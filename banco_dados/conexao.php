@@ -7311,20 +7311,27 @@ order by total_pontos_somados desc");
         $id_candidato,
         $id_especialidade,
         $etapa,
+        $obs_etapa,
         $data_abertura,
         $avaliador,
         $status,
         $id_usuario_analise,
         $data_analise,
-        $analise
+        $analise,
+        $nome_original,
+        $nomeFinalArquivo,
+        $extensao,
+        $tamanho_do_arquivo
     ) {
+
         $datetime = date('Y-m-d H:i:s');
         $zero = 0;
 
         try {
             $sqlInsert = "INSERT INTO recurso
-                (id_candidato, id_especialidade,  etapa, data_abertura, para_avaliador, status,  analise, data_analise, id_usuario_analise,  apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao) 
-         VALUES (:id_candidato, :id_especialidade, :etapa,:data_abertura, :avaliador     ,:status, :analise, :data_analise, :id_usuario_analise,:zero, :datetime,                 :id_usuario)";
+        (id_candidato, id_especialidade, etapa, obs_etapa, data_abertura, para_avaliador, status, analise, data_analise, id_usuario_analise, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao, arq_nome_original, arq_nome_arquivo, arq_extensao, arq_tamanho) 
+        VALUES (:id_candidato, :id_especialidade, :etapa, :obs_etapa, :data_abertura, :avaliador, :status, :analise, :data_analise, :id_usuario_analise, :zero, :datetime, :id_usuario, :arq_nome_original, :arq_nome_arquivo, :arq_extensao, :arq_tamanho)";
+
 
             $this->pdo->beginTransaction();
             $query = $this->pdo->prepare($sqlInsert);
@@ -7332,6 +7339,7 @@ order by total_pontos_somados desc");
             $query->bindValue(":id_candidato", $id_candidato);
             $query->bindValue(":id_especialidade", $id_especialidade);
             $query->bindValue(":etapa", $etapa);
+            $query->bindValue(":obs_etapa", $obs_etapa);
             $query->bindValue(":data_abertura", $data_abertura);
             $query->bindValue(":avaliador", $avaliador);
             $query->bindValue(":analise", $analise);
@@ -7341,6 +7349,10 @@ order by total_pontos_somados desc");
             $query->bindValue(":zero", $zero);
             $query->bindValue(":datetime", $datetime);
             $query->bindValue(":id_usuario", $_SESSION['id_usuario']);
+            $query->bindValue(":arq_nome_original", $nome_original);
+            $query->bindValue(":arq_nome_arquivo", $nomeFinalArquivo);
+            $query->bindValue(":arq_extensao", $extensao);
+            $query->bindValue(":arq_tamanho", $tamanho_do_arquivo);
 
             if ($query->execute()) {
                 $data =
@@ -7349,6 +7361,7 @@ order by total_pontos_somados desc");
                         'id_candidato' => $id_candidato,
                         'id_especialidade' => $id_especialidade,
                         'etapa' => $etapa,
+                        'obs_etapa' => $obs_etapa,
                         'data_abertura' => $data_abertura,
                         'avaliador' => $avaliador,
                         'status' => $status,
@@ -7358,7 +7371,13 @@ order by total_pontos_somados desc");
                         'apagado' => $zero,
                         '_data_ultima_atualizacao' => $datetime,
                         '_usuario_ultima_atualizacao' => $_SESSION['id_usuario'],
+                        'arq_nome_original' => $nome_original,
+                        'arq_nome_arquivo' => $nomeFinalArquivo,
+                        'arq_extensao' => $extensao,
+                        'arq_tamanho' => $tamanho_do_arquivo,
                     ];
+
+                    
                 $this->pdo->commit();
                 return $data;
             } else {

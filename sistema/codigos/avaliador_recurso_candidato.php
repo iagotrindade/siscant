@@ -1,5 +1,5 @@
 <a name="recursos"></a>
-<div class="row" <?php if($_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'admin') echo "hidden"; ?>>
+<div class="row" <?php if($_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'admin' && isset($_SESSION['eipot']) == 1) echo "hidden"; ?>>
     <div class="col-md-12">
         <div class="card">
             <div class="row">

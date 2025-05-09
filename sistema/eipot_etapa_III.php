@@ -2,17 +2,18 @@
 include_once 'menu.php';
 include_once 'codigos/funcao_apagar.php';
 
-$conexao = new Conexao();
+//$conexao = new Conexao();
 
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
 
+session_start();
 if ($candidato == 1 || $perfil == 'candidato' || $_SESSION['candidato'] == 1) {
     erro("Erro 23543! Página não encontrada!");
     exit();
 }
 
-if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SESSION['perfil'] != 'avaliador') {
+if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'jise') {
     erro("Erro 632457437! Página não encontrada!");
     exit();
 }
@@ -56,7 +57,11 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                             foreach ($candidatos as $linha) {
                                 $aparece = true;
 
-                                if ($linha['etapa'] < 3) {
+                                /*if ($linha['etapa'] < 3) {
+                                    continue;
+                                }*/
+
+                                if ($linha['etapa'] < 3 || $linha['rm_inscricao'] != $rm_usuario) {
                                     continue;
                                 }
 
@@ -83,7 +88,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
 
                                 if ($linha['apto_saude_recurso'] == 1) {
                                     $recurso_saude = 'APTO';
-                                } elseif ($linha['aapto_saude_recurso'] == 0  && $linha['grupo_saude_recurso']) {
+                                } elseif ($linha['apto_saude_recurso'] == 0  && $linha['grupo_saude_recurso']) {
                                     $recurso_saude = 'INAPTO';
                                 } elseif ($linha['apto_saude_recurso'] == 2) {
                                     $recurso_saude = 'NÃO COMPARECEU';
@@ -100,6 +105,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <td>' . $saude . '</td>
                                 <td>' . $recurso_saude . '</td>';
                             }
+
                             ?>
                         </tbody>
                     </table>

@@ -1,24 +1,26 @@
 <?php
 
-
 include_once '../../banco_dados/conexao.php';
 include_once '../../sistema/funcoes.php';
-
 include("mpdf60/mpdf.php");
+//05MAI25 - SILVA E IAGO -  AJUSTE CONEXAO E ATUALIZAÇÃO TABELA 
+$mpdf = new mPDF(
+    '',    // mode - default ''
+    '',    // format - A4, for example, default ''
+    0,     // font size - default 0
+    '',    // default font family
+    5,    // margin_left
+    5,    // margin right
+    16,    // margin top
+    16,    // margin bottom
+    5,     // margin header
+    5,     // margin footer
+    'L'
+);
 
-$mpdf = new mPDF([
-    'format' => 'A4-L',
-    'margin_left' => 5,
-    'margin_right' => 5,
-    'margin_top' => 10,
-    'margin_bottom' => 10
-]);
 $mpdf->SetDisplayMode('fullpage');
 $css = file_get_contents("css/estilo.css");
 $mpdf->WriteHTML($css, 1);
-
-$id_usuario = $_SESSION['id_usuario'];
-$rm_usuario = $conexao->rm_usuario($id_usuario);
 
 $titulo_sipmed = $_POST['titulo_sipmed'];
 $texto_sipmed = $_POST['texto_sipmed'];
@@ -28,10 +30,12 @@ set_time_limit(300);
 session_start();
 
 if (!isset($_SESSION['perfil'])) {
+
+    var_dump('okl'); exit;
     erro_relatorio("Erro 823494! A sua sessão expirou! Faça o login no sistema para gerar o relatório");
     exit();
 }
-if ($_SESSION['perfil'] != 'admin') {
+if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'jise') {
     erro_relatorio("Erro 824! Somente o administrador pode gerar este relatório");
     exit();
 }
@@ -41,6 +45,10 @@ if ($_SESSION['candidato'] == '1') {
 }
 
 $conexao = new Conexao();
+
+$id_usuario = $_SESSION['id_usuario'];
+
+$rm_usuario = $conexao->rm_usuario($id_usuario);
 
 
 if ($rm_usuario == "3")
@@ -169,13 +177,33 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
     if (count($candidatos) === 0) {
         continue; // Não cria tabela se não houver candidatos
     }
-
+    //TROCA DAS COLUNAS IDT E NSC
     $html = "
+   <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px; font-size: 10px;'>
+    <tr>
+        <th colspan='12' style='text-align: center; background-color: #D8D8D8; font-size: 10px;'>" . mb_strtoupper($arma, "UTF-8") . "</th>
+    </tr>
+    <tr style='font-size: 10px;'>
+        <th style='text-align: center; '>CPF</th>
+        <th style='text-align: center; '>NOME</th>
+        <th style='text-align: center;'>IDT</th>
+        <th style='text-align: center;'>NASCIMENTO</th>
+        <th style='text-align: center; '>NATURALIDADE</th>
+        <th style='text-align: center; '>SEXO</th>
+        <th style='text-align: center; '>MÃE</th>
+        <th style='text-align: center; '>PAI</th>
+        <th style='text-align: center; '>ENDEREÇO</th>
+        <th style='text-align: center;'>TELEFONE</th>
+        <th style='text-align: center;'>EMAIL</th>
+        <th style='text-align: center;'>CIVIL/MILITAR</th>
+    </tr>
+";
+    /*$html = "
    <table border='13' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
     <tr>
-        <th colspan='' style='text-align: center; background-color: #D8D8D8; font-size: 12px;'>" . mb_strtoupper($arma, "UTF-8") . "</th>
+        <th colspan='12' style='text-align: center; background-color: #D8D8D8; font-size: 12px;'>" . mb_strtoupper($arma, "UTF-8") . "</th>
     </tr>
-    <tr>
+    <tr style='font-size: 10px;'>
         <th style='text-align: center; width: 5%;'>CPF</th>
         <th style='text-align: center; width: 10%;'>NOME</th>
         <th style='text-align: center; width: 5%;'>NASCIMENTO</th>
@@ -189,14 +217,14 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
         <th style='text-align: center; width: 5%;'>EMAIL</th>
         <th style='text-align: center; width: 5%;'>CIVIL/MILITAR</th>
     </tr>
-";
+"; */
 
     $contador = 1;
 
     foreach ($candidatos as $candidato) {
 
         $html .= "
-        <tr>
+        <tr style='font-size: 8px;'>
             <td style='text-align: center;'>" . strtoupper($candidato['cpf']) . "</td>
             <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
             <td style='text-align: center;'>" . strtoupper($candidato['identidade']) . "</td>
@@ -220,9 +248,7 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
 
 // Se necessário, adicione um AddPage() no final para uma nova página após todas as tabelas
 
-//$mpdf->SetDisplayMode('fullwidth');
-
-//$mpdf->WriteHTML($html);
+// $mpdf->WriteHTML($html);
 $mpdf->Output("sipmed.pdf", 'D');
 
 exit();

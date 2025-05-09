@@ -61,7 +61,7 @@
         exit();
     }
     
-    if($_SESSION['perfil'] != 'saude' && $_SESSION['perfil'] != 'admin')
+    if($_SESSION['perfil'] != 'jise' && $_SESSION['perfil'] != 'admin')
     {
         erro("Erro 3426346346! Não é possivel fazer essa edição!"); 
         exit();

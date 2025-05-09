@@ -82,7 +82,7 @@ require 'menu.php';
             <br>
         </div>
         
-        <div class="row">
+        <div class="row <?php if($perfil == 'jise') echo('hidden')?>">
             <div class="col-md-12">
             <?php 
                 if(isset($_SESSION['eipot']) && $perfil == 'admin' || $perfil == 'consulta') 

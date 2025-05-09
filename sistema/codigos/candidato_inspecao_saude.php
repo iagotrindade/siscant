@@ -2,7 +2,7 @@
 if (!isset($_SESSION))
     session_start();
 
-if (($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'documentos') || $_SESSION['candidato'] == '1') {
+if (($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'documentos' && $_SESSION['perfil'] != 'jise') || $_SESSION['candidato'] == '1') {
     erro("Erro 2353565! Página não encontrada!");
     exit();
 }
