@@ -57,12 +57,12 @@ if (($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'documentos' && $_
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label>PDF do Exame de saúde</label><br>
-                            <a target="_blank" href="mpdf/relatorio_exame_medico.php?codigo=<?php
+                            <label>Ata IS</label><br>
+                            <!--<a target="_blank" href="mpdf/relatorio_exame_medico.php?codigo=<?php
                                                                                             echo hash('sha256', $_SESSION['chave']);
                                                                                             echo "&id_candidato=" . $id_usuario; ?>">
                                 <img src="imagens/pdf.png" height="50px">
-                            </a>
+                            </a>-->
                         </div>
                     </div>
                 </div>
@@ -118,12 +118,12 @@ if (($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'documentos' && $_
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label>PDF do Exame de saúde</label><br>
-                            <a target="_blank" href="mpdf/relatorio_exame_medico_recurso.php?codigo=<?php
+                            <label>Ata ISGRec</label><br>
+                            <!--<a target="_blank" href="mpdf/relatorio_exame_medico_recurso.php?codigo=<?php
                                                                                                     echo hash('sha256', $_SESSION['chave']);
                                                                                                     echo "&id_candidato=" . $id_usuario; ?>">
                                 <img src="imagens/pdf.png" height="50px">
-                            </a>
+                            </a>-->
                         </div>
                     </div>
                 </div>

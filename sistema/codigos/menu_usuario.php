@@ -33,8 +33,8 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </ul>
 </li>
 
-<li <?php if ($perfil == "ouvidor" || $perfil == "avaliador" || $perfil == "documentos" || $perfil == "om") echo "hidden" ?> class="treeview">
-    <a href="#"><i class="fa fa-search"></i><span>Pesquisa</span><i class="fa fa-angle-right"></i></a>
+<li <?php if ($perfil == "ouvidor" || $perfil == "avaliador" || $perfil == "documentos" || $perfil == "om") echo "hidden"; ?> class="treeview">
+    <a href="#"><i class="fa fa-search"></i><span><?php if($_SESSION['perfil'] == "jise") echo('Resultado IS'); else echo('Pesquisa'); ?></span><i class="fa fa-angle-right"></i></a>
     <ul class="treeview-menu">
         <li <?php if (!isset($_SESSION['eipot']) || $perfil == "jise") echo " hidden " ?> class="treeview"><a href="candidato_lista_eipot.php"><i class="fa fa-users"></i><span>EIPOT - Ampla Concorrência</span></a></li>
 
@@ -52,8 +52,8 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
         <li <?php if ($_SESSION['selecao_codigo'] != 'mfdv') echo "hidden" ?> class="treeview"><a href="medicos_obrigatorios.php"><i class="fa fa-user-md"></i><span>Médicos Obrigatórios</span></a></li>
 
-        <li <?php if (!isset($_SESSION['eipot'])) echo " hidden " ?> class="treeview"><a href="eipot_etapa_III.php"><i class="fa fa-address-book"></i>Dados Cadastro IS - SIPMED</a></>
-        <li <?php if ($perfil == "jise") echo " hidden " ?> class="treeview"><a href="usuario_lista.php"><i class="fa fa-user"></i>Usuário</a></li>
+        <li <?php if (!isset($_SESSION['eipot'])) echo " hidden " ?> class="treeview"><a href="eipot_etapa_III.php"><i class="fa fa-address-book"></i><?php if($_SESSION['perfil'] == "jise") echo('JISE'); else echo('Dados Cadastro IS - SIPMED')?></a></>
+        <li <?php if ($perfil == "jise") echo " hidden " ?> class="treeview"><a href="usuario_lista.php"><i class="fa fa-user"></i>Usuários</a></li>
     </ul>
 </li>
 

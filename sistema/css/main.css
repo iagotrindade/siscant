@@ -2793,18 +2793,18 @@ fieldset[disabled] .btn-success.focus {
 
 .btn-info {
   color: #fff;
-  background-color: #2196F3;
+  background-color: #0a6b1f;
   border-color: transparent;
 }
 
 .btn-info:focus, .btn-info.focus {
   color: #fff;
-  background-color: #0e8df2;
+  background-color: #0a6b1f;
 }
 
 .btn-info:hover {
   color: #fff;
-  background-color: #0e8df2;
+  background-color: #0a6b1f;
 }
 
 .btn-info:active, .btn-info.active,
@@ -2828,11 +2828,11 @@ fieldset[disabled] .btn-success.focus {
 fieldset[disabled] .btn-info:hover,
 fieldset[disabled] .btn-info:focus,
 fieldset[disabled] .btn-info.focus {
-  background-color: #2196F3;
+  background-color: #0a6b1f;
 }
 
 .btn-info .badge {
-  color: #2196F3;
+  color: #0a6b1f;
   background-color: #fff;
 }
 
@@ -4584,7 +4584,7 @@ a.label:hover, a.label:focus {
 }
 
 .label-info {
-  background-color: #2196F3;
+  background-color: #0a6b1f;
 }
 
 .label-info[href]:hover, .label-info[href]:focus {
@@ -4850,7 +4850,7 @@ a.badge:hover, a.badge:focus {
 }
 
 .progress-bar-info {
-  background-color: #2196F3;
+  background-color: #0a6b1f;
 }
 
 .progress-striped .progress-bar-info {

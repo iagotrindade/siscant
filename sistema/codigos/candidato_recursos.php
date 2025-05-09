@@ -7,7 +7,7 @@
                 <div class="alert alert-dismissible ">
                     <legend>Recursos do Candidato</legend>
                     <div class="row">
-                        <div class="col-lg-12" <?php if ($_SESSION['perfil'] != 'admin' || $_SESSION['perfil'] != 'jise') echo ('hidden') ?>>
+                        <div class="col-lg-12" <?php if ($_SESSION['perfil'] != 'admin') echo ('hidden') ?>>
                             <form action="../banco_dados/candidato_cadastra_recurso.php" method="post" enctype="multipart/form-data">
                                 <div class="col-lg-2">
                                     <div class="form-group"> <label>Etapa</label>
@@ -176,7 +176,16 @@
                                 continue;
 
                             if ($linha['arq_nome_arquivo'] != null)
-                                $arquivo_add_candidato_recurso = '<a href="baixaPDF.php?codigo=rec_cand_vis&nome_arquivo=' . $linha['arq_nome_arquivo'] . '" target="_blank">Recurso do Candidato -> <img src="imagens/pdf.png" height="70px"></a>';
+                                $crip = hash('sha256', "freitas" . $linha['id']);
+                                $imagem = 'imagem.png';
+
+                                if ($linha['arq_extensao'] == 'pdf') $imagem = 'pdf.png';
+                                if ($linha['arq_extensao'] == 'odt') $imagem = 'odt.jpg';
+                                if ($linha['arq_extensao'] == 'doc' || $linha['arq_extensao'] == 'docx') $imagem = 'word.png';
+                                if ($linha['arq_extensao'] == 'xls' || $linha['arq_extensao'] == 'xlsx' || $linha['arq_extensao'] == 'ods') $imagem = 'ods.png';
+
+                            
+                                $arquivo_add_candidato_recurso = '<a href="arquivos_add_p_cand/recursos/' . $linha['arq_nome_arquivo'] . '" target="_blank">Recurso do Candidato -> <img src="imagens/pdf.png" height="70px"></a>';
 
                             if (!isset($_SESSION["eipot"])) {
                                 $avaliador = '<b>Para avaliador analisar? </b><font color="#000">' . $para_avaliador . '</font><br>';

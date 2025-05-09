@@ -23,7 +23,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
 <div class="content-wrapper">
     <div class="page-title">
         <div>
-            <h1>Cadastro Dados IS - SIPMED<i class="fa fa-address-book"></i></h1>
+            <h1><?php if($_SESSION['perfil'] == "jise") echo('Resultado IS'); else echo('Cadastro Dados IS - SIPMED'); ?> <i class="fa fa-address-book"></i></h1>
         </div>
         <div>
             <ul class="breadcrumb">
@@ -45,21 +45,19 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <th>Nome</th>
                                 <th>Etapa</th>
                                 <th>Especialidade</th>
-                                <th>Situação IS</th>
-                                <th>Situação ISGR</th>
+                                <th>IS - JISE</th>
+                                <th>ISGRec - JISR</th>
+                                <th>Recurso Etapa 3</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
 
                             $candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
+                            $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario );
 
                             foreach ($candidatos as $linha) {
                                 $aparece = true;
-
-                                /*if ($linha['etapa'] < 3) {
-                                    continue;
-                                }*/
 
                                 if ($linha['etapa'] < 3 || $linha['rm_inscricao'] != $rm_usuario) {
                                     continue;
@@ -96,6 +94,23 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                     $recurso_saude = 'NÃO REALIZADA';
                                 }
 
+                                foreach($recursos as $recurso) {
+                                    if($recurso['id_candidato'] == $linha['id'] && $recurso['etapa'] >= 3) {
+                                        if($recurso['obs_etapa'] == '3 - IS') {
+                                            $recursoEtapa3 = '3 - IS';
+                                        }
+
+                                        elseif($recurso['obs_etapa'] == '3 - Documental') {
+
+                                        }$recursoEtapa3 = '3 - Documental';
+                                        
+                                    }
+
+                                    else {
+                                        $recursoEtapa3 = 'NÃO';
+                                    }
+                                }
+
                                 echo '
                                 <tr bgcolor = ' . $fontColor . '>
                                 <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id_usuario'] . '">' . $linha['cpf'] . '</a></td>
@@ -103,8 +118,9 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <td>_' . $linha['etapa'] . '</td>
                                 <td>' . $linha['arma_especialidade'] . '</td>
                                 <td>' . $saude . '</td>
-                                <td>' . $recurso_saude . '</td>';
-                            }
+                                <td>' . $recurso_saude . '</td>
+                                <td>' . $recursoEtapa3 . '</td>';
+                             }
 
                             ?>
                         </tbody>
@@ -112,7 +128,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" <?php if($_SESSION['perfil'] == 'jise') echo('hidden')?>>
                 <legend>Cadastro Dados IS - SIPMED
                     <img src="imagens/pdf.png" width="30px">
                 </legend>
