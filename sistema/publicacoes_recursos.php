@@ -82,7 +82,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
     <form name="form_etapa_presencial" action="mpdf/resultado_recursos_etapa_iii.php" method="post">
         <div class="card">
             <h3>
-                Resultado Análise de Recursos Etapas III
+                Resultado Análise de Recursos Etapa III
             </h3>
 
             <br><!-- Título do formulário -->
@@ -126,10 +126,12 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="background-color: #CCC; height: 1px;" class= "mb-20 mt-40"></div>
 
+            <p class="alert-danger" style="padding: 10px; border-radius: 5px;">PARA A QUEBRA DE LINHAS UTILIZAR " # " ANTES DO ENDEREÇO!</p>
+
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="hora_arma[infantaria]">AGENDAMENTO ISGR - INFANTARIA:</label>
-                    <input type="text" name="hora_arma[infantaria]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+                    <input type="text" name="hora_arma[infantaria]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
             </div>
@@ -137,7 +139,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="hora_arma[cavalaria]">AGENDAMENTO ISGR - CAVALARIA:</label>
-                    <input type="text" name="hora_arma[cavalaria]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+                    <input type="text" name="hora_arma[cavalaria]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
             </div>
@@ -145,7 +147,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="hora_arma[artilharia de campanha]">AGENDAMENTO ISGR - ARTILHARIA DE CAMPANHA:</label>
-                    <input type="text" name="hora_arma[artilharia de campanha]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+                    <input type="text" name="hora_arma[artilharia de campanha]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
             </div>
@@ -153,7 +155,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="hora_arma[artilharia antiaérea]">AGENDAMENTO ISGR - ARTILHARIA ANTIAÉREA:</label>
-                    <input type="text" name="hora_arma[artilharia antiaérea]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+                    <input type="text" name="hora_arma[artilharia antiaérea]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
             </div>
@@ -161,7 +163,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="hora_arma[engenharia]">AGENDAMENTO ISGR - ENGENHARIA:</label>
-                    <input type="text" name="hora_arma[engenharia]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+                    <input type="text" name="hora_arma[engenharia]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
             </div>
@@ -169,7 +171,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="hora_arma[comunicações]">AGENDAMENTO ISGR - COMUNICAÇÕES:</label>
-                    <input type="text" name="hora_arma[comunicações]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+                    <input type="text" name="hora_arma[comunicações]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
             </div>
@@ -177,7 +179,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="hora_arma[material bélico]">AGENDAMENTO ISGR - MATERIAL BÉLICO:</label>
-                    <input type="text" name="hora_arma[material bélico]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+                    <input type="text" name="hora_arma[material bélico]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
             </div>
@@ -185,7 +187,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="hora_arma[intendência]">AGENDAMENTO ISGR - INTENDÊNCIA:</label>
-                    <input type="text" name="hora_arma[intendência]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+                    <input type="text" name="hora_arma[intendência]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
             </div>

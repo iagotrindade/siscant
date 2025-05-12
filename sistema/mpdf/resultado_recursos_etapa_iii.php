@@ -263,7 +263,7 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
             $hora = $valor;
 
             // quebrar a string em partes divididas por |
-            $hora_local = explode('|', $hora);
+            $hora_local = explode('#', $hora);
             break;
         }
     }
