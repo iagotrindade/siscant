@@ -285,8 +285,6 @@ $html = "
 </table> 
 <br>
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify;'>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   &nbsp;&nbsp;&nbsp;
    A Junta de Inspeção de Saúde Especial inspecionou na presente sessão, o abaixo declarado, para fins de incorporação no ano de $ano_selecao_mais_um, e sobre seu estado de saúde, proferiu o parecer abaixo:
 </p>
 <br>

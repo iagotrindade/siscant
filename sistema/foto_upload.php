@@ -31,7 +31,7 @@ require 'menu.php';
                                     <th width="100%"><label>Troque a foto do seu perfil</label>
                                     <input type="file" name="foto"/></th>
                                     <th rowspan="3" >
-                                        <center><img src="<?php echo"fotos/$usuario_foto" ?>" width="150px"></center>
+                                        <center><img src="<?php echo"fotos/$usuario_foto" ?>" width="150px" style="box-shadow: 0px 0px 10px #197249"></center>
                                     </th>
                                 </tr>
                                 <tr>

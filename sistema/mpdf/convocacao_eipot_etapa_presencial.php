@@ -29,7 +29,6 @@ function normaliza_texto($texto) {
     return trim($texto);
 }
 
-
 set_time_limit(300);
 
 session_start();
@@ -138,7 +137,8 @@ $html = "
 </table>
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-     " . $texto_etapa_presencial . "
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    " . $texto_etapa_presencial . "
 </p>
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
@@ -150,9 +150,8 @@ $mpdf->WriteHTML($html);
 
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
-$lista_inscritos = $conexao->get_inscritos_eipot_rm_inscricao($rm_usuario);
-$lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
 
+$lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
 
 $ordem_arma = [
     'INFANTARIA',
@@ -245,7 +244,6 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
 }
 
 // Se necessário, adicione um AddPage() no final para uma nova página após todas as tabelas
-
 
 //$mpdf->SetDisplayMode('fullwidth');
 

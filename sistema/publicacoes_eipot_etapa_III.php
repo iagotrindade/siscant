@@ -135,7 +135,7 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
 
     <form name="form_relacao_classificacao_eipot_pontuacao" action="mpdf/resultado_eipot_etapa_III.php" method="post">
         <div class="card">
-            <h3>Resultado Inicial Etapa III - Inspeção de Saúde</h3><br> <!-- Título do formulário -->
+            <h3>Resultado Etapa III - Inspeção de Saúde</h3><br> <!-- Título do formulário -->
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
@@ -152,8 +152,18 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
             </div>
 
             <div class="form-group">
-                <label for="titulo_um">Texto:</label>
-                <input type="text" name="texto_resultado_etapa_presencial" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Etapa III. O período para interposição de Recursos da Etapa III será nos dias 26 a 28 de maio de 2025 das 0930h às 1130h e das 1300h às 1630h, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre. O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial. Não serão aceitos recursos entregues fora do prazo ou no local errado." required>
+                <label for="titulo_um">Primeiro Parágrafo:</label>
+                <input type="text" name="paragrafo_um_resultado_etapa_presencial" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Etapa III." required>
+            </div>
+
+            <div class="form-group">
+                <label for="titulo_um">Segundo Parágrafo:</label>
+                <input type="text" name="paragrafo_dois_resultado_etapa_presencial" class="form-control" value="O período para interposição de Recursos da Etapa III será nos dias 26 a 28 de maio de 2025 das 0930h às 1130h e das 1300h às 1630h, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre." required>
+            </div>
+
+            <div class="form-group">
+                <label for="titulo_um">Terceiro Parágrafo:</label>
+                <input type="text" name="paragrafo_tres_resultado_etapa_presencial" class="form-control" value="O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial. Não serão aceitos recursos entregues fora do prazo ou no local errado." required>
             </div>
 
             <div style="float: left; width: 48%; margin-right: 4%;">
@@ -169,27 +179,29 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
         </div>
     </form>
 
-    <!--<form name="form_relacao_classificacao_eipot_pontuacao" action="mpdf/resultado_final_eipot_etapa_III.php" method="post">
+    <form name="form_relacao_classificacao_eipot_pontuacao" action="mpdf/resultado_eipot_isgrec.php" method="post">
         <div class="card">
-            <h3>Resultado Final Etapa III - Inspeção de Saúde em Grau de Recurso</h3><br> Título do formulário 
+            <h3>Resultado Inspeção de Saúde em Grau de Recurso</h3>
+            
+            <br>
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
                     <label for="titulo">Título:</label>
-                    <input type="text" name="titulo_resultado_etapa_presencial" class="form-control" value="ESTÁGIO DE INSTRUÇÃO E DE PREPARAÇÃO PARA OFICIAIS TEMPORÁRIOS (EIPOT) / 2025" required>
+                    <input type="text" name="titulo" class="form-control" value="ESTÁGIO DE INSTRUÇÃO E DE PREPARAÇÃO PARA OFICIAIS TEMPORÁRIOS (EIPOT) / 2025" required>
                 </div>
             </div>
 
             <div style="float: left; width: 48%;">
                 <div class="form-group">
                     <label for="titulo_um">Subtítulo:</label>
-                    <input type="text" name="subtitulo_resultado_etapa_presencial" class="form-control" value="Resultado Final Etapa III - Inspeção de Saúde em Grau de Recurso - Xª RM" required>
+                    <input type="text" name="subtitulo" class="form-control" value="Resultado Inspeção de Saúde em Grau de Recurso - Xª RM" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="titulo_um">Texto:</label>
-                <input type="text" name="texto_resultado_etapa_presencial" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Inspeção de Saúde em Grau de Recurso (ISGR)." required>
+                <input type="text" name="texto_resultado_isgrec" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Inspeção de Saúde em Grau de Recurso (ISGRec)." required>
             </div>
 
             <div style="float: left; width: 48%; margin-right: 4%;">
@@ -200,10 +212,10 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
             </div>
 
             <div class="col-mg-12">
-                <button type="submit" class="btn btn-primary btn-block">PUBLICAÇÃO RESULTADO FINAL ETAPA III - INSPEÇÃO DE SAÚDE</button>
+                <button type="submit" class="btn btn-primary btn-block">PUBLICAÇÃO RESULTADO ISGRec</button>
             </div>
         </div>
-    </form>-->
+    </form>
 
     <br>
     <br>

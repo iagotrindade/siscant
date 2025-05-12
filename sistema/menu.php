@@ -306,7 +306,7 @@ else
       <aside class="main-sidebar hidden-print">
         <section class="sidebar">
           <div class="user-panel">
-            <div class="pull-left "><img height="50px" class="img-circle" src="<?php echo "fotos/$usuario_foto"?>" alt="User Image"></div>
+            <div class="pull-left "><img height="50px" style="box-shadow: 0px 0px 10px #197249" class="img-circle" src="<?php echo "fotos/$usuario_foto"?>" alt="User Image"></div>
             <div class="pull-left info">
               <p class="designation">
                 <?php

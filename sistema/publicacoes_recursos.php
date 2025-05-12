@@ -45,7 +45,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
     <form name="form_etapa_presencial" action="mpdf/relatorio_recursos.php" method="post">
         <div class="card">
-            <h3>Relatório de Análise de Recursos Etapas I e II</h3> <br><!-- Título do formulário -->
+            <h3>Resultado Análise de Recursos Etapas I e II</h3> <br><!-- Título do formulário -->
 
             <!-- Campo de texto para digitar o título -->
             <div style="float: left; width: 48%; margin-right: 4%;">
@@ -79,94 +79,121 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
         </div>
     </form>
 
-    <form name="form_etapa_presencial" action="mpdf/convocacao_eipot_etapa_presencial.php" method="post">
+    <form name="form_etapa_presencial" action="mpdf/resultado_recursos_etapa_iii.php" method="post">
         <div class="card">
             <h3>
-                Relatório de Análise de Recursos Etapas III
-            </h3> 
-            
+                Resultado Análise de Recursos Etapas III
+            </h3>
+
             <br><!-- Título do formulário -->
 
             <!-- Campo de texto para digitar o título -->
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
                     <label for="titulo">Título:</label>
-                    <input type="text" name="titulo_etapa_presencial" class="form-control" value="ESTÁGIO DE INSTRUÇÃO E DE PREPARAÇÃO PARA OFICIAIS TEMPORÁRIOS (EIPOT) / 2025" required>
+                    <input type="text" name="titulo" class="form-control" value="ESTÁGIO DE INSTRUÇÃO E DE PREPARAÇÃO PARA OFICIAIS TEMPORÁRIOS (EIPOT) / 2025" required>
                 </div>
             </div>
 
             <div style="float: left; width: 48%;">
                 <div class="form-group">
                     <label for="titulo_um">Subtítulo:</label>
-                    <input type="text" name="subtitulo_etapa_presencial" class="form-control" value="Relatório da Análise de Recursos Etapa III - Xª Região Militar" required>
+                    <input type="text" name="subtitulo" class="form-control" value="Relatório da Análise de Recursos Etapa III e Convocação ISGRec- Xª Região Militar" required>
                 </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="paragrafo_um_resultado">Texto Resultado Análise Recursos (1º Parágrafo):</label>
+                <textarea type="text" name="paragrafo_um_resultado" class="form-control" required>O Comandante da Xª Região Militar divulga o parecer da análise de recursos referente à Etapa III e convoca para  Inspeção de Saúde em Grau de Recurso (ISGR), conforme Anexo “A” (Calendário de Eventos) do Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025.</textarea>
             </div>
 
             <div class="form-group">
-                <label for="titulo_um">Texto:</label>
-                <input type="text" name="texto_etapa_presencial" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, CONVOCA os candidatos abaixo relacionados, para comparecimento presencial à Comissão de Seleção Especial (CSE), localizada na Rua Bento Martins Nº 45 – Centro – Porto Alegre-RS, nas DATAS e HORÁRIOS abaixo, munidos dos exames de saúde previstos no aviso de convocação. Será ELIMINADO o candidato CONVOCADO que NÃO COMPARECER à chamada para a Etapa III." required>
+                <label for="paragrafo_dois_resultado">Texto Resultado Análise Recursos (2º Parágrafo):</label>
+                <textarea style="height: 40px;" type="text" name="paragrafo_dois_resultado" class="form-control" required>A presente relação NÃO está em ordem de CLASSIFICAÇÃO.</textarea>
             </div>
+
+            <div style="background-color: #CCC; height: 1px;" class= "mb-20 mt-40"></div>
+
+            <div class="form-group">
+                <label for="paragrafo_um_convocacao">Texto Convocação ISGRec (1º Parágrafo):</label>
+                <textarea style="height: 40px;" type="text" name="paragrafo_um_convocacao" class="form-control" value="">Convoco os candidatos abaixo relacionados para comparecimento nos respectivos locais e datas discriminados a fim de realizarem Inspeção de Saúde em Grau de Recurso.</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="paragrafo_dois_convocacao">Texto Convocação ISGRec (2º Parágrafo):</label>
+                <textarea style="height: 40px;" type="text" name="paragrafo_dois_convocacao" class="form-control" value="">Informo que será ELIMINADO do processo seletivo o candidato CONVOCADO que NÃO COMPARECER na data, horário e local determinado.</textarea>
+            </div>
+
+            <div style="background-color: #CCC; height: 1px;" class= "mb-20 mt-40"></div>
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">AGENDAMENTO  ISGR - INFANTARIA:</label>
-                    <input type="text" name="hora_arma[infantaria]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
+                    <label for="hora_arma[infantaria]">AGENDAMENTO ISGR - INFANTARIA:</label>
+                    <input type="text" name="hora_arma[infantaria]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+" required>
                 </div>
             </div>
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">AGENDAMENTO  ISGR - CAVALARIA:</label>
-                    <input type="text" name="hora_arma[cavalaria]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
+                    <label for="hora_arma[cavalaria]">AGENDAMENTO ISGR - CAVALARIA:</label>
+                    <input type="text" name="hora_arma[cavalaria]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+" required>
                 </div>
             </div>
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">AGENDAMENTO  ISGR - ARTILHARIA DE CAMPANHA:</label>
-                    <input type="text" name="hora_arma[artilharia de campanha]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
+                    <label for="hora_arma[artilharia de campanha]">AGENDAMENTO ISGR - ARTILHARIA DE CAMPANHA:</label>
+                    <input type="text" name="hora_arma[artilharia de campanha]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+" required>
                 </div>
             </div>
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">>AGENDAMENTO  ISGR - ARTILHARIA ANTIAÉREA:</label>
-                    <input type="text" name="hora_arma[artilharia antiaérea]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
+                    <label for="hora_arma[artilharia antiaérea]">AGENDAMENTO ISGR - ARTILHARIA ANTIAÉREA:</label>
+                    <input type="text" name="hora_arma[artilharia antiaérea]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+" required>
                 </div>
             </div>
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">AGENDAMENTO  ISGR - ENGENHARIA:</label>
-                    <input type="text" name="hora_arma[engenharia]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
+                    <label for="hora_arma[engenharia]">AGENDAMENTO ISGR - ENGENHARIA:</label>
+                    <input type="text" name="hora_arma[engenharia]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+" required>
                 </div>
             </div>
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">AGENDAMENTO  ISGR - COMUNICAÇÕES:</label>
-                    <input type="text" name="hora_arma[comunicações]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
+                    <label for="hora_arma[comunicações]">AGENDAMENTO ISGR - COMUNICAÇÕES:</label>
+                    <input type="text" name="hora_arma[comunicações]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+" required>
                 </div>
             </div>
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">AGENDAMENTO  ISGR - MATERIAL BÉLICO:</label>
-                    <input type="text" name="hora_arma[material bélico]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
+                    <label for="hora_arma[material bélico]">AGENDAMENTO ISGR - MATERIAL BÉLICO:</label>
+                    <input type="text" name="hora_arma[material bélico]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+" required>
                 </div>
             </div>
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">AGENDAMENTO  ISGR - INTENDÊNCIA:</label>
-                    <input type="text" name="hora_arma[intendência]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
+                    <label for="hora_arma[intendência]">AGENDAMENTO ISGR - INTENDÊNCIA:</label>
+                    <input type="text" name="hora_arma[intendência]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE | Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
+" required>
                 </div>
             </div>
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
                     <label for="titulo">Data:</label>
-                    <input type="text" name="texto_dia" class="form-control" value="Porto Alegre - RS, 23 de Maio de 2025" required>
+                    <input type="text" name="texto_dia" class="form-control" value="Porto Alegre - RS, 30 de Maio de 2025" required>
                 </div>
             </div>
 

@@ -1197,6 +1197,33 @@ class Conexao
         }
     }
 
+    public function get_candidatos_isgrec($rm_usuario)
+    {
+        $stmt = $this->pdo->prepare("SELECT u.nome_completo, u.apto_saude_recurso, u.cpf, ce.*, u.rm_inscricao, e.nome AS arma_especialidade, r.*  FROM siscant.recurso r
+                                            INNER JOIN usuario u ON u.id = r.id_candidato 
+                                            INNER JOIN candidato_x_especialidade ce ON ce.id_candidato = u.id
+                                            INNER JOIN especialidade e ON ce.id_especialidade = e.id
+                                            WHERE r.apagado = 0 
+                                            AND r.etapa = 3
+                                            AND r.obs_etapa = '3 - IS'
+                                            AND r.status_final = 'deferido'
+                                            AND u.id_selecao = :selecao
+                                            AND u.rm_inscricao = :rm_usuario
+                                            ORDER BY u.nome_completo ASC;");
+
+        $stmt->bindValue(':rm_usuario', $rm_usuario, PDO::PARAM_INT); // Especificando o tipo
+        $stmt->bindValue(':selecao', $_SESSION['selecao'], PDO::PARAM_INT); // Especificando o tipo
+        $run = $stmt->execute();
+
+        if ($run) {
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } else {
+            // Lidar com o erro se necessário
+            return [];
+        }
+    }
+
     public function get_inscritos_eipot_vagas_reservadas_tabelas($rm_usuario)
     {
         $stmt = $this->pdo->prepare("
@@ -5140,7 +5167,8 @@ order by total_pontos_somados desc");
         $grupo_saude,
         $data_exame_saude,
         $cid_saude,
-        $observacao
+        $observacao,
+        $ata_is
     ) {
         try {
 
@@ -5153,6 +5181,7 @@ order by total_pontos_somados desc");
                         data_exame_saude       =   :data_exame_saude,
                         cid_saude              =   :cid_saude,
                         observacao_exame_saude =   :obs,
+                        ata_is               =   :ata_is,
                         _data_ultima_atualizacao      =   :datetime,
                         _usuario_ultima_atualizacao   =   :id_user_atualizou
                         WHERE id                      =   :id_candidato";
@@ -5167,6 +5196,7 @@ order by total_pontos_somados desc");
             $query->bindValue(":data_exame_saude", $data_exame_saude);
             $query->bindValue(":cid_saude", $cid_saude);
             $query->bindValue(":obs", $observacao);
+            $query->bindValue(":ata_is", $ata_is);
             $query->bindValue(":datetime", $datetime);
             $query->bindValue(":id_user_atualizou", $_SESSION['id_usuario']);
 
@@ -5180,6 +5210,7 @@ order by total_pontos_somados desc");
                         'data_exame_saude' => $data_exame_saude,
                         'cid_saude' => $cid_saude,
                         'observacao' => $observacao,
+                        'ata_is' => $ata_is,
                         'data_editado' => $datetime,
                         'usuario_editou' => $_SESSION['id_usuario'],
                     ];
@@ -5318,7 +5349,8 @@ order by total_pontos_somados desc");
         $grupo_saude,
         $data_exame_saude,
         $cid_saude,
-        $observacao
+        $observacao,
+        $ata_is_recurso
     ) {
         try {
 
@@ -5331,6 +5363,7 @@ order by total_pontos_somados desc");
                         data_exame_saude_recurso       =   :data_exame_saude,
                         cid_saude_recurso              =   :cid_saude,
                         observacao_exame_saude_recurso =   :obs,
+                        ata_is_recurso                 =   :ata_is_recurso,
                         _data_ultima_atualizacao      =   :datetime,
                         _usuario_ultima_atualizacao   =   :id_user_atualizou
                         WHERE id                      =   :id_candidato";
@@ -5345,6 +5378,7 @@ order by total_pontos_somados desc");
             $query->bindValue(":data_exame_saude", $data_exame_saude);
             $query->bindValue(":cid_saude", $cid_saude);
             $query->bindValue(":obs", $observacao);
+            $query->bindValue(":ata_is_recurso", $ata_is_recurso);
             $query->bindValue(":datetime", $datetime);
             $query->bindValue(":id_user_atualizou", $_SESSION['id_usuario']);
 
@@ -5358,6 +5392,7 @@ order by total_pontos_somados desc");
                         'data_exame_saude_recurso' => $data_exame_saude,
                         'cid_saude_recurso' => $cid_saude,
                         'observacao_recurso' => $observacao,
+                        'ata_is_recurso' => $ata_is_recurso,
                         'data_editado' => $datetime,
                         'usuario_editou' => $_SESSION['id_usuario'],
                     ];
@@ -7377,7 +7412,7 @@ order by total_pontos_somados desc");
                         'arq_tamanho' => $tamanho_do_arquivo,
                     ];
 
-                    
+
                 $this->pdo->commit();
                 return $data;
             } else {
@@ -7917,6 +7952,53 @@ order by total_pontos_somados desc");
             return false;
         }
         return false;
+    }
+
+    public function get_candidato_atas_is($id_usuario) {
+        //selecionar o campo ata_is e ata_is_recurso
+        $sql = "SELECT ata_is, ata_is_recurso FROM usuario WHERE id = :id_usuario";
+        $query = $this->pdo->prepare($sql);
+        $query->bindValue(":id_usuario", $id_usuario);  
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function apaga_ata_is_candidato($id_candidato, $datetime, $usuario, $tipo)
+    {
+        try {
+            $sqlInsert = "UPDATE usuario SET $tipo = null WHERE id = :id_candidato";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_candidato", $id_candidato);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'id_candidato' => $id_candidato,
+                        $tipo => "null",
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario
+                    ];
+                $this->pdo->commit();
+
+                // devolver o nome do arquivo apagado
+                
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
     }
     // </editor-fold>
 

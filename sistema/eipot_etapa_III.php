@@ -29,7 +29,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
             <ul class="breadcrumb">
                 <li><i class="fa fa-home fa-lg"></i></li>
                 <li><a href="index.php">Página Inicial</a></li>
-                <li>Cadastro Dados IS - SIPMED</li>
+                <li><?php if($_SESSION['perfil'] == "jise") echo('Resultado IS'); else echo('Cadastro Dados IS - SIPMED')?></li>
             </ul>
         </div>
     </div>
@@ -93,20 +93,19 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 } elseif ($linha['apto_saude_recurso'] == NULL) {
                                     $recurso_saude = 'NÃO REALIZADA';
                                 }
+                                
+                                $recursoEtapa3 = null; // <- Inicialização correta
 
                                 foreach($recursos as $recurso) {
                                     if($recurso['id_candidato'] == $linha['id'] && $recurso['etapa'] >= 3) {
                                         if($recurso['obs_etapa'] == '3 - IS') {
                                             $recursoEtapa3 = '3 - IS';
+                                            break;
+                                        } elseif($recurso['obs_etapa'] == '3 - Documental') {
+                                            $recursoEtapa3 = '3 - Documental';
+                                            break;
                                         }
-
-                                        elseif($recurso['obs_etapa'] == '3 - Documental') {
-
-                                        }$recursoEtapa3 = '3 - Documental';
-                                        
-                                    }
-
-                                    else {
+                                    } else {
                                         $recursoEtapa3 = 'NÃO';
                                     }
                                 }

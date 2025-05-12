@@ -44,6 +44,7 @@ if($get_recursos_id[0]['etapa'] != $_SESSION['etapa_selecao'])
 }
 
 $get_usuario_recurso = $conexao->get_usuario_id($get_recursos_id[0]['id_candidato']);
+
 if(count($get_usuario_recurso) != 1)
 {
     $conexao = null;
@@ -62,6 +63,9 @@ $cpf_candidato = $get_usuario_recurso[0]['cpf'];
 
 
 $resultado = $conexao->apaga_recurso_candidato($id_recurso);
+
+
+
 $alteracoes_detalhadas = print_r($resultado, true);
 if($resultado)
     $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $cpf, $id_recurso, "15116", "recurso", "Delete", "Apagou o seu recurso de ID: $id_recurso", $alteracoes_detalhadas);

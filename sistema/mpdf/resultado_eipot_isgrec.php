@@ -8,9 +8,9 @@ $mpdf->SetDisplayMode('fullpage');
 $css = file_get_contents("css/estilo.css");
 $mpdf->WriteHTML($css, 1);
 
-$titulo_etapa_presencial = $_POST['titulo_etapa_presencial'];
-$subtitulo_etapa_presencial = $_POST['subtitulo_etapa_presencial'];
-$texto_etapa_presencial = $_POST['texto_etapa_presencial'];
+$titulo = $_POST['titulo'];
+$subtitulo = $_POST['subtitulo'];
+$texto_resultado_isgrec = $_POST['texto_resultado_isgrec'];
 $texto_dia = $_POST['texto_dia'];
 
 set_time_limit(300);
@@ -21,6 +21,7 @@ if (!isset($_SESSION['perfil'])) {
     erro_relatorio("Erro 823494! A sua sessão expirou! Faça o login no sistema para gerar o relatório");
     exit();
 }
+
 if ($_SESSION['perfil'] != 'admin') {
     erro_relatorio("Erro 824! Somente o administrador pode gerar este relatório");
     exit();
@@ -106,13 +107,13 @@ $html = "
 </p>
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $titulo_etapa_presencial . "</strong></th>
+        <th align='center'><strong>" . $titulol . "</strong></th>
     </tr>
 </table>
 
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $subtitulo_etapa_presencial . "</strong></th>
+        <th align='center'><strong>" . $subtitulo . "</strong></th>
     </tr>
 </table>
 
@@ -124,17 +125,13 @@ $html = "
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    " . $texto_etapa_presencial . "
-</p>
-
-<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-   
+    " . $texto_resultado_isgrec . "
 </p>
 ";
 
 $mpdf->WriteHTML($html);
 
-$lista_candidatos_recurso = $conexao->get_candidatos_recurso($rm_usuario);
+$lista_candidatos_isgrec = $conexao->get_candidatos_isgrec($rm_usuario);
 
 $ordem_arma = [
     'INFANTARIA',
@@ -147,16 +144,16 @@ $ordem_arma = [
     'INTENDÊNCIA'
 ];
 
-$inscritos_por_arma = [];
+$candidatos_por_arma = [];
 
-foreach ($lista_candidatos_recurso as $inscrito) {
+foreach ($lista_candidatos_isgrec as $inscrito) {
     if ($inscrito['rm_inscricao'] == $rm_usuario) { // Filtra por rm_inscricao
         $arma = $inscrito['arma_especialidade'];
-        $inscritos_por_arma[$arma][] = $inscrito;
+        $candidatos_por_arma[$arma][] = $inscrito;
     }
 }
 
-uksort($inscritos_por_arma, function ($a, $b) use ($ordem_arma) {
+uksort($candidatos_por_arma, function ($a, $b) use ($ordem_arma) {
     // Verificando se a especialidade $a e $b estão na ordem específica
     $pos_a = array_search($a, $ordem_arma);
     $pos_b = array_search($b, $ordem_arma);
@@ -173,7 +170,8 @@ uksort($inscritos_por_arma, function ($a, $b) use ($ordem_arma) {
     return $pos_a - $pos_b;
 });
 
-foreach ($inscritos_por_arma as $arma => $candidatos) {
+
+foreach ($candidatos_por_arma as $arma => $candidatos) {
     if (count($candidatos) === 0) {
         continue; // Não cria tabela se não houver candidatos
     }
@@ -187,7 +185,7 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
         <th style='text-align: center; width: 8%;'>Nº</th>
         <th style='text-align: center; width: 15%;'>CPF</th>
         <th style='text-align: center; width: 57%;'>NOME</th>
-         <th style='text-align: center; width: 20%;'>PARECER</th>
+         <th style='text-align: center; width: 20%;'>RESULTADO</th>
     </tr>
     ";
 
@@ -195,12 +193,27 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
 
     foreach ($candidatos as $candidato) {
         $cpf = substr($candidato['cpf'], 0, -5) . "*****";
+
+        switch ($candidato['apto_saude_recurso']) {
+            case 0:
+                $resultado = 'INAPTO';
+                break;
+            case 1:
+                $resultado = 'APTO';
+                break;
+            case 2:
+                $resultado = 'NÃO COMPARECEU';
+                break;
+            default:
+                $resultado = 'N/A';
+        }
+
         $html .= "
         <tr>
             <td style='text-align: center;'>$contador</td>
             <td style='text-align: center;'>$cpf</td>
            <td style='text-align: left;'>" . strtoupper($candidato['nome_completo']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['status_final']) . "</td>
+            <td style='text-align: center;'>" . strtoupper($resultado) . "</td>
         </tr>";
         $contador++;
     }
@@ -214,6 +227,6 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
 //$mpdf->SetDisplayMode('fullwidth');
 
 //$mpdf->WriteHTML($html);
-$mpdf->Output("Resultado Análise de Recursos Etapas I e II.pdf", 'D');
+$mpdf->Output("Resultado ISGRec.pdf", 'D');
 
 exit();

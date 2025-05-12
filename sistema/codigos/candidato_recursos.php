@@ -78,7 +78,7 @@
                                             <input type="text" hidden name="criptografia" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas") ?>">
                                             <input type="text" hidden name="cpf_candidato" value="<?php echo $cpf ?>">
                                             <input type="text" hidden name="id_candidato" value="<?php echo $id_usuario ?>">
-                                            <div class="col-md-6">
+                                            <div>
                                                 <div class="form-group">
                                                     <input type="file" name="arquivo" />
                                                 </div>
@@ -98,7 +98,7 @@
                                         <textarea style="width:100%;" rows="2" name="analise"></textarea>
                                     </div>
 
-                                    <div class="col-lg-12">
+                                    <div class="row">
                                         <br>
                                         <input hidden value="<?php echo hash('sha256', $_SESSION['id_usuario'] . $_SESSION['chave']) ?>" name="crip">
                                         <input value="<?php echo $id_usuario ?>" maxlength="50" name="id_candidato" hidden>

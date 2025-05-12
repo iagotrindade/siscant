@@ -126,6 +126,7 @@ $html = "
 </table>
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     " . $texto_pontos . "
 </p>
 

@@ -33,6 +33,7 @@ if(count($get_recursos_id) != 1)
 }
 
 $get_usuario_recurso = $conexao->get_usuario_id($get_recursos_id[0]['id_candidato']);
+
 if(count($get_usuario_recurso) != 1)
 {
     $conexao = null;

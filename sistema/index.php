@@ -1,7 +1,5 @@
 <?php
 require 'menu.php';
-
-
 ?>
 <div class="content-wrapper">
   <div class="page-title">

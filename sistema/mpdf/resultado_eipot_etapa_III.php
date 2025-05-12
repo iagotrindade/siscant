@@ -11,12 +11,13 @@ $mpdf->SetDisplayMode('fullpage');
 $css = file_get_contents("css/estilo.css");
 $mpdf->WriteHTML($css, 1);
 
-$id_usuario = $_SESSION['id_usuario'];
-$rm_usuario = $conexao->rm_usuario($id_usuario);
-
 $titulo_resultado_etapa_presencial = $_POST['titulo_resultado_etapa_presencial'];
 $subtitulo_resultado_etapa_presencial = $_POST['subtitulo_resultado_etapa_presencial'];
-$texto_resultado_etapa_presencial = $_POST['texto_resultado_etapa_presencial'];
+
+$paragrafo_um_resultado_etapa_presencial = $_POST['paragrafo_um_resultado_etapa_presencial'];
+$paragrafo_dois_resultado_etapa_presencial = $_POST['paragrafo_dois_resultado_etapa_presencial'];
+$paragrafo_tres_resultado_etapa_presencial = $_POST['paragrafo_tres_resultado_etapa_presencial'];
+
 $texto_dia = $_POST['texto_dia'];
 
 set_time_limit(300);
@@ -37,6 +38,9 @@ if ($_SESSION['candidato'] == '1') {
 }
 
 $conexao = new Conexao();
+
+$id_usuario = $_SESSION['id_usuario'];
+$rm_usuario = $conexao->rm_usuario($id_usuario);
 
 if ($rm_usuario == "3")
     $_SESSION['cabecalho_relatorio'] = 'MINISTÉRIO DA DEFESA<br>
@@ -127,11 +131,18 @@ $html = "
 </table>
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-     " . $texto_resultado_etapa_presencial . "
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    " . $paragrafo_um_resultado_etapa_presencial . "
 </p>
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-   
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    " . $paragrafo_dois_resultado_etapa_presencial . "
+</p>
+
+<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    " . $paragrafo_tres_resultado_etapa_presencial . "
 </p>
 ";
 

@@ -127,7 +127,8 @@ $html = "
 </table>
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-     " . $texto_etapa_presencial . "
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    " . $texto_etapa_presencial . "
 </p>
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>

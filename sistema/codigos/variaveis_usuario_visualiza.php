@@ -94,12 +94,14 @@ $grupo_saude = $usuario_visualiza[0]['grupo_saude'];
 $data_exame_saude = $usuario_visualiza[0]['data_exame_saude'];
 $cid_saude = $usuario_visualiza[0]['cid_saude'];
 $observacao_exame_saude = $usuario_visualiza[0]['observacao_exame_saude'];
+$ata_is = $usuario_visualiza[0]['ata_is'];
 
 $apto_saude_recurso = $usuario_visualiza[0]['apto_saude_recurso'];
 $grupo_saude_recurso = $usuario_visualiza[0]['grupo_saude_recurso'];
 $data_exame_saude_recurso = $usuario_visualiza[0]['data_exame_saude_recurso'];
 $cid_saude_recurso = $usuario_visualiza[0]['cid_saude_recurso'];
 $observacao_exame_saude_recurso = $usuario_visualiza[0]['observacao_exame_saude_recurso'];
+$ata_is_recurso = $usuario_visualiza[0]['ata_is_recurso'];
 
 $transferencia_fisemi = $usuario_visualiza[0]['transferencia_fisemi'];
 $fisemi_rm_origem = $usuario_visualiza[0]['fisemi_rm_origem'];
