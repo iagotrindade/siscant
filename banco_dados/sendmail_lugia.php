@@ -40,7 +40,7 @@ $mail_envia->Host = "lugia.1cta.eb.mil.br"; // Endereço do servidor SMTP
 
 $mail_envia->SMTPAuth = false; // Autenticação
 // $mail_envia->Username = 'usuario@3rm.eb.mil.br'; // Usuário do servidor SMTP
-$mail_envia->Password = ''; // Senha da caixa postal utilizada
+$mail_envia->Password = '12345678'; // Senha da caixa postal utilizada
 #Define o remetente
 $mail_envia->From = "siscant@3rm.eb.mil.br"; // Endereço de quem enviou o e-mail
 $mail_envia->FromName = "Serviço Militar";// E-MAIL Recebido de quem

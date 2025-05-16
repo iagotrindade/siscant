@@ -78,18 +78,18 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.webmail.eb.mil.br'; // Servidor SMTP
     $mail->SMTPAuth = true;
-    $mail->Username = 'jhartmann@3rm.eb.mil.br'; // Seu usuário SMTP
+    $mail->Username = 'siscant@3rm.eb.mil.br'; // Seu usuário SMTP
     $mail->Password = '12345678'; // Sua senha SMTP
     $mail->SMTPSecure = 'tls';  //'tls' Define o tipo de criptografia para TLS
     $mail->Port = 587; // Porta TCP para TLS
    
-    $mail->From = 'jhartmann@3rm.eb.mil.br'; //Set who the message is to be sent from
+    $mail->From = 'siscant@3rm.eb.mil.br'; //Set who the message is to be sent from
     $mail->FromName = utf8_decode('Não responda - Comando 3ª RM'); //Nome do Remetente
     $mail->Subject = utf8_decode('Recuperação de senha da VPN'); //Assunto da mensagem
 
       // Configurações do remetente e destinatário
       $mail->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente
-      //$mail->addAddress('jhartmann@3rm.eb.mil.br'); // Adiciona um destinatário
+      //$mail->addAddress('siscant@3rm.eb.mil.br'); // Adiciona um destinatário
 
       $mail->AddAddress($mail_usuario, $cpf_candidato);
   

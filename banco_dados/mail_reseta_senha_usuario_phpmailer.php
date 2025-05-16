@@ -34,12 +34,12 @@ $mail_envia->Host = "smtp.webmail.eb.mil.br"; // Endereço do servidor SMTP
 $mail_envia->Port = 587; // Porta
 
 $mail_envia->SMTPAuth = true; // Autenticação
-$mail_envia->Username = 'jhartmann@3rm.eb.mil.br'; // Usuário do servidor SMTP
+$mail_envia->Username = 'siscant@3rm.eb.mil.br'; // Usuário do servidor SMTP
 $mail_envia->Password = '12345678'; // Senha da caixa postal utilizada
 
 $mail_envia->SMTPSecure = 'tls';
 #Define o remetente
-$mail_envia->From = "jhartmann@3rm.eb.mil.br"; // Endereço de quem enviou o e-mail
+$mail_envia->From = "siscant@3rm.eb.mil.br"; // Endereço de quem enviou o e-mail
 $mail_envia->FromName = "Serviço Militar";// E-MAIL Recebido de quem
 #Define os destinatário(s)
 $mail_envia->AddAddress($mail, $cpf_candidato);// Vai enviar o e-mail, E-Mail e Nome
