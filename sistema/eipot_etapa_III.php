@@ -7,7 +7,6 @@ include_once 'codigos/funcao_apagar.php';
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
 
-session_start();
 if ($candidato == 1 || $perfil == 'candidato' || $_SESSION['candidato'] == 1) {
     erro("Erro 23543! Página não encontrada!");
     exit();
@@ -19,17 +18,18 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
 }
 
 ?>
-
 <div class="content-wrapper">
     <div class="page-title">
         <div>
-            <h1><?php if($_SESSION['perfil'] == "jise") echo('Resultado IS'); else echo('Cadastro Dados IS - SIPMED'); ?> <i class="fa fa-address-book"></i></h1>
+            <h1><?php if ($_SESSION['perfil'] == "jise") echo ('Resultado IS');
+                else echo ('Cadastro Dados IS - SIPMED'); ?> <i class="fa fa-address-book"></i></h1>
         </div>
         <div>
             <ul class="breadcrumb">
                 <li><i class="fa fa-home fa-lg"></i></li>
                 <li><a href="index.php">Página Inicial</a></li>
-                <li><?php if($_SESSION['perfil'] == "jise") echo('Resultado IS'); else echo('Cadastro Dados IS - SIPMED')?></li>
+                <li><?php if ($_SESSION['perfil'] == "jise") echo ('Resultado IS');
+                    else echo ('Cadastro Dados IS - SIPMED') ?></li>
             </ul>
         </div>
     </div>
@@ -54,7 +54,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                             <?php
 
                             $candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
-                            $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario );
+                            $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario);
 
                             foreach ($candidatos as $linha) {
                                 $aparece = true;
@@ -93,15 +93,15 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 } elseif ($linha['apto_saude_recurso'] == NULL) {
                                     $recurso_saude = 'NÃO REALIZADA';
                                 }
-                                
+
                                 $recursoEtapa3 = null; // <- Inicialização correta
 
-                                foreach($recursos as $recurso) {
-                                    if($recurso['id_candidato'] == $linha['id'] && $recurso['etapa'] >= 3) {
-                                        if($recurso['obs_etapa'] == '3 - IS') {
+                                foreach ($recursos as $recurso) {
+                                    if ($recurso['id_candidato'] == $linha['id'] && $recurso['etapa'] >= 3) {
+                                        if ($recurso['obs_etapa'] == '3 - IS') {
                                             $recursoEtapa3 = '3 - IS';
                                             break;
-                                        } elseif($recurso['obs_etapa'] == '3 - Documental') {
+                                        } elseif ($recurso['obs_etapa'] == '3 - Documental') {
                                             $recursoEtapa3 = '3 - Documental';
                                             break;
                                         }
@@ -119,7 +119,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <td>' . $saude . '</td>
                                 <td>' . $recurso_saude . '</td>
                                 <td>' . $recursoEtapa3 . '</td>';
-                             }
+                            }
 
                             ?>
                         </tbody>
@@ -127,7 +127,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                 </div>
             </div>
 
-            <div class="card" <?php if($_SESSION['perfil'] == 'jise') echo('hidden')?>>
+            <div class="card" <?php if ($_SESSION['perfil'] == 'jise') echo ('hidden') ?>>
                 <legend>Cadastro Dados IS - SIPMED
                     <img src="imagens/pdf.png" width="30px">
                 </legend>

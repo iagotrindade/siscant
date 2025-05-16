@@ -3870,8 +3870,7 @@ order by total_pontos_somados desc");
         $mostrar_recurso
     ) {
 
-        try { //TEM QUE ADICIONAR OUTRO WHERE AQUI
-
+        try {
             $sqlInsert = "UPDATE recurso_rm
                                                         SET data_inicio_recurso = :data_inicio_recurso,
                                                             data_fim_recurso = :data_fim_recurso,

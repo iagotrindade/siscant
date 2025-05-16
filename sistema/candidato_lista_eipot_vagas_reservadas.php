@@ -30,7 +30,7 @@
 <div class="content-wrapper">
   <div class="page-title">
     <div>
-        <h1>Candidatos <i class="fa fa-users"></i></h1>
+        <h1>Candidatos <i class="fa fa-circle"></i></h1>
     </div>
     <div>
       <ul class="breadcrumb">

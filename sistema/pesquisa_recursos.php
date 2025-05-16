@@ -33,7 +33,7 @@
 <div class="content-wrapper">
   <div class="page-title">
     <div>
-        <h1>Recursos <i class="fa fa-pencil"></i></h1>
+        <h1>Recursos <i class="fa fa-file-text"></i></h1>
     </div>
     <div>
       <ul class="breadcrumb">
