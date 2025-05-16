@@ -681,6 +681,12 @@ if(isset($_GET['codigo']))
                                         <td>Atualiza nota usuário EIPOT</td>
                                         <td>161507</td>
                                     </tr>
+
+                                    <tr>
+                                        <td>UPDATE</td>
+                                        <td>Altera E-mail candidato</td>
+                                        <td>161508</td>
+                                    </tr>
                                     <tr>
                                         <td>RESTAURA</td>
                                         <td>Restaurou candidato</td>

@@ -49,7 +49,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 ?>
 
 <div class="row">
-    <div class="col-md-12"></div>
+    <div class="col-md-12">
         <div class="card">
 
             <div class="row">
@@ -383,11 +383,6 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_concorrendo.php';
             }
 
-            // 14 MAIO 2024 
-            if ($_SESSION['perfil'] == 'admin') {
-                include_once 'codigos/candidato_altera_email_admin.php';
-            }
-
             if ($_SESSION['perfil'] == 'admin' && isset($_SESSION["eipot"]) == 1) {
                 include_once 'codigos/candidato_eipot.php';
             }
@@ -499,6 +494,5 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
         }
 
         ?>
-        
     </div>
 </div>

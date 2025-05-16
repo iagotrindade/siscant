@@ -70,8 +70,8 @@ require 'menu.php';
                     <small class="pull-right">
                         <img 
                             <?php
-                                if(isset($_SESSION['eipot']) == 1)  echo 'src="imagens/EIPOT.jpg" width="150" height="100" style="box-shadow: 0px 0px 10px #197249"';
-                                else echo 'src="imagens/'.$rm_usuario.'rm.png" style="box-shadow: 0px 0px 10px #197249"';
+                                if(isset($_SESSION['eipot']) == 1)  echo 'src="imagens/EIPOT.jpg" width="150" height="100"';
+                                else echo 'src="imagens/'.$rm_usuario.'rm.png"';
                             ?>
                             width="80px">
                     </small>

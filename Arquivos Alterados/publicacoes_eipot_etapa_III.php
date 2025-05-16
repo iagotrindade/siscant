@@ -127,9 +127,7 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
             </div>
 
             <div style="clear: both;"></div>
-            <button type="submit" class="btn btn-primary btn-block mb-20">PUBLICAÇÃO CONVOCAÇÃO PARA ETAPA III - INSPEÇÃO DE SAÚDE</button>
-
-            <a href="mpdf/relatorio_lista_presenca_eipot_etapa_iii.php" type="submit" class="btn btn-primary btn-block">LISTA DE PRESENÇA ETAPA III - INSPEÇÃO DE SAÚDE</a>
+            <button type="submit" class="btn btn-primary btn-block">PUBLICAÇÃO CONVOCAÇÃO PARA ETAPA III - INSPEÇÃO DE SAÚDE</button>
         </div>
         <br>
     </form>
@@ -196,19 +194,19 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
 
             <div style="float: left; width: 48%;">
                 <div class="form-group">
-                    <label for="subtitulo">Subtítulo:</label>
+                    <label for="titulo_um">Subtítulo:</label>
                     <input type="text" name="subtitulo" class="form-control" value="Resultado Inspeção de Saúde em Grau de Recurso - Xª RM" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="texto_resultado_isgrec">Texto:</label>
+                <label for="titulo_um">Texto:</label>
                 <input type="text" name="texto_resultado_isgrec" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Inspeção de Saúde em Grau de Recurso (ISGRec)." required>
             </div>
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
-                    <label for="texto_dia">Data:</label>
+                    <label for="titulo">Data:</label>
                     <input type="text" name="texto_dia" class="form-control" value="Porto Alegre - RS,  6 de junho de 2025" required>
                 </div>
             </div>

@@ -52,6 +52,7 @@
         $voluntario_obrigatorio = $_GET['voluntario_obrigatorio'];
     
     $especialidade_medico = false;
+
     
 ?>
 
@@ -59,6 +60,8 @@
   <div class="page-title">
     <div>
         <h1>Relatorio Candidatos Especialidade <i class="fa fa-file-text"></i></h1>
+
+        <?php echo("<pre>"); print_r($lista_candidatos);?>
     </div>
     <div>
       <ul class="breadcrumb">

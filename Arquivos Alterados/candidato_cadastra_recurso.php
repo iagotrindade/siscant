@@ -76,7 +76,7 @@ try {
     $_UP['pasta'] = '../sistema/arquivos_add_p_cand/recursos/';
 
     // Tamanho máximo do arquivo (em Bytes)
-    $_UP['tamanho'] = 1024 * 1024 * 8; // 2Mb
+    $_UP['tamanho'] = 1024 * 1024 * 5; // 2Mb
 
     // Array com as extensões permitidas
     $_UP['extensoes'] = array('pdf', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods', 'png', 'jpg', 'jpeg');

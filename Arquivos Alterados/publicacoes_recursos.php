@@ -12,7 +12,6 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
     exit();
 }
 
-
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
 
@@ -22,6 +21,9 @@ $data_fim_recurso = $get_recurso_rm[0]['data_fim_recurso'];
 $data_inicio_recurso = trata_data($data_inicio_recurso);
 $data_fim_recurso = trata_data($data_fim_recurso);
 $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
+
+//var_dump($mostrar_recurso); exit;
+//   $data_inicio_recurso = $conexao->get_data_recursos($rm_usuario);
 
 ?>
 
@@ -54,19 +56,19 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 48%;">
                 <div class="form-group">
-                    <label for="subtitulo_etapa_presencial">Subtítulo:</label>
+                    <label for="titulo_um">Subtítulo:</label>
                     <input type="text" name="subtitulo_etapa_presencial" class="form-control" value="Relatório da Análise de Recursos Etapas I e II - Xª Região Militar" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="texto_etapa_presencial">Texto:</label>
+                <label for="titulo_um">Texto:</label>
                 <input type="text" name="texto_etapa_presencial" class="form-control" value="O Comandante da Xª Região Militar divulga o parecer da análise de recursos referente às Etapas I e II, conforme Anexo “A” (Calendário de Eventos) do Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025. Os candidatos cujo recurso foi DEFERIDO estão considerados inscritos e com documentação validada." required>
             </div>
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
-                    <label for="texto_dia">Data:</label>
+                    <label for="titulo">Data:</label>
                     <input type="text" name="texto_dia" class="form-control" value="Porto Alegre - XX de XXXX de XXXX" required>
                 </div>
             </div>
@@ -127,7 +129,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="hora_arma[infantaria]">AGENDAMENTO ISGRec INFANTARIA:</label>
+                    <label for="hora_arma[infantaria]">AGENDAMENTO ISGR - INFANTARIA:</label>
                     <input type="text" name="hora_arma[infantaria]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
@@ -135,7 +137,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="hora_arma[cavalaria]">AGENDAMENTO ISGRec CAVALARIA:</label>
+                    <label for="hora_arma[cavalaria]">AGENDAMENTO ISGR - CAVALARIA:</label>
                     <input type="text" name="hora_arma[cavalaria]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
@@ -143,7 +145,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="hora_arma[artilharia de campanha]">AGENDAMENTO ISGRec ARTILHARIA DE CAMPANHA:</label>
+                    <label for="hora_arma[artilharia de campanha]">AGENDAMENTO ISGR - ARTILHARIA DE CAMPANHA:</label>
                     <input type="text" name="hora_arma[artilharia de campanha]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
@@ -151,7 +153,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="hora_arma[artilharia antiaérea]">AGENDAMENTO ISGRec ARTILHARIA ANTIAÉREA:</label>
+                    <label for="hora_arma[artilharia antiaérea]">AGENDAMENTO ISGR - ARTILHARIA ANTIAÉREA:</label>
                     <input type="text" name="hora_arma[artilharia antiaérea]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
@@ -159,7 +161,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="hora_arma[engenharia]">AGENDAMENTO ISGRec ENGENHARIA:</label>
+                    <label for="hora_arma[engenharia]">AGENDAMENTO ISGR - ENGENHARIA:</label>
                     <input type="text" name="hora_arma[engenharia]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
@@ -167,7 +169,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="hora_arma[comunicações]">AGENDAMENTO ISGRec COMUNICAÇÕES:</label>
+                    <label for="hora_arma[comunicações]">AGENDAMENTO ISGR - COMUNICAÇÕES:</label>
                     <input type="text" name="hora_arma[comunicações]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
@@ -175,7 +177,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="hora_arma[material bélico]">AGENDAMENTO ISGRec MATERIAL BÉLICO:</label>
+                    <label for="hora_arma[material bélico]">AGENDAMENTO ISGR - MATERIAL BÉLICO:</label>
                     <input type="text" name="hora_arma[material bélico]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
@@ -183,7 +185,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="hora_arma[intendência]">AGENDAMENTO ISGRec INTENDÊNCIA:</label>
+                    <label for="hora_arma[intendência]">AGENDAMENTO ISGR - INTENDÊNCIA:</label>
                     <input type="text" name="hora_arma[intendência]" class="form-control" value="03 JUNHO 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE # Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS
 " required>
                 </div>
@@ -201,8 +203,6 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
         </div>
         <br>
     </form>
-
-
 </div>
 </div>
 </div>

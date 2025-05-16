@@ -73,7 +73,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Recurso</label>
-                                                <font color="red"> <b>*Máximo 8 Megabytes</b></font><br>
+                                                <font color="red"> <b>*Máximo 5 MegaBytes</b></font><br>
                                             </div>
                                             <input type="text" hidden name="criptografia" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas") ?>">
                                             <input type="text" hidden name="cpf_candidato" value="<?php echo $cpf ?>">
@@ -108,7 +108,7 @@
                             </form>
                         </div>
                     </div>
-</div>
+
                     <div class="col-lg-12">
                         <br>
                         <?php

@@ -1,5 +1,5 @@
 <?php
-
+//APS-SILVA-14-MAIO-2025
 class Conexao
 {
     var $pdo;
@@ -12,10 +12,10 @@ class Conexao
         //$this->pdo = new PDO('mysql:host=10.25.60.31;dbname=siscant_hom;charset=utf8', 'root', 'suporte');
 
         //Produção
-        //$this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', '123@ati3rm');
+        // $this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', '123@ati3rm');
 
-        //Produção 2023
-        //  $this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', 'ati@root@mysql');
+        //Produção 2025
+        //$this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', 'ati@root@mysql');
     }
 
     // <editor-fold defaultstate="collapsed" desc="Get Browser">
@@ -525,6 +525,48 @@ class Conexao
             return false;
         }
         return false;
+    }
+
+
+    // 14 MAIO 2024 -> IAGO SILVA
+    public function altera_email_candidato($id_candidato, $novo_email, $id_admin, $admin_password)
+    {
+        try {
+            $stmt = $this->pdo->prepare(
+                "select senha from usuario where id = :id_admin"
+            );
+            $stmt->bindValue(':id_admin', $id_admin);
+            $run = $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($admin_password == $result[0]['senha']) {
+                $sqlInsert = "UPDATE usuario SET mail = :novo_email WHERE id = :id_candidato";
+
+                $this->pdo->beginTransaction();
+
+                $query = $this->pdo->prepare($sqlInsert);
+
+                $query->bindValue(":id_candidato", $id_candidato);
+                $query->bindValue(":novo_email", $novo_email);
+
+                if ($query->execute()) {
+                    $data =
+                        [
+                            'id_candidato' => $id_candidato,
+                            'novo_email' => $novo_email,
+                        ];
+
+                    $this->pdo->commit();
+                    return $data;
+                } else {
+                    echo('nops');exit;
+                    $this->pdo->rollBack();
+                    return false;
+                }
+            }
+        } catch (Exception $e) {
+            return false;
+        }
     }
     // </editor-fold>
 
@@ -5171,8 +5213,6 @@ order by total_pontos_somados desc");
         $ata_is
     ) {
         try {
-
-            $perfil = "candidato";
             $datetime = date('Y-m-d H:i:s');
 
             $sqlInsert = "UPDATE usuario SET 
@@ -5225,6 +5265,7 @@ order by total_pontos_somados desc");
             return false;
         }
     }
+
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Edita EXAME MÉDICO">
@@ -5245,9 +5286,6 @@ order by total_pontos_somados desc");
         $aditamento_convocacao,
         $observacao_distribuicao
     ) {
-
-
-
         try {
 
             $perfil = "candidato";
@@ -5353,8 +5391,6 @@ order by total_pontos_somados desc");
         $ata_is_recurso
     ) {
         try {
-
-            $perfil = "candidato";
             $datetime = date('Y-m-d H:i:s');
 
             $sqlInsert = "UPDATE usuario SET 
@@ -7954,11 +7990,12 @@ order by total_pontos_somados desc");
         return false;
     }
 
-    public function get_candidato_atas_is($id_usuario) {
+    public function get_candidato_atas_is($id_usuario)
+    {
         //selecionar o campo ata_is e ata_is_recurso
         $sql = "SELECT ata_is, ata_is_recurso FROM usuario WHERE id = :id_usuario";
         $query = $this->pdo->prepare($sql);
-        $query->bindValue(":id_usuario", $id_usuario);  
+        $query->bindValue(":id_usuario", $id_usuario);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
         if ($result) {
@@ -7990,7 +8027,7 @@ order by total_pontos_somados desc");
                 $this->pdo->commit();
 
                 // devolver o nome do arquivo apagado
-                
+
                 return $data;
             } else {
                 $this->pdo->rollBack();

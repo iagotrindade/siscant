@@ -1,4 +1,5 @@
 <?php
+
 include_once '../../banco_dados/conexao.php';
 include_once '../../sistema/funcoes.php';
 include("mpdf60/mpdf.php");
@@ -8,10 +9,7 @@ $mpdf->SetDisplayMode('fullpage');
 $css = file_get_contents("css/estilo.css");
 $mpdf->WriteHTML($css, 1);
 
-$titulo = $_POST['titulo'];
-$subtitulo = $_POST['subtitulo'];
-$texto_resultado_isgrec = $_POST['texto_resultado_isgrec'];
-$texto_dia = $_POST['texto_dia'];
+$date = '';
 
 set_time_limit(300);
 
@@ -21,13 +19,12 @@ if (!isset($_SESSION['perfil'])) {
     erro_relatorio("Erro 823494! A sua sessão expirou! Faça o login no sistema para gerar o relatório");
     exit();
 }
-
 if ($_SESSION['perfil'] != 'admin') {
     erro_relatorio("Erro 824! Somente o administrador pode gerar este relatório");
     exit();
 }
 if ($_SESSION['candidato'] == '1') {
-    erro_gerar_relatorio_cadastro_candidato("Erro 3541621441 ao gerar relatório!");
+    erro_gerar_relatorio_cadastro_candidato("Erro 8145345346 ao gerar relatório!");
     exit();
 }
 
@@ -47,6 +44,7 @@ if ($rm_usuario == "3")
 if ($rm_usuario == "8")
     $_SESSION['cabecalho_relatorio'] = 'MINISTÉRIO DA DEFESA<br>
     EXÉRCITO BRASILEIRO<br>
+    COMANDO MILITAR DO SUL<br>
     COMANDO DA 8ª REGIÃO MILITAR<br>
     (Gov das Armas Prov do PA/1821)<br>
     REGIÃO FORTE DO PRESÉPIO<br>';
@@ -107,31 +105,29 @@ $html = "
 </p>
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $titulo . "</strong></th>
+        <th align='center'><strong>". $_SESSION['selecao_nome'] ."</strong></th>
     </tr>
 </table>
 
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $subtitulo . "</strong></th>
+        <th align='center'><strong>Lista de presença Etapa III - Inspeção de Saúde - " . $rm_usuario . "ª RM </strong></th>
     </tr>
 </table>
 
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='right'><strong>" . $texto_dia . "</strong></th>
+        <th align='right'><strong> " . $date . " </strong></th>
     </tr>
 </table>
-
-<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    " . $texto_resultado_isgrec . "
-</p>
 ";
 
 $mpdf->WriteHTML($html);
 
-$lista_candidatos_isgrec = $conexao->get_candidatos_isgrec($rm_usuario);
+$id_usuario = $_SESSION['id_usuario'];
+$rm_usuario = $conexao->rm_usuario($id_usuario);
+
+$lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
 
 $ordem_arma = [
     'INFANTARIA',
@@ -143,17 +139,16 @@ $ordem_arma = [
     'MATERIAL BÉLICO',
     'INTENDÊNCIA'
 ];
+$inscritos_por_arma = [];
 
-$candidatos_por_arma = [];
-
-foreach ($lista_candidatos_isgrec as $inscrito) {
+foreach ($lista_candidatos as $inscrito) {
     if ($inscrito['rm_inscricao'] == $rm_usuario) { // Filtra por rm_inscricao
         $arma = $inscrito['arma_especialidade'];
-        $candidatos_por_arma[$arma][] = $inscrito;
+        $inscritos_por_arma[$arma][] = $inscrito;
     }
 }
 
-uksort($candidatos_por_arma, function ($a, $b) use ($ordem_arma) {
+uksort($inscritos_por_arma, function ($a, $b) use ($ordem_arma) {
     // Verificando se a especialidade $a e $b estão na ordem específica
     $pos_a = array_search($a, $ordem_arma);
     $pos_b = array_search($b, $ordem_arma);
@@ -171,7 +166,7 @@ uksort($candidatos_por_arma, function ($a, $b) use ($ordem_arma) {
 });
 
 
-foreach ($candidatos_por_arma as $arma => $candidatos) {
+foreach ($inscritos_por_arma as $arma => $candidatos) {
     if (count($candidatos) === 0) {
         continue; // Não cria tabela se não houver candidatos
     }
@@ -179,13 +174,19 @@ foreach ($candidatos_por_arma as $arma => $candidatos) {
     $html = "
    <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
     <tr>
-        <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>" . mb_strtoupper($arma, "UTF-8") . "</th>
+        <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>
+            " . mb_strtoupper($arma, 'UTF-8') . "
+            
+            <br>
+
+            ___ / ___ / ___
+        </th>
     </tr>
     <tr>
         <th style='text-align: center; width: 5%;'>Nº</th>
         <th style='text-align: center; width: 15%;'>CPF</th>
-        <th style='text-align: center; width: 55%;'>NOME</th>
-        <th style='text-align: center; width: 25%;'>RESULTADO</th>
+        <th style='text-align: center; width: 40%;'>NOME</th>
+        <th style='text-align: center; width: 40%;'>ASSINATURA</th>
     </tr>
     ";
 
@@ -193,27 +194,12 @@ foreach ($candidatos_por_arma as $arma => $candidatos) {
 
     foreach ($candidatos as $candidato) {
         $cpf = substr($candidato['cpf'], 0, -5) . "*****";
-
-        switch ($candidato['apto_saude_recurso']) {
-            case 0:
-                $resultado = 'INAPTO';
-                break;
-            case 1:
-                $resultado = 'APTO';
-                break;
-            case 2:
-                $resultado = 'NÃO COMPARECEU';
-                break;
-            default:
-                $resultado = 'N/A';
-        }
-
         $html .= "
         <tr>
             <td style='text-align: center;'>$contador</td>
             <td style='text-align: center;'>$cpf</td>
-           <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($resultado) . "</td>
+            <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
+            <td style='text-align: center;'></td>
         </tr>";
         $contador++;
     }
@@ -227,6 +213,6 @@ foreach ($candidatos_por_arma as $arma => $candidatos) {
 //$mpdf->SetDisplayMode('fullwidth');
 
 //$mpdf->WriteHTML($html);
-$mpdf->Output("Resultado ISGRec.pdf", 'D');
+$mpdf->Output("Lista de Presença.pdf", 'D');
 
 exit();
