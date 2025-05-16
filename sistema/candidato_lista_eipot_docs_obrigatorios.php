@@ -9,6 +9,8 @@
     }
     
     $id_usuario = $_SESSION['id_usuario'];
+    $rm_usuario = $conexao->rm_usuario($id_usuario); 
+   // var_dump($rm_usuario); exit;
 
    // $lista_inscritos = $conexao->get_inscritos_eipot_rm_inscricao($rm_usuario); 
    // $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario); 
@@ -16,21 +18,17 @@
     $id_especialidade_selecionada = null;
     if(isset($_GET['id_especialidade']))
         $id_especialidade_selecionada = $_GET['id_especialidade'];
-
-    $lista_rms = $conexao->busca_rms();
-   
-    if(isset($_GET['rm_superadmin'])) $rm_usuario = $_GET['rm_superadmin'];
-
+    
     if($id_especialidade_selecionada != null) 
         $lista_candidatos = $conexao->get_candidatos_especialidade_eipot($id_especialidade_selecionada, $rm_usuario);
     else
         $lista_candidatos = $conexao->get_candidatos_concorrendo_eipot($rm_usuario);
- ?>
+?>
 
- <div class="content-wrapper">
+<div class="content-wrapper">
   <div class="page-title">
     <div>
-        <h1>Relatório de documentos obrigatórios <i class="fa fa-file-text-o"></i></h1>
+        <h1>Candidatos <i class="fa fa-users"></i></h1>
     </div>
     <div>
       <ul class="breadcrumb">
@@ -40,35 +38,7 @@
       </ul>
     </div>
   </div>
-   
-
-  <div <?php if($super_admin != "1") echo "hidden" ?> class="row">
-        <div class="col-md-12">
-            <form action="candidato_lista_eipot_docs_obrigatorios.php" method="get">
-                <div class="card">
-                    <div class="card-body">
-                        <label>Selecione a RM Desejada</label>
-                        <select name="rm_superadmin" class="form-control">
-                            <option value="">Selecione a Região Militar</option>
-                            <?php
-                                foreach ($lista_rms as $value) {
-                                    echo '<option value="'.$value['rm'].'">' . $value['rm'] . '</option>';
-                                }
-                            ?>
-                        </select>
-                         <!--SILVA--> 
-                         <br/>
-                        
-                       <button type="submit" class="btn btn-primary btn-block">TROCAR</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-
-
+    
     <div class="row">
     <div class="col-md-12">
         <form name="fomulario" action="candidato_lista_eipot_docs_obrigatorios.php" method="get">
@@ -107,8 +77,10 @@
                 </div>
             </div>
             </form>
-        </div>
     </div>
+    </div>
+    
+    
     
   <div class="row">
     <div class="col-md-12">
@@ -121,7 +93,6 @@
                       <th>Código</th>
                       <th>CPF</th>
                       <th>Nome</th>
-                      <th>Idade</th>
                       <th>Etapa</th>
                       <th>Inscrito na Arma</th>
                       <th>Docs Faltando</th>
@@ -150,11 +121,6 @@
                             else 
                                 $pagou = "Não";
                              */
-                            $data_nascimento = $linha['data_nascimento'];
-                            $nascimento = new DateTime($data_nascimento);
-                            $hoje = new DateTime();
-                            $idade = $hoje->diff($nascimento)->y;
-                            $linha['idade'] = $idade;
                             
                             // DOCs Faltando
                             $quantidade_docs_faltando = 0;
@@ -166,9 +132,10 @@
                             // Especialidades
                             $lista_especialidades_candidato = $conexao->get_especialidade_candidato($linha['id']); 
                             $quantidade_especialidades_candidato = count($lista_especialidades_candidato);
-                            if (!empty($lista_especialidades_candidato)) {
-                                $nome_especialidade = $lista_especialidades_candidato[0]['especialidade'];
-                            }
+                            
+                                                        
+                            //
+                            
                             $lista_docs_obrigatorios = $conexao->get_docs_obrigatorios_inseridos_candidato($linha['id']);  
                             $quantidade_docs_adicionados = count($lista_docs_obrigatorios);
                             
@@ -183,6 +150,7 @@
                                 if($doc['valido'] == '1')
                                     $quantidade_docs_validos++;
                             }
+                            
                             
                             $total_docs_adicionados = $total_docs_adicionados + (int)$quantidade_docs_adicionados;
                             $total_docs_avaliados = $total_docs_avaliados + $quantidade_docs_avaliados;
@@ -221,7 +189,7 @@
                             if($quantidade_docs_validos != $quantidade_docs_adicionados && $porcentagem == 100)
                                 $cor_docs_validos = '#fd8a8a';
 
-                            if($quantidade_especialidades_candidato != "0") $quantidade_especialidades_candidato = $nome_especialidade; 
+                            if($quantidade_especialidades_candidato != "0") $quantidade_especialidades_candidato = "Sim"; 
                             if($quantidade_especialidades_candidato == "0") $quantidade_especialidades_candidato = "Não";
                             
                                 echo '
@@ -229,7 +197,6 @@
                                     <td>'.$linha['id'].'-'.$codigo_final.'</td>
                                     <td>'.$linha['cpf'].'</td>
                                     <td>'.$linha['nome_completo'].'</td>
-                                     <td>'.$linha['idade'].'</td>
                                     <td>_'.$linha['etapa'].'</td>                                    
                                     <td>'.$quantidade_especialidades_candidato.'</td>                                    
                                     <td>'.$quantidade_docs_faltando.'</td>                                    
@@ -266,21 +233,12 @@
                         }
                     ?> 
             </div>
-            
             </font>
         </div>
         </div>
-
- <div class="card">
-    <div class="row">
-        <div style="clear: both;"></div>
-        <a href="mpdf/relatorio_idade_eipot.php" class="btn btn-primary btn-block">
-            RELATÓRIO DE IDADES - POR ARMA
-        </a>
-    </div>
- </div> 
-
         
+        
+    <a href="javascript:history.back()"><button class="btn btn-default btn-block">VOLTAR</button></a>
 </div>
 </div>
 </div>
