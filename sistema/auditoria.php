@@ -687,6 +687,13 @@ if(isset($_GET['codigo']))
                                         <td>Altera E-mail candidato</td>
                                         <td>161508</td>
                                     </tr>
+
+                                    <tr>
+                                        <td>UPDATE</td>
+                                        <td>Alterou a etapa da especialidade do candidato</td>
+                                        <td>161509</td>
+                                    </tr>
+
                                     <tr>
                                         <td>RESTAURA</td>
                                         <td>Restaurou candidato</td>

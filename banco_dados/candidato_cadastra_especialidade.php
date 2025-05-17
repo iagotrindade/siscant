@@ -1,7 +1,6 @@
 <?php
 include_once '../sistema/funcoes.php';
 
-
 $especialidade=null;
 $registro_conselho=null;
 $data_habilitacao=null;
@@ -109,7 +108,7 @@ if($get_especialidade[0]['ott_stt'] == "stt")
 
 
 if($_POST)
-    $resultado = $conexao->insere_especialidade_candidato($_SESSION['id_usuario'],$especialidade,$registro_conselho, $data_habilitacao);
+    $resultado = $conexao->insere_especialidade_candidato($_SESSION['id_usuario'], $especialidade, $registro_conselho, $data_habilitacao, 1);
 
 $alteracoes_detalhadas =  print_r($resultado, true);
 

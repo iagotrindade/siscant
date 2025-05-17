@@ -559,7 +559,8 @@ class Conexao
                     $this->pdo->commit();
                     return $data;
                 } else {
-                    echo('nops');exit;
+                    echo ('nops');
+                    exit;
                     $this->pdo->rollBack();
                     return false;
                 }
@@ -2519,20 +2520,36 @@ class Conexao
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Candidatos Concorrendo">
+    // Fazendo INNER JOIN para trazer junto os dados da tabela candidato_x_especialidade
     public function get_candidatos_concorrendo()
     {
-        $stmt = $this->pdo->prepare("select * from usuario 
-                                    where perfil = 'candidato' 
-                                    and candidato = 1 
-                                    and concorrendo = 1 
-                                    and apagado = 0 
-                                    and medico_obrigatorio is null
-                                    and id_selecao = :selecao");
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            u.*, 
+            ce.id AS id_candidato_x_especialidade,
+            ce.id_especialidade,
+            e.nome AS nome_especialidade
+        FROM usuario u
+        INNER JOIN candidato_x_especialidade ce 
+            ON ce.id_candidato = u.id 
+            AND ce.apagado = 0 
+            AND ce.concorrendo = 1
+        INNER JOIN especialidade e 
+            ON e.id = ce.id_especialidade 
+            AND e.apagado = 0
+        WHERE u.perfil = 'candidato' 
+            AND u.candidato = 1 
+            AND u.concorrendo = 1 
+            AND u.apagado = 0 
+            AND u.medico_obrigatorio IS NULL 
+            AND u.id_selecao = :selecao
+    ");
+
         $stmt->bindValue(':selecao', $_SESSION['selecao']);
-        $run = $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function get_candidatos_concorrendo_eipot($rm_usuario)
     {
@@ -2803,7 +2820,7 @@ order by total_pontos_somados desc");
         $stmt = $this->pdo->prepare(
             "
                     select e.teste_pratico, ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, ce.id_especialidade, u.nome_completo, u.cpf, 
-                    e.nome especialidade, e.musica, e.ott_stt, ce.registro_conselho, ce.data_habilitacao
+                    e.nome especialidade, e.musica, e.ott_stt, ce.registro_conselho, ce.data_habilitacao, ce.etapa
                     from candidato_x_especialidade ce
                     inner join usuario u on u.id = ce.id_candidato
                     inner join especialidade e on e.id = ce.id_especialidade
@@ -6145,7 +6162,7 @@ order by total_pontos_somados desc");
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Insere Especialidade para Candidato">
-    public function insere_especialidade_candidato($id_candidato, $id_especialidade, $registro_conselho, $data_habilitacao)
+    public function insere_especialidade_candidato($id_candidato, $id_especialidade, $registro_conselho, $data_habilitacao, $etapa)
     {
         $datetime = date('Y-m-d H:i:s');
         $usuario_cadastrou = $_SESSION['id_usuario'];
@@ -6154,8 +6171,8 @@ order by total_pontos_somados desc");
 
         try {
             $sqlInsert = "INSERT INTO candidato_x_especialidade 
-                (id_candidato, id_especialidade, registro_conselho, data_habilitacao, concorrendo, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao)
-                VALUES (:id_candidato, :id_especialidade, :registro_conselho, :data_habilitacao, :um, :zero, :datetime, :usuario_cadastrou)";
+                (id_candidato, id_especialidade, etapa, registro_conselho, data_habilitacao, concorrendo, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao)
+                VALUES (:id_candidato, :id_especialidade, :etapa, :registro_conselho, :data_habilitacao, :um, :zero, :datetime, :usuario_cadastrou)";
 
             $this->pdo->beginTransaction();
 
@@ -6163,6 +6180,7 @@ order by total_pontos_somados desc");
 
             $query->bindValue(":id_candidato", $id_candidato);
             $query->bindValue(":id_especialidade", $id_especialidade);
+            $query->bindValue(":etapa", $etapa);
             $query->bindValue(":data_habilitacao", $data_habilitacao);
             $query->bindValue(":registro_conselho", $registro_conselho);
             $query->bindValue(":datetime", $datetime);
@@ -6175,6 +6193,7 @@ order by total_pontos_somados desc");
                     [
                         'id_candidato' => $id_candidato,
                         'id_especialidade' => $id_especialidade,
+                        'etapa' => $etapa,
                         'data_habilitacao' => $data_habilitacao,
                         'registro_conselho' => $registro_conselho,
                         'concorrendo' => $um,
@@ -7575,6 +7594,42 @@ order by total_pontos_somados desc");
                 $data =
                     [
                         'id_candidato' => $id_candidato,
+                        'etapa' => $etapa,
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        return false;
+    }
+
+    public function altera_etapa_especialidade($id_especialidade, $etapa)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+        $zero = 0;
+
+        try {
+            $sqlInsert = "UPDATE candidato_x_especialidade SET etapa=:etapa WHERE id = :id_especialidade";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_especialidade", $id_especialidade);
+            $query->bindValue(":etapa", $etapa);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'id_especialidade' => $id_especialidade,
                         'etapa' => $etapa,
                         '_data_ultima_atualizacao' => $datetime,
                         '_usuario_ultima_atualizacao' => $usuario,
