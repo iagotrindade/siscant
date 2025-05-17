@@ -97,9 +97,9 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 <!-- <li <?php if ($perfil != "avaliador" && $perfil != "admin") echo "hidden" ?>><a href="candidato_lista_avaliador.php"><i class="fa fa-check-square-o"></i><span>Avaliação</span></a></li>                         
 -->
 
-<!-- <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="suporte_inicial_lista.php"><i class="fa fa-support"></i><span>Suporte</span></a></li>                         -->
+<!-- <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="suporte_inicial_lista.php"><i class="fa fa-comments"></i><span>Suporte</span></a></li>                         -->
 
-<li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="suporte_lista.php"><i class="fa fa-support"></i><span>Fale conosco</span></a></li>
+<li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="suporte_lista.php"><i class="fa fa-comments"></i><span>Fale conosco</span></a></li>
 
 <li <?php if ($perfil != "admin" && $perfil != "consulta") echo "hidden" ?>><a href="auditoria.php"><i class="fa fa-eye"></i><span>Auditoria</span></a></li>
 
