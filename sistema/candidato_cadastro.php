@@ -139,18 +139,18 @@ include_once './codigos/candidato_valida_cadastro.php';
                                                 <input id="filiacao_pai" maxlength="120" name="filiacao_pai" class="form-control">
                                             </div>
 
-                                            <!--
-                    <div class="form-group">
-                        <label>Autodeclaração</label>
-                        <select id="autodeclaracao" name="autodeclaracao" onchange="mostra_vaga_reservada()" class="form-control">
-                            <option value="">Selecione a Opção</option>
-                            <option value="branco">Branco</option>
-                            <option value="preto">Preto</option>
-                            <option value="pardo">Pardo</option>
-                            <option value="indio">Índio</option>
-                            <option value="amarelo">Amarelo</option>
-                        </select>
-                    </div> -->
+
+                                            <div class="form-group">
+                                                <label>Autodeclaração</label>
+                                                <select id="autodeclaracao" name="autodeclaracao" onchange="mostra_vaga_reservada()" class="form-control">
+                                                    <option value="">Selecione a Opção</option>
+                                                    <option value="branco">Branco</option>
+                                                    <option value="preto">Preto</option>
+                                                    <option value="pardo">Pardo</option>
+                                                    <option value="indio">Índio</option>
+                                                    <option value="amarelo">Amarelo</option>
+                                                </select>
+                                            </div>
 
                                             <div class="row">
                                                 <div class="col-lg-6">

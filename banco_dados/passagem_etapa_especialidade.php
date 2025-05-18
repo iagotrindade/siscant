@@ -36,6 +36,7 @@ if ($criptografia != hash('sha256', $_SESSION['chave'] . "freitas")) {
 $conexao = new Conexao();
 
 // Buscando a etapa da seleção
+$get_selecao = $conexao->get_selecao_id();
 $etapaSelecao = $get_selecao[0]['etapa'];
 
 // Sanitização dos parâmetros numéricos
@@ -163,7 +164,6 @@ if (count($lista_candidatos) > 0) {
 
 // Atualização no banco de dados (apenas os primeiros $quantidade candidatos)
 for ($i = 0; $i < min($quantidade, count($vetor_ordenado_candidatos)); $i++) {
-
     $candidato = $vetor_ordenado_candidatos[$i];
 
     // Alterar a etapa do Candidato se ela for menos do que a enviada
@@ -183,7 +183,7 @@ for ($i = 0; $i < min($quantidade, count($vetor_ordenado_candidatos)); $i++) {
                     "14122",
                     "usuario",
                     "Insert",
-                    "Observação adicionada, Candidato passou para ETAPA " . $etapa . "",
+                    "Observação adicionada, Candidato passou para ETAPA " . $etapa,
                     $alteracoes_detalhadas
                 );
             }
@@ -194,7 +194,7 @@ for ($i = 0; $i < min($quantidade, count($vetor_ordenado_candidatos)); $i++) {
         if ($resultadoEtapaEspecialidade) {
             $obs = "Cod: 95471. Candidato passou para etapa " . $etapa . " na especialidade " . $especialidade[0]['nome'] . "!";
             $resultadoObs = $conexao->cadastra_observacao_candidato($candidato['id'], $obs, 1);
-            $alteracoes_detalhadas = print_r($resultado, true);
+            $alteracoes_detalhadas = print_r($resultadoEtapaEspecialidade, true);
 
             if ($resultadoObs) {
                 $insere_log = $conexao->insere_log(
@@ -209,11 +209,11 @@ for ($i = 0; $i < min($quantidade, count($vetor_ordenado_candidatos)); $i++) {
                 );
             }
         }
-
-        // Retorno seguro (em produção, usar JSON)
-        header("Location: ../sistema/etapa_passagem.php?sucesso=1");
-        exit();
     } else {
         erro('Não é possível passar os candidatos para uma etapa maior que a do sistema.');
     }
 }
+
+// Mover para fora do loop
+header("Location: ../sistema/etapa_passagem.php?sucesso=1");
+exit();

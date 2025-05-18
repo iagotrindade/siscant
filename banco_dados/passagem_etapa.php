@@ -42,10 +42,7 @@ $conexao = new Conexao();
 $get_selecao = $conexao->get_selecao_id();
 $etapa_selecao = $get_selecao[0]['etapa'];
 
-if ($etapa_selecao >= 2 && ($etapa == 2 || $etapa == 1)) {
-    erro("Erro 39426435840! A seleção não pode retornar para etapa $etapa");
-    exit();
-}
+
 
 if ($etapa == 2) {
     $lista_candidatos = $conexao->get_candidatos_concorrendo();
@@ -55,8 +52,6 @@ if ($etapa == 2) {
     $candidatos_processados = [];
 
     foreach ($lista_candidatos as &$candidato) {
-        echo ($candidato['id']);
-        exit;
         // Só atualiza etapa do candidato uma vez
         if (!in_array($candidato['id'], $candidatos_processados)) {
             $resultadoEtapaCandidato = $conexao->altera_etapa_candidato($candidato['id'], $etapa);
@@ -85,7 +80,7 @@ if ($etapa == 2) {
         }
 
         // Sempre altera etapa da especialidade
-        $resultadoEspecialidade = $conexao->altera_etapa_especialidade($candidato['id'], $candidato['id_candidato_x_especialidade'], $etapa);
+        $resultadoEspecialidade = $conexao->altera_etapa_especialidade($candidato['id'], $candidato['id_especialidade'], $etapa);
 
         if ($resultadoEspecialidade) {
             $obs = "Cod: 95471. Candidato passou para etapa II na especialidade " . $candidato['nome_especialidade'] . "!";
