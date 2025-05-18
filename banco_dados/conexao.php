@@ -1079,7 +1079,6 @@ class Conexao
     // <editor-fold defaultstate="collapsed" desc="Get Especialidades">
     public function get_especialidade()
     {
-
         $stmt = $this->pdo->prepare(
             "
                     select e.*
@@ -7610,30 +7609,31 @@ order by total_pontos_somados desc");
         return false;
     }
 
-    public function altera_etapa_especialidade($id_especialidade, $etapa)
+    public function altera_etapa_especialidade($id_candidato, $id_especialidade, $etapa)
     {
         $datetime = date('Y-m-d H:i:s');
         $usuario = $_SESSION['id_usuario'];
-        $zero = 0;
 
         try {
-            $sqlInsert = "UPDATE candidato_x_especialidade SET etapa=:etapa WHERE id = :id_especialidade";
+            $sqlUpdate = "UPDATE candidato_x_especialidade 
+                      SET etapa = :etapa 
+                      WHERE id_especialidade = :id_especialidade AND id_candidato = :id_candidato";
 
             $this->pdo->beginTransaction();
 
-            $query = $this->pdo->prepare($sqlInsert);
+            $query = $this->pdo->prepare($sqlUpdate);
 
             $query->bindValue(":id_especialidade", $id_especialidade);
+            $query->bindValue(":id_candidato", $id_candidato);
             $query->bindValue(":etapa", $etapa);
 
             if ($query->execute()) {
-                $data =
-                    [
-                        'id_especialidade' => $id_especialidade,
-                        'etapa' => $etapa,
-                        '_data_ultima_atualizacao' => $datetime,
-                        '_usuario_ultima_atualizacao' => $usuario,
-                    ];
+                $data = [
+                    'id_especialidade' => $id_especialidade,
+                    'etapa' => $etapa,
+                    '_data_ultima_atualizacao' => $datetime,
+                    '_usuario_ultima_atualizacao' => $usuario,
+                ];
                 $this->pdo->commit();
                 return $data;
             } else {
@@ -7641,10 +7641,11 @@ order by total_pontos_somados desc");
                 return false;
             }
         } catch (Exception $e) {
+            $this->pdo->rollBack(); // Boa prática: garantir o rollback em caso de exceção
             return false;
         }
-        return false;
     }
+
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Altera Etapa do Candidato">

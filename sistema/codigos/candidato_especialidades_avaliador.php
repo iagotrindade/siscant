@@ -79,6 +79,7 @@ if ($_SESSION['perfil'] == "avaliador") {
 
             //echo "Especialidade: " . mb_strtoupper($valor['ott_stt'], "UTF-8") . " " .$valor['especialidade'] . "<br>";
             $id_candidato_x_especialidade = null;
+
             $resultado_verificacao = $conexao->verifica_especialidade_candidato($id_usuario, $valor['id_especialidade']);
 
 
@@ -564,7 +565,7 @@ if ($_SESSION['perfil'] == "avaliador") {
                                 <form action="../banco_dados/candidato_especialidade_etapa_atualiza.php" method="post">
                                     <input hidden name="criptografia" value="<?php echo  hash('sha256', $_SESSION['chave'] . $id_usuario . "freitas"); ?>">
                                     <input hidden name="id_usuario" value="<?php echo $id_usuario ?>">
-                                    <input hidden name="id_especialidade" value="<?php echo $valor['id_candidato_x_especialidade'] ?>">
+                                    <input hidden name="id_especialidade" value="<?php echo $valor['id_especialidade'] ?>">
                                     <input hidden name="etapa_atual" value="<?php echo $valor['etapa'] ?>">
                                     <input hidden name="nome_especialidade" value="<?php echo $valor['especialidade'] ?>">
                                     

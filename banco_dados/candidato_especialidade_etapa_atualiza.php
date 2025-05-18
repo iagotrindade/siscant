@@ -48,7 +48,7 @@ if($_POST['etapa_especialidade'] == '' || $_POST['etapa_especialidade'] == null 
 }
 
 
-if ($_SESSION['eipot'] != 1) {
+if ($_SESSION['eipot'] && $_SESSION['eipot'] != 1) {
     if ($etapa > $etapa_selecao) {
         erro("Erro 345636457! A etapa selecionada é maior do que a etapa da seleção!");
         exit();
@@ -81,7 +81,7 @@ $candidato_cpf = $get_candidato[0]['cpf'];
 
 // Muda Status isento
 
-$resultado = $conexao->altera_etapa_especialidade($id_especialidade, $etapa);
+$resultado = $conexao->altera_etapa_especialidade($get_candidato[0]['id'], $id_especialidade, $etapa);
 
 $alteracoes_detalhadas =  print_r($resultado, true);
 
@@ -94,7 +94,7 @@ else
     exit();
 }
 
-$observacao = " Cod 24578 - Alterou a etapa da especialidade " . $nome_especialidade . " de $etapa_atual para $etapa!";
+$observacao = "Cod 24578 - Alterou a etapa da especialidade " . $nome_especialidade . " de $etapa_atual para $etapa!";
 $resultado = $conexao->cadastra_observacao_candidato($id_usuario,$observacao,1);
 $alteracoes_detalhadas =  print_r($resultado, true);
 

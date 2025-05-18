@@ -44,6 +44,9 @@ $eliminar_caso_nao_adicione_foto = $get_selecao[0]['eliminar_caso_nao_adicione_f
 $pagamento_obrigatorio = $get_selecao[0]['pagamento'];
 $eliminar_caso_nao_adicione_todos_documentos_obrigatorios = $get_selecao[0]['eliminar_docs_obrigatorios'];
 
+$especialidades = $conexao->get_especialidade();
+
+
 ?>
 
 
@@ -91,6 +94,7 @@ $eliminar_caso_nao_adicione_todos_documentos_obrigatorios = $get_selecao[0]['eli
             </ul>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -174,56 +178,146 @@ $eliminar_caso_nao_adicione_todos_documentos_obrigatorios = $get_selecao[0]['eli
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <legend>Passagem de etapa da Seleção</legend>
-                    <form action="../banco_dados/passagem_etapa.php" method="post">
+        <div class="col-md-6">
+            <div class="card">
+                <legend>Passagem de etapa da Seleção</legend>
+                <form action="../banco_dados/passagem_etapa.php" method="post">
 
-                        <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group"> <label>Selecione a etapa</label>
-                                    <select id="etapa" name="etapa" class="form-control" onchange="passagem_etapa()">
-                                        <option value="">Selecione a Etapa</option>
-                                        <option <?php if ($etapa == 1) echo "selected" ?> value="1">Etapa I</option>
-                                        <option <?php if ($etapa == 2) echo "selected" ?> value="2">Etapa II</option>
-                                        <option <?php if ($etapa == 3) echo "selected" ?> value="3">Etapa III</option>
-                                        <option <?php if ($etapa == 4) echo "selected" ?> value="4">Etapa IV</option>
-                                        <option <?php if ($etapa == 5) echo "selected" ?> value="5">Etapa V</option>
-                                        <option <?php if ($etapa == 6) echo "selected" ?> value="6">Etapa VI</option>
-                                        <option <?php if ($etapa == 7) echo "selected" ?> value="7">Etapa VII</option>
-                                        <option <?php if ($etapa == 8) echo "selected" ?> value="8">Etapa VIII</option>
-                                        <option <?php if ($etapa == 9) echo "selected" ?> value="9">Etapa IX</option>
-                                        <option <?php if ($etapa == 10) echo "selected" ?> value="10">Etapa X</option>
-                                    </select>
-                                </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group"> <label>Selecione a etapa</label>
+                                <select id="etapa" name="etapa" class="form-control" onchange="passagem_etapa()">
+                                    <option value="">Selecione a Etapa</option>
+                                    <option <?php if ($etapa == 1) echo "selected" ?> value="1">Etapa I</option>
+                                    <option <?php if ($etapa == 2) echo "selected" ?> value="2">Etapa II</option>
+                                    <option <?php if ($etapa == 3) echo "selected" ?> value="3">Etapa III</option>
+                                    <option <?php if ($etapa == 4) echo "selected" ?> value="4">Etapa IV</option>
+                                    <option <?php if ($etapa == 5) echo "selected" ?> value="5">Etapa V</option>
+                                    <option <?php if ($etapa == 6) echo "selected" ?> value="6">Etapa VI</option>
+                                    <option <?php if ($etapa == 7) echo "selected" ?> value="7">Etapa VII</option>
+                                    <option <?php if ($etapa == 8) echo "selected" ?> value="8">Etapa VIII</option>
+                                    <option <?php if ($etapa == 9) echo "selected" ?> value="9">Etapa IX</option>
+                                    <option <?php if ($etapa == 10) echo "selected" ?> value="10">Etapa X</option>
+                                </select>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div hidden id="div_etapa2" class="col-lg-12">
-                                <label>Detalhamento:</label>
-                                <div class="alert alert-dismissible alert-info">
-                                    <p style="text-align: justify">O escript da Etapa II irá atualizar todos os candidatos para a Etapa II, aqueles que:
-                                        <br><br> Estão concorrendo no processo, ou seja, passaram pelos scripts de desclassificação.
-                                        <font color="red"><br><br><b>ATENÇÃO:</b></font> Este script só poderá ser executado após a execução dos scripts de desclassificação de candidato referente as suas obrigações na inscrição.
-                                    </p>
-                                </div>
+                    <div class="row">
+                        <div hidden id="div_etapa2" class="col-lg-12">
+                            <label>Detalhamento:</label>
+                            <div class="alert alert-dismissible alert-info">
+                                <p style="text-align: justify">O escript da Etapa II irá atualizar todos os candidatos para a Etapa II, aqueles que:
+                                    <br><br> Estão concorrendo no processo, ou seja, passaram pelos scripts de desclassificação.
+                                    <font color="red"><br><br><b>ATENÇÃO:</b></font> Este script só poderá ser executado após a execução dos scripts de desclassificação de candidato referente as suas obrigações na inscrição.
+                                </p>
                             </div>
                         </div>
+                    </div>
 
-                        <div <?php if ($perfil != "admin") echo "hidden" ?> class="row">
-                            <div class="col-lg-12">
-                                <button type="submit" class="btn btn-primary btn-block">EXECUTAR</button>
-                            </div>
+                    <div <?php if ($perfil != "admin") echo "hidden" ?> class="row">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary btn-block">EXECUTAR</button>
                         </div>
+                    </div>
 
-                    </form>
-                </div>
+                </form>
             </div>
+        </div>
 
+        <div class="col-md-12">
+            <div class="card">
+                <legend>Passagem de etapa de Especialidade</legend>
+                <form action="../banco_dados/passagem_etapa_especialidade.php" method="post">
+                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Selecione a Especialidade</label>
+
+                                <select id="etapa" name="id_especialidade" class="form-control">
+                                    <option value="">Selecione a Especialidade</option>
+                                    <?php 
+                                        foreach($especialidades as $especialidade) {
+                                            echo("<option value=".$especialidade['id'].">".$especialidade['nome']."</option>");
+                                        }
+                                    ?>
+                                    
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Selecione quantidade de Candidatos</label>
+
+                                <select id="etapa" name="quantidade" class="form-control">
+                                    <option value="">Selecione quantidade de Candidatos</option>
+                                    <?php 
+                                        for($i=1; $i <= 1000; $i++) {
+                                            echo("<option value=".$i.">".$i."</option>");
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Selecione a etapa</label>
+
+                                <select id="etapa" name="etapa" class="form-control">
+                                    <option value="">Selecione a Etapa</option>
+                                    <option <?php if ($etapa == 1) echo "selected" ?> value="1">Etapa I</option>
+                                    <option <?php if ($etapa == 2) echo "selected" ?> value="2">Etapa II</option>
+                                    <option <?php if ($etapa == 3) echo "selected" ?> value="3">Etapa III</option>
+                                    <option <?php if ($etapa == 4) echo "selected" ?> value="4">Etapa IV</option>
+                                    <option <?php if ($etapa == 5) echo "selected" ?> value="5">Etapa V</option>
+                                    <option <?php if ($etapa == 6) echo "selected" ?> value="6">Etapa VI</option>
+                                    <option <?php if ($etapa == 7) echo "selected" ?> value="7">Etapa VII</option>
+                                    <option <?php if ($etapa == 8) echo "selected" ?> value="8">Etapa VIII</option>
+                                    <option <?php if ($etapa == 9) echo "selected" ?> value="9">Etapa IX</option>
+                                    <option <?php if ($etapa == 10) echo "selected" ?> value="10">Etapa X</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div hidden id="div_etapa2" class="col-lg-12">
+                            <label>Detalhamento:</label>
+                            <div class="alert alert-dismissible alert-info">
+                                <p style="text-align: justify">O escript da Etapa II irá atualizar todos os candidatos para a Etapa II, aqueles que:
+                                    <br><br> Estão concorrendo no processo, ou seja, passaram pelos scripts de desclassificação.
+                                    <font color="red"><br><br><b>ATENÇÃO:</b></font> Este script só poderá ser executado após a execução dos scripts de desclassificação de candidato referente as suas obrigações na inscrição.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="row">
+                        <div class="col-lg-12">
+                            <label>Detalhamento:</label>
+                            <div class="alert alert-dismissible alert-info">
+                                <p style="text-align: justify">Esta ação passará os candidatos da especialidade selecionada para a etapa selecionada:
+                                    <br><br>Tanto a ETAPA DO CANDIDATO quanto a ETAPA DA ESPECIALIDADE serão atualizadas.
+                                    <font color="red"><br><br><b>ATENÇÃO:</b></font> Este script só poderá ser executado após a execução dos scripts de desclassificação de candidato referente as suas obrigações na inscrição.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div <?php if ($perfil != "admin") echo "hidden" ?> class="row">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary btn-block">EXECUTAR</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
 
@@ -232,7 +326,6 @@ $eliminar_caso_nao_adicione_todos_documentos_obrigatorios = $get_selecao[0]['eli
             <a href="javascript:history.back()"><button class="btn btn-default btn-block">VOLTAR</button></a>
         </div>
     </div>
-
 </div>
 
 
