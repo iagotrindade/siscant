@@ -230,7 +230,16 @@ $especialidades = $conexao->get_especialidade();
         <div class="col-md-12">
             <div class="card">
                 <legend>Passagem de etapa de Especialidade</legend>
-                <form action="../banco_dados/passagem_etapa_especialidade.php" method="post">
+                <form 
+                    action="
+                        <?php if(isset($_SESSION['eipot']) == 1 ) 
+                            {
+                                echo("../banco_dados/passagem_etapa_arma.php");
+                            } else {
+                                echo("../banco_dados/passagem_etapa_especialidade.php");
+                            }
+                        ?>" 
+                    method="post">
                     <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
 
                     <div class="row">

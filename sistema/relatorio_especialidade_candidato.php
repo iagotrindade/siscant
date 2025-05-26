@@ -45,6 +45,8 @@
     }
     
     $lista_candidatos = $conexao->get_candidatos_especialidade($id_especialidade_selecionada);  
+
+
     
     
     $voluntario_obrigatorio = '';
@@ -52,8 +54,6 @@
         $voluntario_obrigatorio = $_GET['voluntario_obrigatorio'];
     
     $especialidade_medico = false;
-
-    
 ?>
 
 <div class="content-wrapper">

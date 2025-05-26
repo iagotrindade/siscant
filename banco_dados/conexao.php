@@ -1898,24 +1898,35 @@ class Conexao
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Candidatos Especialidade do Processo">
+
+    // 21/05/2025 - Adicionando o campo etapa criado na tabela candidato_x_especialidade e alterando o nome atribuido a etapa do candidato
     public function get_candidatos_especialidade($id_especialidade)
     {
-        $stmt = $this->pdo->prepare("select u.*, c.nome cidade_escolheu_servir, ce.id id_ce, ce.nota_prova_teorico_pratico
-                                    from candidato_x_especialidade ce
-                                    inner join usuario u on u.id = ce.id_candidato
-                                    left join cidade c on c.id = ce.cidade_escolheu_servir
-                                    where ce.id_especialidade = :id_especialidade
-                                    and ce.apagado = 0
-                                    and ce.concorrendo = 1
-                                    and u.apagado = 0
-                                    and u.concorrendo = 1
-                                    and u.id_selecao = :selecao
-                                    order by u.nome_completo");
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            u.*, 
+            u.etapa AS etapa_candidato,
+            c.nome AS cidade_escolheu_servir, 
+            ce.id AS id_ce, 
+            ce.nota_prova_teorico_pratico,
+            ce.etapa AS etapa
+        FROM candidato_x_especialidade ce
+        INNER JOIN usuario u ON u.id = ce.id_candidato
+        LEFT JOIN cidade c ON c.id = ce.cidade_escolheu_servir
+        WHERE ce.id_especialidade = :id_especialidade
+            AND ce.apagado = 0
+            AND ce.concorrendo = 1
+            AND u.apagado = 0
+            AND u.concorrendo = 1
+            AND u.id_selecao = :selecao
+        ORDER BY u.nome_completo
+    ");
+
         $stmt->bindValue(':id_especialidade', $id_especialidade);
         $stmt->bindValue(':selecao', $_SESSION['selecao']);
-        $run = $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function get_candidatos_especialidade_eipot($id_especialidade, $rm_usuario)

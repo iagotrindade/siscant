@@ -7,7 +7,12 @@ session_start();
 
 // Verificação inicial de segurança
 if (!$_POST) {
-    erro_mensagem("Erro 2342344!");
+    erro_mensagem("Erro 2342344! Método inválido.");
+    exit();
+}
+
+if (isset($_SESSION['eipot']) == 1) {
+    erro("Erro 2342344! Método inválido.");
     exit();
 }
 
@@ -37,7 +42,12 @@ $conexao = new Conexao();
 
 // Buscando a etapa da seleção
 $get_selecao = $conexao->get_selecao_id();
-$etapaSelecao = $get_selecao[0]['etapa'];
+if (empty($get_selecao)) {
+    erro("Erro! Não foi possível obter dados da seleção.");
+    exit();
+}
+
+$etapaSelecao = (int)$get_selecao[0]['etapa'];
 
 // Sanitização dos parâmetros numéricos
 $id_especialidade = filter_input(INPUT_POST, 'id_especialidade', FILTER_SANITIZE_NUMBER_INT);
@@ -50,39 +60,78 @@ if ($id_especialidade <= 0 || $etapa <= 0 || $quantidade <= 0) {
     exit();
 }
 
+// Verificar se a etapa é válida
+if ($etapa > $etapaSelecao) {
+    erro('Não é possível passar os candidatos para uma etapa maior que a do sistema.');
+    exit();
+}
+
 $especialidade = $conexao->get_especialidade_selecionadas($id_especialidade);
 
-if (count($especialidade) == 0) {
+if (empty($especialidade)) {
     erro("Erro! Especialidade não encontrada!");
     exit();
 }
 
 $lista_candidatos = $conexao->get_candidatos_especialidade($id_especialidade);
-
 $vetor_ordenado_candidatos = array();
+
+// Pré-carregar todas as pontuações para otimização
+$pontuacoes_avaliadas = [];
+$pontuacoes_provas = [];
+foreach ($lista_candidatos as $candidato) {
+    $pontuacoes_avaliadas[$candidato['id']] = $conexao->get_pontuacao_avaliada($candidato['id'], $id_especialidade);
+    $pontuacoes_provas[$candidato['id']] = $conexao->verifica_especialidade_candidato($candidato['id'], $id_especialidade);
+}
 
 foreach ($lista_candidatos as $candidato) {
     // Sanitização dos dados do candidato
-    $candidato['id'] = filter_var($candidato['id'], FILTER_SANITIZE_NUMBER_INT);
+    $candidato['id'] = (int)$candidato['id'];
     $candidato['data_nascimento'] = filter_var($candidato['data_nascimento'], FILTER_SANITIZE_STRING);
     $candidato['cidade_escolheu_servir'] = filter_var($candidato['cidade_escolheu_servir'], FILTER_SANITIZE_STRING);
+    $candidato['civil_militar'] = filter_var($candidato['civil_militar'], FILTER_SANITIZE_STRING);
+    $candidato['posto_grad'] = filter_var($candidato['posto_grad'], FILTER_SANITIZE_STRING);
+    $candidato['certificado'] = isset($candidato['certificado']) ? filter_var($candidato['certificado'], FILTER_SANITIZE_STRING) : '';
 
-    // Pontuação do currículo
-    $pontuacao_curriculo = 0;
-    $get_pontuacao_avaliada = $conexao->get_pontuacao_avaliada($candidato['id'], $id_especialidade);
-    if (count($get_pontuacao_avaliada) > 0) {
-        $pontuacao_curriculo = round(filter_var($get_pontuacao_avaliada[0]['pontuacao_avaliada'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION), 2);
+    if ($especialidade[0]['musica'] == '1' || $especialidade[0]['musica'] == 1) {
+        // PONTUAÇÃO PARA ESPECIALIDADES MUSICAIS
+        
+        // Currículo
+        $pontuacao_curriculo = 0;
+        if (!empty($pontuacoes_avaliadas[$candidato['id']])) {
+            $pontuacao_curriculo = round($pontuacoes_avaliadas[$candidato['id']][0]['pontuacao_avaliada'], 2);
+        }
+
+        // Provas
+        $prova_pratica_musica = 0;
+        $prova_escrita_musica = 0;
+        $prova_oral_musica = 0;
+
+        if (!empty($pontuacoes_provas[$candidato['id']])) {
+            $prova_pratica_musica = $pontuacoes_provas[$candidato['id']][0]['prova_pratica_musica'];
+            $prova_escrita_musica = $pontuacoes_provas[$candidato['id']][0]['prova_teorica_musica'];
+            $prova_oral_musica = $pontuacoes_provas[$candidato['id']][0]['prova_oral_musica'];
+        }
+
+        $somatorio_total_pontos_musica = (((($prova_escrita_musica * 2) + ($prova_pratica_musica * 2) + $prova_oral_musica) / 5) + $pontuacao_curriculo) / 2;
+        $pontuacao_curriculo = round($somatorio_total_pontos_musica, 2);
+    } else {
+        // PONTUAÇÃO PARA ESPECIALIDADES NÃO MUSICAIS
+        
+        $pontuacao_curriculo = 0;
+        if (!empty($pontuacoes_avaliadas[$candidato['id']])) {
+            $pontuacao_curriculo = round($pontuacoes_avaliadas[$candidato['id']][0]['pontuacao_avaliada'], 2);
+        }
+
+        // Prova Teórico Prática
+        $nota_prova_teorico_pratico = 0;
+        if (!empty($pontuacoes_provas[$candidato['id']])) {
+            $nota_prova_teorico_pratico = $pontuacoes_provas[$candidato['id']][0]['nota_prova_teorico_pratico'];
+            $pontuacao_curriculo = round($pontuacao_curriculo + $nota_prova_teorico_pratico, 2);
+        }
     }
 
-    // Prova Teórico Prática
-    $get_pontuacao_provas = $conexao->verifica_especialidade_candidato($candidato['id'], $id_especialidade);
-    $nota_prova_teorico_pratico = 0;
-    if (count($get_pontuacao_provas) > 0) {
-        $nota_prova_teorico_pratico = filter_var($get_pontuacao_provas[0]['nota_prova_teorico_pratico'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        $pontuacao_curriculo = round($pontuacao_curriculo + $nota_prova_teorico_pratico, 2);
-    }
-
-    // Categoria militar usando switch
+    // Categoria militar
     $militar = 7; // Padrão (civil sem certificado)
 
     switch (true) {
@@ -106,114 +155,149 @@ foreach ($lista_candidatos as $candidato) {
             break;
     }
 
-    // Cálculo do tempo de serviço público (Linha ~70)
+    // Cálculo do tempo de serviço público
     $anos_sv_publico = isset($candidato['tempo_sv_mil_anos']) ? (int)$candidato['tempo_sv_mil_anos'] : 0;
     $meses_sv_publico = isset($candidato['tempo_sv_mil_meses']) ? (int)$candidato['tempo_sv_mil_meses'] : 0;
     $dias_sv_publico = isset($candidato['tempo_sv_mil_dias']) ? (int)$candidato['tempo_sv_mil_dias'] : 0;
 
     $tempo_total_sv_publico_dias = ($anos_sv_publico * 365) + ($meses_sv_publico * 30) + $dias_sv_publico;
 
-    // Cálculo da idade (Linha ~101)
+    // Cálculo da idade
     $data_atual = new DateTime(date("Y-m-d"));
     $data_nasc = new DateTime($candidato['data_nascimento']);
     $intervalo = $data_atual->diff($data_nasc);
 
-    $anos_vida = (int)$intervalo->y;  // Usando ->y em vez de format('%Y')
-    $meses_vida = (int)$intervalo->m; // Usando ->m em vez de format('%m')
-    $dias_vida = (int)$intervalo->d;  // Usando ->d em vez de format('%d')
+    $anos_vida = $intervalo->y;
+    $meses_vida = $intervalo->m;
+    $dias_vida = $intervalo->d;
 
     $tempo_total_idade_dias = ($anos_vida * 365) + ($meses_vida * 30) + $dias_vida;
 
     // Preparação do array ordenado
     $novo_vetor = [
         "id" => $candidato['id'],
+        "nome" => mb_strtoupper($candidato['nome_completo'], "UTF-8"),
         "cpf" => $candidato['cpf'],
+        "mail" => $candidato['mail'],
         "pontos" => $pontuacao_curriculo,
         "militar" => $militar,
         "tempo_sv_pub" => $tempo_total_sv_publico_dias,
         "tempo_idade" => $tempo_total_idade_dias,
-        "etapa" => filter_var($candidato['etapa'], FILTER_SANITIZE_NUMBER_INT),
+        "etapa" => (int)$candidato['etapa'],
+        "cidade_escolheu_servir" => $candidato['cidade_escolheu_servir']
     ];
+
+    if ($especialidade[0]['musica'] == '1' || $especialidade[0]['musica'] == 1) {
+        $novo_vetor["pratica"] = $prova_pratica_musica;
+        $novo_vetor["escrita"] = $prova_escrita_musica;
+        $novo_vetor["oral"] = $prova_oral_musica;
+    } else {
+        $novo_vetor["nota_prova_teorico_pratico"] = $nota_prova_teorico_pratico;
+    }
 
     array_push($vetor_ordenado_candidatos, $novo_vetor);
 }
 
 // Ordenação
-if (count($lista_candidatos) > 0) {
-    foreach ($vetor_ordenado_candidatos as $index => $candidato2) {
-        $pontos_array[$index] = $candidato2['pontos'];
-        $militar_array[$index] = $candidato2['militar'];
-        $tempo_sv_pub[$index] = $candidato2['tempo_sv_pub'];
-        $tempo_idade[$index] = $candidato2['tempo_idade'];
+if (!empty($vetor_ordenado_candidatos)) {
+    // Preparar arrays para ordenação
+    $pontos_array = $militar_array = $tempo_sv_pub = $tempo_idade = [];
+    $prova_pratica_array = $prova_escrita_array = $prova_oral_array = [];
+    
+    foreach ($vetor_ordenado_candidatos as $index => $candidato) {
+        $pontos_array[$index] = $candidato['pontos'];
+        $militar_array[$index] = $candidato['militar'];
+        $tempo_sv_pub[$index] = $candidato['tempo_sv_pub'];
+        $tempo_idade[$index] = $candidato['tempo_idade'];
+        
+        if ($especialidade[0]['musica'] == '1' || $especialidade[0]['musica'] == 1) {
+            $prova_pratica_array[$index] = $candidato['pratica'];
+            $prova_escrita_array[$index] = $candidato['escrita'];
+            $prova_oral_array[$index] = $candidato['oral'];
+        }
     }
 
-    if (count($vetor_ordenado_candidatos) > 0) {
+    // Ordenar de acordo com o tipo de especialidade
+    if ($especialidade[0]['musica'] == '1' || $especialidade[0]['musica'] == 1) {
         array_multisort(
-            $pontos_array,
-            SORT_DESC,
-            $militar_array,
-            SORT_ASC,
-            $tempo_sv_pub,
-            SORT_ASC,
-            $tempo_idade,
-            SORT_DESC,
+            $pontos_array, SORT_DESC,
+            $prova_pratica_array, SORT_DESC,
+            $prova_escrita_array, SORT_DESC,
+            $prova_oral_array, SORT_DESC,
+            $militar_array, SORT_ASC,
+            $tempo_sv_pub, SORT_ASC,
+            $tempo_idade, SORT_DESC,
+            $vetor_ordenado_candidatos
+        );
+    } else {
+        array_multisort(
+            $pontos_array, SORT_DESC,
+            $militar_array, SORT_ASC,
+            $tempo_sv_pub, SORT_ASC,
+            $tempo_idade, SORT_DESC,
             $vetor_ordenado_candidatos
         );
     }
 }
 
 // Atualização no banco de dados (apenas os primeiros $quantidade candidatos)
-for ($i = 0; $i < min($quantidade, count($vetor_ordenado_candidatos)); $i++) {
+$sucesso = true;
+$quantidade = min($quantidade, count($vetor_ordenado_candidatos));
+
+for ($i = 0; $i < $quantidade; $i++) {
     $candidato = $vetor_ordenado_candidatos[$i];
 
-    // Alterar a etapa do Candidato se ela for menos do que a enviada
-    if ($etapa <= $etapaSelecao) {
-        $resultadoEtapaCandidato = $conexao->altera_etapa_candidato($candidato['id'], $etapa);
+    // Alterar a etapa do Candidato
+    $resultadoEtapaCandidato = $conexao->altera_etapa_candidato($candidato['id'], $etapa);
 
-        if ($resultadoEtapaCandidato) {
-            $obs = "Cod: 95471. Candidato passou para etapa " . $etapa . "!";
-            $resultadoObs = $conexao->cadastra_observacao_candidato($candidato['id'], $obs, 1);
-            $alteracoes_detalhadas = print_r($resultadoEtapaCandidato, true);
+    if ($resultadoEtapaCandidato) {
+        $obs = "Cod: 95471. Candidato passou para etapa " . $etapa . "!";
+        $resultadoObs = $conexao->cadastra_observacao_candidato($candidato['id'], $obs, 1);
+        $alteracoes_detalhadas = print_r($resultadoEtapaCandidato, true);
 
-            if ($resultadoObs) {
-                $insere_log = $conexao->insere_log(
-                    $_SESSION['id_usuario'],
-                    $candidato['cpf'],
-                    $candidato['id'],
-                    "14122",
-                    "usuario",
-                    "Insert",
-                    "Observação adicionada, Candidato passou para ETAPA " . $etapa,
-                    $alteracoes_detalhadas
-                );
-            }
-        }
-
-        $resultadoEtapaEspecialidade = $conexao->altera_etapa_especialidade($candidato['id'], $id_especialidade, $etapa);
-
-        if ($resultadoEtapaEspecialidade) {
-            $obs = "Cod: 95471. Candidato passou para etapa " . $etapa . " na especialidade " . $especialidade[0]['nome'] . "!";
-            $resultadoObs = $conexao->cadastra_observacao_candidato($candidato['id'], $obs, 1);
-            $alteracoes_detalhadas = print_r($resultadoEtapaEspecialidade, true);
-
-            if ($resultadoObs) {
-                $insere_log = $conexao->insere_log(
-                    $_SESSION['id_usuario'],
-                    $candidato['cpf'],
-                    $candidato['id'],
-                    "14122",
-                    "usuario",
-                    "Insert",
-                    "Observação adicionada, Candidato passou para ETAPA " . $etapa . " na especialidade " . $especialidade[0]['nome'] . "!",
-                    $alteracoes_detalhadas
-                );
-            }
+        if ($resultadoObs) {
+            $insere_log = $conexao->insere_log(
+                $_SESSION['id_usuario'],
+                $candidato['cpf'],
+                $candidato['id'],
+                "14122",
+                "usuario",
+                "Insert",
+                "Observação adicionada, Candidato passou para ETAPA " . $etapa,
+                $alteracoes_detalhadas
+            );
         }
     } else {
-        erro('Não é possível passar os candidatos para uma etapa maior que a do sistema.');
+        $sucesso = false;
+    }
+
+    $resultadoEtapaEspecialidade = $conexao->altera_etapa_especialidade($candidato['id'], $id_especialidade, $etapa);
+
+    if ($resultadoEtapaEspecialidade) {
+        $obs = "Cod: 95471. Candidato passou para etapa " . $etapa . " na especialidade " . $especialidade[0]['nome'] . "!";
+        $resultadoObs = $conexao->cadastra_observacao_candidato($candidato['id'], $obs, 1);
+        $alteracoes_detalhadas = print_r($resultadoEtapaEspecialidade, true);
+
+        if ($resultadoObs) {
+            $insere_log = $conexao->insere_log(
+                $_SESSION['id_usuario'],
+                $candidato['cpf'],
+                $candidato['id'],
+                "14122",
+                "usuario",
+                "Insert",
+                "Observação adicionada, Candidato passou para ETAPA " . $etapa . " na especialidade " . $especialidade[0]['nome'] . "!",
+                $alteracoes_detalhadas
+            );
+        }
+    } else {
+        $sucesso = false;
     }
 }
 
-// Mover para fora do loop
-header("Location: ../sistema/etapa_passagem.php?sucesso=1");
+if ($sucesso) {
+    header("Location: ../sistema/etapa_passagem.php?sucesso=1");
+} else {
+    header("Location: ../sistema/etapa_passagem.php?sucesso=0&erro=Alguns candidatos não puderam ser atualizados");
+}
 exit();
