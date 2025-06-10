@@ -95,6 +95,7 @@ if(strtotime($data_inicio_recurso) >= strtotime($data_fim_recurso))
 }
 
 $resultado_selecao = $conexao->get_selecao_id();
+
 $nome_selecao = $resultado_selecao[0]['nome'] . " - " . $resultado_selecao[0]['ano'];
 
 if($_POST)
@@ -112,8 +113,6 @@ else
 
 header("Location: ../sistema/configuracao_selecao.php?datas_atualizadas=1");
 exit();
-
-
 
 ?>
 

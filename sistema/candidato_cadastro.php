@@ -952,9 +952,14 @@ include_once './codigos/candidato_valida_cadastro.php';
                                             <label>
                                                 <input type="checkbox" id="declaracao" name="declaracao">
                                                 <span class="label-text">Declaro que li o aviso de convocação e que as informações aqui cadastradas são verdadeiras.</span>
+                                                <br>
+                                                <font color="red" size="5px"> ATENÇÃO! Ao clicar em Cadastrar, aguarde! O processo pode levar de 2 a 5 minutos. Não feche a aba ou
+                                                    o navegador.
+                                                </font>
                                             </label>
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12">
                                         <div id='div_erro_declaracao' hidden class="alert alert-dismissible alert-danger">
                                             <b>
@@ -969,8 +974,6 @@ include_once './codigos/candidato_valida_cadastro.php';
                                 <button type="submit" class="btn btn-primary btn-block">CADASTRAR</button>
                             </div>
                         </div>
-
-
                     </section>
                 </div>
             </form>

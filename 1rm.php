@@ -30,9 +30,11 @@
                             </b>
                         </font>
                          <br>
-                         <a class="btn btn-warning" href="1rm_mfdv_2025.php">MFDV 2025</a>
-                        
-                       
+                         <a class="btn btn-warning" href="1rm_mfdv_2025.php">FDV 2025</a>  
+                         <a class="btn btn-warning" href="1rm_cet_2025.php">CET 2025</a>   
+                          <a class="btn btn-warning" href="1rm_ott_2025.php">OTT 2025</a>  
+                           <a class="btn btn-warning" href="1rm_stt_2025.php">STT 2025</a>  
+
                   </div>
                
                    

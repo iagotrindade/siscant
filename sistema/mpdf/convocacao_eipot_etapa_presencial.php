@@ -17,17 +17,6 @@ $texto_etapa_presencial = $_POST['texto_etapa_presencial'];
 $texto_dia = $_POST['texto_dia'];
 $hora_arma = $_POST['hora_arma'];
 
-function normaliza_texto($texto) {
-    $texto = mb_strtolower($texto, 'UTF-8');
-    $texto = preg_replace('/[áàãâä]/u', 'a', $texto);
-    $texto = preg_replace('/[éèêë]/u', 'e', $texto);
-    $texto = preg_replace('/[íìîï]/u', 'i', $texto);
-    $texto = preg_replace('/[óòõôö]/u', 'o', $texto);
-    $texto = preg_replace('/[úùûü]/u', 'u', $texto);
-    $texto = preg_replace('/[ç]/u', 'c', $texto);
-    $texto = preg_replace('/[^a-z0-9 ]+/u', '', $texto); // remove símbolos
-    return trim($texto);
-}
 
 set_time_limit(300);
 

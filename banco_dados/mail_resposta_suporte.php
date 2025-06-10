@@ -24,9 +24,9 @@ $mail_envia = new PHPMailer();
 // Desabilita SSL para que a nova versoã do PHPMailer possa enviar o E-Mail
 $mail_envia->SMTPOptions = array(
 'ssl' => array(
-   'verify_peer' => true,
-    'verify_peer_name' => true,
-    'allow_self_signed' => false
+    'verify_peer' => false,
+    'verify_peer_name' => false,
+    'allow_self_signed' => true
 ));
 ////////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +35,7 @@ $mail_envia->IsSMTP(); // Define que a mensagem será SMTP
 
 //$mail_envia->Host = "smtp.1cta.eb.mil.br"; // Endereço do servidor SMTP --- Funcionando até 30/11/2021
 $mail_envia->Host = "smtp.webmail.eb.mil.br"; // Endereço do servidor SMTP
-$mail_envia->Port = 587; // Porta
+
 
 $mail_envia->SMTPAuth = false; // Autenticação
 // $mail_envia->Username = 'usuario@3rm.eb.mil.br'; // Usuário do servidor SMTP

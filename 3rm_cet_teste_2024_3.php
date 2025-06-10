@@ -17,7 +17,7 @@ $_SESSION['chave'] = $codigo_chave;
 
 // Mudar essas variaveis
 $_SESSION['nome_arquivo'] = "3rm_cet_teste_2024_3.php";
-$_SESSION['selecao'] = 1052;
+$_SESSION['selecao'] = 1092;
 $_SESSION['selecao_regiao'] = 3;
 $_SESSION['3_regiao'] = true;
 

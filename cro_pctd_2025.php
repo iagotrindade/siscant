@@ -10,24 +10,24 @@ if(isset($_GET['usuario_senha']))
         $usuario_senha = 'invalido';
     
 $rand = rand(100, 10000);
-$string = "cro_pctd_2025";
+$string = "cro_pctd_1126";
 $codigo_criptografar = $rand.time().$string;
 $codigo_chave = substr(md5( $codigo_criptografar) , 0, 6);
 $_SESSION['chave'] = $codigo_chave;
     
 $_SESSION['nome_arquivo'] = "cro_pctd_2025.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
-// $_SESSION['selecao'] = 1126; // PRODUÇÃO
-$_SESSION['selecao'] = 1059; //LOCAL
+$_SESSION['selecao'] = 1126; // PRODUÇÃO
+//$_SESSION['selecao'] = 1059; //LOCAL
 //$_SESSION['selecao'] = 10;
 
 $_SESSION['apresentacao_candidato'] = "Seleção de Pessoal Contratado por Tempo Determinado (PCTD)";
 
 // AMBIENTE DE TESTES
-$_SESSION['pasta_arquivos'] = "arquivos/";
+//$_SESSION['pasta_arquivos'] = "arquivos/";
 
 //AMBIENTE DE PRODUÇÃO
-//$_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
+$_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
 
 ?>
 <!DOCTYPE html>

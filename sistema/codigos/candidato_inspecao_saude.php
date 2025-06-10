@@ -53,7 +53,7 @@ include_once '../sistema/codigos/funcao_apagar.php';
                     <div class="col-lg-12">
                         <div class="form-group">
                             <label>Observações (Preencher FC, PA, PESO, ALT e IMC) </label>
-                            <textarea maxlength="2000" name="observacao_exame_saude" class="form-control"><?php echo $observacao_exame_saude ?></textarea>
+                            <textarea row = "8" maxlength="2000" name="observacao_exame_saude" class="form-control"><?php echo $observacao_exame_saude ?></textarea>
                         </div>
                     </div>
                     <div class="row col-md-6">

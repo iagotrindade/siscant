@@ -122,10 +122,8 @@ if(!empty($value['cidade_escolheu_servir']) || $value['concorrendo'] == 0) $cor_
 if($value['concorrendo'] == 0) echo '<br><font color="red"><b> DESCLASSIFICADO: </b> '.$value['justificativa'].' </font>';
 
 
-//RETORNA NOME DA OM E NUMERO DE VAGAS DA OM DE ACORDO COM A ESPECIALIDADE
-$lista_epecialidades = $conexao->get_vagas_oms_especialidade_eipot($value['id_especialidade']); 
-//RETORNA...
-$get_vagas_especialidade = $conexao->get_vagas_especialidade_eipot($value['id_especialidade']);
+$lista_epecialidades = $conexao->get_vagas_oms_especialidade($value['id_especialidade']); 
+$get_vagas_especialidade = $conexao->get_vagas_especialidade($value['id_especialidade']);
 
 echo '
 <br>

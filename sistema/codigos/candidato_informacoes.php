@@ -1,4 +1,5 @@
 <?php
+/*ASP SILVA ATUALIZADO EM 28 MAIO 25 */
 // var_dump($_SESSION["perfil"]); 
 if ($_SESSION['perfil'] == 'avaliador') {
     $lista_especialidade_avaliador = $conexao->get_especialidades_usuario_avaliador($_SESSION['id_usuario']);
@@ -99,7 +100,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 </div>
             </div>
 
-            <div class="table-responsive">
+            <div class="table-responsive"> <!-- inFORMAÇÕES BASICAS USUSARIO-->
 
                 <table class="table table-striped">
                     <tbody>
@@ -282,47 +283,46 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 </table>
             </div>
 
-            <div class="row" <?php if ($_SESSION['perfil'] != 'admin') echo ' hidden ' ?>>
-                <div class="col-lg-2">
+            <div class="row">
+                <div class="col-md-2">
                     <a href="#especialidades">
                         <legend>Especialidade(s) <i class="fa fa-arrow-down"></i></legend>
                     </a>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-md-2">
                     <a href="#arquivos_obrigatorios">
                         <legend>Docs Obrigatórios <i class="fa fa-arrow-down"></i></legend>
                     </a>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-md-2">
                     <a href="#observacoes">
                         <legend>Observações <i class="fa fa-arrow-down"></i></legend>
                     </a>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-md-2">
                     <a href="#recursos">
                         <legend>Recursos <i class="fa fa-arrow-down"></i></legend>
                     </a>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-md-2">
                     <a href="#insere_arquivo_candidato">
                         <legend>Arquivos <i class="fa fa-arrow-down"></i></legend>
                     </a>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-md-2">
                     <a href="#auditoria">
                         <legend>Auditoria <i class="fa fa-arrow-down"></i></legend>
                     </a>
                 </div>
             </div>
         </div>
-
         <?php
         if ($_SESSION['perfil'] == 'om')
             include_once 'codigos/om_preenchimento.php';
         ?>
-
+        <!--silva 26MAIO2025-->
         <a name="isento"></a>
-        <div class="card" <?php if ($pagamento_obrigatorio == '0' || $pagamento_obrigatorio == null) echo ' hidden ' ?>>
+        <div class="card" <?php if ($pagamento_obrigatorio == '0' || $pagamento_obrigatorio == null) echo 'hidden' ?>>
             <legend>Arquivo de Pagamento/Isenção</legend>
             <div class="row">
                 <div class="col-md-12">
@@ -339,7 +339,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                         $isento = "";
                     ?>
 
-                    <div class="col-lg-6" <?php if (count($arquivo_pagamento) == 0) echo "hidden" ?>>
+                    <div class="col-lg-6" <?php if (count($arquivo_pagamento) == 0) echo 'hidden' ?>>
                         <div class="bs-component">
                             <a target="_blank" href="baixaPDF.php?codigo=cand_inf_pag&nome_arquivo=<?php if (count($arquivo_pagamento) > 0) echo $arquivo_pagamento[0]['nome'] ?>">
                                 <div class="alert alert-success">
@@ -349,7 +349,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                         </div>
                     </div>
 
-                    <div class="col-lg-6" <?php if (count($arquivo_pagamento) > 0) echo "hidden" ?>>
+                    <div class="col-lg-6" <?php if (count($arquivo_pagamento) > 0) echo 'hidden' ?>>
                         <div class="bs-component">
                             <div class="alert alert-laranja">
                                 <div class="row">
@@ -360,18 +360,18 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                             </div>
                         </div>
                     </div>
-
-                    <?php
-
-
-
-                    if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'documentos')
-                        include_once 'codigos/isento_pagamento.php';
-                    ?>
                 </div>
             </div>
         </div>
 
+        <?php
+
+        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'documentos')
+            include_once 'codigos/isento_pagamento.php';
+        ?>
+
+
+        <!--SILVA 26maio25-->
 
         <?php
 
@@ -383,7 +383,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_concorrendo.php';
             }
 
-             // 14 MAIO 2024 
+            // 14 MAIO 2024 
             if ($_SESSION['perfil'] == 'admin') {
                 include_once 'codigos/candidato_altera_email_admin.php';
             }
@@ -392,11 +392,12 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_eipot.php';
             }
 
-            if ($_SESSION['perfil'] == 'admin'|| $_SESSION['perfil'] == 'jise') {
-                include_once 'codigos/candidato_recursos.php';
+            if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'jise') {
+                include_once 'codigos/candidato_recurso.php';
             }
-
-            if (isset($_SESSION['eipot']) == 1 && $_SESSION['perfil'] == 'avaliador' || $_SESSION['perfil'] == 'admin' ||  $_SESSION['perfil'] == 'jise') {
+            
+            //Excluido o perfil jise da avaliação de recurso do candidato ||  $_SESSION['perfil'] == 'jise' Em 28 de MAio de 2025
+            if (isset($_SESSION['eipot']) == 1 && $_SESSION['perfil'] == 'avaliador' || $_SESSION['perfil'] == 'admin') {
                 include_once 'codigos/avaliador_recurso_candidato.php';
             }
 
@@ -445,6 +446,11 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_concorrendo.php';
             }
 
+            // 14 MAIO 2024 
+            if ($_SESSION['perfil'] == 'admin') {
+                include_once 'codigos/candidato_altera_email_admin.php';
+            }
+
             if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'avaliador') {
                 include_once 'codigos/candidato_especialidades_avaliador.php';
             } else {
@@ -482,7 +488,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
             }
 
             if ($_SESSION['perfil'] == 'admin') {
-                include_once 'codigos/candidato_recursos.php';
+                include_once 'codigos/candidato_recurso.php';
             }
 
             if ($_SESSION['perfil'] == 'avaliador' || $_SESSION['perfil'] == 'admin') {
@@ -499,8 +505,5 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
         }
 
         ?>
-    </div>
-</div>        ?>
-        
-    </div>
-</div>
+
+    </div><!--/DIV FINAL CANDIDATO INFORMAÇÕES -->

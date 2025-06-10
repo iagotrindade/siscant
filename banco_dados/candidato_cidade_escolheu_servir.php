@@ -171,6 +171,7 @@ foreach ($get_especialidade_candidato as $especialidade)
                 $pontuacao_curriculo = round ($pontuacao_curriculo + $nota_prova_teorico_pratico,2);
             }
             
+            
             $especialidade_selecionada = $conexao->get_especialidade_id($id_especialidade);
             
             // SE A ESPECIALIDADE FOR DE MÚSICA
@@ -377,6 +378,7 @@ foreach ($get_especialidade_candidato as $especialidade)
 
                 header("Location: ../sistema/candidato_escolha_cidade.php");
                 exit();
+                
                 break;
             }
          

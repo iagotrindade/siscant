@@ -34,6 +34,7 @@ $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
     <link rel="stylesheet" type="text/css" href="sistema/css/main.css">
     <link rel="stylesheet" type="text/css" href="sistema/css/font-awesome-4.7.0/css/font-awesome.min.css">
     <title>SiSCanT</title>
+    
     <script src="sistema/ajax/ajax.js"></script>
     <script src="sistema/ajax/funcoes.js"></script>
 

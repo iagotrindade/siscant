@@ -1,20 +1,18 @@
 <script>
     
-   
-
-  /*  function mostra_vaga_reservada()
+    function mostra_nome_social()
     {
-        if($('#check_vaga_reservada').is(':checked'))
+        if($('#check_nome_social').is(':checked'))
         {
-            $('#vaga_reservada').show();
+            $('#div_nome_social').show();
         }
         else
         {
-            $('#autodeclaracao').hide();
+            $('#div_nome_social').hide();
             $('#nome_social').val('');
         }
             
-    } */
+    }
     
     function mostra_companheiro()
     {
@@ -132,7 +130,7 @@
 
         $('#posto_grad').append($('<option>', 
         {
-            value: "cb",
+            value: "cd",
             text: "Cabo"
         }));
 

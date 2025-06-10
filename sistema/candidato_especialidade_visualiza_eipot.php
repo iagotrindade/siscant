@@ -7,7 +7,9 @@ include_once './codigos/verifica_cadastro_especialidade_candidato.php';
    $id_selecao = $_SESSION['selecao'];
    $id_candidato = $_SESSION['id_usuario']; 
    $arma_eipot = $conexao->getArmaEipot($id_candidato);
+ //  var_dump($arma_eipot);
    $especialidades_armas_eipot = $conexao->getEspecialidadesPorSelecao($id_selecao);
+ //  var_dump($especialidades_armas_eipot); exit;
   
 ?>
 
@@ -59,7 +61,9 @@ function selecao_cidade()
                             ?>
                         </select>
                     </div>
+
                     </div>
+                  
                     <div class="row" id="div_mensagem_erro" hidden>
                         <div class="form-group col-lg-12">
                             <font color="red"><b><center><p id="mensagem_erro">Selecione uma opção!</p></b></center></font>

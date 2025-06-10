@@ -77,7 +77,7 @@ function verifica_campos()
         <font color="white">
             <b> Sistema de Seleção de Candidatos Temporários
             <br> Estágio de Instrução e de Preparação para Oficiais Temporários
-            <br> EIPOT 2024
+            <br> EIPOT  2024
             </b>
         </font>
         </center>

@@ -17,7 +17,7 @@ $_SESSION['chave'] = $codigo_chave;
     
 $_SESSION['nome_arquivo'] = "8rm_mfdv_2024_2sem.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
-$_SESSION['selecao'] = 1054;
+$_SESSION['selecao'] = 1111;
 $_SESSION['mfdv'] = 1;
 
 $_SESSION['apresentacao_candidato'] = "Seleção de Médicos Farmacêuticos Dentistas e Veterinários (MFDV)";

@@ -28,6 +28,8 @@ $_SESSION['apresentacao_candidato'] = "Seleção CET Músico 2024";
 //AMBIENTE DE PRODUÇÃO
 $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
 
+
+
 ?>
 <!DOCTYPE html>
 <html>

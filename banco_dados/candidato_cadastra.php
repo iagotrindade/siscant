@@ -4,8 +4,6 @@ session_start();
 
 include_once '../sistema/funcoes.php';
 
-// <editor-fold defaultstate="collapsed" desc="GET VARIÁVEIS E VALIDAÇÕES">
-
 if(!$_POST)
 {
     erro_mensagem("Erro 5623444!");
@@ -63,8 +61,6 @@ $ano_formacao_ofor = null;
 $nota_ofor = null;
 $arma_eipot = null;
 
-
-
 if(!isset($_POST['declaracao']))
 {
     erro_mensagem("Erro 454236! Declaração de veracidade não preenchida!");
@@ -97,7 +93,6 @@ if (
     )
     
     {
-    
         erro_mensagem("Erro 995346! Todos os campos são obrigatorios!");
         exit();
     }
@@ -604,7 +599,6 @@ if (
         
     }
     
-    
     // </editor-fold>
     
     include_once 'conexao.php';
@@ -616,6 +610,7 @@ if (
         erro_mensagem("Erro 153455! A sua sessão expirou! Faça novamente o cadastro");
         exit();
     }
+    
     if(!isset($_SESSION['chave']))
     {
         erro_mensagem("Erro 167845! Faça novamente o cadastro clicando na página incial o botão QUERO ME CADASTRAR");
@@ -723,11 +718,12 @@ if (
     //////////////////////////////////////////////////////
     // Verifica se existe usuário na seleção
     //////////////////////////////////////////////////////
-    
+    /*asp silva*/
+
     $resultado = $conexao->get_usuario_cpf($cpf);
     if(count($resultado) > 0)
     {
-        erro_mensagem("Erro 3463457456! Candidato já cadastrado! Nome:".$resultado[0]['nome_completo']." e CPF:".$resultado[0]['cpf']);
+        erro_mensagem("Erro 3463457456! Candidato já cadastrado nesta seleção! Nome: ".$resultado[0]['nome_completo']." e CPF:".$resultado[0]['cpf']);
         exit();
     }
     

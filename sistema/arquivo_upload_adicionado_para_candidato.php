@@ -110,8 +110,6 @@ try
     $extensao = strtolower(end(explode('.', $_FILES['arquivo']['name'])));
     
     if (array_search($extensao, $_UP['extensoes']) === false) 
-
-    
     {
       erro("Erro 234623634! Por favor envie arquivos nos formatos:<br> PDF, DOC, DOCX, XLS, XLSX, ODT, ODS, PNG, JPG ou JPEG");
       //erro("Erro 276437457! Por favor envie arquivos no formato PDF");
@@ -168,4 +166,7 @@ catch (Exception $e)
     //erro("Exceção capturada! :" .  $e->getMessage());
     exit();
 }
+    
+
+   
 ?>

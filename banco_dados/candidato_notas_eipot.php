@@ -5,14 +5,11 @@ session_start();
 include_once 'conexao.php';
 $conexao = new Conexao();
 
-/*
 if(!$_POST)
 {
     erro_mensagem("Erro 326264567!");
     exit();
 }
-    */
-    
 
 if(!isset($_SESSION['chave']) || !isset($_SESSION['selecao']))
 {
@@ -52,6 +49,7 @@ $quantidade_barra = (int)htmlspecialchars(trim($_POST['qtd_barra']));
 $distancia_corrida = (int)htmlspecialchars(trim($_POST['dist_corrida']));
 $nota_ofor = htmlspecialchars(trim($_POST['notafinal_ofor']));
 $ano_formacao = (int)htmlspecialchars(trim($_POST['nota_ano_formacao']));
+
 $testa_usuario = $conexao->get_usuario_id($id_usuario_eipot);
 
 if($testa_usuario[0]['cpf'] != $cpf_candidato)
@@ -67,6 +65,8 @@ if($nota_ofor > 10)
     erro("Erro 34636346! A nota final do curso OFOT não pode ser maior que 10");
     exit();
 }
+
+
 
 if($_POST)
     $resultado = $conexao->atualiza_notas_eipot($id_usuario_eipot,$quantidade_flexao_braco,$quantidade_abdominal,$quantidade_barra,$distancia_corrida,$ano_formacao,$nota_ofor);

@@ -17,7 +17,7 @@ $_SESSION['chave'] = $codigo_chave;
     
 $_SESSION['nome_arquivo'] = "3rm_eipot_2024.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
-$_SESSION['selecao'] = 1050;
+$_SESSION['selecao'] = 1054;
 $_SESSION['eipot'] = 1;
 $_SESSION['apresentacao_candidato'] = "Seleção EIPOT";
 
@@ -90,6 +90,7 @@ function verifica_campos()
           <form class="login-form" method="post" action="banco_dados/login.php" onsubmit="return verifica_campos()">
             <center>
                 <font size="5px"><b>SiSCanT </b></font><font size="2px"></font>
+               
             </center>
             <br>
             

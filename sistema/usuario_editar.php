@@ -149,7 +149,6 @@ if($get_usuario[0]['perfil'] != "avaliador")
                                 <option <?php if($get_usuario[0]['perfil'] == "avaliador") echo "selected" ?> value="avaliador">Avaliador de currículo</option>
                                 <option <?php if($get_usuario[0]['perfil'] == "documentos") echo "selected" ?> value="documentos">Avaliador de docs obrigatórios</option>
                                 <option <?php if($get_usuario[0]['perfil'] == "om") echo "selected" ?> value="om">Organização Militar (OM)</option>
-                                <option <?php if($get_usuario[0]['perfil'] == "jise") echo "selected" ?> value="jise">JISE</option>
                             </select>
                         </div>
                     </div>

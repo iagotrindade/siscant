@@ -33,14 +33,14 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != "ouvidor" && $_SESS
                     <table class="table table-hover table-bordered" id="tabela_dinamica">
                         <thead>
                             <tr>
-                                <th style="text-align: center;">Tutorial SISCANT EIPOT Recursos</th>
+                                <th style="text-align: center;">Tutorial SISCANT EIPOT RECURSOS</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>
                                     <div style="text-align: center; border-radius:10px; padding: 25px;">
-                                        <video width="1024" height="768" controls style="border-radius:5px; box-shadow: 0px 0px 10px #197249">
+                                        <video width="1280" height="720" controls style="border-radius:5px; box-shadow: 0px 0px 10px #197249">
                                             <source src="tutoriais/video_tres.mp4" type="video/mp4">
                                             Seu navegador não suporta a tag de vídeo.
                                         </video>

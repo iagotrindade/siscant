@@ -92,7 +92,7 @@ try
     $nome_original = $_FILES['arquivo']['name'];    
 
     // Pasta onde o arquivo vai ser salvo
-    $_UP['pasta'] =  '../pasta_arquivos'; // $_SESSION['pasta_arquivos'];
+    $_UP['pasta'] = $_SESSION['pasta_arquivos'];
 
     // Tamanho máximo do arquivo (em Bytes)
     $_UP['tamanho'] = 1024 * 1024 * 5; // 5Mb

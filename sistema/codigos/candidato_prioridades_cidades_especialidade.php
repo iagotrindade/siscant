@@ -11,7 +11,7 @@ if($selecao_libera_prioridade_candidato != '1')
     $quantidade_cidades = $conexao->get_quantidade_cidades_especialidade($id_especialidade);  
     $quantidade_cidades = $quantidade_cidades[0]['quantidade'];
     $lista_cidades = $conexao->get_cidades_especialidade_candidato($id_especialidade, $id_candidato_x_especialidade);  
-
+    
 ?>
  
 <div class="row" >

@@ -82,6 +82,14 @@ $ano_incorporacao = $candidato_relatorio[0]['ano_incorporacao'];
 $posto_grad = $candidato_relatorio[0]['posto_grad'];
 $arma_quadro_servico = $candidato_relatorio[0]['arma_quadro_servico'];
 $licenciamento = $candidato_relatorio[0]['licenciamento'];
+$autodeclaracao = $candidato_relatorio[0]['autodeclaracao'];//ASPSILVA 19MAIO25
+$vaga_reservada = $candidato_relatorio[0]['vaga_reservada'];
+
+
+ if ($vaga_reservada == 0 || ($vaga_reservada == null))  $vaga_reservada = "Não";
+ if ($vaga_reservada == 1) $vaga_reservada = "Sim";
+                                
+
 
 //EIPOT
 $curso_graduacao = $candidato_relatorio[0]['curso_graduacao'];
@@ -347,6 +355,11 @@ if($civil_militar == 'militar' || $ativa_reserva == 'ja_foi_militar')
         $html = $html . "<td><b>Licenciamento: </b>$licenciamento</td>";
     $html = $html . "</tr>";
 }
+$html = $html ."
+<tr>
+      <td><b>Auto Declaração: </b> $autodeclaracao </td>
+      <td><b>Concorrendo vaga reservada: </b> $vaga_reservada</td>
+  </tr>";
 
 $html = $html . "</table> 
         <br>";

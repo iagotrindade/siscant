@@ -45,7 +45,7 @@
                         <div  class="col-lg-2">
                             <input name="data_ata_saude" maxlength="100" class="form-control" placeholder="Dia dos exames" >
                         </div>
-                        <!--
+                        
                         <div  class="col-lg-2">
                             <input name="assinante_1" maxlength="100" class="form-control" placeholder="1º assinante/CRM" >
                         </div>
@@ -175,20 +175,7 @@
                             $dias_vida = $intervalo->format('%D');
                             
                             
-                            /*
-                             * 
-                             * 
-                                voluntario_12rm
-
-                                voluntario_sv_militar
-
-                                data_exame_saude
-                                grupo_saude
-
-                                grupo_saude_recurso
-                                data_exame_saude_recurso
-                             */
-                            
+                                                 
                             $voluntario = "Vol_SV_X" ;
                             if($linha['voluntario_sv_militar'] === '1') $voluntario = "Vol_SV_SIM" ;
                             if($linha['voluntario_sv_militar'] === '0') $voluntario = "Vol_SV-NÃO" ;
@@ -214,30 +201,24 @@
                             if($voluntario_12 == '0') $voluntario_12 = "12_RM-NÃO";
                             
                             
-                                echo '
-                                <tr '.$bgcolor.'>
-                                <td><a href="usuario_visualiza.php?id_usuario='.$linha['id'].'"> '.$concorrendo.' *'.$anos_vida.'a'.$meses_vida.'m'.$dias_vida.' '.
-                                $voluntario . ' ' .  $texto_dependente .' '. $estado_civil . ' ' . $voluntario_12 . ' ' .
-                                $linha['cpf'].'</a></td>
+                                echo '<tr '.$bgcolor.'> <td><a href="usuario_visualiza.php?id_usuario='.$linha['id'].'">' . $linha['cpf'].'</a></td>
                                 <td>'.$linha['nome_completo'].'</td>
                                 <td>'.$linha['instituto_ensino'].' / '.$linha['ano_formacao'].'</td>
                                 <td>_'.$ano_selecao.'_</td>';
-                                //<td>'.$data_nascimento.'</td>
-                                //<td>'.$linha['mail'].'</td>
-                                echo '<td>'.$lista_especialidades.'</td>
+
+                         echo '<td>'.$lista_especialidades.'</td>
                                 <td>'.$data_fim_adiamento.'</td>
                                 <td>#'.$grupo_jise.'_</td>
                                 <td>'.$data_ex_saude.'</td>
                                 <td>#'.$sit_distribuicao.'</td>
                                 <td>'.$linha['observacao_distribuicao'].'</td>
                                     ';
-                                // <td width="40px"><a href="edita_medico_obrigatorio.php?id_usuario='.$linha['id'].'"><img title="Editar" src="imagens/editar.png" width="30px"></a></td>
+                                
                                 echo'<td width="30px"><a onclick="funcao_apagar(\''.$linha['id'].'\', \'candidato\')"><img title="Apagar" src="imagens/apagar.png" width="30px"></a></td>
                                 </tr>';
                              
                         }
-                        // ALTERA SENHA <td width="30px"><a href ="medico_obrigatorio_altera_senha.php?id_usuario='.$linha['id'].'" ><center><img data-toggle="tooltip" title="Resetar senha" src="imagens/senha.png" width="30px"></center></a></td>
-                        // FOTO <td width="40px"><a href="usuario_visualiza.php?id_usuario='.$linha['id'].'"><img title="Visualizar" class="img-circle" src="fotos/'.$foto.'" width="40px"></a></td>
+                        
                     ?>
 
                 </tbody>

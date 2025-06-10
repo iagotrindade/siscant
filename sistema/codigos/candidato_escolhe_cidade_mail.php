@@ -32,7 +32,7 @@ $mail_envia->SMTPOptions = array(
 $mail_envia->IsSMTP(); // Define que a mensagem será SMTP
 
 //$mail_envia->Host = "smtp.1cta.eb.mil.br"; // Endereço do servidor SMTP --- Funcionando até 30/11/2021
-$mail_envia->Host = "lugia.1cta.eb.mil.br"; // Endereço do servidor SMTP
+$mail_envia->Host = "10.25.111.80"; // Endereço do servidor SMTP
 
 
 $mail_envia->SMTPAuth = false; // Autenticação

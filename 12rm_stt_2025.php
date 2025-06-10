@@ -19,7 +19,7 @@ $_SESSION['chave'] = $codigo_chave;
 $_SESSION['selecao'] = 1122;
 $_SESSION['12_regiao'] = true;
 
-$_SESSION['apresentacao_candidato'] = "Seleção STT 2025";
+$_SESSION['apresentacao_candidato'] = "Seleção STT 2024/2";
 $_SESSION['nome_arquivo'] = "12rm_stt_2025.php";
 
 // AMBIENTE DE TESTES

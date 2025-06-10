@@ -44,13 +44,17 @@ $lista_usuarios = $conexao->get_usuarios_apagados();
                     </tr>
                 </thead>
                 <tbody>
+
                     <?php
                         foreach ($lista_usuarios as $linha) 
                         {
+                            
                             $foto = "user.jpg";
+                            
                             $get_foto = $conexao->get_foto_usuario($linha['id']);  
                             if(count($get_foto) > 0)
                                 $foto = $get_foto[0]['nome'];
+                            
                                 echo '
                                 <tr>
                                 <td>'.$linha['id'].'</td>

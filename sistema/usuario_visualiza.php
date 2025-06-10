@@ -52,7 +52,7 @@ include_once './codigos/variaveis_usuario_visualiza.php';
     
     
 </div>
-</div>
+
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">$('#tabela_dinamica').DataTable();</script>

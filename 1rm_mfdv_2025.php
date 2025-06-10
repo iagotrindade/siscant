@@ -83,7 +83,7 @@ function verifica_campos()
             <h1><b>Sistema de Seleção de Candidatos Temporários
             <br> MFDV 
             <br>Oficial Técnico Temporário
-            <br>Médicos, Dentistas, Farmacêuticos e Veterinários
+            <br>Médicos, Farmacêuticos, Dentistas e Veterinários
             
             </b></h1>
         </font>
@@ -111,6 +111,7 @@ function verifica_campos()
 
             <input hidden name="pagina_acessada" value="<?php echo $_SERVER['PHP_SELF'] ?>" >
             
+            
             <div id="div_mensagem"> <center><font color="red"><b><span id="mensagem"></span></b></font></center> </div>
 
             <div id="div_usuario_senha_invalido" <?php  if($usuario_senha != 'invalido') echo "hidden"; ?> > <center><font color="red"><b>Usuário e/ou senha inválido(s)</b></font></center> </div>
@@ -137,10 +138,12 @@ function verifica_campos()
         <div class="form-group">
             <center><font size="5px"><b><a class="btn btn-info" href="sistema/suporte_inicial.php">Suporte <i class="fa fa-support"></i></a></b></font></center>
         </div>
+        
         <p class="semibold-text mb-0"><a target="_blank" href="http://www.3rm.eb.mil.br/index.php/servico-militar-regional?id=911"><u>Página do Processo Seletivo (Aviso de Convocação)</u></a></p>
         
         -->
     </section>
+      
     <script src="sistema/js/jquery-3.3.1.min.js"></script>
     <script src="sistema/js/bootstrap.min.js"></script>
     <script src="sistema/js/plugins/pace.min.js"></script>

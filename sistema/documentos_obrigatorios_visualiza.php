@@ -9,10 +9,8 @@
         $liberado_para_visualizar_avaliacao_docs_obr = true;
     
     $get_candidato = $conexao->get_usuario_id($_SESSION['id_usuario']);
-   
     $filtro_lista_docs_obrigatorios_sobrando = retorna_docs_obrigatorios_sobrando_candidato($get_candidato,$lista_docs_obrigatorios_sobrando);
     $quantidade_docs_faltantes = count($filtro_lista_docs_obrigatorios_sobrando);
-
 ?>
 
 <div class="content-wrapper">

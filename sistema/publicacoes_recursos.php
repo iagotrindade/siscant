@@ -98,7 +98,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
                     <input type="text" name="subtitulo" class="form-control" value="Relatório da Análise de Recursos Etapa III e Convocação ISGRec- Xª Região Militar" required>
                 </div>
             </div>
-
+            
             <div class="form-group">
                 <label for="paragrafo_um_resultado">Texto Resultado Análise Recursos (1º Parágrafo):</label>
                 <textarea type="text" name="paragrafo_um_resultado" class="form-control" required>O Comandante da Xª Região Militar divulga o parecer da análise de recursos referente à Etapa III e convoca para  Inspeção de Saúde em Grau de Recurso (ISGR), conforme Anexo “A” (Calendário de Eventos) do Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025.</textarea>
@@ -109,7 +109,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
                 <textarea style="height: 40px;" type="text" name="paragrafo_dois_resultado" class="form-control" required>A presente relação NÃO está em ordem de CLASSIFICAÇÃO.</textarea>
             </div>
 
-            <div style="background-color: #CCC; height: 1px;" class="mb-20 mt-40"></div>
+            <div style="background-color: #CCC; height: 1px;" class= "mb-20 mt-40"></div>
 
             <div class="form-group">
                 <label for="paragrafo_um_convocacao">Texto Convocação ISGRec (1º Parágrafo):</label>
@@ -121,7 +121,7 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'];
                 <textarea style="height: 40px;" type="text" name="paragrafo_dois_convocacao" class="form-control" value="">Informo que será ELIMINADO do processo seletivo o candidato CONVOCADO que NÃO COMPARECER na data, horário e local determinado.</textarea>
             </div>
 
-            <div style="background-color: #CCC; height: 1px;" class="mb-20 mt-40"></div>
+            <div style="background-color: #CCC; height: 1px;" class= "mb-20 mt-40"></div>
 
             <p class="alert-danger" style="padding: 10px; border-radius: 5px;">PARA A QUEBRA DE LINHAS UTILIZAR " # " ANTES DO ENDEREÇO!</p>
 

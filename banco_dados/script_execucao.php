@@ -1,6 +1,5 @@
 <?php
 
-
 include_once '../sistema/funcoes.php';
 session_start();
 

@@ -1,9 +1,9 @@
 
 <?php
 /**
-* @author Asp Volpato
-* 2.0v - 08/06/2022 - recuperação de senha da vpn
-*/
+ * @author Asp Volpato
+ * 2.0v - 08/06/2022 - recuperação de senha da vpn
+ */
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -18,18 +18,7 @@ include_once '../envia_carta/src/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-        
 
-
-
-/**
- * sendmail function
- * envia email para o usuário com um código para confirmação
- *
- * @param [string] $user_mail - email informado do usuário
- * @param [string] $idt  - identidade militar do usuário
- * @return void
- */
 
 /*
 function sendmail($mail, $cpf_usuario) {
@@ -59,22 +48,23 @@ function sendmail($mail, $cpf_usuario) {
         )
     );
     */
-    $randomString = 'r@nd0m$tring';
+$randomString = 'r@nd0m$tring';
 
-    //Create a new PHPMailer instance
-    $mail = new PHPMailer();
-    //Tell PHPMailer to use SMTP
-    $mail->SMTPDebug = 0;
-   
-    $mail->SMTPOptions = array(
-        'ssl' => array(
-           'verify_peer' => false,
-            'verify_peer_name' => true,
-            'allow_self_signed' => true
-        )); 
+//Create a new PHPMailer instance
+$mail = new PHPMailer();
+//Tell PHPMailer to use SMTP
+$mail->SMTPDebug = 0;
+
+$mail->SMTPOptions = array(
+    'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => true,
+        'allow_self_signed' => true
+    )
+);
 
 try {
-    
+
     $mail->isSMTP();
     $mail->Host = 'smtp.webmail.eb.mil.br'; // Servidor SMTP
     $mail->SMTPAuth = true;
@@ -82,43 +72,41 @@ try {
     $mail->Password = '12345678'; // Sua senha SMTP
     $mail->SMTPSecure = 'tls';  //'tls' Define o tipo de criptografia para TLS
     $mail->Port = 587; // Porta TCP para TLS
-   
+
     $mail->From = 'siscant@3rm.eb.mil.br'; //Set who the message is to be sent from
     $mail->FromName = utf8_decode('Não responda - Comando 3ª RM'); //Nome do Remetente
     $mail->Subject = utf8_decode('Recuperação de senha da VPN'); //Assunto da mensagem
 
-      // Configurações do remetente e destinatário
-      $mail->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente
-      //$mail->addAddress('siscant@3rm.eb.mil.br'); // Adiciona um destinatário
+    // Configurações do remetente e destinatário
+    $mail->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente
+    //$mail->addAddress('siscant@3rm.eb.mil.br'); // Adiciona um destinatário
 
-      $mail->AddAddress($mail_usuario, $cpf_candidato);
-  
-      // Conteúdo do e-mail
-      $mail->isHTML(true);                                        // Definir como HTML
-      $mail->Subject = 'Solicitacao de Reset de Senha';                       // Assunto do e-mail
-      $mail->Body = '<b>Sua nova senha do Siscant:</b>' . $nova_senha . '<br><br>Entre com seu CPF e sua nova senha. Em seguida escolha uma senha de 
+    $mail->AddAddress($mail_usuario, $cpf_candidato);
+
+    // Conteúdo do e-mail
+    $mail->isHTML(true);                                        // Definir como HTML
+    $mail->Subject = 'Solicitacao de Reset de Senha';                       // Assunto do e-mail
+    $mail->Body = '<b>Sua nova senha do Siscant: </b>' . $nova_senha . '<br><br>Entre com seu CPF e sua nova senha. Em seguida escolha uma senha de 
       sua preferência!<br>Este é um email automático, não responda.'; // Corpo da mensagem em HTML
-      $mail->AltBody = 'Este é o corpo alternativo em texto simples para clientes de e-mail sem suporte HTML.';
- 
-      $mail->SMTPDebug = 0;
-      $enviado = $mail->send();
+    $mail->AltBody = 'Este é o corpo alternativo em texto simples para clientes de e-mail sem suporte HTML.';
 
-      if(!$enviado) {
+    $mail->SMTPDebug = 0;
+    $enviado = $mail->send();
+
+    if (!$enviado) {
         echo 'Erro ao enviar o email: ' . $mail->ErrorInfo;
-        } else {
+    } else {
         echo 'Email enviado com sucesso!';
-        }
-     
-      if ($enviado) {
-        $foi_enviado_email = true;
-      }
-      else {
-        echo 'Falha ao enviar mensagem: ' . $mail->ErrorInfo;
     }
 
-    } catch (Exception $e) {
-        echo "Erro ao enviar mensagem: {$mail->ErrorInfo}";
-        }
+    if ($enviado) {
+        $foi_enviado_email = true;
+    } else {
+        echo 'Falha ao enviar mensagem: ' . $mail->ErrorInfo;
+    }
+} catch (Exception $e) {
+    echo "Erro ao enviar mensagem: {$mail->ErrorInfo}";
+}
 
 
     //Set the hostname of the mail server

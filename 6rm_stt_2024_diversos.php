@@ -22,11 +22,14 @@ $_SESSION['6_regiao'] = true;
 
 $_SESSION['apresentacao_candidato'] = "Sargento Técnico Temporário (STT)";
 
+
 // AMBIENTE DE TESTES
 //$_SESSION['pasta_arquivos'] = "arquivos/";
 
 //AMBIENTE DE PRODUÇÃO
 $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
+
+
 
 ?>
 <!DOCTYPE html>

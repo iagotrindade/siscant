@@ -4,7 +4,7 @@ session_start();
 
 if($_SESSION['perfil'] != 'candidato')
 {
-    erro("Erro 243734754! Você não tem permissão!");
+    erro("Erro 243734755! Você não tem permissão!");
     exit();
 }
 

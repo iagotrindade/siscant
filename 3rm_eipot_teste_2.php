@@ -17,8 +17,8 @@ $_SESSION['chave'] = $codigo_chave;
     
 $_SESSION['nome_arquivo'] = "3rm_eipot_teste_2.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
-//$_SESSION['selecao'] = 1114; // PRODUÇÃO
-$_SESSION['selecao'] = 1056; // LOCAL
+$_SESSION['selecao'] = 1114; // PRODUÇÃO
+//$_SESSION['selecao'] = 1056; // LOCAL
 $_SESSION['eipot'] = 1;
 $_SESSION['apresentacao_candidato'] = "Seleção EIPOT";
 

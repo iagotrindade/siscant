@@ -143,6 +143,7 @@ if(!empty($value['cidade_escolheu_servir']) || $value['concorrendo'] == 0) $cor_
                             
 if($value['concorrendo'] == 0) echo '<br><font color="red"><b> DESCLASSIFICADO: </b> '.$value['justificativa'].' </font>';
 
+
 $lista_epecialidades = $conexao->get_cidades_especialidade($value['id_especialidade']); 
 $get_vagas_especialidade = $conexao->get_vagas_especialidade($value['id_especialidade']);
 

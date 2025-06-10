@@ -14,6 +14,7 @@
 
     // SEGMENTO
 
+
     $selecao = $_SESSION['selecao'];
     $total_etapa_presencial = $conexao->get_total_etapa_presencial_rm();
     $total_1rm = $total_etapa_presencial[0]['rm_inscricao_1'];
@@ -132,6 +133,7 @@
     $quantidade_inscritos_concorrendo = $quantidade_stt_concorrendo + $quantidade_ott_concorrendo;
     $quantidade_inscritos_nao_concorrendo = $quantidade_total_inscrição - $quantidade_inscritos_concorrendo;
     
+    
     ///////////// GIGAS
     
     $quantidade_docs_obrigatorios = null;
@@ -189,12 +191,13 @@
             <div class="widget-small primary"><i class="icon fa fa-users fa-3x"></i>
               <div class="info">
                 
-                <h4>TOTAL INSCRIÇÕES: <u><?php echo $total_inscritos ?></u></h4>
+                <h4>TOTAL INSCRITOS NO BRASIL: <u><?php echo $total_inscritos ?></u></h4>
                 <p><b><?php echo " Concorrendo/Eliminados: " . $total_inscritos ."  / <font color='red'> $quantidade_candidatos_nao_concorrendo </font>"?></b></p>
 
               </div>
             </div>
         </div>
+        
         
         <!-- OTT STT -->
         
@@ -389,7 +392,6 @@ $labels_filtrados = array_values(array_filter($labels, function($index) use ($da
     return $dados[$index] != 0;
 }, ARRAY_FILTER_USE_KEY));
 
-
 // Gerar a string de dados para o gráfico
 $dados_para_grafico = implode(",", $dados_filtrados);
 $labels_para_grafico = implode('","', $labels_filtrados);
@@ -416,6 +418,8 @@ $labels_para_grafico = implode('","', $labels_filtrados);
                             "#2F4F4F",  // Verde-azulado escuro
                             "#A9A9A9"   // Cinza escuro
                         ],
+
+                        
                         data: [<?php echo $dados_para_grafico; ?>]
       }]
     },
@@ -745,6 +749,11 @@ Chart.plugins.register({
     }
 });
 </script>
+
+
+
+
+ 
 
 
 <script>

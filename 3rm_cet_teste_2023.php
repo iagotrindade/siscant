@@ -10,15 +10,17 @@ if(isset($_GET['usuario_senha']))
         $usuario_senha = 'invalido';
     
 $rand = rand(100, 10000);
-$string = "3rm_cet_teste_2023";
+$string = "selecao_cet_1033_2022";
 $codigo_criptografar = $rand.time().$string;
 $codigo_chave = substr(md5( $codigo_criptografar) ,0,6);
 $_SESSION['chave'] = $codigo_chave;
-
-// Mudar essas variaveis
+    
 $_SESSION['nome_arquivo'] = "3rm_cet_teste_2023.php";
+// A seleção é referente ao index da tabela do banco de dados SELEÇÃO
 $_SESSION['selecao'] = 1033;
+
 $_SESSION['apresentacao_candidato'] = "Seleção CET 2023";
+
 
 // AMBIENTE DE TESTES
 //$_SESSION['pasta_arquivos'] = "arquivos/";

@@ -45,7 +45,7 @@ $nome = null;
 
 $nome_completo = $get_usuario[0]['nome_completo'];
 $cpf_candidato = $get_usuario[0]['cpf'];
-$mail = $get_usuario[0]['mail'];
+$mail_candidato = $get_usuario[0]['mail'];
 $nome_guerra = $get_usuario[0]['nome_guerra'];
 $posto_grad = $get_usuario[0]['posto_grad'];
 
@@ -93,9 +93,8 @@ if($resultado)
         $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $cpf, $id_usuario, "16107", "usuario", "Update", "Resetou a senha do candidato $nome, CPF: $cpf_usuario", $alteracoes_detalhadas);
     
     $foi_enviado_email= false;
-    if($mail != null)
-      //  include_once './mail_reseta_senha_usuario.php';
-        include_once './sendmail.php';
+    if($mail_candidato != null)
+        include_once './mail_reseta_senha_usuario.php';
     
     $conexao = null;
     if($foi_enviado_email)

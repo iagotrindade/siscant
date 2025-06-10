@@ -106,6 +106,7 @@ function verifica_campos()
 
             <input hidden name="pagina_acessada" value="<?php echo $_SERVER['PHP_SELF'] ?>" >
             
+            
             <div id="div_mensagem"> <center><font color="red"><b><span id="mensagem"></span></b></font></center> </div>
 
             <div id="div_usuario_senha_invalido" <?php  if($usuario_senha != 'invalido') echo "hidden"; ?> > <center><font color="red"><b>Usuário e/ou senha inválido(s)</b></font></center> </div>

@@ -33,6 +33,8 @@
                     }
                 }
 
+                
+
                 ///////////////////////////////
 
                 /* CODIGOS MILITAR
@@ -81,7 +83,8 @@
 
                  // O de Menor idade  94306177025 pronto
 
-                 // O Mil Sd 2a cat de maior idade 39387225097 pronto
+                 // O Mil Sd 2a cat de maior idade 39387225097
+
 
                 ///////////////////////////////
                 //  TEMPO SERVIÇO PÚBLICO

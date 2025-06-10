@@ -3,14 +3,12 @@
     <div class="col-md-12">
         <div class="card">
             <div class="row">
-                    
                     <div class="alert alert-dismissible ">
                         <legend>Análise de Recurso</legend> 
                         <div  class="row">
                         <div class="col-lg-12">
                         <br>
                         <?php
-            
                                 $especialidades_avaliador = $conexao->get_especialidades_usuario_avaliador($_SESSION['id_usuario']);  
                         
                                 $lista_recursos = $conexao->get_recursos_candidato($id_usuario); 

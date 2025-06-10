@@ -3,10 +3,6 @@ include_once 'menu.php';
 include_once 'codigos/funcao_apagar.php';
 include_once './codigos/verifica_cadastro_especialidade_candidato.php';
 
-
-
-
-
 ?>
 
 <script type="text/javascript">
@@ -49,13 +45,10 @@ function selecao_cidade()
                         <div class="form-group col-lg-6" id="div_ott_stt">
                             <label>Selecione o tipo da especialidade</label>
                             <select id="ott_stt" name="ott_stt" class="form-control" onchange="busca_ott_stt()">
-                                <option value="">Selecione a opção</option>
                                 
                                 <?php
-
                                     if($codigo_selecao == 'mfdv')
-                                    echo "teste5";
-                                    echo '<option value="medico">Médico</option>
+                                        echo '<option value="medico">Médico</option>
                                         <option value="farmaceutico">Farmacêutico</option>
                                         <option value="dentista">Dentista</option>
                                         <option value="veterinario">Veterinário</option>';
@@ -73,9 +66,9 @@ function selecao_cidade()
                                     
                                     if($codigo_selecao == 'ottm')
                                         echo '<option value="ottm">OTTM</option>';
-                                    
-                                   
+
                                 ?>
+                                <option value="">Selecione a opção</option>
                                 
                             </select>
                         </div>

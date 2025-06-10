@@ -45,7 +45,7 @@ $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
     <script src="sistema/ajax/funcoes.js"></script>
 
 <script>
-function limpa_mensagem() 
+function limpa_mensagem()
 {
     $('#mensagem').text('');
 }

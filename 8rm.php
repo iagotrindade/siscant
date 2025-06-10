@@ -22,7 +22,7 @@
           <br>
           <center>
           <div class="form-group btn-info btn">
-                    <center>
+                    <BR>
                         <font size="5px">
                             <b>
                                <u>2025</u>
@@ -32,7 +32,22 @@
                          <br>
                          <a class="btn btn-warning" href="8rm_ott_2025.php">OTT 2025</a>
                          <a class="btn btn-warning" href="8rm_mfdv_2025.php">MFDV 2025</a>
-                       
+                        <br>
+                        <br>
+                         <a class="btn btn-warning" href="8rm_mfdv_2025_2.php">MFDV 003-SSMR/8 2025</a>
+                          <br>
+                          <br>
+                         <a class="btn btn-warning" href="8rm_ott_2025_2.php">OTT 004-SSMR/8 2025</a>
+                         <a class="btn btn-warning" href="8rm_ottm_2025.php">OTTM 005-SSMR/8 2025</a>
+                         <br>
+                         <br>
+                         <a class="btn btn-warning" href="8rm_stt_2025_2.php">STT 006-SSMR/8 2025</a>
+                        <br>
+                        <br>
+                         <a class="btn btn-warning" href="8rm_cet_2025_2.php">CET 007-SSMR/8 2025</a>
+                         <a class="btn btn-warning" href="8rm_cet_motorista_2025.php">CET MOTORISTA 008-SSMR/8 2025</a>
+                         <a class="btn btn-warning" href="8rm_cet_mus_2025.php">CET MÚSICO 2025</a>
+                          </center>
                   </div>
                   <br>
                   <br>
@@ -52,7 +67,8 @@
                          <br>
                          <a class="btn btn-warning" href="8rm_mfdv_2024_2sem.php">MFDV 2024</a>
                          <a class="btn btn-warning" href="8rm_cet_2025.php">CET 2024</a>
-                  </div>
+                  </center><!--SILVA-->
+                        </div>
                  <br>
                  <br>
              

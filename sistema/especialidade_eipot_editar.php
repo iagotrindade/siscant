@@ -40,6 +40,8 @@ if(isset($_GET['sucesso']) && $_GET['sucesso'] == 1)
 
 ?>
 
+
+
 <script>
     $(document).ready(function() {
     $('.js-example-basic-multiple').select2();
@@ -126,7 +128,7 @@ if(isset($_GET['sucesso']) && $_GET['sucesso'] == 1)
                             <select style="width: 100%" class="js-example-basic-multiple" name="om">
                             <option value="">Selecione a OM</option>
                                <?php
-                                    $lista_cidades =  $conexao->get_cidades_especialidade($get_especialidade[0]['id']); 
+                                    $resultado = $conexao->busca_oms(); 
                                     foreach ($resultado as $value) 
                                     {
                                         //echo '<option value="'.$value['id'].'">'.$value['nome'].'</option>';

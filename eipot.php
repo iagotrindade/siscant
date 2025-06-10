@@ -40,7 +40,10 @@
           <br>
           <br>
           <br>
+        
           <center>
+           
+            
             <div class="form-group btn-info btn">
                 <center>
                     <font size="5px">
@@ -53,6 +56,7 @@
                         <a class="btn btn-warning" href="eipot_tenr2_2025.php">TEN R/2 </a>
                 </center>
                 </div>
+              
                 <br>
                 <br>
           </center>

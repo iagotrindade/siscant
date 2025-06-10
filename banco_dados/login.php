@@ -97,7 +97,9 @@ if (count($resultado) == 1)
     $_SESSION['candidato'] = $resultado[0]['candidato'];
     $_SESSION['concorrendo'] = $resultado[0]['concorrendo'];
     $_SESSION['candidato_etapa'] = $resultado[0]['etapa'];
+    
     $_SESSION['medico_obrigatorio'] = $resultado[0]['medico_obrigatorio'];
+    
     $_SESSION['usuario_foto'] = "user.jpg";
     
     $foto_usuario = $conexao->get_foto_usuario($resultado[0]['id']);    

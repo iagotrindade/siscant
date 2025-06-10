@@ -19,7 +19,7 @@ $_SESSION['chave'] = $codigo_chave;
 $_SESSION['selecao'] = 1120;
 $_SESSION['12_regiao'] = true;
 
-$_SESSION['apresentacao_candidato'] = "Seleção OTT 2025";
+$_SESSION['apresentacao_candidato'] = "Seleção OTT 2024/2";
 $_SESSION['nome_arquivo'] = "12rm_ott_2025.php";
 
 // AMBIENTE DE TESTES

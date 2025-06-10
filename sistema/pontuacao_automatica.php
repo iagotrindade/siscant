@@ -111,6 +111,7 @@
                                 //$data_habilitacao = $valor['data_habilitacao'];
 
                                 $data_habilitacao = new DateTime(date($valor['data_habilitacao']));
+
                                 
                                 foreach ($lista_curriculo_adicionado as $curriculo) 
                                 {

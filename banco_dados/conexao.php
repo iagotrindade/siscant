@@ -12,7 +12,7 @@ class Conexao
         //$this->pdo = new PDO('mysql:host=10.25.60.31;dbname=siscant_hom;charset=utf8', 'root', 'suporte');
 
         //Produção
-        // $this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', '123@ati3rm');
+        //$this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', '123@ati3rm');
 
         //Produção 2025
         //$this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', 'ati@root@mysql');
@@ -2530,15 +2530,13 @@ class Conexao
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Candidatos Concorrendo">
-    // Fazendo INNER JOIN para trazer junto os dados da tabela candidato_x_especialidade
+    // Usando GROUP_CONCAT(e.nome SEPARATOR ', ') para juntar nomes das especialidades em uma única string e GROUP BY u.id para agrupar os resultados por candidato, evitando duplicidade na tabela de avaliação de documentos.
     public function get_candidatos_concorrendo()
     {
         $stmt = $this->pdo->prepare("
         SELECT 
             u.*, 
-            ce.id AS id_candidato_x_especialidade,
-            ce.id_especialidade,
-            e.nome AS nome_especialidade
+            GROUP_CONCAT(e.nome SEPARATOR ', ') AS especialidades
         FROM usuario u
         INNER JOIN candidato_x_especialidade ce 
             ON ce.id_candidato = u.id 
@@ -2553,6 +2551,7 @@ class Conexao
             AND u.apagado = 0 
             AND u.medico_obrigatorio IS NULL 
             AND u.id_selecao = :selecao
+        GROUP BY u.id
     ");
 
         $stmt->bindValue(':selecao', $_SESSION['selecao']);
@@ -3161,7 +3160,26 @@ order by total_pontos_somados desc");
         return $result;
     }
     // </editor-fold>
+    //ASP SILVA
+    public function get_lista_suporte_todos_candidatos()
+    {
+        $id_selecao = $_SESSION['selecao'];
 
+        $stmt = $this->pdo->prepare(
+            "
+                         select sc.* ,u.cpf, u.mail, u.rm_inscricao, user.posto_grad, user.nome_guerra
+                        from suporte_candidato sc
+                        inner join usuario u on u.id = sc.id_usuario_remetente
+                        left join usuario user on user.id = sc.id_usuario_respondeu
+                        where sc.apagado = 0 
+                        and u.id_selecao = :id_selecao
+                        order by sc.id"
+        );
+        $stmt->bindValue(':id_selecao', $id_selecao);
+        $run = $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     // <editor-fold defaultstate="collapsed" desc="Get currículo para o candidato cadastrar">
     public function get_curriculo_cadastrados()
     {
@@ -4631,9 +4649,6 @@ order by total_pontos_somados desc");
         $nota_ofor,
         $arma_eipot
     )
-    //  $rm_inscricao,
-    //   $rm_destino,
-    //  $datetime)
 
     {
         try {

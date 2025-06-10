@@ -17,9 +17,7 @@ $_SESSION['chave'] = $codigo_chave;
     
 $_SESSION['nome_arquivo'] = "3rm_radio_tv_2023.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
-
-//$_SESSION['selecao'] = 1004;
-$_SESSION['selecao'] = 31;
+$_SESSION['selecao'] = 1004;
 
 $_SESSION['apresentacao_candidato'] = "Seleção STT Rádio e TV (Locutor) 2023";
 

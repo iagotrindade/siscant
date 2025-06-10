@@ -17,7 +17,7 @@ $_SESSION['chave'] = $codigo_chave;
     
 $_SESSION['nome_arquivo'] = "eipot_teste.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
-$_SESSION['selecao'] = 1061; //1124; 
+$_SESSION['selecao'] = 1061; 
 $_SESSION['eipot'] = 1;
 $_SESSION['apresentacao_candidato'] = "Seleção EIPOT TESTE";
 
@@ -63,6 +63,7 @@ function verifica_campos()
     return true;
 }
 </script>
+
   </head>
   <body>
     <section class="material-half-bg">
@@ -81,9 +82,10 @@ function verifica_campos()
               <img src="sistema/imagens/9rm.png" width="80px" style="display: inline-block; margin: 5px;">
               <img src="sistema/imagens/10rm.png" width="80px" style="display: inline-block; margin: 5px;">
               <img src="sistema/imagens/11rm.png" width="80px" style="display: inline-block; margin: 5px;">
-              <img src="sistema/imagens/12rm_old.png" width="80px" style="display: inline-block; margin: 5px;">
+              <img src="sistema/imagens/12rm.png" width="80px" style="display: inline-block; margin: 5px;">
         </div>
 
+        
         <center>
         <font color="white">
             <b> Sistema de Seleção de Candidatos Temporários
@@ -129,6 +131,7 @@ function verifica_campos()
         </div>
         
   </section>
+      
     <script src="sistema/js/jquery-3.3.1.min.js"></script>
     <script src="sistema/js/bootstrap.min.js"></script>
     <script src="sistema/js/plugins/pace.min.js"></script>

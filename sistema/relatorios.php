@@ -40,6 +40,7 @@
       </ul>
     </div>
   </div>
+
     
   <div class="row">
     <div class="col-md-12">
@@ -68,6 +69,9 @@
                         </select>
                     </div>
                 </div>
+
+           
+
                 <div class="col-lg-4">
                     <div class="form-group"> 
                         <select name="etapa" class="form-control">
@@ -201,21 +205,6 @@
                         </select>
                     </div>
                 </div>
-                <div  class="col-lg-12">
-                    <button  type="submit" class="btn btn-primary btn-block">GERAR RELATÓRIO</button> 
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-
-           
-    <div class="card">
-        <legend>Convocados para Inspeção de Saúde <img src="imagens/pdf.png" height="30px"></legend>
-        <div class="card-body">
-            <form action="mpdf/relatorio_convocados_inspecao_saude.php" method="post">
-            <div class="row">
-               
                 <div  class="col-lg-12">
                     <button  type="submit" class="btn btn-primary btn-block">GERAR RELATÓRIO</button> 
                 </div>

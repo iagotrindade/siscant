@@ -1,4 +1,5 @@
 <?php
+/*ASP SILVA 06 JUN 25*/
 include_once 'menu.php';
 
 if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != "ouvidor" && $_SESSION['perfil'] != "consulta") {
@@ -8,7 +9,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != "ouvidor" && $_SESS
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
 
-$lista_suporte = $conexao->get_lista_suporte_candidato($rm_usuario);
+$lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
 ?>
 
 <div class="content-wrapper">

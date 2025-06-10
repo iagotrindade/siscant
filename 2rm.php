@@ -29,7 +29,9 @@
                             </b>
                         </font>
                          <br>
-                         <a class="btn btn-warning" href="2rm_stt_2025.php">STT</a>
+                         <a class="btn btn-warning" href="2rm_stt_2025.php">STT</a> 
+                         <BR/><BR/>
+                         <a class="btn btn-warning" href="2rm_cro_pctd_2025.php">PCTD - CRO/2</a>
                     </center>
                 </div>
                 <br>
