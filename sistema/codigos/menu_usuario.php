@@ -69,7 +69,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
         <li <?php if (!isset($_SESSION['eipot']) || $perfil == "jise") echo " hidden " ?> class="treeview"><a href="candidato_lista_eipot_docs_obrigatorios.php"><i class="fa fa-map-marker"></i><span>EIPOT - Etapas Presenciais</span></a></li>
 
-        <li <?php if (!isset($_SESSION['eipot'])|| $perfil == "jise" ) echo " hidden " ?> class="treeview"><a href="pesquisa_recursos.php"><i class="fa fa-file-text"></i><span>Recursos</span></a></li>
+        <li <?php if (!isset($_SESSION['eipot']) || $perfil == "jise") echo " hidden " ?> class="treeview"><a href="pesquisa_recursos.php"><i class="fa fa-file-text"></i><span>Recursos</span></a></li>
 
         <li <?php if (isset($_SESSION['eipot']) || $perfil == "jise") echo " hidden " ?> class="treeview"><a href="candidato_lista.php"><i class="fa fa-users"></i><span>Candidatos participando</span></a></li>
 
@@ -80,17 +80,20 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         <li <?php if ($_SESSION['selecao_codigo'] != 'mfdv') echo "hidden" ?> class="treeview"><a href="medicos_obrigatorios.php"><i class="fa fa-user-md"></i><span>Médicos Obrigatórios</span></a></li>
 
         <li <?php if (!isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview"><a href="eipot_etapa_III.php"><i class="fa fa-address-book"></i><?php if ($_SESSION['perfil'] == "jise") echo ('JISE');
-                                                                                                                                                        else echo ('Dados Cadastro IS - SIPMED') ?></a></>
+                                                                                                                                                    else echo ('Dados Cadastro IS - SIPMED') ?></a>
+
+        <li <?php if (!isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview"><a href="eipot_etapa_v.php"><i class="fa fa-check-circle"></i><?php if ($_SESSION['perfil'] == "chc" ||$_SESSION['perfil'] == "cr"  ) echo ('Heteroidentificação');
+                                                                                                                                                    else echo ('Heteroidentificação') ?></a>
         <li <?php if ($perfil == "jise") echo " hidden " ?> class="treeview"><a href="usuario_lista.php"><i class="fa fa-user"></i>Usuários</a></li>
     </ul>
 </li>
 
-<li <?php if ($perfil == "ouvidor" || $perfil == "avaliador" || $perfil == "documentos" || $perfil == "om" || $perfil == "jise") echo "hidden" ?> class="treeview">
+<li <?php if ($perfil != "admin") echo "hidden" ?> class="treeview">
     <a href="#"><i class="fa fa-pencil"></i><span>Publicações</span><i class="fa fa-angle-right"></i></a>
     <ul class="treeview-menu">
         <li class="treeview"><a href="publicacoes_eipot.php"><i class="fa fa-pencil"></i>Etapa I e II</a></li>
         <li class="treeview"><a href="publicacoes_eipot_etapa_III.php"><i class="fa fa-pencil"></i>Etapa III</a></li>
-        <li class="treeview"><a href="publicacoes_eipot_etapa_IV.php"><i class="fa fa-pencil"></i>Etapa IV</a></li>
+        <li class="treeview"><a href="publicacoes_eipot_etapa_iv.php"><i class="fa fa-pencil"></i>Etapa IV</a></li>
         <li class="treeview"><a href="publicacoes_recursos.php"><i class="fa fa-pencil"></i>Recursos</a></li>
     </ul>
 </li>

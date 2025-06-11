@@ -7,29 +7,31 @@ include_once 'codigos/funcao_apagar.php';
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
 
-session_start();
 if ($candidato == 1 || $perfil == 'candidato' || $_SESSION['candidato'] == 1) {
     erro("Erro 23543! Página não encontrada!");
     exit();
 }
 
-if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'jise') {
+if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SESSION['perfil'] != 'chc' && $_SESSION['perfil'] != 'cr') {
     erro("Erro 632457437! Página não encontrada!");
     exit();
 }
 
 ?>
-
 <div class="content-wrapper">
     <div class="page-title">
         <div>
-            <h1><?php if($_SESSION['perfil'] == "jise") echo('Resultado IS'); else echo('Cadastro Dados IS - SIPMED'); ?> <i class="fa fa-address-book"></i></h1>
+            <h1>
+                Heteroidentificação Complementar <i class="fa fa-check-circle"></i>
+            </h1>
         </div>
         <div>
             <ul class="breadcrumb">
                 <li><i class="fa fa-home fa-lg"></i></li>
                 <li><a href="index.php">Página Inicial</a></li>
-                <li><?php if($_SESSION['perfil'] == "jise") echo('Resultado IS'); else echo('Cadastro Dados IS - SIPMED')?></li>
+                <li>
+                    Heteroidentificação Complementar
+                </li>
             </ul>
         </div>
     </div>
@@ -45,16 +47,16 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <th>Nome</th>
                                 <th>Etapa</th>
                                 <th>Especialidade</th>
-                                <th>IS - JISE</th>
-                                <th>ISGRec - JISR</th>
-                                <th>Recurso Etapa 3</th>
+                                <th>HC</th>
+                                <th>HC - RECURSO</th>
+                                <th>Recurso Etapa 5</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
 
                             $candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
-                            $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario );
+                            $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario);
 
                             foreach ($candidatos as $linha) {
                                 $aparece = true;
@@ -93,15 +95,15 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 } elseif ($linha['apto_saude_recurso'] == NULL) {
                                     $recurso_saude = 'NÃO REALIZADA';
                                 }
-                                
+
                                 $recursoEtapa3 = null; // <- Inicialização correta
 
-                                foreach($recursos as $recurso) {
-                                    if($recurso['id_candidato'] == $linha['id'] && $recurso['etapa'] >= 3) {
-                                        if($recurso['obs_etapa'] == '3 - IS') {
+                                foreach ($recursos as $recurso) {
+                                    if ($recurso['id_candidato'] == $linha['id'] && $recurso['etapa'] >= 3) {
+                                        if ($recurso['obs_etapa'] == '3 - IS') {
                                             $recursoEtapa3 = '3 - IS';
                                             break;
-                                        } elseif($recurso['obs_etapa'] == '3 - Documental') {
+                                        } elseif ($recurso['obs_etapa'] == '3 - Documental') {
                                             $recursoEtapa3 = '3 - Documental';
                                             break;
                                         }
@@ -119,37 +121,12 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <td>' . $saude . '</td>
                                 <td>' . $recurso_saude . '</td>
                                 <td>' . $recursoEtapa3 . '</td>';
-                             }
+                            }
 
                             ?>
                         </tbody>
                     </table>
                 </div>
-            </div>
-
-            <div class="card" <?php if($_SESSION['perfil'] == 'jise') echo('hidden')?>>
-                <legend>Cadastro Dados IS - SIPMED
-                    <img src="imagens/pdf.png" width="30px">
-                </legend>
-
-                <form name="form_relacao_classificacao_eipot_pontuacao" action="mpdf/relatorio_sipmed.php" method="post">
-
-                    <div style="float: left; width: 100%; margin-right: 4%;">
-                        <div class="form-group">
-                            <label for="titulo_sipmed">Título:</label>
-                            <input type="text" name="titulo_sipmed" class="form-control" value="Dados Cadastro para Inspeção de Saúde no SIPMED - Xª RM" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="texto_sipmed">Texto:</label>
-                            <input type="text" name="texto_sipmed" class="form-control" value="Tendo em vista a convocação dos candidatos EIPOT/2025, abaixo relacionados, para a realização de Inspeção de Saúde na Xª RM, solicito que os mesmos sejam cadastrados no Sistema de Perícias Médicas - SIPMED para a realização das Inspeções de Saúde no período entre 19 a 21 Maio 25." required>
-                        </div>
-                    </div>
-
-                    <div class="col-mg-12">
-                        <button type="submit" class="btn btn-primary btn-block">GERAR ANEXO</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

@@ -149,32 +149,32 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
         <br>
     </form>
 
-    <form name="form_relacao_classificacao_eipot_pontuacao" action="mpdf/resultado_eipot_etapa_III.php" method="post">
+    <form name="form_relacao_classificacao_eipot_pontuacao" action="mpdf/resultado_eipot_etapa_iv.php" method="post">
         <div class="card">
             <h3>Resultado Etapa IV - EAF</h3><br> <!-- Título do formulário -->
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
                     <label for="titulo">Título:</label>
-                    <input type="text" name="titulo_resultado_etapa_presencial" class="form-control" value="ESTÁGIO DE INSTRUÇÃO E DE PREPARAÇÃO PARA OFICIAIS TEMPORÁRIOS (EIPOT) / 2025" required>
+                    <input type="text" name="titulo_resultado_etapa_iv" class="form-control" value="ESTÁGIO DE INSTRUÇÃO E DE PREPARAÇÃO PARA OFICIAIS TEMPORÁRIOS (EIPOT) / 2025" required>
                 </div>
             </div>
 
             <div style="float: left; width: 48%;">
                 <div class="form-group">
                     <label for="titulo_um">Subtítulo:</label>
-                    <input type="text" name="subtitulo_resultado_etapa_presencial" class="form-control" value="Resultado Etapa IV - EAF - Xª RM" required>
+                    <input type="text" name="subtitulo_resultado_etapa_iv" class="form-control" value="Resultado Etapa IV - EAF - Xª RM" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="paragrafo_um_resultado_resultado_iv">Primeiro Parágrafo:</label>
-                <input type="text" name="paragrafo_um_resultado_resultado_iv" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Etapa IV." required>
+                <label for="paragrafo_um_resultado_iv">Primeiro Parágrafo:</label>
+                <input type="text" name="paragrafo_um_resultado_iv" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Etapa IV." required>
             </div>
 
             <div class="form-group">
                 <label for="paragrafo_dois_resultado_iv">Segundo Parágrafo:</label>
-                <input type="text" name="paragrafo_dois_resultado_iv" class="form-control" value="O período para interposição de Recursos da Etapa III será nos dias 26 a 28 de maio de 2025 das 0930h às 1130h e das 1300h às 1630h, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre." required>
+                <input type="text" name="paragrafo_dois_resultado_iv" class="form-control" value="O período para interposição de Recursos da Etapa IV será nos dias 18, 23 e 24  de junho de 2025 das 0930h às 1130h e das 1300h às 1630h, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre." required>
             </div>
 
             <div class="form-group">
@@ -185,7 +185,7 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
                     <label for="titulo">Data:</label>
-                    <input type="text" name="texto_dia" class="form-control" value="Porto Alegre - RS, 23 de Maio de 2025" required>
+                    <input type="text" name="texto_dia" class="form-control" value="Porto Alegre - RS, 17 de Junho de 2025" required>
                 </div>
             </div>
 

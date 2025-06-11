@@ -149,6 +149,19 @@ function get_nota_corrida($distancia)
     return $nota;
 }
 
+// 11/06/2025 Iago Silva adicionado cálculo do intervalo percorrido
+function get_intervalo_corrida($distancia)
+{
+    $intervalo_corrida = "0 - 1799";
+
+    if($distancia >= 1801 && $distancia <=2000) $intervalo_corrida = "1801 - 2000";
+    if($distancia >= 2001 && $distancia <=2200) $intervalo_corrida = "2001 - 2200";
+    if($distancia >= 2201 && $distancia <=2400) $intervalo_corrida = "2201 - 2400";
+    if($distancia >= 2401 && $distancia <=2600) $intervalo_corrida = "2401 - 2600";
+    if($distancia > 2600) $intervalo_corrida = "2601 - 2800";
+    return $intervalo_corrida;
+}
+
 function inscricao()
 {
     if($_SESSION['selecao_data_final_inscricao'] == null)

@@ -108,6 +108,7 @@ if ($_SESSION['perfil'] != 'admin') {
                                 <input maxlength="20" name="telefone" class="form-control">
                             </div>
 
+                            <!-- 10/06/2025 Adicionando perfil Membro CHC e Membro CR -->
                             <div id="div_perfil" class="form-group"> <label>Perfil</label>
                                 <select id="perfil" name="perfil" class="form-control" onchange="verifica_perfil()">
                                     <option value="">Selecione o Perfil</option>
@@ -116,8 +117,10 @@ if ($_SESSION['perfil'] != 'admin') {
                                     <option value="ouvidor">Ouvidor</option>
                                     <option value="avaliador">Avaliador de currículo</option>
                                     <option value="documentos">Avaliador de docs obrigatórios</option>
-                                    <option value="om">Organização Militar (OM)</option>
                                     <option value="jise">JISE</option>
+                                    <option value="chc">Membro CHC</option>
+                                    <option value="cr">Membro CR</option>
+                                    <option value="om">Organização Militar (OM)</option>
                                 </select>
                             </div>
                         </div>

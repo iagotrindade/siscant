@@ -2576,6 +2576,29 @@ class Conexao
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    // 11/06/2025 - Iago Silva Trazendo todos candidatos EIPOT independente da RM
+    public function get_candidatos_eipot()
+    {
+        $stmt = $this->pdo->prepare("
+           SELECT  u.*, 
+            u.id AS id_usuario, 
+            ce.id AS id_candidato_especialidade, 
+            e.nome AS arma_especialidade
+            FROM usuario u
+            INNER JOIN candidato_x_especialidade ce ON ce.id_candidato = u.id
+            INNER JOIN especialidade e ON ce.id_especialidade = e.id
+            WHERE u.apagado = 0 
+            AND u.id_selecao = :selecao
+            AND u.concorrendo = 1
+            ORDER BY u.nome_completo ASC;
+
+        ");
+        $stmt->bindValue(':selecao', $_SESSION['selecao']);
+        $run = $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Candidatos Concorrendo por OM">
@@ -4648,9 +4671,7 @@ order by total_pontos_somados desc");
         $ano_formacao_ofor,
         $nota_ofor,
         $arma_eipot
-    )
-
-    {
+    ) {
         try {
 
             $perfil = "candidato";
