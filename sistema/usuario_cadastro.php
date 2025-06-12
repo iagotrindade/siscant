@@ -118,8 +118,8 @@ if ($_SESSION['perfil'] != 'admin') {
                                     <option value="avaliador">Avaliador de currículo</option>
                                     <option value="documentos">Avaliador de docs obrigatórios</option>
                                     <option value="jise">JISE</option>
-                                    <option value="chc">Membro CHC</option>
-                                    <option value="cr">Membro CR</option>
+                                    <option value="chc">Comissão Heteroidentificação</option>
+                                    <option value="cr">Comissão Revisional</option>
                                     <option value="om">Organização Militar (OM)</option>
                                 </select>
                             </div>

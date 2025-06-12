@@ -230,8 +230,13 @@
                                             <label>Corrida 12 min</label>
                                             <select name="dist_corrida" class="form-control">
                                                 <option value="">Selecione a distância</option>
-                                                <?php for ($i = 1000; $i <= 3200; $i += 50) {
-                                                    echo "<option value='$i'" . ($dist_corrida == $i ? " selected" : "") . ">$i</option>";
+                                                <option value="0" <?php if ($dist_corrida == 0)  echo ("selected"); ?>>0 - 1799</option>
+                                                <?php
+                                                $b = 1800;
+
+                                                for ($i = 1801; $i <= 3200; $i += 200) {
+                                                    $b = $b += 200;
+                                                    echo "<option value='$i'" . ($dist_corrida == $i ? " selected" : "") . ">$i - " . $b . "</option>";
                                                 } ?>
                                             </select>
                                         </div>

@@ -82,7 +82,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         <li <?php if (!isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview"><a href="eipot_etapa_III.php"><i class="fa fa-address-book"></i><?php if ($_SESSION['perfil'] == "jise") echo ('JISE');
                                                                                                                                                     else echo ('Dados Cadastro IS - SIPMED') ?></a>
 
-        <li <?php if (!isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview"><a href="eipot_etapa_v.php"><i class="fa fa-check-circle"></i><?php if ($_SESSION['perfil'] == "chc" ||$_SESSION['perfil'] == "cr"  ) echo ('Heteroidentificação');
+        <li <?php if (!isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview"><a href="eipot_etapa_v.php"><i class="fa fa-check-circle"></i><?php if ($_SESSION['perfil'] == "chc" || $_SESSION['perfil'] == "cr") echo ('Heteroidentificação');
                                                                                                                                                     else echo ('Heteroidentificação') ?></a>
         <li <?php if ($perfil == "jise") echo " hidden " ?> class="treeview"><a href="usuario_lista.php"><i class="fa fa-user"></i>Usuários</a></li>
     </ul>
@@ -94,6 +94,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         <li class="treeview"><a href="publicacoes_eipot.php"><i class="fa fa-pencil"></i>Etapa I e II</a></li>
         <li class="treeview"><a href="publicacoes_eipot_etapa_III.php"><i class="fa fa-pencil"></i>Etapa III</a></li>
         <li class="treeview"><a href="publicacoes_eipot_etapa_iv.php"><i class="fa fa-pencil"></i>Etapa IV</a></li>
+        <li class="treeview"><a href="publicacoes_eipot_etapa_v.php"><i class="fa fa-pencil"></i>Etapa V</a></li>
         <li class="treeview"><a href="publicacoes_recursos.php"><i class="fa fa-pencil"></i>Recursos</a></li>
     </ul>
 </li>

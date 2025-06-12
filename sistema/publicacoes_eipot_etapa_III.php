@@ -86,7 +86,7 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
 
             <div style="float: left; width: 100%;">
                 <div class="form-group">
-                    <label for="titulo_um">>AGENDAMENTO - ARTILHARIA ANTIAÉREA:</label>
+                    <label for="titulo_um">AGENDAMENTO - ARTILHARIA ANTIAÉREA:</label>
                     <input type="text" name="hora_arma[artilharia antiaérea]" class="form-control" value="20 MAIO 25 ÀS 0800h" required>
                 </div>
             </div>
@@ -131,7 +131,6 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
 
             <a href="mpdf/relatorio_lista_presenca_eipot_etapa_iii.php" type="submit" class="btn btn-primary btn-block">LISTA DE PRESENÇA ETAPA III - INSPEÇÃO DE SAÚDE</a>
         </div>
-        <br>
     </form>
 
 
@@ -184,7 +183,7 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
     <form name="form_relacao_classificacao_eipot_pontuacao" action="mpdf/resultado_eipot_isgrec.php" method="post">
         <div class="card">
             <h3>Resultado Inspeção de Saúde em Grau de Recurso</h3>
-            
+
             <br>
 
             <div style="float: left; width: 48%; margin-right: 4%;">

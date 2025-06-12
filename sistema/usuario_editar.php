@@ -143,11 +143,12 @@ if ($get_usuario[0]['perfil'] != "avaliador") {
                                     <option <?php if ($get_usuario[0]['perfil'] == "avaliador") echo "selected" ?> value="avaliador">Avaliador de currículo</option>
                                     <option <?php if ($get_usuario[0]['perfil'] == "documentos") echo "selected" ?> value="documentos">Avaliador de docs obrigatórios</option>
                                     <option <?php if ($get_usuario[0]['perfil'] == "jise") echo "selected" ?> value="jise">JISE</option>
+                                    <option <?php if ($get_usuario[0]['perfil'] == "chc") echo "selected" ?> value="chc">Comissão Heteroidentificação</option>
+                                    <option <?php if ($get_usuario[0]['perfil'] == "cr") echo "selected" ?> value="cr">Comissão Revisional</option>
                                     <option <?php if ($get_usuario[0]['perfil'] == "om") echo "selected" ?> value="om">Organização Militar (OM)</option>
                                 </select>
                             </div>
                         </div>
-
 
                         <div class="col-lg-12">
 

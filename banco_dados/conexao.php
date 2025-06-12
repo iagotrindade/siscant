@@ -1266,10 +1266,15 @@ class Conexao
         }
     }
 
+    //12/06/2025 Adicionando o id do usuário no retorno
     public function get_inscritos_eipot_vagas_reservadas_tabelas($rm_usuario)
     {
         $stmt = $this->pdo->prepare("
-          SELECT u.*, ce.id, e.nome AS arma_especialidade
+         SELECT 
+            u.*, 
+            u.id AS usuario_id, 
+            ce.id AS id_candidato_especialidade, 
+            e.nome AS arma_especialidade
             FROM usuario u
             INNER JOIN candidato_x_especialidade ce ON ce.id_candidato = u.id
             INNER JOIN especialidade e ON ce.id_especialidade = e.id

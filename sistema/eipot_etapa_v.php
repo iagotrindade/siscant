@@ -49,14 +49,16 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <th>Especialidade</th>
                                 <th>HC</th>
                                 <th>HC - RECURSO</th>
-                                <th>Recurso Etapa 5</th>
+                                <th>Recurso HC</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
 
-                            $candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
+                            $candidatos = $conexao->get_inscritos_eipot_vagas_reservadas_tabelas($rm_usuario);
                             $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario);
+
+                          
 
                             foreach ($candidatos as $linha) {
                                 $aparece = true;
@@ -114,7 +116,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
 
                                 echo '
                                 <tr bgcolor = ' . $fontColor . '>
-                                <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id_usuario'] . '">' . $linha['cpf'] . '</a></td>
+                                <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">' . $linha['cpf'] . '</a></td>
                                 <td>' . $linha['nome_completo'] . '</td>
                                 <td>_' . $linha['etapa'] . '</td>
                                 <td>' . $linha['arma_especialidade'] . '</td>
