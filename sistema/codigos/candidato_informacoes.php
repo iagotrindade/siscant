@@ -392,6 +392,10 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_eipot.php';
             }
 
+            if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consultor' || $_SESSION['perfil'] == 'ch' || $_SESSION['perfil'] == 'cr' ) {
+                include_once 'codigos/candidato_heteroidentificacao.php';
+            }
+
             if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'jise') {
                 include_once 'codigos/candidato_recurso.php';
             }
