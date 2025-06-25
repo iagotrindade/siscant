@@ -10,10 +10,12 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == '1') {
 $lista_observacaoes = $conexao->get_observacoes_candidato($id_usuario);
 include_once '../sistema/codigos/funcao_apagar.php';
 ?>
-<a name="insere_arquivo_candidato">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
+<a name="insere_arquivo_candidato"></a>
+<!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
+<div class="">
+    <div class="card">
+        <div class="row">
+            <div class="col-md-12">
                 <form method="post" action="arquivo_upload_adicionado_para_candidato.php" enctype="multipart/form-data">
                     <legend>Arquivos adicionados para o Candidato</legend>
                     <div class="row">
@@ -51,8 +53,8 @@ include_once '../sistema/codigos/funcao_apagar.php';
 
 
                                 echo ' <a href="arquivos_add_p_cand/' . $arquivo['nome'] . '" target="_blank">' . $arquivo['label'] . '
-                            <img src="imagens/' . $imagem . '" height="55px">
-                            </a>';
+                                <img src="imagens/' . $imagem . '" height="55px">
+                                </a>';
                                 echo ' <a onclick="funcao_apagar(\'' . $arquivo['id'] . '\', \'arquivo\',\'' . $crip . '\')"><img title="Apagar" src="imagens/apagar.png" width="30px"></a>';
                                 echo ' <br>';
                             }
@@ -81,4 +83,4 @@ include_once '../sistema/codigos/funcao_apagar.php';
             </div>
         </div>
     </div>
-    
+</div>

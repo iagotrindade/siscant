@@ -2,10 +2,10 @@
 include_once 'menu.php';
 include_once 'codigos/funcao_apagar.php';
 
-//$conexao = new Conexao();
-
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
+
+$pareceres = $conexao->get_pareceres_heteroidentificacao($id_usuario);
 
 if ($candidato == 1 || $perfil == 'candidato' || $_SESSION['candidato'] == 1) {
     erro("Erro 23543! Página não encontrada!");
@@ -58,12 +58,33 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                             $candidatos = $conexao->get_inscritos_eipot_vagas_reservadas_tabelas($rm_usuario);
                             $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario);
 
-                          
+
 
                             foreach ($candidatos as $linha) {
+                                $pareceres = $conexao->get_pareceres_heteroidentificacao($linha['id']);
+
+                                $parecerHc = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 1);
+                                $parecerRevisora = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 2);
+
+                                $pareceresFase1 = array_filter($pareceres, function ($parecer) {
+                                    return $parecer['fase'] == 1;
+                                });
+
+                                $pareceresFase2 = array_filter($pareceres, function ($parecer) {
+                                    return $parecer['fase'] == 2;
+                                });
+
+                                if(count($pareceresFase1) < 5) {
+                                    $parecerHc = 'PENDENTE';
+                                }
+
+                                if(count($pareceresFase2) < 3) {
+                                    $parecerRevisora = 'PENDENTE';
+                                }
+
                                 $aparece = true;
 
-                                if ($linha['etapa'] < 3 || $linha['rm_inscricao'] != $rm_usuario) {
+                                if ($linha['etapa'] < 5 || $linha['rm_inscricao'] != $rm_usuario) {
                                     continue;
                                 }
 
@@ -71,58 +92,28 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
 
                                 if ($linha['id_selecao'] != $_SESSION['selecao']) continue;
 
-                                $fontColor = "";
-                                if ($linha['concorrendo'] == 0) {
-                                    $fontColor = '#FF8C73';
-                                }
+                                $hc = '';
 
-                                $saude = "";
 
-                                if ($linha['apto_saude'] == 1) {
-                                    $saude = 'APTO';
-                                } elseif ($linha['apto_saude'] == 0  && $linha['grupo_saude']) {
-                                    $saude = 'INAPTO';
-                                } elseif ($linha['apto_saude'] == 2) {
-                                    $saude = 'NÃO COMPARECEU';
-                                } elseif ($linha['apto_saude'] == NULL) {
-                                    $saude = 'PENDENTE';
-                                }
-
-                                if ($linha['apto_saude_recurso'] == 1) {
-                                    $recurso_saude = 'APTO';
-                                } elseif ($linha['apto_saude_recurso'] == 0  && $linha['grupo_saude_recurso']) {
-                                    $recurso_saude = 'INAPTO';
-                                } elseif ($linha['apto_saude_recurso'] == 2) {
-                                    $recurso_saude = 'NÃO COMPARECEU';
-                                } elseif ($linha['apto_saude_recurso'] == NULL) {
-                                    $recurso_saude = 'NÃO REALIZADA';
-                                }
-
-                                $recursoEtapa3 = null; // <- Inicialização correta
+                                $recursoEtapa5 = null; // <- Inicialização correta
 
                                 foreach ($recursos as $recurso) {
-                                    if ($recurso['id_candidato'] == $linha['id'] && $recurso['etapa'] >= 3) {
-                                        if ($recurso['obs_etapa'] == '3 - IS') {
-                                            $recursoEtapa3 = '3 - IS';
-                                            break;
-                                        } elseif ($recurso['obs_etapa'] == '3 - Documental') {
-                                            $recursoEtapa3 = '3 - Documental';
-                                            break;
-                                        }
+                                    if ($recurso['id_candidato'] == $linha['id'] && $recurso['etapa'] == 5) {
+                                        $recursoEtapa5 = 'SIM';
+                                        break;
                                     } else {
-                                        $recursoEtapa3 = 'NÃO';
+                                        $recursoEtapa5 = 'NÃO';
                                     }
                                 }
 
                                 echo '
-                                <tr bgcolor = ' . $fontColor . '>
                                 <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">' . $linha['cpf'] . '</a></td>
                                 <td>' . $linha['nome_completo'] . '</td>
                                 <td>_' . $linha['etapa'] . '</td>
                                 <td>' . $linha['arma_especialidade'] . '</td>
-                                <td>' . $saude . '</td>
-                                <td>' . $recurso_saude . '</td>
-                                <td>' . $recursoEtapa3 . '</td>';
+                                <td>' . $parecerHc . '</td>
+                                <td>' . $parecerRevisora . '</td>
+                                <td>' . $recursoEtapa5 . '</td>';
                             }
 
                             ?>
@@ -130,8 +121,36 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                     </table>
                 </div>
             </div>
+
+            <div class="card" <?php if ($_SESSION['perfil'] == 'jise') echo ('hidden') ?>>
+                <legend>Gerar Ata Heteroidentificação Complementar
+                    <img src="imagens/pdf.png" width="30px">
+                </legend>
+
+                <form name="form_ata_heteroidentificacao_eipot" action="mpdf/relatorio_heteroidentificacao.php" method="post">
+                    <div style="float: left; width: 100%; margin-right: 4%;">
+                        <div class="form-group">
+                            <label for="fase">Fase:</label>
+                            <select name="fase" class="form-control" required>
+                                <option value="1">Heteroidentificação Complementar</option>
+                                <option value="2">Heteroidentificação Revisora</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="titulo">Data da Inspeção:</label>
+                            <input type="datetime" name="data_inspecao" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col-mg-12">
+                        <button type="submit" class="btn btn-primary btn-block">GERAR ATA</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+    
 </div>
 </div>
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>

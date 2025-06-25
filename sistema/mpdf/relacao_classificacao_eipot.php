@@ -1,5 +1,7 @@
 <?php
 
+ob_start();
+session_start();
 include_once '../../banco_dados/conexao.php';
 include_once '../../sistema/funcoes.php';
 include("mpdf60/mpdf.php");
@@ -9,18 +11,16 @@ $mpdf->SetDisplayMode('fullpage');
 $css = file_get_contents("css/estilo.css");
 $mpdf->WriteHTML($css, 1);
 
-$titulo_resultado_etapa_presencial = $_POST['titulo_resultado_etapa_iv'];
-$subtitulo_resultado_etapa_presencial = $_POST['subtitulo_resultado_etapa_iv'];
+$tipo_publicacao = $_POST['tipo_publicacao'];
 
-$paragrafo_um_resultado_etapa_presencial = $_POST['paragrafo_um_resultado_iv'];
-$paragrafo_dois_resultado_etapa_presencial = $_POST['paragrafo_dois_resultado_iv'];
-$paragrafo_tres_resultado_etapa_presencial = $_POST['paragrafo_tres_resultado_iv'];
+$titulo_resultado_eipot = $_POST['titulo_resultado_eipot'];
+$subtitulo_resultado_eipot = $_POST['subtitulo_resultado_eipot'];
+
+$paragrafo_um_resultado_eipot = $_POST['paragrafo_um_resultado_eipot'];
 
 $texto_dia = $_POST['texto_dia'];
 
 set_time_limit(300);
-
-session_start();
 
 if (!isset($_SESSION['perfil'])) {
     erro_relatorio("Erro 823494! A sua sessão expirou! Faça o login no sistema para gerar o relatório");
@@ -63,13 +63,13 @@ $html = "
 </p>
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $titulo_resultado_etapa_presencial . "</strong></th>
+        <th align='center'><strong>" . $titulo_resultado_eipot . "</strong></th>
     </tr>
 </table>
 
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $subtitulo_resultado_etapa_presencial . "</strong></th>
+        <th align='center'><strong>" . $subtitulo_resultado_eipot . "</strong></th>
     </tr>
 </table>
 
@@ -81,17 +81,7 @@ $html = "
 
 <p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    " . $paragrafo_um_resultado_etapa_presencial . "
-</p>
-
-<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    " . $paragrafo_dois_resultado_etapa_presencial . "
-</p>
-
-<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    " . $paragrafo_tres_resultado_etapa_presencial . "
+    " . $paragrafo_um_resultado_eipot . "
 </p>
 ";
 
@@ -113,22 +103,36 @@ $ordem_arma = [
 $inscritos_por_arma = [];
 
 foreach ($lista_candidatos as $inscrito) {
-    if ($inscrito['rm_inscricao'] == $rm_usuario) { // Filtra por rm_inscricao
-        $arma = $inscrito['arma_especialidade'];
-        $inscritos_por_arma[$arma][] = $inscrito;
+    
+    // Ignora candidatos de outras regiões militares
+    if ((int) $inscrito['rm_inscricao'] !== $rm_usuario) {
+        continue;
     }
+
+    $vagaReservada = (int) ($inscrito['vaga_reservada'] ?? 0);
+
+    // Filtro por tipo de publicação
+    if (
+        ($tipo_publicacao === 'eipot_ampla_concorrencia' && $vagaReservada === 1) ||
+        ($tipo_publicacao === 'eipot_cotas_negros' && $vagaReservada === 0)
+    ) {
+        continue;
+    }
+
+    $inscrito['nota_final'] = get_nota_final_eipot($inscrito['id']);
+    $arma = $inscrito['arma_especialidade'] ?? 'Não Informada';
+
+    $inscritos_por_arma[$arma][] = $inscrito;
 }
 
+// Ordena os grupos de armas conforme $ordem_arma
 uksort($inscritos_por_arma, function ($a, $b) use ($ordem_arma) {
-    // Verificando se a especialidade $a e $b estão na ordem específica
     $pos_a = array_search($a, $ordem_arma);
     $pos_b = array_search($b, $ordem_arma);
 
-    // Se não encontrar a especialidade, coloca no final e ordena alfabeticamente
     if ($pos_a === false) $pos_a = PHP_INT_MAX;
     if ($pos_b === false) $pos_b = PHP_INT_MAX;
 
-    // Se ambos os valores estão fora da ordem (não definidos em $ordem_arma), ordena alfabeticamente
     if ($pos_a === PHP_INT_MAX && $pos_b === PHP_INT_MAX) {
         return strcasecmp($a, $b);
     }
@@ -136,7 +140,18 @@ uksort($inscritos_por_arma, function ($a, $b) use ($ordem_arma) {
     return $pos_a - $pos_b;
 });
 
+// Ordena candidatos por nota e adiciona classificação 01, 02, 03...
+foreach ($inscritos_por_arma as &$candidatos) {
+    usort($candidatos, function ($a, $b) {
+        return $b['nota_final'] <=> $a['nota_final'];
+    });
 
+    foreach ($candidatos as $i => &$inscrito) {
+        $inscrito['classificacao'] = str_pad($i + 1, 2, '0', STR_PAD_LEFT);
+    }
+    unset($inscrito);
+}
+unset($candidatos);
 
 foreach ($inscritos_por_arma as $arma => $candidatos) {
     if (count($candidatos) === 0) {
@@ -149,82 +164,30 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
             <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 12px;'>" . mb_strtoupper($arma, "UTF-8") . "</th>
         </tr>
         <tr>
-            <th style='font-size: 12px; text-align: center; width: 20%;'>Nº</th>
+            <th style='font-size: 12px; text-align: center; width: 20%;'>CLASSIFICAÇÃO</th>
             <th style='font-size: 12px; text-align: center; width: 20%;'>CPF</th>
             <th style='font-size: 12px; text-align: center; width: 35%;'>NOME</th>
             <th style='font-size: 12px; text-align: center; width: 25%;'>RESULTADO</th>
         </tr>
     ";
 
-    $contador = 1;
     $total = count($candidatos);
 
     foreach ($candidatos as $index => $candidato) {
         $cpf = substr($candidato['cpf'], 0, -5) . '*****';
 
-        $candidato['qtd_flexao_braco'] = $candidato['qtd_flexao_braco'] ?? 'Não informado';
-        $candidato['qtd_abdominal']    = $candidato['qtd_abdominal'] ?? 'Não informado';
-        $candidato['qtd_barra']        = $candidato['qtd_barra'] ?? 'Não informado';
-
-        $distancia_corrida_bruta = $candidato['dist_corrida'] ?? 0;
-
-        if ($distancia_corrida_bruta == null) {
-            $candidato['dist_corrida'] = 'Não informado';
-        } elseif ((int)$distancia_corrida_bruta === 0) {
-            $candidato['dist_corrida'] = '0 - 1799';
-        } else {
-            $candidato['dist_corrida'] = get_intervalo_corrida($distancia_corrida_bruta);
-        }
-
-        $resultado = (
-            $candidato['qtd_flexao_braco'] >= 10 &&
-            $candidato['qtd_abdominal']    >= 20 &&
-            $candidato['qtd_barra']        >= 1 &&
-            $distancia_corrida_bruta       > 1799
-        ) ? 'APTO' : 'INAPTO';
-
         $html .= "
         <tr>
-            <td style='text-align: center;'>{$contador}</td>
+            <td style='text-align: center;'>{$candidato['classificacao']}</td>
             <td style='text-align: center;'>{$cpf}</td>
             <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
-            <td style='text-align: center;'>{$resultado}</td>
-        </tr>
-        <tr>
-            <td style='text-align: center;'>Flexão de Braço</td>
-            <td style='text-align: center;'>Abdominal Supra</td>
-            <td style='text-align: center;'>Flexão na Barra Fixa</td>
-            <td style='text-align: center;'>Corrida Livre 12 Minutos</td>
-        </tr>
-        <tr>
-            <td style='text-align: center;'>{$candidato['qtd_flexao_braco']}</td>
-            <td style='text-align: center;'>{$candidato['qtd_abdominal']}</td>
-            <td style='text-align: center;'>{$candidato['qtd_barra']}</td>
-            <td style='text-align: center;'>{$candidato['dist_corrida']}</td>
-        </tr>
-        ";
-
-        // Adiciona linha cinza separadora apenas se não for o último candidato
-        if ($index < $total - 1) {
-            $html .= "
-            <tr>
-                <th colspan='4' style='text-align: center; background-color: #D8D8D8; padding: 8px 0;'></th>
-            </tr>";
-        }
-
-        $contador++;
+            <td style='text-align: center;'>" . get_nota_final_eipot($candidato['id']) . "</td>
+        </tr>";
     }
 
     $html .= "</table>";
     $mpdf->WriteHTML($html);
 }
-
-
-// Se necessário, adicione um AddPage() no final para uma nova página após todas as tabelas
-
-//$mpdf->SetDisplayMode('fullwidth');
-
-//$mpdf->WriteHTML($html);
-$mpdf->Output("Resultado EIPOT Etapa IV.pdf", 'D');
-
+$mpdf->Output("Ranking EIPOT.pdf", 'D');
+ob_end_flush();
 exit();

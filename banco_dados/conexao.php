@@ -7296,6 +7296,104 @@ order by total_pontos_somados desc");
 
     // <editor-fold defaultstate="collapsed" desc="Cadastra Arquivo Obrigatório">
 
+    // 17/06/2025 - Iago Silva Criando função para cadastrar parecer de heteroidentificação
+    public function cadastra_parecer_heteroidentificacao($id_candidato, $parecer, $justificativa, $fase, $id_avaliador)
+    {
+        $datetime = date('Y-m-d H:i:s');
+
+        try {
+            $sqlInsert = "INSERT INTO heteroidentificacao
+            (id_candidato, parecer, justificativa, id_avaliador, fase, data_avaliacao) 
+            VALUES (:id_candidato, :parecer, :justificativa, :id_avaliador, :fase, :datetime)";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_candidato", $id_candidato);
+            $query->bindValue(":parecer", $parecer);
+            $query->bindValue(":justificativa", $justificativa);
+            $query->bindValue(":id_avaliador", $id_avaliador);
+            $query->bindValue(":fase", $fase);
+            $query->bindValue(":datetime", $datetime);
+
+            if ($query->execute()) {
+                $this->pdo->commit();
+                return [
+                    'id_candidato' => $id_candidato,
+                    'parecer' => $parecer,
+                    'justificativa' => $justificativa,
+                    'fase' => $fase,
+                    'id_avaliador' => $id_avaliador,
+                    'data_avaliacao' => $datetime,
+                ];
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack(); // boa prática: rollback também no catch
+            return false;
+        }
+    }
+
+    // 17/06/2025 - Iago Silva
+    public function editar_parecer_heteroidentificacao($id_candidato, $parecer, $justificativa, $id_parecer)
+    {
+        $datetime = date('Y-m-d H:i:s');
+
+        try {
+            $sql = "
+            UPDATE heteroidentificacao 
+            SET parecer = :parecer, justificativa = :justificativa, data_avaliacao = :datetime 
+            WHERE id = :id_parecer
+        ";
+
+            $this->pdo->beginTransaction();
+            $query = $this->pdo->prepare($sql);
+
+            $query->bindValue(":id_parecer", $id_parecer, PDO::PARAM_INT);
+            $query->bindValue(":parecer", $parecer);
+            $query->bindValue(":justificativa", $justificativa);
+            $query->bindValue(":datetime", $datetime);
+
+            if ($query->execute()) {
+                $this->pdo->commit();
+                return [
+                    'id_candidato'    => $id_candidato,
+                    'parecer'         => $parecer,
+                    'justificativa'   => $justificativa,
+                    'id_parecer'      => $id_parecer,
+                    'data_avaliacao'  => $datetime,
+                ];
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    // 17/06/2025 - Iago Silva
+    public function get_pareceres_heteroidentificacao($id_candidato)
+    {
+        $sql = "
+        SELECT h.*, u.nome_guerra AS nome_avaliador, u.posto_grad AS graduacao_avaliador
+        FROM heteroidentificacao h
+        LEFT JOIN usuario u ON u.id = h.id_avaliador
+        WHERE h.id_candidato = :id_candidato
+        ORDER BY h.data_avaliacao DESC
+    ";
+
+        $query = $this->pdo->prepare($sql);
+        $query->bindValue(":id_candidato", $id_candidato);
+        $query->execute();
+
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function cadastra_arquivo_obrigatorio($nome_arquivo_obrigatorio, $mulher, $militar_ativa, $reservista, $cdi, $vaga_reservada)
     {
         $datetime = date('Y-m-d H:i:s');

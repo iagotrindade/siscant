@@ -31,13 +31,15 @@ if ($usuario_logado[0]['assinatura_sistema'] != $_SESSION['assinatura_sistema'])
     exit();
 }
 
-
 //Trata o POST recebido
+$id_parecer = $_POST['id_parecer'];
+$id_avaliador = $_POST['id_avaliador'];
 $parecer = $_POST['parecer'];
 $justificativa = $_POST['justificativa'];
-$id_candidato = $_POST['id_candidato'];
 $fase = $_POST['fase'];
+$id_candidato = $_POST['id_candidato'];
 $cpf_candidato = $_POST['cpf_candidato'];
+
 $pareceres = $conexao->get_pareceres_heteroidentificacao($id_candidato);
 
 // Define o limite por fase
@@ -56,34 +58,16 @@ if (!isset($limitesPorFase[$fase])) {
     exit();
 }
 
-// Filtra os pareceres da fase atual
-$pareceresDaFase = array_filter($pareceres, function ($parecer) use ($fase) {
-    return (int) $parecer['fase'] === $fase;
-});
+// Verificar se a análise foi feita pelo usuario logado
 
-$totalPareceresFase = count($pareceresDaFase);
 
-// Verifica se atingiu o limite
-if ($totalPareceresFase >= $limitesPorFase[$fase]) {
-    $conexao = null;
-    erro("Erro 2346236457! Não foi possível salvar a avaliação: já existem {$limitesPorFase[$fase]} pareceres na fase {$fase}.");
-    exit();
-}
-
-// Verificar se o usuário logado possui alguma análise feita no candidato se sim, bloqueia a inserção
-if (in_array($_SESSION['id_usuario'], array_column($pareceres, 'id_avaliador'))) {
-    $conexao = null;
-    erro("Erro 2346236457! Não foi possível salvar a avaliação: você já enviou um parecer para este candidato.");
-    exit();
-}
-
-if ($parecer && $justificativa) {
-    $resultado = $conexao->cadastra_parecer_heteroidentificacao($id_candidato, $parecer, $justificativa, $fase, $_SESSION['id_usuario']);
+if ($_SESSION['id_usuario'] == $id_avaliador && $parecer && $justificativa && $fase) {
+    $resultado = $conexao->editar_parecer_heteroidentificacao($id_candidato, $parecer, $justificativa, $id_parecer);
 
     if ($resultado) {
         $alteracoes_detalhadas =  print_r($resultado, true);
 
-        $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $id_candidato, "161510", "heteroidentificacao", "Insert", "Avaliador " . $_SESSION['cpf'] . " Inseriu um parecer de Heteroidentificação para o candidato $cpf_candidato", $alteracoes_detalhadas);
+        $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $id_candidato, "161511", "heteroidentificacao", "Update", "Avaliador " . $_SESSION['cpf'] . " Alterou o parecer de Heteroidentificação do candidato $cpf_candidato", $alteracoes_detalhadas);
 
         header("Location: ../sistema/usuario_visualiza.php?id_usuario=" . $id_candidato . "#heteroidentificacao");
     } else {

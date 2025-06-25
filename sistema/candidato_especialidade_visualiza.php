@@ -20,7 +20,8 @@ include_once './codigos/verifica_cadastro_especialidade_candidato.php';
 <div class="content-wrapper">
     <div class="page-title">
         <div>
-            <h1>Cadastrar uma especialidade <i class="fa fa-wrench"></i></h1>
+            <!-- 22/06/2025 -> Iago Silva Alterado o ícone -->
+            <h1>Cadastrar uma especialidade <i class="fa fa-graduation-cap"></i></h1>
         </div>
         <div>
             <ul class="breadcrumb">

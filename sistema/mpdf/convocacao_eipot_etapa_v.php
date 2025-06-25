@@ -1,4 +1,6 @@
 <?php
+ob_start();
+session_start();
 include_once '../../banco_dados/conexao.php';
 include_once '../../sistema/funcoes.php';
 include("mpdf60/mpdf.php");
@@ -11,8 +13,8 @@ $mpdf->WriteHTML($css, 1);
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $_POST['rm_usuario'];
 
-$titulo_etapa_iv = $_POST['titulo_etapa_v'];
-$subtitulo_etapa_iv = $_POST['subtitulo_etapa_v'];
+$titulo_etapa_v = $_POST['titulo_etapa_v'];
+$subtitulo_etapa_v = $_POST['subtitulo_etapa_v'];
 $paragrafo_um_convocacao_v = $_POST['paragrafo_um_convocacao_v'];
 $paragrafo_dois_convocacao_v = $_POST['paragrafo_dois_convocacao_v'];
 $paragrafo_tres_convocacao_v = $_POST['paragrafo_tres_convocacao_v'];
@@ -20,8 +22,6 @@ $hora_arma = $_POST['hora_arma'];
 $texto_dia = $_POST['texto_dia'];
 
 set_time_limit(300);
-
-session_start();
 
 if (!isset($_SESSION['perfil'])) {
     erro_relatorio("Erro 823494! A sua sessão expirou! Faça o login no sistema para gerar o relatório");
@@ -113,13 +113,13 @@ $html = "
 </p>
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $titulo_etapa_iv . "</strong></th>
+        <th align='center'><strong>" . $titulo_etapa_v . "</strong></th>
     </tr>
 </table>
 
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $subtitulo_etapa_iv . "</strong></th>
+        <th align='center'><strong>" . $subtitulo_etapa_v . "</strong></th>
     </tr>
 </table>
 
@@ -150,10 +150,11 @@ $ordem_arma = [
     'MATERIAL BÉLICO',
     'INTENDÊNCIA'
 ];
+
 $inscritos_por_arma = [];
 
 foreach ($lista_candidatos as $inscrito) {
-    if ($inscrito['rm_inscricao'] == $rm_usuario) { // Filtra por rm_inscricao
+    if ((int)$inscrito['rm_inscricao'] == $rm_usuario) { // Filtra por rm_inscricao
         $arma = $inscrito['arma_especialidade'];
         $inscritos_por_arma[$arma][] = $inscrito;
     }
@@ -175,7 +176,6 @@ uksort($inscritos_por_arma, function ($a, $b) use ($ordem_arma) {
 
     return $pos_a - $pos_b;
 });
-
 
 foreach ($inscritos_por_arma as $arma => $candidatos) {
     if (count($candidatos) === 0) {
@@ -202,8 +202,8 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
    <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
     <tr>
         <th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>"
-            . mb_strtoupper($arma, 'UTF-8') . " <br>"
-            . htmlspecialchars($hora, ENT_QUOTES, 'UTF-8') . "
+        . mb_strtoupper($arma, 'UTF-8') . " <br>"
+        . htmlspecialchars($hora, ENT_QUOTES, 'UTF-8') . "
         </th>
     </tr>
     <tr>
@@ -229,12 +229,6 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
     $html .= "</table>";
     $mpdf->WriteHTML($html);
 }
-
-// Se necessário, adicione um AddPage() no final para uma nova página após todas as tabelas
-
-//$mpdf->SetDisplayMode('fullwidth');
-
-//$mpdf->WriteHTML($html);
 $mpdf->Output("Convocação Etapa V - Heteroidentificação.pdf", 'D');
-
+ob_end_flush();
 exit();

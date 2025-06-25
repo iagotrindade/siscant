@@ -52,7 +52,6 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-
             <div class="row">
                 <div class="col-md-10">
                     <legend>
@@ -392,15 +391,16 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_eipot.php';
             }
 
-            if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consultor' || $_SESSION['perfil'] == 'ch' || $_SESSION['perfil'] == 'cr' ) {
+            //13 JUNHO 2024 - IAGO SILVA
+            if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consultor' || $_SESSION['perfil'] == 'chc' || $_SESSION['perfil'] == 'cr') {
                 include_once 'codigos/candidato_heteroidentificacao.php';
             }
 
             if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'jise') {
                 include_once 'codigos/candidato_recurso.php';
             }
-            
-            //Excluido o perfil jise da avaliação de recurso do candidato ||  $_SESSION['perfil'] == 'jise' Em 28 de MAio de 2025
+
+            //Excluido o perfil jise da avaliação de recurso do candidato ||  $_SESSION['perfil'] == 'jise' Em 28 de Maio de 2025
             if (isset($_SESSION['eipot']) == 1 && $_SESSION['perfil'] == 'avaliador' || $_SESSION['perfil'] == 'admin') {
                 include_once 'codigos/avaliador_recurso_candidato.php';
             }
@@ -413,8 +413,12 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/oficio_medico_obrigatorio.php';
             }
 
-            if ($_SESSION['perfil'] == 'admin') {
+            if ($_SESSION['perfil'] == 'admin' && $medico_obrigatorio == 1) {
                 include_once 'codigos/candidato_impedimento_judicial.php';
+            }
+
+            if ($_SESSION['perfil'] == 'admin') {
+                include_once 'codigos/candidato_distribuicao.php';
             }
 
             if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'documentos') {
@@ -510,4 +514,4 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
         ?>
 
-    </div><!--/DIV FINAL CANDIDATO INFORMAÇÕES -->
+    <!--/DIV FINAL CANDIDATO INFORMAÇÕES -->

@@ -52,7 +52,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         <!-- <li class="treeview"><a href="curriculo_cadastro.php"><i class="fa fa-files-o"></i> Arquivos Currículo</a></li> -->
         <li <?php if ($_SESSION['selecao_codigo'] != 'mfdv') echo "hidden" ?> class="treeview"><a href="medico_obrigatorio_cadastro.php"><i class="fa fa-user-md"></i> Médico Obrigatório</a></li>
         <li <?php if (isset($_SESSION['eipot']) && $rm_usuario != 3 && $perfil != "admin") echo "hidden" ?> class="treeview"><a href="documentacao_obrigatoria_visualiza.php"><i class="fa fa-files-o"></i> Documentos Obrigatórios</a></li>
-        <li <?php if (!isset($_SESSION['eipot']) && $rm_usuario != 3 && $perfil != "admin") echo "hidden" ?> class="treeview"><a href="especialidade_visualiza_eipot.php"><i class="fa fa-shield"></i> Armas</a></li>
+        <li <?php if (!isset($_SESSION['eipot']) || $rm_usuario != 3 || $perfil != "admin") echo "hidden" ?> class="treeview"><a href="especialidade_visualiza_eipot.php"><i class="fa fa-shield"></i> Armas</a></li>
         <li <?php if (isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview"><a href="curriculo_visualiza.php"><i class="fa fa-file-text-o"></i>Currículo</a></li>
         <li <?php if (isset($_SESSION['eipot'])) echo " hidden " ?> class="treeview"><a href="especialidade_visualiza.php"><i class="fa fa-wrench"></i> Especialidade</a></li>
         <li class="treeview"><a href="usuario_cadastro.php"><i class="fa fa-user-plus"></i>Usuários</a></li>
@@ -80,21 +80,23 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         <li <?php if ($_SESSION['selecao_codigo'] != 'mfdv') echo "hidden" ?> class="treeview"><a href="medicos_obrigatorios.php"><i class="fa fa-user-md"></i><span>Médicos Obrigatórios</span></a></li>
 
         <li <?php if (!isset($_SESSION['eipot']) || $perfil == "chc" || $perfil == "cr") echo "hidden" ?> class="treeview"><a href="eipot_etapa_III.php"><i class="fa fa-address-book"></i><?php if ($_SESSION['perfil'] == "jise") echo ('JISE');
-                                                                                                                                                    else echo ('Dados Cadastro IS - SIPMED') ?></a>
+                                                                                                                                                                                            else echo ('Dados Cadastro IS - SIPMED') ?></a>
 
-        <li <?php if (!isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview"><a href="eipot_etapa_v.php"><i class="fa fa-check-circle"></i><?php if ($_SESSION['perfil'] == "chc" || $_SESSION['perfil'] == "cr") echo ('Heteroidentificação');
-                                                                                                                                                    else echo ('Heteroidentificação') ?></a>
+        <li <?php if (!isset($_SESSION['eipot']) || $perfil != 'admin' && $perfil != 'consulta' && $perfil != 'chc' && $perfil != 'cr') echo "hidden" ?> class="treeview"><a href="eipot_etapa_v.php"><i class="fa fa-check-circle"></i><?php if ($_SESSION['perfil'] == "chc" || $_SESSION['perfil'] == "cr") echo ('Heteroidentificação');
+                                                                                                                                                                                                                                        else echo ('Heteroidentificação') ?></a>
         <li <?php if ($perfil == "jise" || $perfil == "chc" || $perfil == "cr") echo " hidden " ?> class="treeview"><a href="usuario_lista.php"><i class="fa fa-user"></i>Usuários</a></li>
     </ul>
 </li>
 
-<li <?php if ($perfil != "admin") echo "hidden" ?> class="treeview">
+<!-- Esconde as Publicações do EIPOT caso a seleção não seja EIPOT -->
+<li <?php if ($perfil != "admin" || !isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview">
     <a href="#"><i class="fa fa-pencil"></i><span>Publicações</span><i class="fa fa-angle-right"></i></a>
     <ul class="treeview-menu">
         <li class="treeview"><a href="publicacoes_eipot.php"><i class="fa fa-pencil"></i>Etapa I e II</a></li>
         <li class="treeview"><a href="publicacoes_eipot_etapa_III.php"><i class="fa fa-pencil"></i>Etapa III</a></li>
         <li class="treeview"><a href="publicacoes_eipot_etapa_iv.php"><i class="fa fa-pencil"></i>Etapa IV</a></li>
         <li class="treeview"><a href="publicacoes_eipot_etapa_v.php"><i class="fa fa-pencil"></i>Etapa V</a></li>
+        <li class="treeview"><a href="publicacoes_eipot_rankings.php"><i class="fa fa-pencil"></i>Rankings</a></li>
         <li class="treeview"><a href="publicacoes_recursos.php"><i class="fa fa-pencil"></i>Recursos</a></li>
     </ul>
 </li>
@@ -124,7 +126,8 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </ul>
 </li>
 
-<li <?php if ($perfil != "admin" && $perfil != "consulta") echo "hidden" ?> class="treeview">
+<!-- Esconde os Tutoriais do EIPOT caso a seleção não seja EIPOT -->
+<li <?php if ($perfil != "admin" && $perfil != "consulta" || !isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview">
     <a href="#"> <i class="fa fa-book"></i> <span>Tutoriais</span> <i class="fa fa-angle-right"></i> </> </a>
     <ul class="treeview-menu">
         <li><a href="tutoriais.php"><i class="fa fa-book"></i><span>Etapa I</span></a></li>

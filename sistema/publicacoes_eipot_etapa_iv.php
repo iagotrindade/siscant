@@ -196,11 +196,8 @@ $lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
     </form>
     <br>
     <br>
-    <!--<a href="javascript:history.back()"><button class="btn btn-default btn-block">VOLTAR</button></a> -->
 </div>
-</div>
-</div>
-</div>
+<!-- 20/06/2025 -> Iago Silva Removidos fechamentos de divs desnecessários-->
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 </body>

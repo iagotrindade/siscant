@@ -688,6 +688,19 @@ if(isset($_GET['codigo']))
                                         <td>161508</td>
                                     </tr>
 
+                                    <!-- 20/06/2025 -> Iago Silva Adicionado novos registros de auditoria para heteroidentificação -->
+                                    <tr>
+                                        <td>INSERT</td>
+                                        <td>Inseriu um parecer de heteroidentificação do candidato</td>
+                                        <td>161510</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>UPDATE</td>
+                                        <td>Alterou um parecer de heteroidentificação do candidato</td>
+                                        <td>161511</td>
+                                    </tr>
+
                                     <tr>
                                         <td>UPDATE</td>
                                         <td>Alterou a etapa da especialidade do candidato</td>

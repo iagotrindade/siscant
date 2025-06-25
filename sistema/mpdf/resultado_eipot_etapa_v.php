@@ -1,5 +1,6 @@
 <?php
-
+ob_start();
+session_start();
 include_once '../../banco_dados/conexao.php';
 include_once '../../sistema/funcoes.php';
 include("mpdf60/mpdf.php");
@@ -9,18 +10,19 @@ $mpdf->SetDisplayMode('fullpage');
 $css = file_get_contents("css/estilo.css");
 $mpdf->WriteHTML($css, 1);
 
-$titulo_resultado_etapa_presencial = $_POST['titulo_resultado_etapa_iv'];
-$subtitulo_resultado_etapa_presencial = $_POST['subtitulo_resultado_etapa_iv'];
+$id_usuario = $_SESSION['id_usuario'];
+$rm_usuario = $_POST['rm_usuario'];
 
-$paragrafo_um_resultado_etapa_presencial = $_POST['paragrafo_um_resultado_iv'];
-$paragrafo_dois_resultado_etapa_presencial = $_POST['paragrafo_dois_resultado_iv'];
-$paragrafo_tres_resultado_etapa_presencial = $_POST['paragrafo_tres_resultado_iv'];
-
+$titulo_resultado_etapa_v = $_POST['titulo_resultado_etapa_v'];
+$subtitulo_resultado_etapa_v = $_POST['subtitulo_resultado_etapa_v'];
+$paragrafo_um_resultado_v = $_POST['paragrafo_um_resultado_v'];
+$paragrafo_dois_resultado_v = $_POST['paragrafo_dois_resultado_v'];
+$paragrafo_tres_resultado_v = $_POST['paragrafo_tres_resultado_v'];
+$hora_arma = $_POST['hora_arma'];
 $texto_dia = $_POST['texto_dia'];
+$fase = $_POST['fase'];
 
 set_time_limit(300);
-
-session_start();
 
 if (!isset($_SESSION['perfil'])) {
     erro_relatorio("Erro 823494! A sua sessão expirou! Faça o login no sistema para gerar o relatório");
@@ -63,13 +65,13 @@ $html = "
 </p>
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $titulo_resultado_etapa_presencial . "</strong></th>
+        <th align='center'><strong>" . $titulo_resultado_etapa_v . "</strong></th>
     </tr>
 </table>
 
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>" . $subtitulo_resultado_etapa_presencial . "</strong></th>
+        <th align='center'><strong>" . $subtitulo_resultado_etapa_v . "</strong></th>
     </tr>
 </table>
 
@@ -79,25 +81,16 @@ $html = "
     </tr>
 </table>
 
-<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    " . $paragrafo_um_resultado_etapa_presencial . "
-</p>
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_um_resultado_v</p>
 
-<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    " . $paragrafo_dois_resultado_etapa_presencial . "
-</p>
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_dois_resultado_v</p>
 
-<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    " . $paragrafo_tres_resultado_etapa_presencial . "
-</p>
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_tres_resultado_v</p>
 ";
 
 $mpdf->WriteHTML($html);
 
-$lista_candidatos = $conexao->get_inscritos_eipot_tabelas($rm_usuario);
+$lista_candidatos = $conexao->get_inscritos_eipot_vagas_reservadas_tabelas($rm_usuario);
 
 $ordem_arma = [
     'INFANTARIA',
@@ -113,7 +106,7 @@ $ordem_arma = [
 $inscritos_por_arma = [];
 
 foreach ($lista_candidatos as $inscrito) {
-    if ($inscrito['rm_inscricao'] == $rm_usuario) { // Filtra por rm_inscricao
+    if ((int)$inscrito['rm_inscricao'] == $rm_usuario) { // Filtra por rm_inscricao
         $arma = $inscrito['arma_especialidade'];
         $inscritos_por_arma[$arma][] = $inscrito;
     }
@@ -136,95 +129,89 @@ uksort($inscritos_por_arma, function ($a, $b) use ($ordem_arma) {
     return $pos_a - $pos_b;
 });
 
-
-
 foreach ($inscritos_por_arma as $arma => $candidatos) {
     if (count($candidatos) === 0) {
         continue; // Não cria tabela se não houver candidatos
     }
 
     $html = "
-    <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
-        <tr>
-            <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 12px;'>" . mb_strtoupper($arma, "UTF-8") . "</th>
-        </tr>
-        <tr>
-            <th style='font-size: 12px; text-align: center; width: 20%;'>Nº</th>
-            <th style='font-size: 12px; text-align: center; width: 20%;'>CPF</th>
-            <th style='font-size: 12px; text-align: center; width: 35%;'>NOME</th>
-            <th style='font-size: 12px; text-align: center; width: 25%;'>RESULTADO</th>
-        </tr>
+   <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
+    <tr>
+        <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>"
+        . mb_strtoupper($arma, 'UTF-8') . " <br>
+        </th>
+    </tr>
+    <tr>
+        <th style='text-align: center; width: 10%;'>Nº</th>
+        <th style='text-align: center; width: 30%;'>CPF</th>
+        <th style='text-align: center; width: 60%;'>NOME</th>
+        <th style='text-align: center; width: 60%;'>RESULTADO</th>
+    </tr>
     ";
 
     $contador = 1;
-    $total = count($candidatos);
 
-    foreach ($candidatos as $index => $candidato) {
-        $cpf = substr($candidato['cpf'], 0, -5) . '*****';
+    foreach ($candidatos as $candidato) {
+        $cpf = substr($candidato['cpf'], 0, -5) . "*****";
 
-        $candidato['qtd_flexao_braco'] = $candidato['qtd_flexao_braco'] ?? 'Não informado';
-        $candidato['qtd_abdominal']    = $candidato['qtd_abdominal'] ?? 'Não informado';
-        $candidato['qtd_barra']        = $candidato['qtd_barra'] ?? 'Não informado';
+        $pareceres = $conexao->get_pareceres_heteroidentificacao($candidato['id']);
 
-        $distancia_corrida_bruta = $candidato['dist_corrida'] ?? 0;
+        $quantidadePareceresConfirmados = 0;
+        $quantidadePareceresNaoConfirmados = 0;
 
-        if ($distancia_corrida_bruta == null) {
-            $candidato['dist_corrida'] = 'Não informado';
-        } elseif ((int)$distancia_corrida_bruta === 0) {
-            $candidato['dist_corrida'] = '0 - 1799';
-        } else {
-            $candidato['dist_corrida'] = get_intervalo_corrida($distancia_corrida_bruta);
+        // Contabilizar os pareceres da fase atual
+        foreach ($pareceres as $parecer) {
+            if ($parecer['fase'] != $fase) {
+                continue;
+            }
+
+            if ($parecer['parecer'] === 'confirmada') {
+                $quantidadePareceresConfirmados++;
+            } elseif ($parecer['parecer'] === 'nao_confirmada') {
+                $quantidadePareceresNaoConfirmados++;
+            }
         }
 
-        $resultado = (
-            $candidato['qtd_flexao_braco'] >= 10 &&
-            $candidato['qtd_abdominal']    >= 20 &&
-            $candidato['qtd_barra']        >= 1 &&
-            $distancia_corrida_bruta       > 1799
-        ) ? 'APTO' : 'INAPTO';
+        // Total de pareceres válidos
+        $totalPareceres = $quantidadePareceresConfirmados + $quantidadePareceresNaoConfirmados;
+
+        // Lógica de aprovação por fase
+        if ($fase == 1) {
+            $minConfirmados = 3;
+            $minTotal = 5;
+        } else {
+            $minConfirmados = 2;
+            $minTotal = 3;
+        }
+
+        // Determinar o resultado
+        if ($totalPareceres === $minTotal) {
+            if ($quantidadePareceresConfirmados >= $minConfirmados) {
+                $resultado = 'CONFIRMADA';
+            } elseif ($quantidadePareceresNaoConfirmados >= $minConfirmados) {
+                $resultado = 'NÃO CONFIRMADA';
+            } else {
+                $resultado = 'PENDENTE';
+            }
+        } else {
+            $resultado = 'PENDENTE';
+        }
+
+        $parecer = get_parecer_final_heteroidentificacao($candidato['id'], $pareceres, 1);
 
         $html .= "
         <tr>
-            <td style='text-align: center;'>{$contador}</td>
-            <td style='text-align: center;'>{$cpf}</td>
+            <td style='text-align: center;'>$contador</td>
+            <td style='text-align: center;'>$cpf</td>
             <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
-            <td style='text-align: center;'>{$resultado}</td>
-        </tr>
-        <tr>
-            <td style='text-align: center;'>Flexão de Braço</td>
-            <td style='text-align: center;'>Abdominal Supra</td>
-            <td style='text-align: center;'>Flexão na Barra Fixa</td>
-            <td style='text-align: center;'>Corrida Livre 12 Minutos</td>
-        </tr>
-        <tr>
-            <td style='text-align: center;'>{$candidato['qtd_flexao_braco']}</td>
-            <td style='text-align: center;'>{$candidato['qtd_abdominal']}</td>
-            <td style='text-align: center;'>{$candidato['qtd_barra']}</td>
-            <td style='text-align: center;'>{$candidato['dist_corrida']}</td>
-        </tr>
-        ";
-
-        // Adiciona linha cinza separadora apenas se não for o último candidato
-        if ($index < $total - 1) {
-            $html .= "
-            <tr>
-                <th colspan='4' style='text-align: center; background-color: #D8D8D8; padding: 8px 0;'></th>
-            </tr>";
-        }
-
+            <td style='text-align: center;'>" . strtoupper($resultado) . "</td>
+        </tr>";
         $contador++;
     }
 
     $html .= "</table>";
     $mpdf->WriteHTML($html);
 }
-
-
-// Se necessário, adicione um AddPage() no final para uma nova página após todas as tabelas
-
-//$mpdf->SetDisplayMode('fullwidth');
-
-//$mpdf->WriteHTML($html);
-$mpdf->Output("Resultado EIPOT Etapa IV.pdf", 'D');
-
+$mpdf->Output("Resultado Inicial Etapa V - Heteroidentificação.pdf", 'D');
+ob_end_flush();
 exit();

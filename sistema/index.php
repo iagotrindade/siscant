@@ -77,7 +77,8 @@ require 'menu.php';
                 <br>
             </div>
 
-            <div class="row <?php if ($perfil == 'jise') echo ('hidden') ?>">
+            <!-- 18/06/2025 - Iago Silva Inlcuido perfil chc e cr na verificação-->
+            <div class="row <?php if ($perfil == 'jise' || $perfil == 'chc' || $perfil == 'cr') echo ('hidden') ?>">
                 <div class="col-md-12">
                     <?php
                     if (isset($_SESSION['eipot']) && $perfil == 'admin' || $perfil == 'consulta')
