@@ -164,7 +164,7 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
             <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 12px;'>" . mb_strtoupper($arma, "UTF-8") . "</th>
         </tr>
         <tr>
-            <th style='font-size: 12px; text-align: center; width: 20%;'>CLASSIFICAÇÃO</th>
+            <th style='font-size: 12px; text-align: center; width: 20%;'>ORD</th>
             <th style='font-size: 12px; text-align: center; width: 20%;'>CPF</th>
             <th style='font-size: 12px; text-align: center; width: 35%;'>NOME</th>
             <th style='font-size: 12px; text-align: center; width: 25%;'>RESULTADO</th>

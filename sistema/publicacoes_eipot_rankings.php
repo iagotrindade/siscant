@@ -30,7 +30,8 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
     <form name="form_relacao_classificacao_eipot_ampla" action="mpdf/relacao_classificacao_eipot.php" method="post">
         <input type="hidden" name="tipo_publicacao" value="eipot_ampla_concorrencia">
         <div class="card">
-            <h3>Ranking após Etapas I, II, III e IV - Ampla Concorrência</h3><br> <!-- Título do formulário -->
+             <!-- 26/06/2025 -> Iago Silva Alterado o título -->
+            <h3>Classificação após Etapas I, II, III e IV - Ampla Concorrência</h3><br> <!-- Título do formulário -->
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
@@ -67,7 +68,8 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
     <form name="form_relacao_classificacao_cotas_negros" action="mpdf/relacao_classificacao_eipot.php" method="post">
         <input type="hidden" name="tipo_publicacao" value="eipot_cotas_negros">
         <div class="card">
-            <h3>Ranking após Etapas I, II, III e IV - Cotas Negros</h3><br> <!-- Título do formulário -->
+            <!-- 26/06/2025 -> Iago Silva Alterado o título -->
+            <h3>Classificação após Etapas I, II, III e IV - Cotas Negros</h3><br> <!-- Título do formulário -->
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
