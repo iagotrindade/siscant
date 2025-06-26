@@ -58,8 +58,6 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                             $candidatos = $conexao->get_inscritos_eipot_vagas_reservadas_tabelas($rm_usuario);
                             $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario);
 
-
-
                             foreach ($candidatos as $linha) {
                                 $pareceres = $conexao->get_pareceres_heteroidentificacao($linha['id']);
 
@@ -74,11 +72,11 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                     return $parecer['fase'] == 2;
                                 });
 
-                                if(count($pareceresFase1) < 5) {
+                                if (count($pareceresFase1) < 5) {
                                     $parecerHc = 'PENDENTE';
                                 }
 
-                                if(count($pareceresFase2) < 3) {
+                                if (count($pareceresFase2) < 3) {
                                     $parecerRevisora = 'PENDENTE';
                                 }
 
@@ -107,6 +105,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 }
 
                                 echo '
+                                <tr>
                                 <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">' . $linha['cpf'] . '</a></td>
                                 <td>' . $linha['nome_completo'] . '</td>
                                 <td>_' . $linha['etapa'] . '</td>
@@ -150,16 +149,13 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
             </div>
         </div>
     </div>
-    
+
 </div>
 </div>
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
     $('#tabela_dinamica').DataTable();
-</script>
-<script type="text/javascript">
-    $('#tabela_dinamica2').DataTable();
 </script>
 </body>
 
