@@ -192,6 +192,7 @@
                         } else {
                             $avaliador = '';
                         }
+                        // 26/06/2025 -> Iago Silva Alterado o input de obs_etapa para hidden
                         echo '
 <div class="alert alert-info">
     <div class="row">
@@ -223,7 +224,7 @@
 
         <form action="../banco_dados/candidato_atualiza_oficio_recurso.php" method="post" >
         <input name="id_recurso" value=' . $linha['id'] . ' hidden>
-        <input name="obs_etapa" type="text" value=' . $linha['obs_etapa'] . ' hidden>
+        <input type="hidden" name="obs_etapa" value=' . $linha['obs_etapa'] . ' hidden>
         <input name="id_candidato" value=' . $linha['id_candidato'] . ' hidden>
         <input name="cpf_candidato" value=' . $cpf . ' hidden>
 

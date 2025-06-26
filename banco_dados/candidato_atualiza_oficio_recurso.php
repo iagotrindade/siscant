@@ -89,7 +89,8 @@ if ($get_recurso_id[0]['id_candidato'] != $id_candidato) {
     exit();
 }
 
-if ($obs_etapa != '3' && $_SESSION['perfil'] != 'jise') {
+// 26/06/2025 -> Iago Silva Inlcuido a verificação do perfil admin
+if ($obs_etapa != '3' && $_SESSION['perfil'] != 'jise' && $_SESSION['perfil'] != 'admin') {
     erro("Erro 2473478! Não foi possível fazer a atualização dos dados!");
     exit();
 }
