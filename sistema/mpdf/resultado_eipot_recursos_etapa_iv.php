@@ -164,6 +164,6 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
 //$mpdf->SetDisplayMode('fullwidth');
 
 //$mpdf->WriteHTML($html);
-$mpdf->Output("Resultado Análise Recursos Etapa IV", 'D');
+$mpdf->Output("Resultado Análise Recursos Etapa IV.pdf", 'D');
 
 exit();

@@ -103,7 +103,7 @@ $ordem_arma = [
 $inscritos_por_arma = [];
 
 foreach ($lista_candidatos as $inscrito) {
-    
+
     // Ignora candidatos de outras regiões militares
     if ((int) $inscrito['rm_inscricao'] !== $rm_usuario) {
         continue;
@@ -113,7 +113,6 @@ foreach ($lista_candidatos as $inscrito) {
 
     // Filtro por tipo de publicação
     if (
-        ($tipo_publicacao === 'eipot_ampla_concorrencia' && $vagaReservada === 1) ||
         ($tipo_publicacao === 'eipot_cotas_negros' && $vagaReservada === 0)
     ) {
         continue;
