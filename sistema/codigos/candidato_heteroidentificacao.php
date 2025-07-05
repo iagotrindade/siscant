@@ -30,9 +30,19 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
 <a name='heteroidentificacao'></a>
 <div <?php if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'chc' && $_SESSION['perfil'] != 'cr' && $_SESSION['perfil'] != 'consulta') echo 'hidden' ?>>
     <div class="card p-4">
-        <h4 class="">
-            <a data-toggle="collapse" href="#hetero">Mostrar/Esconder Pareceres Heteroidentificação</a>
-        </h4>
+        <div class="row">
+            <h4 class="col-md-11">
+                <a data-toggle="collapse" href="#hetero">Mostrar/Esconder Pareceres Heteroidentificação</a>
+            </h4>
+
+            <div class="col-md-1 row text-center">
+                <label for="heteroidentificacao" class="form-label">Baixar Ata</label>
+                <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?php echo $id_usuario; ?>&fase=1">
+
+                    <img src="imagens/pdf.png" alt="Ícone de Heteroidentificação" style="width: 50px; margin-bottom: 20px;">
+                </a>
+            </div>
+        </div>
         <!-- Análises -->
         <?php $contadorHetero = 0; ?>
         <div class="row collapse" id="hetero">
@@ -82,7 +92,7 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
                         </fieldset>
                     </form>
 
-                    <div class="" <?php if ($parecer['id_avaliador'] == $_SESSION['id_usuario']) echo 'hidden'; ?>>
+                    <div class="" <?php if  ($parecer['id_avaliador'] == $_SESSION['id_usuario']) echo 'hidden'; ?>>
                         <h4>Parecer número: <?php echo ($contadorHetero); ?></h4>
                         <p style="font-size: 16px;" id="titulo-heteroidentificacao" class="mb-4">
                             Análise realizada em <?php echo (trata_data_hora($parecer['data_avaliacao'])); ?> pelo <?php echo ($parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador']); ?>
@@ -181,9 +191,19 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
     </div>
 
     <div class="card p-4">
-        <h4 class="">
-            <a data-toggle="collapse" href="#heteroRevisora">Mostrar/Esconder Pareceres Heteroidentificação Revisora</a>
-        </h4>
+        <div class="row">
+            <h4 class="col-md-11">
+                <a data-toggle="collapse" href="#hetero">Mostrar/Esconder Pareceres Heteroidentificação Revisora</a>
+            </h4>
+
+            <div class="col-md-1 row text-center">
+                <label for="heteroidentificacao" class="form-label">Baixar Ata</label>
+                <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?php echo $id_usuario; ?>&fase=2">
+
+                    <img src="imagens/pdf.png" alt="Ícone de Heteroidentificação" style="width: 50px; margin-bottom: 20px;">
+                </a>
+            </div>
+        </div>
         <!-- Análises Revisora -->
         <?php $contadorRevisora = 0; ?>
 

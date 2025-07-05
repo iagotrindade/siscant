@@ -134,7 +134,7 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
 
     <form name="form_relacao_classificacao_eipot_pontuacao" action="mpdf/resultado_eipot_etapa_v.php" method="post">
         <div class="card">
-            <h3>Resultado Etapa V - Heteroidentificação Complementar</h3><br>
+            <h3>Resultado Etapa V - Comissão de Heteroidentificação</h3><br>
             <input type="hidden" name="fase" value="1">
 
             <div style="float: left; width: 48%; margin-right: 4%;">
@@ -153,7 +153,7 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
 
             <div class="form-group">
                 <label for="paragrafo_um_resultado_iv">Primeiro Parágrafo:</label>
-                <input type="text" name="paragrafo_um_resultado_v" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Etapa V - Heteroidentificação Complementar." required>
+                <input type="text" name="paragrafo_um_resultado_v" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Comissão de Heteroidentificação." required>
             </div>
 
             <div class="form-group">
@@ -183,7 +183,7 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
         <div class="card">
             <input type="hidden" name="fase" value="2">
 
-            <h3>Resultado Etapa V - Heteroidentificação Complementar em Grau de Recurso</h3><br> <!-- Título do formulário -->
+            <h3>Resultado Etapa V - Comissão Revisora</h3><br> <!-- Título do formulário -->
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
@@ -201,7 +201,7 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
 
             <div class="form-group">
                 <label for="paragrafo_um_resultado_iv">Primeiro Parágrafo:</label>
-                <input type="text" name="paragrafo_um_resultado_v" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Etapa V - Heteroidentificação Complementar em Grau de Recurso." required>
+                <input type="text" name="paragrafo_um_resultado_v" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado da Comissão Revisora." required>
             </div>
 
             <div style="float: left; width: 48%; margin-right: 4%;">

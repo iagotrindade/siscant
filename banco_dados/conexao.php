@@ -2535,13 +2535,14 @@ class Conexao
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Candidatos Concorrendo">
-    // Usando GROUP_CONCAT(e.nome SEPARATOR ', ') para juntar nomes das especialidades em uma única string e GROUP BY u.id para agrupar os resultados por candidato, evitando duplicidade na tabela de avaliação de documentos.
+    // 30/06/2025 - Iago Silva Modificando a query para trazer junto o id da especialidade
     public function get_candidatos_concorrendo()
     {
         $stmt = $this->pdo->prepare("
         SELECT 
             u.*, 
-            GROUP_CONCAT(e.nome SEPARATOR ', ') AS especialidades
+            GROUP_CONCAT(e.nome SEPARATOR ', ') AS especialidades,
+            GROUP_CONCAT(e.id SEPARATOR ',') AS ids_especialidades
         FROM usuario u
         INNER JOIN candidato_x_especialidade ce 
             ON ce.id_candidato = u.id 
@@ -2563,6 +2564,7 @@ class Conexao
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 
     public function get_candidatos_concorrendo_eipot($rm_usuario)
@@ -7766,36 +7768,34 @@ order by total_pontos_somados desc");
 
         try {
             $sqlUpdate = "UPDATE candidato_x_especialidade 
-                      SET etapa = :etapa 
-                      WHERE id_especialidade = :id_especialidade AND id_candidato = :id_candidato";
+                      SET etapa = :etapa,
+                          _data_ultima_atualizacao = :data_atualizacao,
+                          _usuario_ultima_atualizacao = :usuario
+                      WHERE id_especialidade = :id_especialidade 
+                        AND id_candidato = :id_candidato";
 
             $this->pdo->beginTransaction();
 
             $query = $this->pdo->prepare($sqlUpdate);
 
+            $query->bindValue(":etapa", $etapa);
+            $query->bindValue(":data_atualizacao", $datetime);
+            $query->bindValue(":usuario", $usuario);
             $query->bindValue(":id_especialidade", $id_especialidade);
             $query->bindValue(":id_candidato", $id_candidato);
-            $query->bindValue(":etapa", $etapa);
 
             if ($query->execute()) {
-                $data = [
-                    'id_especialidade' => $id_especialidade,
-                    'etapa' => $etapa,
-                    '_data_ultima_atualizacao' => $datetime,
-                    '_usuario_ultima_atualizacao' => $usuario,
-                ];
                 $this->pdo->commit();
-                return $data;
+                return true;
             } else {
                 $this->pdo->rollBack();
                 return false;
             }
         } catch (Exception $e) {
-            $this->pdo->rollBack(); // Boa prática: garantir o rollback em caso de exceção
+            $this->pdo->rollBack();
             return false;
         }
     }
-
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Altera Etapa do Candidato">

@@ -1,4 +1,4 @@
-<div class="card">
+<div class="">
 
     <?php
 
@@ -116,9 +116,11 @@
                 "tempo_sv_pub" => $tempo_total_sv_publico_dias,
                 "tempo_idade" => $tempo_total_idade_dias,
                 "mail" => $linha['mail'],
+                "autodeclaracao" => $linha['autodeclaracao'],
                 "etapa" => $linha['etapa'],
                 "etapa_candidato" => $linha['etapa_candidato'],
-                "cidade_escolheu_servir" => $linha['cidade_escolheu_servir']
+                "cidade_escolheu_servir" => $linha['cidade_escolheu_servir'],
+                "vaga_reservada" => $linha['vaga_reservada'],
             ];
 
         array_push($vetor_ordenado_candidatos, $novo_vetor);
@@ -151,79 +153,164 @@
 
     ?>
 
-    <legend>Classificação dos candidatos</legend>
-    <div style="background: yellow"> <b>Linha com fundo amarelo</b>: Candidato acima da etapa 2 concorrendo em mais de uma especialidade</div>
-    <br>
-    <div class="card-body">
-        <div class="alert alert-dismissible alert-success" style="text-align: justify">
-            <font color="black"><b>Códigos da coluna Militar: </b></font>
-            <u><b> 1 </b>- Oficial da Ativa </u> - | -
-            <u><b> 2 </b>- Oficial R2 </u> - | -
-            <u><b> 3 </b>- Aspitante R2 </u> - | -
-            <u><b> 4 </b>- Praça Ativa </u> - | -
-            <u><b> 5 </b>- Reservista de 1ª categoria </u> - | -
-            <u><b> 6 </b>- Reservista de 2ª categoria </u> - | -
-            <u><b> 7 </b>- Civil </u>
-        </div>
-        <!-- 21/05/2025 Adicionando o campo etapa do candidato e alterando a etapa para etapa na especialidade -->
-        <table class="table table-hover table-bordered" id="tabela_dinamica2">
-            <thead>
-                <tr>
-                    <th>Lugar</th>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Pontuação</th>
-                    <th>Militar</th>
-                    <th>Dias SV Mil</th>
-                    <th>Dias Idade</th>
-                    <th>E-Mail</th>
-                    <th>Etapa na Especialidade</th>
-                    <th>Etapa Geral</th>
-                    <th>Cidade Escolheu</th>
-                    <th>Ver</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="card">
+        <legend>Classificação dos candidatos - Ampla concorrência</legend>
+        <div style="background: yellow"> <b>Linha com fundo amarelo</b>: Candidato acima da etapa 2 concorrendo em mais de uma especialidade</div>
+        <br>
+        <div class="">
+            <div class="alert alert-dismissible alert-success" style="text-align: justify">
+                <font color="black"><b>Códigos da coluna Militar: </b></font>
+                <u><b> 1 </b>- Oficial da Ativa </u> - | -
+                <u><b> 2 </b>- Oficial R2 </u> - | -
+                <u><b> 3 </b>- Aspitante R2 </u> - | -
+                <u><b> 4 </b>- Praça Ativa </u> - | -
+                <u><b> 5 </b>- Reservista de 1ª categoria </u> - | -
+                <u><b> 6 </b>- Reservista de 2ª categoria </u> - | -
+                <u><b> 7 </b>- Civil </u>
+            </div>
+            <!-- 21/05/2025 Adicionando o campo etapa do candidato e alterando a etapa para etapa na especialidade -->
+            <table class="table table-hover table-bordered" id="tabela_dinamica2">
+                <thead>
+                    <tr>
+                        <th>Lugar</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Pontuação</th>
+                        <th>Militar</th>
+                        <th>Dias SV Mil</th>
+                        <th>Dias Idade</th>
+                        <th>E-Mail</th>
+                        <th>Etapa na Especialidade</th>
+                        <th>Etapa Geral</th>
+                        <th>Cidade Escolheu</th>
+                        <th>Ver</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                <?php
+                    <?php
 
-                $lugar = 1;
-                foreach ($vetor_ordenado_candidatos as $linha) {
+                    $lugar = 1;
+                    foreach ($vetor_ordenado_candidatos as $linha) {
 
-                    $cor_linha = "";
-                    if ($linha['etapa'] > 2) {
-                        $resultado = $conexao->get_candidatos_mais_uma_especialidade_id_usuario($linha['id']);
-                        if (count($resultado) > 0)
-                            $cor_linha = ' bgcolor = "yellow" ';
+                        $cor_linha = "";
+                        if ($linha['etapa'] > 2) {
+                            $resultado = $conexao->get_candidatos_mais_uma_especialidade_id_usuario($linha['id']);
+                            if (count($resultado) > 0)
+                                $cor_linha = ' bgcolor = "yellow" ';
+                        }
+
+                        /*
+                            $foto = "user.jpg";
+                            $get_foto = $conexao->get_foto_usuario($linha['id']);  
+                            if(count($get_foto) > 0)
+                                $foto = $get_foto[0]['nome'];
+                            */
+                        echo '
+                            <tr ' . $cor_linha . '>
+                                <td>' . $lugar . 'º</td>
+                                <td>' . $linha['nome'] . '</td>
+                                <td>' . $linha['cpf'] . '</td>
+                                <td>' . $linha['pontos'] . '</td>
+                                <td>' . $linha['militar'] . '</td>
+                                <td>' . $linha['tempo_sv_pub'] . '</td>
+                                <td>' . $linha['tempo_idade'] . '</td>
+                                <td>' . $linha['mail'] . '</td>
+                                <td>et_' . $linha['etapa'] . '</td>
+                                <td>et_' . $linha['etapa_candidato'] . '</td>
+                                <td>' . $linha['cidade_escolheu_servir'] . '</td>
+                                <td width="40px" align="center"><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">ver</a></td>
+                            </tr>';
+                        //<img class="img-circle" src="fotos/'.$foto.'" width="40px">
+                        $lugar++;
                     }
+                    ?>
 
-                    /*
-                        $foto = "user.jpg";
-                        $get_foto = $conexao->get_foto_usuario($linha['id']);  
-                        if(count($get_foto) > 0)
-                            $foto = $get_foto[0]['nome'];
-                        */
-                    echo '
-                        <tr ' . $cor_linha . '>
-                            <td>' . $lugar . 'º</td>
-                            <td>' . $linha['nome'] . '</td>
-                            <td>' . $linha['cpf'] . '</td>
-                            <td>' . $linha['pontos'] . '</td>
-                            <td>' . $linha['militar'] . '</td>
-                            <td>' . $linha['tempo_sv_pub'] . '</td>
-                            <td>' . $linha['tempo_idade'] . '</td>
-                            <td>' . $linha['mail'] . '</td>
-                            <td>et_' . $linha['etapa'] . '</td>
-                            <td>et_' . $linha['etapa_candidato'] . '</td>
-                            <td>' . $linha['cidade_escolheu_servir'] . '</td>
-                            <td width="40px" align="center"><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">ver</a></td>
-                        </tr>';
-                    //<img class="img-circle" src="fotos/'.$foto.'" width="40px">
-                    $lugar++;
-                }
-                ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-            </tbody>
-        </table>
+    <div class="card">
+        <legend>Classificação dos candidatos - Cotas</legend>
+        <div style="background: yellow"> <b>Linha com fundo amarelo</b>: Candidato acima da etapa 2 concorrendo em mais de uma especialidade</div>
+        <br>
+        <div class="">
+            <div class="alert alert-dismissible alert-success" style="text-align: justify">
+                <font color="black"><b>Códigos da coluna Militar: </b></font>
+                <u><b> 1 </b>- Oficial da Ativa </u> - | -
+                <u><b> 2 </b>- Oficial R2 </u> - | -
+                <u><b> 3 </b>- Aspitante R2 </u> - | -
+                <u><b> 4 </b>- Praça Ativa </u> - | -
+                <u><b> 5 </b>- Reservista de 1ª categoria </u> - | -
+                <u><b> 6 </b>- Reservista de 2ª categoria </u> - | -
+                <u><b> 7 </b>- Civil </u>
+            </div>
+            <!-- 21/05/2025 Adicionando o campo etapa do candidato e alterando a etapa para etapa na especialidade -->
+            <table class="table table-hover table-bordered" id="tabela_dinamica5">
+                <thead>
+                    <tr>
+                        <th>Lugar</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Pontuação</th>
+                        <th>Militar</th>
+                        <th>Dias SV Mil</th>
+                        <th>Dias Idade</th>
+                        <th>E-Mail</th>
+                        <th>Autodeclaracao</th>
+                        <th>Etapa na Especialidade</th>
+                        <th>Etapa Geral</th>
+                        <th>Cidade Escolheu</th>
+                        <th>Ver</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <?php
+
+                    $lugar = 1;
+                    foreach ($vetor_ordenado_candidatos as $linha) {
+                        if ($linha['vaga_reservada'] == 0) continue; // Pula os candidatos que não estão concorrendo em cotas
+
+                        $cor_linha = "";
+                        if ($linha['etapa'] > 2) {
+                            $resultado = $conexao->get_candidatos_mais_uma_especialidade_id_usuario($linha['id']);
+                            if (count($resultado) > 0)
+                                $cor_linha = ' bgcolor = "yellow" ';
+                        }
+
+                        $vaga_reservada = $linha['vaga_reservada'] == 1 ? 'Sim' : 'Não';
+
+                        /*
+                            $foto = "user.jpg";
+                            $get_foto = $conexao->get_foto_usuario($linha['id']);  
+                            if(count($get_foto) > 0)
+                                $foto = $get_foto[0]['nome'];
+                            */
+                        echo '
+                            <tr ' . $cor_linha . '>
+                                <td>' . $lugar . 'º</td>
+                                <td>' . $linha['nome'] . '</td>
+                                <td>' . $linha['cpf'] . '</td>
+                                <td>' . $linha['pontos'] . '</td>
+                                <td>' . $linha['militar'] . '</td>
+                                <td>' . $linha['tempo_sv_pub'] . '</td>
+                                <td>' . $linha['tempo_idade'] . '</td>
+                                <td>' . $linha['mail'] . '</td>
+                                <td>' . ucfirst($linha['autodeclaracao']) . '</td>
+                                <td>et_' . $linha['etapa'] . '</td>
+                                <td>et_' . $linha['etapa_candidato'] . '</td>
+                                <td>' . $linha['cidade_escolheu_servir'] . '</td>
+                                <td width="40px" align="center"><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">ver</a></td>
+                            </tr>';
+                        //<img class="img-circle" src="fotos/'.$foto.'" width="40px">
+                        $lugar++;
+                    }
+                    ?>
+
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

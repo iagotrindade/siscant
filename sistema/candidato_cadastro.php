@@ -2,8 +2,6 @@
 include_once './menu_candidato.php';
 include_once './codigos/candidato_campos_cadastra.php';
 include_once './codigos/candidato_valida_cadastro.php';
-
-//   print_r($_SESSION['eipot']);
 ?>
 
 <script>
@@ -25,7 +23,7 @@ include_once './codigos/candidato_valida_cadastro.php';
     <div class="card">
         <div class="row">
             <div class="col-md-6">
-                <legend><b>SiSCanT - <?php if (isset($_SESSION['apresentacao_candidato'])) echo $_SESSION['apresentacao_candidato'] ?></b> <small class="pull-right">...</small> </legend>
+                <legend><b>SiSCanT - <?php if (isset($_SESSION['apresentacao_candidato'])) echo $_SESSION['apresentacao_candidato'] ?></legend>
                 <p>Sistema de Seleção de Canditados Temporários</p>
             </div>
             <div class="col-md-6">
@@ -142,13 +140,15 @@ include_once './codigos/candidato_valida_cadastro.php';
 
                                             <div class="form-group">
                                                 <label>Autodeclaração</label>
-                                                <select id="autodeclaracao" name="autodeclaracao" onchange="mostra_vaga_reservada()" class="form-control">
+                                                <select id="autodeclaracao" name="autodeclaracao" onchange="mostra_vaga_reservada('<?php echo ($_SESSION['tipo_selecao'] ?? 'ott_stt'); ?>')" class="form-control">
                                                     <option value="">Selecione a Opção</option>
                                                     <option value="branco">Branco</option>
                                                     <option value="preto">Preto</option>
                                                     <option value="pardo">Pardo</option>
                                                     <option value="indio">Índio</option>
                                                     <option value="amarelo">Amarelo</option>
+                                                    <!-- 27/06/2025 -> Iago Silva Adicionando opção de quilombola para concorrer as vagas reservadas -->
+                                                    <option value="quilombola" <?php if (!isset($_SESSION['tipo_selecao'])) echo ('hidden'); ?>>Quilombola</option>
                                                 </select>
                                             </div>
 
@@ -165,15 +165,22 @@ include_once './codigos/candidato_valida_cadastro.php';
                                             </div>
 
                                             <script>
-                                                function mostra_vaga_reservada() {
-                                                    if ($('#autodeclaracao').val() == 'preto' || $('#autodeclaracao').val() == 'pardo') {
+                                                // 27/06/2025 -> Iago Silva Adicionando opção de quilombola e indios para concorrer as vagas reservadas no MFDV e CET
+                                                function mostra_vaga_reservada(selecao = null) {
+                                                    const autodeclaracao = $('#autodeclaracao').val();
+
+                                                    const cotistasMfdvCet = ['preto', 'pardo', 'quilombola', 'indio'];
+                                                    const cotistasDemais = ['preto', 'pardo'];
+
+                                                    const cotistasValidos = (selecao === 'mfdv' || selecao === 'cet') ? cotistasMfdvCet : cotistasDemais;
+
+                                                    if (cotistasValidos.includes(autodeclaracao)) {
                                                         $('#div_vaga_reservada').show();
                                                     } else {
                                                         $('#div_vaga_reservada').hide();
                                                     }
                                                 }
                                             </script>
-
 
                                             <div hidden class="row">
                                                 <div class="col-lg-6">
