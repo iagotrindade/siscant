@@ -32,11 +32,11 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
     <div class="card p-4">
         <div class="row">
             <h4 class="col-md-11">
-                <a data-toggle="collapse" href="#hetero">Mostrar/Esconder Pareceres Heteroidentificação</a>
+                <a data-toggle="collapse" href="#hetero">Mostrar/Esconder Pareceres Comissão Heteroidentificação</a>
             </h4>
 
             <div class="col-md-1 row text-center">
-                <label for="heteroidentificacao" class="form-label">Baixar Ata</label>
+                <label for="heteroidentificacao" class="form-label">Baixar Pareceres</label>
                 <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?php echo $id_usuario; ?>&fase=1">
 
                     <img src="imagens/pdf.png" alt="Ícone de Heteroidentificação" style="width: 50px; margin-bottom: 20px;">
@@ -152,7 +152,7 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
                         <input value="<?php echo $cpf; ?>" maxlength="50" name="cpf_candidato" hidden>
                         <input value="1" name="fase" hidden>
                         <fieldset class="col-md-12">
-                            <legend id="titulo-heteroidentificacao" class="mb-4">Inserir Parecer Heteroidentificação Complementar</legend>
+                            <legend id="titulo-heteroidentificacao" class="mb-4">Inserir Parecer Comissão Heteroidentificação</legend>
 
                             <!-- Justificativa -->
                             <div class="mb-20">
@@ -193,11 +193,11 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
     <div class="card p-4">
         <div class="row">
             <h4 class="col-md-11">
-                <a data-toggle="collapse" href="#hetero">Mostrar/Esconder Pareceres Heteroidentificação Revisora</a>
+                <a data-toggle="collapse" href="#heteroRevisora">Mostrar/Esconder Pareceres Comissão Revisora</a>
             </h4>
 
             <div class="col-md-1 row text-center">
-                <label for="heteroidentificacao" class="form-label">Baixar Ata</label>
+                <label for="heteroidentificacao" class="form-label">Baixar Pareceres</label>
                 <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?php echo $id_usuario; ?>&fase=2">
 
                     <img src="imagens/pdf.png" alt="Ícone de Heteroidentificação" style="width: 50px; margin-bottom: 20px;">
@@ -220,7 +220,7 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
                         <fieldset class="col-md-12">
                             <h4>Parecer revisor número: <?php echo ($contadorRevisora); ?></h4>
                             <p style="font-size: 16px;" id="titulo-heteroidentificacao" class="mb-4">
-                                Análise realizada em <?php echo (trata_data_hora($parecer['data_avaliacao'])); ?> pelo <?php echo ($parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador']); ?>
+                                Análise realizada em <?php echo (trata_data_hora($parecer['data_avaliacao'])); ?> pelo (a) <?php echo ($parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador']); ?>
                             </p>
 
                             <!-- Justificativa Revisora -->
@@ -314,7 +314,7 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
                         <input value="<?php echo $cpf; ?>" maxlength="50" name="cpf_candidato" hidden>
                         <input value="2" name="fase" hidden>
                         <fieldset class="col-md-12">
-                            <legend id="titulo-heteroidentificacao" class="mb-4">Inserir Parecer Heteroidentificação Complementar - Revisora</legend>
+                            <legend id="titulo-heteroidentificacao" class="mb-4">Inserir Parecer Comissão Revisora</legend>
 
                             <!-- Justificativa -->
                             <div class="mb-20">

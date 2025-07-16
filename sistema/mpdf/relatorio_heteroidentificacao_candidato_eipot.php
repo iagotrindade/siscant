@@ -13,7 +13,7 @@ $mpdf->WriteHTML($css, 1);
 $id_candidato = (int)$_GET['id'];
 $fase = (int)$_GET['fase'];
 
-$tipo_inspecao = ($fase == 1) ? 'Complementar' : 'Revisora';
+$tipo_inspecao = ($fase == 1) ? 'Heteroidentificação' : 'Revisora';
 
 set_time_limit(300);
 
@@ -58,23 +58,26 @@ $html = "
 </p>
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>Ata Heteroidentificação " . $tipo_inspecao . " - " . $rm_usuario . "ª Região Militar</strong></th>
+        <th align='center'><strong>Parecer Comissão $tipo_inspecao - EIPOT/" . date('Y') . "</strong></th>
     </tr>
 </table>
 
-<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>A Comissão de Heteroidentificação " . $tipo_inspecao . " inspecionou na presente sessão, o abaixo declarado, para fins de comprovação de sua autodeclaração, e sobre isto, proferiu o parecer abaixo:</p> 
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
+    A Comissão " . ($tipo_inspecao == 'Heteroidentificação' ? 'de Heteroidentificação' : 'Revisora') . " realizou o procedimento de heteroidentificação do candidato abaixo identificado, conforme previsto em Aviso de Convocação,  para fins de comprovação de sua autodeclaração, e sobre isto, proferiu os pareceres abaixo:
+</p> 
 ";
 $mpdf->AddPage('P');
 $mpdf->WriteHTML($html);
 
 $candidato = $conexao->get_usuario_id($id_candidato);
-
-$cpf = substr($candidato[0]['cpf'], 0, -5) . "*****";
 $pareceres = $conexao->get_pareceres_heteroidentificacao($candidato[0]['id']);
 
 // Contagem dos pareceres válidos da fase
 $quantidadePareceresConfirmados = 0;
 $quantidadePareceresNaoConfirmados = 0;
+
+// Separa os pareceres da fase
+$pareceresFase = [];
 
 foreach ($pareceres as $parecer) {
     if ($parecer['fase'] != $fase) continue;
@@ -84,7 +87,10 @@ foreach ($pareceres as $parecer) {
     } elseif ($parecer['parecer'] === 'nao_confirmada') {
         $quantidadePareceresNaoConfirmados++;
     }
+
+    $pareceresFase[] = $parecer;
 }
+
 
 $totalPareceres = $quantidadePareceresConfirmados + $quantidadePareceresNaoConfirmados;
 
@@ -119,68 +125,78 @@ $linhasHtml .= "
     <tr>
         <td><b>Naturalidade: </b> " . $candidato[0]['naturalidade'] . " </td>
         <td><b>Data de Nascimento: </b> " . $candidato[0]['data_nascimento'] . " </td>
-    </tr>
+    </tr>";
 
+if (!isset($_SESSION['eipot'])) {
+    $linhasHtml = $linhasHtml . "<tr style='background-color: #D8D8D8'>
+            <td colspan=\"2\"> <center><b>CIVIL/MILTAR</b></center></td>
+        </tr>
+
+        <tr>
+            <td><b>Ativa/Reserva: </b>" . $candidato[0]['ativa_reserva'] . "</td>
+            <td><b>Certificado: </b>" . $candidato[0]['certificado'] . "</td>
+        </tr>
+
+        <tr>
+            <td><b>Nº do Documento: </b>" . $candidato[0]['num_documento'] . "</td>
+            <td><b>Data da Expedição: </b>" . $candidato[0]['data_expedicao'] . "</td>
+        </tr>
+
+        <tr>
+            <td><b>Situação Militar: </b>" . $candidato[0]['situacao_militar'] . "</td>
+            <td><b>Posto/Graduação: </b>" . $candidato[0]['posto_grad'] . "</td>
+        </tr>
+
+        <tr>
+            <td><b>Força: </b>" . $candidato[0]['forca'] . "</td>
+            <td><b>Ano de incorporação: </b>" . $candidato[0]['ano_incorporacao'] . "</td>
+        </tr>
+
+        <tr>
+            <td><b>Arma/Quadro/Serviço: </b>" . $candidato[0]['arma_quadro_servico'] . "</td>
+            <td><b>Licenciamento: </b>" . $candidato[0]['licensiamento'] . "</td>
+        </tr>";
+}
+
+$linhasHtml = $linhasHtml . "
     <tr style='background-color: #D8D8D8'>
-        <td colspan=\"2\"> <center><b>CIVIL/MILTAR</b></center></td>
+        <td colspan=\"2\"> <center><b>PARECERES</b></center></td>
     </tr>
+    </table>";
 
-    <tr>
-        <td><b>Ativa/Reserva: </b>" . $candidato[0]['ativa_reserva'] . "</td>
-        <td><b>Certificado: </b>" . $candidato[0]['certificado'] . "</td>
-    </tr>
+foreach ($pareceresFase as $index => $parecer) {
+    $linhasHtml .= "
 
-    <tr>
-        <td><b>Nº do Documento: </b>" . $candidato[0]['num_documento'] . "</td>
-        <td><b>Data da Expedição: </b>" . $candidato[0]['data_expedicao'] . "</td>
-    </tr>
+    <div style='margin-bottom: 20px;'>
+    <h5 style='margin: 0 0 5px; font-size: 10px;'>
+        <b>Parecer " . ($index + 1) . ":</b> Análise realizada pelo(a) " . $parecer['graduacao_avaliador'] . " " . $parecer['nome_avaliador'] . " em " . trata_data($parecer['data_avaliacao']) . "
+    </h5>
 
-    <tr>
-        <td><b>Situação Militar: </b>" . $candidato[0]['situacao_militar'] . "</td>
-        <td><b>Posto/Graduação: </b>" . $candidato[0]['posto_grad'] . "</td>
-    </tr>
+    <p style='font-size: 10px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
+        " . $parecer['justificativa'] . "
+    </p>
 
-    <tr>
-        <td><b>Força: </b>" . $candidato[0]['forca'] . "</td>
-        <td><b>Ano de incorporação: </b>" . $candidato[0]['ano_incorporacao'] . "</td>
-    </tr>
+    <p style='margin: 5px 0; font-size: 10px;'>
+        <b>Parecer:</b> " . strtoupper($parecer['parecer']) . "
+    </p>
 
-    <tr>
-        <td><b>Arma/Quadro/Serviço: </b>" . $candidato[0]['arma_quadro_servico'] . "</td>
-        <td><b>Licenciamento: </b>" . $candidato[0]['licensiamento'] . "</td>
-    </tr>
+    <hr style='border: 0; border-top: 1px solid #ccc; margin: 10px 0;'>
+</div>";
+}
 
-    <tr style='background-color: #D8D8D8'>
-        <td colspan=\"2\"> <center><b>RESULTADO</b></center></td>
-    </tr>
-
-    <tr>
-        <td><b>Parecer da Comissão: </b>" . $resultado . "</td>
-    </tr>
-
+$linhasHtml .= "
+    <table border='0' style='font-size: 10px; font-family: Times New Roman; width:100%'>
+        <tr style='background-color: #D8D8D8'>
+            <td colspan=\"2\"> <center><b>RESULTADO FINAL</b></center></td>
+        </tr>
     </table> 
-    
-    <table border='0' style='width:100%'>
-    <tr>
-        <th align='left'><strong> <p style='font-size: 12px; font-family: Times New Roman;'>
-            $cidade - " . $data_hoje . "   </p></strong>
-        </th>
-    </tr>
-    </table> 
-
-    <p style='font-size: 12px; font-family: Times New Roman; text-align: justify;'>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   &nbsp;&nbsp;&nbsp;
-   Eu, ". mb_strtoupper($candidato[0]['nome_completo'], "UTF-8").", em _____/_____/20_____, tomei ciência do resultado deste parecer no momento da assinatura.   
-</p>
+    <p style='font-size: 10px; text-align:center;'><b>HETEROIDENTIFICAÇÃO " . $resultado . "</b></p>
 ";
 $contador++;
 
 $mpdf->WriteHTML($linhasHtml);
 
-$mpdf->WriteHTML($html);
-
 // Gera o PDF
-$mpdf->Output("Ata Heteroidentificação " . $tipo_inspecao . " " . $data_inspecao . ".pdf", 'D');
+$mpdf->Output("Ata Heteroidentificação " . $tipo_inspecao . ".pdf", 'D');
 ob_end_flush();
 exit;

@@ -1,6 +1,6 @@
 <a name="recursos"></a>
 
-<div class="row" <?php if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'jise') echo "hidden"; ?>>
+<div class="row" <?php if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'jise' && $_SESSION['perfil'] != 'chc' && $_SESSION['perfil'] != 'cr') echo "hidden"; ?>>
     <div class="col-md-12">
         <div class="card">
             <div class="row">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12">
+                <div>
                     <br>
                     <?php
 
@@ -173,6 +173,9 @@
                         $arquivo_add_candidato_recurso = null;
 
                         if ($_SESSION['perfil'] == 'jise' && $linha['obs_etapa'] != '3 - IS')
+                            continue;
+
+                        if ($_SESSION['perfil'] == 'cr' && $linha['etapa'] != 5)
                             continue;
 
                         if ($linha['arq_nome_arquivo'] != null)

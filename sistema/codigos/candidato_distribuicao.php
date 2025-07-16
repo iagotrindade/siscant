@@ -10,10 +10,10 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
 
 <a name="distribuicao"></a>
 <!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
-<div class="">
-    <div class="card">
-        <div class="row">
-            <div class="col-md-12">
+<div class="row">
+    <div class="">
+        <div class="card">
+            <div class="">
                 <form action="../banco_dados/candidato_distribuicao.php" method="post">
                     <legend>Distribuição</legend>
                     <div class="row">

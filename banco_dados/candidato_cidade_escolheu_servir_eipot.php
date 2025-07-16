@@ -1,7 +1,9 @@
 <?php
 include_once '../sistema/funcoes.php';
-session_start();
 include_once 'conexao.php';
+
+session_start();
+
 $conexao = new Conexao();
 
 if (!$_POST) {
@@ -18,7 +20,6 @@ if (($_SESSION['perfil'] != 'candidato')) {
     erro("Erro 243624747457! Permissão Negada!");
     exit();
 }
-
 
 // Verifica se foi liberado para o candidato escolher a cidade
 $selecao = $conexao->get_selecao_id();
@@ -119,142 +120,8 @@ foreach ($get_especialidade_candidato as $especialidade) {
     }
 }
 
-
-
 // VERIFICA SE O CANDIDATO É O PROXÍMO A ESCOLHER A CIDADE
-$lista_candidatos = $conexao->get_candidatos_especialidade($id_especialidade);
-
-$vetor_ordenado_candidatos = array();
-
-foreach ($lista_candidatos as $linha) {
-    if ($linha['medico_obrigatorio'] == '1') continue;
-
-    $pontuacao_curriculo = 0;
-    $get_pontuacao_avaliada = $conexao->get_pontuacao_avaliada($linha['id'], $id_especialidade);
-    if (count($get_pontuacao_avaliada) > 0)
-        $pontuacao_curriculo = round($get_pontuacao_avaliada[0]['pontuacao_avaliada'], 2);
-
-
-    ///////////////////////////////
-    // Prova Teórico Prática
-    ///////////////////////////////
-    $get_pontuacao_provas = $conexao->verifica_especialidade_candidato($linha['id'], $id_especialidade);
-    $nota_prova_teorico_pratico = 0;
-
-    if (count($get_pontuacao_provas) > 0) {
-        $nota_prova_teorico_pratico = (float)$get_pontuacao_provas[0]['nota_prova_teorico_pratico'];
-        $pontuacao_curriculo = round($pontuacao_curriculo + $nota_prova_teorico_pratico, 2);
-    }
-
-
-    $especialidade_selecionada = $conexao->get_especialidade_id($id_especialidade);
-
-    // SE A ESPECIALIDADE FOR DE MÚSICA
-    if ($especialidade_selecionada[0]['musica'] == '1') {
-        $prova_pratica_musica = 0;
-        $prova_escrita_musica = 0;
-        $prova_oral_musica = 0;
-
-        if (count($get_pontuacao_provas) > 0) {
-            $prova_pratica_musica = $get_pontuacao_provas[0]['prova_pratica_musica'];
-            $prova_escrita_musica = $get_pontuacao_provas[0]['prova_teorica_musica'];
-            $prova_oral_musica = $get_pontuacao_provas[0]['prova_oral_musica'];
-        }
-
-        $somatorio_total_pontos_musica = 0;
-        $somatorio_total_pontos_musica = (((($prova_escrita_musica * 2) + ($prova_pratica_musica * 2) + $prova_oral_musica) / 5) + $pontuacao_curriculo) / 2;
-        $pontuacao_curriculo = round($somatorio_total_pontos_musica, 2);
-    }
-
-
-
-    $militar = 7;
-
-    // Oficiais da Ativa
-    if ($linha['civil_militar'] == 'militar' && ($linha['posto_grad'] == "2_ten" || $linha['posto_grad'] == "1_ten" || $linha['posto_grad'] == "asp"))
-        $militar = 1;
-
-    // Oficial R2
-    if ($linha['civil_militar'] == 'civil' && ($linha['posto_grad'] == "2_ten" || $linha['posto_grad'] == "1_ten"))
-        $militar = 2;
-
-    // Aspirante R2
-    if ($linha['civil_militar'] == 'civil' && ($linha['posto_grad'] == "asp"))
-        $militar = 3;
-
-    // Praça Ativa
-    if ($linha['civil_militar'] == 'militar' && ($linha['posto_grad'] == "3_sgt" || $linha['posto_grad'] == "cb" || $linha['posto_grad'] == "sd"))
-        $militar = 4;
-
-    // Reservista de 1ª categoria
-    if ($linha['certificado'] == '1crm' || ($linha['posto_grad'] == "3_sgt" && $linha['civil_militar'] == 'civil'))
-        $militar = 5;
-
-    // Reservista de 2ª categoria
-    if ($linha['certificado'] == '2crm')
-        $militar = 6;
-
-    $tempo_total_sv_publico_dias = 0;
-    $anos_sv_publico = (int)$linha['tempo_sv_mil_anos'];
-    $meses_sv_publico = (int)$linha['tempo_sv_mil_meses'];
-    $dias_sv_publico = (int)$linha['tempo_sv_mil_dias'];
-
-    $tempo_total_sv_publico_dias = ($anos_sv_publico * 365) + ($meses_sv_publico * 30) + ($dias_sv_publico);
-
-    $tempo_total_idade_dias = 0;
-    $data_atual = new DateTime(date("Y-m-d"));
-    $data_nasc = new DateTime($linha['data_nascimento']);
-    $intervalo = $data_atual->diff($data_nasc);
-
-    $anos_vida  = (int)$intervalo->format('%Y');
-    $meses_vida = (int)$intervalo->format('%m');
-    $dias_vida  = (int)$intervalo->format('%d');
-
-    $tempo_total_idade_dias = ($anos_vida * 365) + ($meses_vida * 30) + ($dias_vida);
-
-    $novo_vetor = array();
-
-    $novo_vetor =
-        [
-            "id" => $linha['id'],
-            "nome" => mb_strtoupper($linha['nome_completo'], "UTF-8"),
-            "cpf" => $linha['cpf'],
-            "pontos" => $pontuacao_curriculo,
-            "militar" => $militar,
-            "tempo_sv_pub" => $tempo_total_sv_publico_dias,
-            "tempo_idade" => $tempo_total_idade_dias,
-            "mail" => $linha['mail'],
-            "etapa" => $linha['etapa'],
-            "cidade_escolheu_servir" => $linha['cidade_escolheu_servir']
-        ];
-
-    array_push($vetor_ordenado_candidatos, $novo_vetor);
-}
-
-if (count($lista_candidatos) > 0) {
-
-    foreach ($vetor_ordenado_candidatos as $index => $linha2) {
-        $pontos_array[$index]  = $linha2['pontos'];
-        $militar_array[$index] = $linha2['militar'];
-        $tempo_sv_pub[$index]  = $linha2['tempo_sv_pub'];
-        $tempo_idade[$index]   = $linha2['tempo_idade'];
-    }
-
-    if (count($vetor_ordenado_candidatos) > 0) {
-
-        array_multisort(
-            $pontos_array,
-            SORT_DESC,
-            $militar_array,
-            SORT_ASC,
-            $tempo_sv_pub,
-            SORT_ASC,
-            $tempo_idade,
-            SORT_DESC,
-            $vetor_ordenado_candidatos
-        );
-    }
-}
+include_once "../sistema/codigos/ordena_candidatos_escolha_cidade.php";
 
 $lugar = 0;
 $candidato_na_frente_nao_escolheu = false;
@@ -315,8 +182,13 @@ foreach ($vetor_ordenado_candidatos as $linha) {
                 }
             }
 
-            header("Location: ../sistema/candidato_escolha_cidade.php");
-            exit();
+            if ($_SESSION['eipot']) {
+                header("Location: ../sistema/candidato_eipot_escolha_cidade.php");
+                exit();
+            } else {
+                header("Location: ../sistema/candidato_escolha_cidade.php");
+                exit();
+            }
         }
 
         // GRAVA CIDADE PARA O CANDIDATO    
@@ -336,14 +208,8 @@ foreach ($vetor_ordenado_candidatos as $linha) {
             exit();
         }
 
-
-        if ($_SESSION['eipot']) {
-            header("Location: ../sistema/candidato_eipot_escolha_cidade.php");
-            exit();
-        } else {
-            header("Location: ../sistema/candidato_escolha_cidade.php");
-            exit();
-        }
+        header("Location: ../sistema/candidato_eipot_escolha_cidade.php");
+        exit();
 
         break;
     }

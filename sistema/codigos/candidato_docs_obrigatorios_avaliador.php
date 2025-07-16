@@ -14,10 +14,10 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'documentos') {
 
 <a name="avaliacao_doc_obrigatorio"></a>
 <!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
-<div class="">
-    <div class="card">
-        <div class="row">
-            <div class="col-md-12">
+<div class="row">
+    <div class="">
+        <div class="card">
+            <div class="">
                 <legend>Arquivos Obrigatórios Adicionados</legend>
                 <div class="card-body">
                     <table class="table table-hover table-bordered">

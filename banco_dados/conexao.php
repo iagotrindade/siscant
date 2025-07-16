@@ -1667,20 +1667,30 @@ class Conexao
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Cidades da Especialidade">
+
+    // 11/07/2025 -> Iago Silva Incluindo o campo regiao_militar na Query
     public function get_cidades_especialidade($id_especialidade)
     {
         $stmt = $this->pdo->prepare("
-                                    select c.id, c.nome, sel.id id_selecao, ce.numero_vagas, e.nome nome_especialidade
-                                    from cidade c
-                                    inner join cidade_x_especialidade ce on ce.id_cidade = c.id
-                                    inner join especialidade e on e.id = ce.id_especialidade
-                                    inner join selecao sel on sel.id = e.id_selecao
-                                    where ce.id_especialidade = :id_especialidade  and ce.apagado = 0");
-        $stmt->bindValue(':id_especialidade', $id_especialidade);
-        $run = $stmt->execute();
+        SELECT 
+            c.id, 
+            c.nome, 
+            sel.id AS id_selecao, 
+            ce.numero_vagas, 
+            ce.regiao_militar,       -- campo adicionado
+            e.nome AS nome_especialidade
+        FROM cidade c
+        INNER JOIN cidade_x_especialidade ce ON ce.id_cidade = c.id
+        INNER JOIN especialidade e ON e.id = ce.id_especialidade
+        INNER JOIN selecao sel ON sel.id = e.id_selecao
+        WHERE ce.id_especialidade = :id_especialidade 
+          AND ce.apagado = 0
+    ");
 
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        $stmt->bindValue(':id_especialidade', $id_especialidade);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
@@ -2584,25 +2594,30 @@ class Conexao
         return $result;
     }
 
-    // 11/06/2025 - Iago Silva Trazendo todos candidatos EIPOT independente da RM
+    // 11/06/2025 -> Iago Silva Trazendo todos candidatos EIPOT independente da RM
+    // 15/07/2025 -> Iago Silva Adicionando o campo cidade_escolheu_servir 
     public function get_candidatos_eipot()
     {
         $stmt = $this->pdo->prepare("
-           SELECT  u.*, 
+        SELECT 
+            u.*, 
             u.id AS id_usuario, 
             ce.id AS id_candidato_especialidade, 
+            ce.cidade_escolheu_servir,
+            c.nome AS nome_cidade_escolhida,
             e.nome AS arma_especialidade
-            FROM usuario u
-            INNER JOIN candidato_x_especialidade ce ON ce.id_candidato = u.id
-            INNER JOIN especialidade e ON ce.id_especialidade = e.id
-            WHERE u.apagado = 0 
-            AND u.id_selecao = :selecao
-            AND u.concorrendo = 1
-            ORDER BY u.nome_completo ASC;
+        FROM usuario u
+        INNER JOIN candidato_x_especialidade ce ON ce.id_candidato = u.id
+        INNER JOIN especialidade e ON ce.id_especialidade = e.id
+        LEFT JOIN cidade c ON c.id = ce.cidade_escolheu_servir
+        WHERE u.apagado = 0 
+        AND u.id_selecao = :selecao
+        AND u.concorrendo = 1
+        ORDER BY u.nome_completo ASC
+    ");
 
-        ");
         $stmt->bindValue(':selecao', $_SESSION['selecao']);
-        $run = $stmt->execute();
+        $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
@@ -3073,28 +3088,31 @@ order by total_pontos_somados desc");
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Vagas Especialidade">
+
+    // 11/07/2025 -> Iago Silva Incluindo o campo regiao_militar na Query
     public function get_vagas_especialidade($id_especialidade)
     {
         $stmt = $this->pdo->prepare("
-                        select c.id id_cidade, c.nome cidade, 
-                        ce.numero_vagas - 
+        SELECT 
+            c.id AS id_cidade, 
+            c.nome AS cidade, 
+            ce.regiao_militar,
+            ce.numero_vagas - (
+                SELECT COUNT(*) 
+                FROM candidato_x_especialidade
+                WHERE id_especialidade = :id_especialidade
+                AND cidade_escolheu_servir = c.id
+                AND concorrendo = 1
+            ) AS vagas
+        FROM cidade_x_especialidade ce
+        INNER JOIN cidade c ON c.id = ce.id_cidade
+        WHERE ce.id_especialidade = :id_especialidade
+        AND ce.apagado = 0
+    ");
 
-                        (select count(*) 
-                        from candidato_x_especialidade
-                        where id_especialidade = :id_especialidade
-                        and cidade_escolheu_servir = c.id
-                        and candidato_x_especialidade.concorrendo = 1)
-                        vagas
-
-                        from cidade_x_especialidade ce
-                        inner join cidade c on c.id = ce.id_cidade
-                        where ce.id_especialidade = :id_especialidade
-                        and ce.apagado = 0
-                    ");
         $stmt->bindValue(':id_especialidade', $id_especialidade);
-        $run = $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function get_vagas_especialidade_eipot($id_especialidade)
@@ -8879,48 +8897,95 @@ order by total_pontos_somados desc");
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Atualiza Número de vagas da cidade e epecialidade">
-    public function numero_vagas_cidade_especialidade_atualiza($id_especialidade, $id_cidade, $num_vagas)
+
+    // 11/07/2025 -> Iago Silva Adicionando o campo região_militar na query
+    public function numero_vagas_cidade_especialidade_atualiza($id_especialidade, $id_cidade, $num_vagas, $regiao_militar = null)
     {
         $datetime = date('Y-m-d H:i:s');
         $usuario = $_SESSION['id_usuario'];
         $id_selecao = $_SESSION['selecao'];
 
-
         try {
-            $sqlInsert = "UPDATE cidade_x_especialidade SET numero_vagas=:num_vagas,
-                _data_ultima_atualizacao = :data, _usuario_ultima_atualizacao = :id_usuario
-                WHERE id_especialidade= :id_especialidade and id_cidade = :id_cidade";
+            $sqlUpdate = "
+            UPDATE cidade_x_especialidade 
+            SET 
+                numero_vagas = :num_vagas,
+                regiao_militar = :regiao_militar,
+                _data_ultima_atualizacao = :data,
+                _usuario_ultima_atualizacao = :id_usuario
+            WHERE 
+                id_especialidade = :id_especialidade 
+                AND id_cidade = :id_cidade
+        ";
 
             $this->pdo->beginTransaction();
 
-            $query = $this->pdo->prepare($sqlInsert);
+            $query = $this->pdo->prepare($sqlUpdate);
 
             $query->bindValue(":id_especialidade", $id_especialidade);
             $query->bindValue(":id_cidade", $id_cidade);
             $query->bindValue(":num_vagas", $num_vagas);
+            $query->bindValue(":regiao_militar", $regiao_militar);
             $query->bindValue(":id_usuario", $usuario);
             $query->bindValue(":data", $datetime);
 
             if ($query->execute()) {
-                $data =
-                    [
-                        'id_selecao' => $id_selecao,
-                        'id_especialidade' => $id_especialidade,
-                        'id_cidade' => $id_cidade,
-                        'numero_vagas' => $num_vagas,
-                        '_data_ultima_atualizacao' => $datetime,
-                        '_usuario_ultima_atualizacao' => $usuario,
-                    ];
                 $this->pdo->commit();
-                return $data;
+                return [
+                    'id_selecao' => $id_selecao,
+                    'id_especialidade' => $id_especialidade,
+                    'id_cidade' => $id_cidade,
+                    'numero_vagas' => $num_vagas,
+                    'regiao_militar' => $regiao_militar,
+                    '_data_ultima_atualizacao' => $datetime,
+                    '_usuario_ultima_atualizacao' => $usuario,
+                ];
             } else {
                 $this->pdo->rollBack();
                 return false;
             }
         } catch (Exception $e) {
+            $this->pdo->rollBack();
             return false;
         }
-        return true;
+    }
+
+    // 14/07/2025 -> Iago Silva Criando a função que busca as vagas preenchidas
+    public function get_vagas_preenchidas($id_especialidade)
+    {
+        try {
+            $sql = "
+            SELECT 
+                c.id AS id_cidade,
+                c.nome AS cidade,
+                cxesp.regiao_militar,
+                COUNT(DISTINCT cxe.id_candidato) AS preenchidas
+            FROM 
+                candidato_x_especialidade AS cxe
+            INNER JOIN 
+                cidade_x_especialidade AS cxesp
+                ON cxesp.id_cidade = cxe.cidade_escolheu_servir
+                AND cxesp.id_especialidade = cxe.id_especialidade
+            INNER JOIN 
+                cidade AS c ON c.id = cxe.cidade_escolheu_servir
+            WHERE 
+                cxe.id_especialidade = :id_especialidade
+                AND cxe.cidade_escolheu_servir IS NOT NULL
+            GROUP BY 
+                c.id, c.nome, cxesp.regiao_militar
+            ORDER BY 
+                c.nome
+        ";
+
+            $query = $this->pdo->prepare($sql);
+            $query->bindValue(':id_especialidade', $id_especialidade);
+            $query->execute();
+
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Erro ao buscar vagas preenchidas: " . $e->getMessage());
+            return false;
+        }
     }
 
     /*public function numero_vagas_om_especialidade_atualiza($id_especialidade, $id_om, $quantidade_vagas) 

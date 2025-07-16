@@ -95,7 +95,7 @@ if($id_suporte != null && $resposta != null)
 {
     if($_POST)
         $resultado = $conexao->insere_resposta_inicial($id_suporte,$resposta);
-    $alteracoes_detalhadas =  print_r($resultado, true);
+        $alteracoes_detalhadas =  print_r($resultado, true);
     if($resultado)
     {
         $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $id_suporte, "16105", "suporte", "Update", "Respondeu suporte inicial do CPF $cpf_requerente", $alteracoes_detalhadas);

@@ -153,8 +153,60 @@ foreach ($inscritos_por_arma as &$candidatos) {
 unset($candidatos);
 
 foreach ($inscritos_por_arma as $arma => $candidatos) {
-    if (count($candidatos) === 0) {
-        continue; // Não cria tabela se não houver candidatos
+    if ($tipo_publicacao === 'eipot_cotas_negros') {
+        $candidatos_com_parecer = [];
+
+        foreach ($candidatos as $candidato) {
+            $pareceres = $conexao->get_pareceres_heteroidentificacao($candidato['id']);
+
+            // Contadores fase 1
+            $fase1_total = 0;
+            $fase1_confirmada = 0;
+
+            // Contadores fase 2
+            $fase2_total = 0;
+            $fase2_confirmada = 0;
+            $fase2_nao_confirmada = 0;
+            $fase2_nao_compareceu = 0;
+
+            foreach ($pareceres as $parecer) {
+                if ((int)$parecer['fase'] === 1) {
+                    $fase1_total++;
+                    if ($parecer['parecer'] === 'confirmada') {
+                        $fase1_confirmada++;
+                    }
+                } elseif ((int)$parecer['fase'] === 2) {
+                    $fase2_total++;
+                    if ($parecer['parecer'] === 'confirmada') {
+                        $fase2_confirmada++;
+                    } elseif ($parecer['parecer'] === 'nao_confirmada') {
+                        $fase2_nao_confirmada++;
+                    } elseif ($parecer['parecer'] === 'nao_compareceu') {
+                        $fase2_nao_compareceu++;
+                    }
+                }
+            }
+
+            $aprovado = false;
+
+            if ($fase1_total === 5 && $fase1_confirmada >= 3) {
+                $aprovado = true;
+            } elseif ($fase2_total === 3 && $fase2_confirmada >= 2) {
+                $aprovado = true;
+            }
+
+            if ($aprovado) {
+                $candidatos_com_parecer[] = $candidato;
+            }
+        }
+
+        // Se nenhum aprovado, pula a arma
+        if (count($candidatos_com_parecer) === 0) {
+            continue;
+        }
+
+        // Redefine a lista de candidatos apenas com os aprovados
+        $candidatos = $candidatos_com_parecer;
     }
 
     $html = "
@@ -173,6 +225,49 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
     $total = count($candidatos);
 
     foreach ($candidatos as $index => $candidato) {
+        if ($tipo_publicacao === 'eipot_cotas_negros') {
+            $pareceres = $conexao->get_pareceres_heteroidentificacao($candidato['id']);
+
+            $fase1_confirmada = 0;
+            $fase1_total = 0;
+            $fase2_confirmada = 0;
+            $fase2_nao_confirmada = 0;
+            $fase2_nao_compareceu = 0;
+            $fase2_total = 0;
+
+            foreach ($pareceres as $parecer) {
+                if ((int)$parecer['fase'] === 1) {
+                    $fase1_total++;
+                    if ($parecer['parecer'] === 'confirmada') {
+                        $fase1_confirmada++;
+                    }
+                } elseif ((int)$parecer['fase'] === 2) {
+                    if ($parecer['parecer'] === 'confirmada') {
+                        $fase2_confirmada++;
+                    } elseif ($parecer['parecer'] === 'nao_confirmada') {
+                        $fase2_nao_confirmada++;
+                    } elseif ($parecer['parecer'] === 'nao_compareceu') {
+                        $fase2_nao_compareceu++;
+                    }
+                    $fase2_total++;
+                }
+            }
+
+            $resultado = 'PENDENTE';
+
+            if ($fase1_total === 5 && $fase1_confirmada >= 3) {
+                $resultado = 'CONFIRMADA';
+            } elseif ($fase2_total === 3) {
+                if ($fase2_confirmada >= 2) {
+                    $resultado = 'CONFIRMADA';
+                } elseif ($fase2_nao_confirmada >= 2 || $fase2_nao_compareceu >= 2) {
+                    continue; // Elimina do relatório
+                }
+            } else {
+                continue; // Ignora se não atendeu nenhuma das fases
+            }
+        }
+
         $cpf = substr($candidato['cpf'], 0, -5) . '*****';
 
         $html .= "

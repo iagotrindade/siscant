@@ -18,7 +18,6 @@ $subtitulo_resultado_etapa_v = $_POST['subtitulo_resultado_etapa_v'];
 $paragrafo_um_resultado_v = $_POST['paragrafo_um_resultado_v'];
 $paragrafo_dois_resultado_v = $_POST['paragrafo_dois_resultado_v'];
 $paragrafo_tres_resultado_v = $_POST['paragrafo_tres_resultado_v'];
-$hora_arma = $_POST['hora_arma'];
 $texto_dia = $_POST['texto_dia'];
 $fase = $_POST['fase'];
 
@@ -130,36 +129,59 @@ uksort($inscritos_por_arma, function ($a, $b) use ($ordem_arma) {
 });
 
 foreach ($inscritos_por_arma as $arma => $candidatos) {
+    // Filtrar candidatos com parecer válido na fase 2
+    if ($fase == 2) {
+        $candidatos_com_parecer = [];
+
+        foreach ($candidatos as $candidato) {
+            $pareceres = $conexao->get_pareceres_heteroidentificacao($candidato['id']);
+            foreach ($pareceres as $parecer) {
+                if ($parecer['fase'] == 2) {
+                    $candidatos_com_parecer[] = $candidato;
+                    break;
+                }
+            }
+        }
+
+        // Se nenhum candidato com parecer na fase 2, pula a arma
+        if (count($candidatos_com_parecer) === 0) {
+            continue;
+        }
+
+        // Redefine a lista de candidatos com apenas os válidos
+        $candidatos = $candidatos_com_parecer;
+    }
+
     if (count($candidatos) === 0) {
-        continue; // Não cria tabela se não houver candidatos
+        continue; // Evita gerar tabela vazia
     }
 
     $html = "
-   <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
-    <tr>
-        <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>"
-        . mb_strtoupper($arma, 'UTF-8') . " <br>
-        </th>
-    </tr>
-    <tr>
-        <th style='text-align: center; width: 10%;'>Nº</th>
-        <th style='text-align: center; width: 30%;'>CPF</th>
-        <th style='text-align: center; width: 60%;'>NOME</th>
-        <th style='text-align: center; width: 60%;'>RESULTADO</th>
-    </tr>
+    <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
+        <tr>
+            <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>"
+        . mb_strtoupper($arma, 'UTF-8') . "<br>
+            </th>
+        </tr>
+        <tr>
+            <th style='text-align: center; width: 10%;'>Nº</th>
+            <th style='text-align: center; width: 30%;'>CPF</th>
+            <th style='text-align: center; width: 60%;'>NOME</th>
+            <th style='text-align: center; width: 60%;'>RESULTADO</th>
+        </tr>
     ";
 
     $contador = 1;
 
     foreach ($candidatos as $candidato) {
         $cpf = substr($candidato['cpf'], 0, -5) . "*****";
-
         $pareceres = $conexao->get_pareceres_heteroidentificacao($candidato['id']);
 
         $quantidadePareceresConfirmados = 0;
         $quantidadePareceresNaoConfirmados = 0;
+        $quantidadeParecerNaoCompareceu = 0;
+        $totalPareceres = 0;
 
-        // Contabilizar os pareceres da fase atual
         foreach ($pareceres as $parecer) {
             if ($parecer['fase'] != $fase) {
                 continue;
@@ -169,35 +191,33 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
                 $quantidadePareceresConfirmados++;
             } elseif ($parecer['parecer'] === 'nao_confirmada') {
                 $quantidadePareceresNaoConfirmados++;
+            } elseif ($parecer['parecer'] === 'nao_compareceu') {
+                $quantidadeParecerNaoCompareceu++;
             }
         }
 
-        // Total de pareceres válidos
-        $totalPareceres = $quantidadePareceresConfirmados + $quantidadePareceresNaoConfirmados;
+        $totalPareceres = $quantidadePareceresConfirmados + $quantidadePareceresNaoConfirmados + $quantidadeParecerNaoCompareceu;
 
-        // Lógica de aprovação por fase
-        if ($fase == 1) {
-            $minConfirmados = 3;
-            $minTotal = 5;
-        } else {
-            $minConfirmados = 2;
-            $minTotal = 3;
+        // Evita entrar no foreach se estiver na fase 2 e sem pareceres
+        if ($fase == 2 && $totalPareceres == 0) {
+            continue;
         }
 
-        // Determinar o resultado
+        // Lógica de aprovação por fase
+        $minConfirmados = $fase == 1 ? 3 : 2;
+        $minTotal = $fase == 1 ? 5 : 3;
+
         if ($totalPareceres === $minTotal) {
             if ($quantidadePareceresConfirmados >= $minConfirmados) {
                 $resultado = 'CONFIRMADA';
             } elseif ($quantidadePareceresNaoConfirmados >= $minConfirmados) {
                 $resultado = 'NÃO CONFIRMADA';
-            } else {
-                $resultado = 'PENDENTE';
+            } elseif ($quantidadeParecerNaoCompareceu >= $minConfirmados) {
+                $resultado = 'NÃO COMPARECEU';
             }
         } else {
             $resultado = 'PENDENTE';
         }
-
-        $parecer = get_parecer_final_heteroidentificacao($candidato['id'], $pareceres, 1);
 
         $html .= "
         <tr>

@@ -122,6 +122,39 @@ function get_nota_final_eipot($id_usuario)
     }
 }
 
+function get_nota_final_eaf($id_usuario)
+{
+    if (file_exists("../banco_dados/conexao.php"))
+        include_once '../banco_dados/conexao.php';
+
+    if (file_exists("../../banco_dados/conexao.php"))
+        include_once '../../banco_dados/conexao.php';
+
+    if (file_exists("banco_dados/conexao.php"))
+        include_once 'banco_dados/conexao.php';
+
+    if (file_exists("conexao.php"))
+        include_once 'conexao.php';
+
+    $conexao = new Conexao();
+
+    $usuario_nota_eipot = $conexao->get_usuario_id($id_usuario);
+
+    $qtd_flexao_braco = $usuario_nota_eipot[0]['qtd_flexao_braco'];
+    $qtd_abdominal = $usuario_nota_eipot[0]['qtd_abdominal'];
+    $qtd_barra = $usuario_nota_eipot[0]['qtd_barra'];
+    $dist_corrida = $usuario_nota_eipot[0]['dist_corrida'];
+
+    $nota_flexao_braco = get_nota_flexao_braco($qtd_flexao_braco);
+    $nota_abdominal = get_nota_abdominal($qtd_abdominal);
+    $nota_barra = get_nota_flexao_barra($qtd_barra);
+    $nota_corrida = get_nota_corrida($dist_corrida);
+
+    $nota_final_eaf = $nota_flexao_braco + $nota_abdominal + $nota_barra + $nota_corrida;
+
+    return $nota_final_eaf;
+}
+
 function get_nota_ano_formacao($ano)
 {
     $nota = 0;
@@ -630,6 +663,29 @@ function envia_arquivo($id_processo, $nome_arquivo, $label)
                 <br><input type="submit" class="btn btn-primary btn-block" value="Anexar ' . $label . '" />
             </div>
         </form>';
+}
+
+function separa_vaga_rm($vagas)
+{
+    // Separar as vagas da especialidade por regiao_militar
+    $vagas_por_regiao = [];
+
+    foreach ($vagas as $vaga) {
+        $regiao = $vaga['regiao_militar'] ?? 'Indefinida'; // Se não tiver valor, usa 'Indefinida'
+
+        // Inicializa a região no array se ainda não existir
+        if (!isset($vagas_por_regiao[$regiao])) {
+            $vagas_por_regiao[$regiao] = [];
+        }
+
+        // Adiciona a cidade e o número de vagas dentro da região
+        $vagas_por_regiao[$regiao][] = [
+            'cidade' => $vaga['numero_vagas'],
+            'vagas' => $vaga['numero_vagas']
+        ];
+    }
+
+    return $vagas_por_regiao;
 }
 
 function get_abrev_posto($posto_grad_abreviado)

@@ -13,7 +13,7 @@ include_once '../sistema/codigos/funcao_apagar.php';
 <a name="exame_medico"></a>
 <!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
 <div class="row">
-    <div class="col-md-12">
+    <div class="">
         <div class="card">
             <div class="">
                 <form action="../banco_dados/candidato_edita_exame_medico.php" method="post" enctype="multipart/form-data" class="mb-40">

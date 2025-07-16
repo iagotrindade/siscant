@@ -12,10 +12,10 @@ include_once '../sistema/codigos/funcao_apagar.php';
 ?>
 <a name="insere_arquivo_candidato"></a>
 <!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
-<div class="">
-    <div class="card">
-        <div class="row">
-            <div class="col-md-12">
+<div class="row">
+    <div class="">
+        <div class="card">
+            <div class="">
                 <form method="post" action="arquivo_upload_adicionado_para_candidato.php" enctype="multipart/form-data">
                     <legend>Arquivos adicionados para o Candidato</legend>
                     <div class="row">

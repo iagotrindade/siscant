@@ -31,7 +31,7 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
         <input type="hidden" name="tipo_publicacao" value="eipot_ampla_concorrencia">
         <div class="card">
              <!-- 26/06/2025 -> Iago Silva Alterado o título -->
-            <h3>Classificação após Etapas I, II, III e IV - Ampla Concorrência</h3><br> <!-- Título do formulário -->
+            <h3>Classificação após Etapas I, II, III IV, e V - Ampla Concorrência</h3><br> <!-- Título do formulário -->
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
@@ -43,13 +43,13 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
             <div style="float: left; width: 48%;">
                 <div class="form-group">
                     <label for="subtitulo_resultado_eipot">Subtítulo:</label>
-                    <input type="text" name="subtitulo_resultado_eipot" class="form-control" value="Resultado após Etapas I, II, III e IV - Ampla Concorrência - Xª RM" required>
+                    <input type="text" name="subtitulo_resultado_eipot" class="form-control" value="Resultado após Etapas I, II, III, IV e V - Ampla Concorrência - Xª RM" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="paragrafo_um_resultado_eipot">Primeiro Parágrafo:</label>
-                <input type="text" name="paragrafo_um_resultado_eipot" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado após Etapas I, II, III e IV - Ampla Concorrência." required>
+                <input type="text" name="paragrafo_um_resultado_eipot" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado após Etapas I, II, III, IV e V - Ampla Concorrência." required>
             </div>
 
             <div style="float: left; width: 48%; margin-right: 4%;">
@@ -60,7 +60,7 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
             </div>
 
             <div class="col-mg-12">
-                <button type="submit" class="btn btn-primary btn-block">PUBLICAÇÃO RESULTADO APÓS ETAPA I, II, III E IV - AMPLA CONCORRÊNCIA</button>
+                <button type="submit" class="btn btn-primary btn-block">PUBLICAÇÃO RESULTADO APÓS ETAPA I, II, III, IV e V - AMPLA CONCORRÊNCIA</button>
             </div>
         </div>
     </form>
@@ -69,7 +69,7 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
         <input type="hidden" name="tipo_publicacao" value="eipot_cotas_negros">
         <div class="card">
             <!-- 26/06/2025 -> Iago Silva Alterado o título -->
-            <h3>Classificação após Etapas I, II, III e IV - Cotas Negros</h3><br> <!-- Título do formulário -->
+            <h3>Classificação após Etapas I, II, III, IV e V - Cotas Negros</h3><br> <!-- Título do formulário -->
 
             <div style="float: left; width: 48%; margin-right: 4%;">
                 <div class="form-group">
@@ -81,13 +81,13 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
             <div style="float: left; width: 48%;">
                 <div class="form-group">
                     <label for="subtitulo_resultado_eipot">Subtítulo:</label>
-                    <input type="text" name="subtitulo_resultado_eipot" class="form-control" value="Resultado após Etapas I, II, III e IV - Cotas Negros - Xª RM" required>
+                    <input type="text" name="subtitulo_resultado_eipot" class="form-control" value="Resultado após Etapas I, II, III, IV e V - Cotas Negros - Xª RM" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="paragrafo_um_resultado_eipot">Primeiro Parágrafo:</label>
-                <input type="text" name="paragrafo_um_resultado_eipot" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado após Etapas I, II, III e IV - Cotas Negros." required>
+                <input type="text" name="paragrafo_um_resultado_eipot" class="form-control" value="O Comandante da Xª RM, de acordo com o Aviso de Convocação Nr X-SSMR/X, de 10 de março de 2025, divulga o resultado após Etapas I, II, III, IV e V - Cotas Negros." required>
             </div>
 
             <div style="float: left; width: 48%; margin-right: 4%;">
@@ -98,7 +98,7 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
             </div>
 
             <div class="col-mg-12">
-                <button type="submit" class="btn btn-primary btn-block">PUBLICAÇÃO RESULTADO APÓS ETAPA I, II, III E IV - COTAS NEGROS</button>
+                <button type="submit" class="btn btn-primary btn-block">PUBLICAÇÃO RESULTADO APÓS ETAPA I, II, III, IV e V - COTAS NEGROS</button>
             </div>
         </div>
     </form>

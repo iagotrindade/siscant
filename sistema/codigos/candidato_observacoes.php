@@ -13,10 +13,10 @@ include_once '../sistema/codigos/funcao_apagar.php';
 ?>
 
 <!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
-<div class="">
-    <div class="card">
-        <div class="row">
-            <div class="col-md-12">
+<div class="row">
+    <div class="">
+        <div class="card">
+            <div class="">
                 <legend>Observações do candidato</legend>
                 <div class="row">
                     <div class="col-md-6">

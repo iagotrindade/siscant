@@ -10,6 +10,9 @@ $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
 
 $lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
+
+$lista_suporte_inicial = $conexao->get_suporte();
+
 ?>
 
 <div class="content-wrapper">
@@ -27,9 +30,8 @@ $lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
     </div>
     <div class="row">
         <div class="col-md-12">
-
             <div class="card">
-                <legend>Suporte Candidato</legend>
+                <legend>Suporte Candidato - Inscrito</legend>
                 <div class="card-body">
                     <table class="table table-hover table-bordered" id="tabela_dinamica">
                         <thead>
@@ -123,7 +125,104 @@ $lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
                 </div>
             </div>
 
-            <div class="card" <?php if ($_SESSION['perfil'] != 'admin') echo "hidden" ?>>
+            <div class="card">
+                <legend>Suporte Candidato - Não Inscrito</legend>
+                <div class="card-body">
+                    <table class="table table-hover table-bordered" id="tabela_dinamica">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>CPF</th>
+                                <th>Motivo</th>
+                                <th>Mensagem</th>
+                                <th>Data Enviado</th>
+                                <th>Respondido para o candidato?</th>
+                                <th>Ver</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <?php
+
+                            $respondidos = 0;
+                            $nao_respondidos = 0;
+                            $somatorio_dias_resposta = 0;
+                            $maior_tempo = 0;
+
+                            foreach ($lista_suporte_inicial as $linha) {
+
+                                $dias_resposta = "";
+
+                                $usuario_respondeu = "_" . strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+
+                                $respondido = "_Não";
+                                if ($linha['resposta'] != null) {
+                                    $respondido = "_Sim";
+                                    $respondidos++;
+
+                                    $dias_resposta = 0;
+                                    $data_enviado = new DateTime($linha['data_enviado']);
+                                    $data_respondido = new DateTime($linha['data_resposta']);
+                                    $intervalo = $data_enviado->diff($data_respondido);
+                                    $tempo_total = $intervalo->d + $intervalo->h / 24;
+                                    $tempo_total = $tempo_total + $intervalo->i / 1440;
+                                    $tempo_total = $tempo_total + $intervalo->s / 86400;
+
+                                    if ($intervalo->m > 0) $tempo_total = $tempo_total + (30 * $intervalo->m);
+
+                                    if ($tempo_total > $maior_tempo) $maior_tempo = $tempo_total;
+
+                                    $somatorio_dias_resposta = $somatorio_dias_resposta + $tempo_total;
+
+                                    $dias_resposta = ", em " . round($tempo_total, 2) . " dias por $usuario_respondeu ";
+                                } else $nao_respondidos++;
+
+                                echo '
+                                <tr>
+                                <td>' . $linha['id'] . '</td>
+                                <td>' . $linha['cpf'] . '</td>
+                                <td>' . $linha['motivo'] . '</td>
+                                <td>' . $linha['mensagem'] . '</td>
+                                <td>' . trata_data_hora($linha['data_enviado']) . '</td>
+                                <td>' . $respondido . $dias_resposta . '</td>
+                                    
+                                <td><a href="suporte_inicial_visualiza.php?criptografia=' . hash('sha256', $linha['id']) . '&id_suporte=' . $linha['id'] . '"><img src="imagens/lupa.png" width="30px"></td>
+                                </tr>';
+                            }
+                            ?>
+
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <br>
+                <div class="row">
+                    <font size="4px">
+                        <div class="col-md-3">
+                            <b>Respondidos:</b> <?php echo $respondidos ?><br>
+                        </div>
+                        <div class="col-md-3">
+                            <b>Não respondidos:</b>
+                            <?php
+                            if ($respondidos > 0 || $nao_respondidos > 0)
+                                $porcentagem = round(($nao_respondidos / ($nao_respondidos + $respondidos)) * 100, 2);
+
+                            if ($nao_respondidos > 0)
+                                echo "<font color='red'>" . $nao_respondidos . " ($porcentagem%)</font>";
+                            else echo '0';
+                            ?>
+                        </div>
+                        <div class="col-md-3">
+                            <b>Média de resp:</b> <?php if ($respondidos > 0 && $somatorio_dias_resposta > 0)  echo round($somatorio_dias_resposta / $respondidos, 2) . " dias"; ?> <br>
+                        </div>
+                        <div class="col-md-3">
+                            <b>Maior tempo:</b> <?php echo round($maior_tempo, 2) . " dias"; ?> <br>
+                        </div>
+                    </font>
+                </div>
+            </div>
+
+            <div class="card" <?php if ($_SESSION['perfil'] != 'admin') echo "hidden"; ?>>
                 <legend>Quantidade de respostas por usuário</legend>
                 <div class="row">
                     <div class="col-md-12">
@@ -141,6 +240,13 @@ $lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
                                     <?php
 
                                     $lista_get_quantidade_x_usuario_suporte_cand = $conexao->get_quantidade_x_usuario_suporte_cand();
+
+                                    $lista_get_quantidade_x_usuario_suporte = $conexao->get_quantidade_x_usuario_suporte(); 
+
+                                    $lista_get_quantidade_x_usuario_suporte_cand = array_merge(
+                                        $lista_get_quantidade_x_usuario_suporte_cand ?? [],
+                                        $lista_get_quantidade_x_usuario_suporte ?? []
+                                    );
 
                                     foreach ($lista_get_quantidade_x_usuario_suporte_cand as $linha) {
                                         $foto = "user.jpg";
@@ -182,6 +288,13 @@ $lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
                                     <?php
 
                                     $lista_quantidade_x_motivo_suporte_cand = $conexao->get_quantidade_x_motivo_suporte_cand();
+
+                                    $lista_quantidade_x_motivo_suporte = $conexao->get_quantidade_x_motivo_suporte();
+
+                                    $lista_quantidade_x_motivo_suporte_cand = array_merge(
+                                        $lista_quantidade_x_motivo_suporte_cand ?? [],
+                                        $lista_quantidade_x_motivo_suporte ?? []
+                                    );
 
                                     foreach ($lista_quantidade_x_motivo_suporte_cand as $linha) {
                                         echo "<tr>

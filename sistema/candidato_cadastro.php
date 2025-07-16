@@ -28,7 +28,20 @@ include_once './codigos/candidato_valida_cadastro.php';
             </div>
             <div class="col-md-6">
                 <legend>Data: <?php echo date("d/m/Y"); ?><small class="pull-right"><a href="../index.php"><img src="imagens/forca.jpg" width="60px"></a></small></legend>
-                <!-- <font size="5px"><b><a class="btn btn-info" href="suporte_inicial.php">Suporte <i class="fa fa-support"></i></a></b></font> -->
+            </div>
+        </div>
+
+        <div class="row mt-20 p-10">
+            <div class="p-10 alert-info col-md-12" style="border-radius: 10px;">
+                <div class="col-md-6 row-full">
+                    <h4 class="text">Dificuldade ao se cadastrar?</h4>
+                </div>
+
+                <div class="col-md-6 text-right">
+                    <a class="btn btn-info" href="suporte_inicial.php">
+                        Solicite Suporte <i class="fa fa-comments"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

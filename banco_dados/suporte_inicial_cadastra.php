@@ -1,5 +1,6 @@
 <?php
-exit();
+
+// 06/07/2025 -> Iago Silva Removido o exit para que o código continue executando
 include_once '../sistema/funcoes.php';
 session_start();
 

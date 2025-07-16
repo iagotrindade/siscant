@@ -50,7 +50,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 ?>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="">
         <div class="card">
             <div class="row">
                 <div class="col-md-10">
@@ -396,7 +396,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_heteroidentificacao.php';
             }
 
-            if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'jise') {
+            if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'jise' || $_SESSION['perfil'] == 'chc' || $_SESSION['perfil'] == 'cr') {
                 include_once 'codigos/candidato_recurso.php';
             }
 
