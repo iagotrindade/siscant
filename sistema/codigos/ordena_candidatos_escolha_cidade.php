@@ -40,6 +40,7 @@ foreach ($lista_candidatos as $linha) {
         "nota_ofor" => (float)$nota_ofor,
         "nota_final_eaf" => (float)$nota_final_eaf,
         "cidade_escolheu_servir" => $linha['cidade_escolheu_servir'],
+        "rm_inscricao" => $linha['rm_inscricao']
     ];
 }
 
@@ -89,11 +90,16 @@ $totalVagasAmplaPorRegiao = [];
 
 foreach ($totalVagasPorRegiao as $regiao => $total) {
     if ($total <= 2) {
+        // 1 ou 2 vagas: todas ampla
         $totalVagasAmplaPorRegiao[$regiao] = $total;
-    } elseif ($total == 3) {
+    } elseif ($total == 3 || $total == 4) {
+        // 3 ou 4 vagas: 1 cota, resto ampla
         $totalVagasAmplaPorRegiao[$regiao] = $total - 1;
     } else {
-        $reservadas = round($total * 0.2, 0, PHP_ROUND_HALF_UP);
+        // 5 ou mais: regra 4x1 (grupos de 5)
+        $grupos = floor($total / 5);
+        $reservadas = $grupos; // 1 cota por grupo de 5
         $totalVagasAmplaPorRegiao[$regiao] = $total - $reservadas;
     }
 }
+

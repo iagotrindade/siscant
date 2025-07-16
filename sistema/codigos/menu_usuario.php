@@ -98,7 +98,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         <li class="treeview"><a href="publicacoes_eipot_etapa_III.php"><i class="fa fa-pencil"></i>Etapa III</a></li>
         <li class="treeview"><a href="publicacoes_eipot_etapa_iv.php"><i class="fa fa-pencil"></i>Etapa IV</a></li>
         <li class="treeview"><a href="publicacoes_eipot_etapa_v.php"><i class="fa fa-pencil"></i>Etapa V</a></li>
-        <li class="treeview"><a href="publicacoes_eipot_rankings.php"><i class="fa fa-pencil"></i>Rankings</a></li>
+        <li class="treeview"><a href="publicacoes_eipot_rankings.php"><i class="fa fa-pencil"></i>Etapa VI</a></li>
         <li class="treeview"><a href="publicacoes_recursos.php"><i class="fa fa-pencil"></i>Recursos</a></li>
     </ul>
 </li>

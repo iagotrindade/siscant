@@ -17,6 +17,7 @@ $titulo_resultado_eipot = $_POST['titulo_resultado_eipot'];
 $subtitulo_resultado_eipot = $_POST['subtitulo_resultado_eipot'];
 
 $paragrafo_um_resultado_eipot = $_POST['paragrafo_um_resultado_eipot'];
+$paragrafo_dois_resultado_eipot = $_POST['paragrafo_dois_resultado_eipot'];
 
 $texto_dia = $_POST['texto_dia'];
 
@@ -83,6 +84,11 @@ $html = "
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     " . $paragrafo_um_resultado_eipot . "
 </p>
+
+<p style='font-size: 12px; font-family: Times New Roman; text-align: justify; margin: 5px 0;'>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    " . $paragrafo_dois_resultado_eipot . "
+</p>
 ";
 
 $mpdf->WriteHTML($html);
@@ -105,7 +111,7 @@ $inscritos_por_arma = [];
 foreach ($lista_candidatos as $inscrito) {
 
     // Ignora candidatos de outras regiões militares
-    if ((int) $inscrito['rm_inscricao'] !== $rm_usuario) {
+    if ((int) $inscrito['rm_inscricao'] !== $rm_usuario || $inscrito['etapa'] < 6) {
         continue;
     }
 
