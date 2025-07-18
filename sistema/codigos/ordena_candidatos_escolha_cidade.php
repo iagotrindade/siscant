@@ -85,21 +85,3 @@ foreach ($vagas_por_regiao as $regiao => $cidades) {
     }
     $totalVagasPorRegiao[$regiao] = $total;
 }
-
-$totalVagasAmplaPorRegiao = [];
-
-foreach ($totalVagasPorRegiao as $regiao => $total) {
-    if ($total <= 2) {
-        // 1 ou 2 vagas: todas ampla
-        $totalVagasAmplaPorRegiao[$regiao] = $total;
-    } elseif ($total == 3 || $total == 4) {
-        // 3 ou 4 vagas: 1 cota, resto ampla
-        $totalVagasAmplaPorRegiao[$regiao] = $total - 1;
-    } else {
-        // 5 ou mais: regra 4x1 (grupos de 5)
-        $grupos = floor($total / 5);
-        $reservadas = $grupos; // 1 cota por grupo de 5
-        $totalVagasAmplaPorRegiao[$regiao] = $total - $reservadas;
-    }
-}
-

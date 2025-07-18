@@ -102,7 +102,7 @@ $datetime = date('d/m/Y H:i:s');
                 $escolhas_por_regiao[$regiao] += $quantidade;
             }
 
-            // Percorre candidatos ordenados
+            // Percorre candidatos ordenados pelo ranking
             foreach ($vetor_ordenado_candidatos as $linha) {
                 $regiao = $linha['rm_inscricao'];
 
@@ -113,23 +113,27 @@ $datetime = date('d/m/Y H:i:s');
 
                     // Posição da próxima escolha naquela RM
                     $posicao_vaga = ($escolhas_por_regiao[$regiao] ?? 0) + 1;
-                    $eh_vaga_cotista = ($posicao_vaga % 5 === 0);
+                    $eh_vaga_cotista = ($posicao_vaga % 5 === 0); // a cada 5ª vaga, 1 reservada para cotista
 
                     if ($eh_vaga_cotista && !$linha["vaga_reservada"]) {
-                        // Vaga reservada para cotistas, e o candidato é ampla → bloqueado
+                        // Vaga reservada para cotistas, e o candidato é ampla concorrência
                         $candidato_bloqueado_por_anterior = true;
                     } else {
-                        // Pode escolher
+                        // Vaga disponível
                         $candidato_bloqueado_por_anterior = false;
                     }
 
                     break;
                 }
 
-                // Candidato anterior ainda não escolheu e é de ampla → bloqueia os próximos
-                if (empty($linha['cidade_escolheu_servir']) && !$linha["vaga_reservada"]) {
+                // Candidato anterior ainda não escolheu
+                if (empty($linha['cidade_escolheu_servir'])) {
                     $candidatos_faltando_a_frente++;
-                    $candidato_bloqueado_por_anterior = true;
+
+                    // Se o candidato anterior for ampla concorrência
+                    if (!$linha["vaga_reservada"]) {
+                        $candidato_bloqueado_por_anterior = true;
+                    }
                 }
             }
 
@@ -175,7 +179,62 @@ $datetime = date('d/m/Y H:i:s');
                             if (!empty($value['cidade_escolheu_servir']) || $value['concorrendo'] == 0) $cor_retangulo = "info";
                             ?>
 
+                            <?php $crip = hash('sha256', $value['id_especialidade'] . "escolhe_cidade"); ?>
                             <div class="alert alert-<?= $cor_retangulo ?> p-20">
+
+                                <legend>
+                                    <b>
+                                        <font color="green">Primeira Escolha: Região Militar</font>
+                                    </b>
+                                </legend>
+                                <form action="../banco_dados/candidato_rm_escolheu_servir_eipot.php" method="post">
+                                    <br>
+                                    <select id="cidade_escolheu" name="cidade_escolheu_servir" class="form-control" onchange="selecao_cidade()">
+                                        <option value="">Selecione a Região Militar em que deseja servir</option>
+                                        <?php foreach ($rms_interesse as $rm): ?>
+                                            <option value="<?= $rm ?>"><?= $rm ?></option>
+                                        <?php endforeach; ?>
+                                        <option value="754809">Nenhuma das Opções (Desistência do Processo Seletivo)</option>
+                                    </select>
+                                    <br>
+
+                                    <label>
+                                        <input type="checkbox" id="declaracao" name="declaracao">
+                                        <span class="label-text">Declaro que li o aviso ORIENTAÇÕES PARA A ESCOLHA DE GUARNIÇÃO.</span>
+                                    </label>
+
+                                    <br>
+                                    <input type="hidden" name="crip" value="<?= $crip ?>">
+                                    <input type="hidden" name="id_especialidade" value="<?= $value['id_especialidade'] ?>">
+
+                                    <b>
+                                        <font color="red" size="4">
+                                            <p id="mensagem_erro_cidade"></p>
+                                        </font>
+                                    </b>
+
+                                    <button type="submit" class="btn btn-primary btn-block">ENVIAR OPÇÃO (Única vez)</button>
+                                    <br>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <?php foreach ($lista_inscricoes as $value): ?>
+                            <?php
+                            $crip = hash('sha256', $_SESSION['chave'] . "freitas" . $value['id_especialidade']);
+                            $ott_stt = $value['ott_stt'] == 'eipot' ? 'EIPOT' : null;
+
+                            $cor_retangulo = "success";
+                            if (!empty($value['cidade_escolheu_servir']) || $value['concorrendo'] == 0) $cor_retangulo = "info";
+                            ?>
+
+                            <div class="alert alert-<?= $cor_retangulo ?> p-20">
+                                <legend>
+                                    <b>
+                                        <font color="green">Segunda Escolha: Guarnição</font>
+                                    </b>
+                                </legend>
                                 <b>
                                     <font size="3"><?= $ott_stt ?> - <?= mb_strtoupper($value['especialidade'], 'UTF-8') ?></font>
                                 </b>
@@ -199,7 +258,6 @@ $datetime = date('d/m/Y H:i:s');
                                     <tbody>
                                         <?php foreach ($lista_cidades_epecialidades as $linha): ?>
                                             <?php
-
                                             $rm = (int) $linha['regiao_militar'];
                                             if (!in_array($rm, $rms_interesse)) {
                                                 continue;
@@ -221,8 +279,8 @@ $datetime = date('d/m/Y H:i:s');
                                             }
                                             ?>
                                             <tr>
-                                                <td><b>Guarnição: </b><?= $nome ?> <b>- Vagas:</b> <?= $total ?></td>
-                                                <td><b>Guarnição: </b><?= $nome ?> <b>- Vagas:</b> <?= $restantes ?></td>
+                                                <td><b>Guarnição: </b><?= $nome . '/' . $linha['uf'] .  ' - ' . $rm . 'ªRM' ?> <b>- Vagas:</b> <?= $total ?></td>
+                                                <td><b>Guarnição: </b><?= $nome . '/' . $linha['uf'] .  ' - ' . $rm . 'ªRM' ?> <b>- Vagas:</b> <?= $restantes ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -265,10 +323,31 @@ $datetime = date('d/m/Y H:i:s');
                                             <?php foreach ($get_vagas_especialidade as $vaga): ?>
                                                 <?php
                                                 $rm = (int)$vaga['regiao_militar'];
-                                                if ((int)$vaga['vagas'] > 0 && in_array($rm, $rms_interesse)):
+                                                $id_cidade = (int)$vaga['id_cidade'];
+
+                                                if ((int)$vaga['vagas'] > 0 && in_array($rm, $rms_interesse)) {
+                                                    // Contar quantas vagas já foram preenchidas nessa RM
+                                                    $preenchidas_na_rm = 0;
+                                                    foreach ($vagas_preenchidas as $vp) {
+                                                        if ((int)$vp['regiao_militar'] === $rm) {
+                                                            $preenchidas_na_rm += (int)$vp['preenchidas'];
+                                                        }
+                                                    }
+
+                                                    $proxima_posicao = $preenchidas_na_rm + 1;
+                                                    $eh_vaga_cotista = ($proxima_posicao % 5 === 0); // ou sua regra atualizada
+
+                                                    // Verifica se o candidato atual é cotista
+                                                    $candidato_e_cotista = $value['vaga_reservada'] == 1;
+
+                                                    if (!$eh_vaga_cotista || ($eh_vaga_cotista && $candidato_e_cotista)) {
                                                 ?>
-                                                    <option value="<?= $vaga['id_cidade'] ?>"><?= $vaga['cidade'] ?> (<?= $vaga['vagas'] ?>)</option>
-                                                <?php endif; ?>
+                                                        <option value="<?= $id_cidade ?>"><?= $vaga['cidade'] ?> (<?= $vaga['vagas'] ?>)</option>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                                <option value="<?= $vaga['id_cidade'] ?>"><?= $vaga['cidade'] ?> (<?= $vaga['vagas'] ?>)</option>
                                             <?php endforeach; ?>
                                             <option value="754809">Nenhuma das Opções (Desistência das localidades ofertadas na 1ª RM)</option>
                                         </select>

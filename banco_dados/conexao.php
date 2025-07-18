@@ -1675,9 +1675,10 @@ class Conexao
         SELECT 
             c.id, 
             c.nome, 
+            c.uf,                          
             sel.id AS id_selecao, 
             ce.numero_vagas, 
-            ce.regiao_militar,       -- campo adicionado
+            ce.regiao_militar,
             e.nome AS nome_especialidade
         FROM cidade c
         INNER JOIN cidade_x_especialidade ce ON ce.id_cidade = c.id
@@ -1692,8 +1693,6 @@ class Conexao
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
 
     public function get_oms_especialidade($id_especialidade)
     {

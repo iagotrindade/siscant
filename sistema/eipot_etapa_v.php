@@ -46,6 +46,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <th>CPF</th>
                                 <th>Nome</th>
                                 <th>Etapa</th>
+                                <th>RM Etapa Presencial</th>
                                 <th>Especialidade</th>
                                 <th>HC</th>
                                 <th>HC - RECURSO</th>
@@ -82,7 +83,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
 
                                 $aparece = true;
 
-                                if ($linha['etapa'] < 5 || $linha['rm_inscricao'] != $rm_usuario) {
+                                if ($linha['etapa'] < 5) {
                                     continue;
                                 }
 
@@ -110,6 +111,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <td>' . $linha['nome_completo'] . '</td>
                                 <td>_' . $linha['etapa'] . '</td>
                                 <td>' . $linha['arma_especialidade'] . '</td>
+                                 <td>' . $linha['rm_inscricao'] . 'ª RM</td>
                                 <td>' . $parecerHc . '</td>
                                 <td>' . $parecerRevisora . '</td>
                                 <td>' . $recursoEtapa5 . '</td>';
