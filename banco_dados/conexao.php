@@ -1923,7 +1923,8 @@ class Conexao
             c.nome AS cidade_escolheu_servir, 
             ce.id AS id_ce, 
             ce.nota_prova_teorico_pratico,
-            ce.etapa AS etapa
+            ce.etapa AS etapa,
+            ce.rm_escolheu_servir
         FROM candidato_x_especialidade ce
         INNER JOIN usuario u ON u.id = ce.id_candidato
         LEFT JOIN cidade c ON c.id = ce.cidade_escolheu_servir
@@ -2887,13 +2888,22 @@ order by total_pontos_somados desc");
 
     public function get_especialidade_candidato_eipot($id_usuario)
     {
-        $stmt = $this->pdo->prepare("SELECT ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, 
-                                    u.nome_completo, u.cpf, u.rm_destino,
-                                    e.id id_especialidade, e.nome especialidade, e.ott_stt
-                                    FROM candidato_x_especialidade ce 
-                                    INNER JOIN usuario u ON u.id = ce.id_candidato
-                                    INNER JOIN especialidade e ON e.id = ce.id_especialidade
-                                    WHERE u.id = :id_usuario AND u.apagado = 0");
+        $stmt = $this->pdo->prepare("SELECT 
+            ce.id id_candidato_x_especialidade,
+            ce.cidade_escolheu_servir,
+            ce.concorrendo,
+            ce.justificativa,
+            ce.rm_escolheu_servir,
+            u.nome_completo,
+            u.cpf,
+            u.rm_destino,
+            e.id id_especialidade,
+            e.nome especialidade,
+            e.ott_stt
+        FROM candidato_x_especialidade ce 
+        INNER JOIN usuario u ON u.id = ce.id_candidato
+        INNER JOIN especialidade e ON e.id = ce.id_especialidade
+        WHERE u.id = :id_usuario AND u.apagado = 0");
         $stmt->bindValue(':id_usuario', $id_usuario);
         $run = $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

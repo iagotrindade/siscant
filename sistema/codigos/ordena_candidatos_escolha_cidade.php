@@ -3,9 +3,14 @@
 // VERIFICA SE O CANDIDATO É O PROXÍMO A ESCOLHER A CIDADE
 $lista_candidatos = $conexao->get_candidatos_especialidade($id_especialidade);
 
+
 $vetor_ordenado_candidatos = [];
 
 foreach ($lista_candidatos as $linha) {
+    if($linha['etapa_candidato'] < 6) {
+        continue; // Ignora candidatos que não estão na etapa 6 ou superior
+    }
+    
     // Critério Geral: Nota Final do EIPOT
     $nota_final_eipot = get_nota_final_eipot($linha['id']);
 
@@ -40,6 +45,7 @@ foreach ($lista_candidatos as $linha) {
         "nota_ofor" => (float)$nota_ofor,
         "nota_final_eaf" => (float)$nota_final_eaf,
         "cidade_escolheu_servir" => $linha['cidade_escolheu_servir'],
+        "rm_escolheu_servir" => $linha['rm_escolheu_servir'],
         "rm_inscricao" => $linha['rm_inscricao']
     ];
 }
@@ -77,6 +83,7 @@ if (count($vetor_ordenado_candidatos) > 0) {
 $vagas_por_regiao = separa_vaga_rm($lista_cidades_epecialidades);
 
 $totalVagasPorRegiao = [];
+
 
 foreach ($vagas_por_regiao as $regiao => $cidades) {
     $total = 0;
