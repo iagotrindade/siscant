@@ -688,6 +688,17 @@ function separa_vaga_rm($vagas)
     return $vagas_por_regiao;
 }
 
+function calcularVagasCotistas($totalVagasRM)
+{
+    if ($totalVagasRM <= 2) {
+        return 0; // RM com 1 ou 2 vagas não tem cotas reservadas
+    } elseif ($totalVagasRM <= 4) {
+        return 1; // RM com 3 ou 4 vagas tem 1 cota reservada
+    } else {
+        return floor($totalVagasRM / 5); // Para 5+ vagas, aplica regra 4:1
+    }
+}
+
 function get_abrev_posto($posto_grad_abreviado)
 {
     if ($posto_grad_abreviado == "Sv Civil")

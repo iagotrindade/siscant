@@ -2889,25 +2889,27 @@ order by total_pontos_somados desc");
     public function get_especialidade_candidato_eipot($id_usuario)
     {
         $stmt = $this->pdo->prepare("SELECT 
-            ce.id id_candidato_x_especialidade,
-            ce.cidade_escolheu_servir,
-            ce.concorrendo,
-            ce.justificativa,
-            ce.rm_escolheu_servir,
-            u.nome_completo,
-            u.cpf,
-            u.rm_destino,
-            e.id id_especialidade,
-            e.nome especialidade,
-            e.ott_stt
-        FROM candidato_x_especialidade ce 
-        INNER JOIN usuario u ON u.id = ce.id_candidato
-        INNER JOIN especialidade e ON e.id = ce.id_especialidade
-        WHERE u.id = :id_usuario AND u.apagado = 0");
+        ce.id AS id_candidato_x_especialidade,
+        ce.cidade_escolheu_servir,
+        ce.concorrendo,
+        ce.justificativa,
+        ce.rm_escolheu_servir,
+        ce._data_ultima_atualizacao,
+        u.nome_completo,
+        u.cpf,
+        u.rm_destino,
+        e.id AS id_especialidade,
+        e.nome AS especialidade,
+        e.ott_stt
+    FROM candidato_x_especialidade ce 
+    INNER JOIN usuario u ON u.id = ce.id_candidato
+    INNER JOIN especialidade e ON e.id = ce.id_especialidade
+    WHERE u.id = :id_usuario AND u.apagado = 0");
+
         $stmt->bindValue(':id_usuario', $id_usuario);
-        $run = $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // </editor-fold>
@@ -8026,6 +8028,49 @@ order by total_pontos_somados desc");
             return false;
         }
         return true;
+    }
+
+    public function cadastra_rm_candidato_vai_servir($id_candidato, $id_especialidade, $rm_escolheu_servir)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+
+        try {
+            $sqlInsert = "UPDATE candidato_x_especialidade SET rm_escolheu_servir = :rm_escolheu_servir,
+                      _usuario_ultima_atualizacao = :id_candidato, 
+                      _data_ultima_atualizacao = :data 
+                      WHERE id_candidato = :id_candidato 
+                      AND id_especialidade = :id_especialidade 
+                      AND apagado = 0";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_candidato", $id_candidato);
+            $query->bindValue(":id_especialidade", $id_especialidade);
+            $query->bindValue(":rm_escolheu_servir", $rm_escolheu_servir);
+            $query->bindValue(":data", $datetime);
+
+            if ($query->execute()) {
+                $data = [
+                    'id_candidato' => $id_candidato,
+                    'id_especialidade' => $id_especialidade,
+                    'rm_escolheu_servir' => $rm_escolheu_servir,
+                    '_data_ultima_atualizacao' => $datetime,
+                    '_usuario_ultima_atualizacao' => $id_candidato,
+                ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            // Log do erro pode ser adicionado aqui
+            $this->pdo->rollBack();
+            return false;
+        }
     }
     // </editor-fold>
 

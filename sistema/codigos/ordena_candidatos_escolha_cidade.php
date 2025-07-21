@@ -3,7 +3,6 @@
 // VERIFICA SE O CANDIDATO É O PROXÍMO A ESCOLHER A CIDADE
 $lista_candidatos = $conexao->get_candidatos_especialidade($id_especialidade);
 
-
 $vetor_ordenado_candidatos = [];
 
 foreach ($lista_candidatos as $linha) {
@@ -84,7 +83,6 @@ $vagas_por_regiao = separa_vaga_rm($lista_cidades_epecialidades);
 
 $totalVagasPorRegiao = [];
 
-
 foreach ($vagas_por_regiao as $regiao => $cidades) {
     $total = 0;
     foreach ($cidades as $cidade) {
@@ -92,3 +90,5 @@ foreach ($vagas_por_regiao as $regiao => $cidades) {
     }
     $totalVagasPorRegiao[$regiao] = $total;
 }
+
+
