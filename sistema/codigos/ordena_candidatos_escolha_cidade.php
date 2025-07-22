@@ -37,6 +37,8 @@ foreach ($lista_candidatos as $linha) {
         "cpf" => $linha['cpf'],
         "tempo_idade" => (int) $tempo_total_idade_dias,
         "autodeclaracao" => $linha['autodeclaracao'],
+
+        //Implementar verificação da heteroidentificação!!!
         "vaga_reservada" => $linha['vaga_reservada'],
         "mail" => $linha['mail'],
         "etapa" => $linha['etapa'],
@@ -45,6 +47,7 @@ foreach ($lista_candidatos as $linha) {
         "nota_final_eaf" => (float)$nota_final_eaf,
         "cidade_escolheu_servir" => $linha['cidade_escolheu_servir'],
         "rm_escolheu_servir" => $linha['rm_escolheu_servir'],
+        "ordem_escolha_guarnicao" => $linha['ordem_escolha_guarnicao'],
         "rm_inscricao" => $linha['rm_inscricao']
     ];
 }

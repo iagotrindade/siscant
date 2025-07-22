@@ -92,7 +92,7 @@ unset($candidatos);
                 <div class="card mb-4">
                     <div class="card-body">
                         <!-- Candidato em escolha -->
-                        <div class="p-10 alert-info col-md-12 text-center mb-20" style="border-radius: 10px;">
+                        <div class="p-10 alert-info col-md-12 text-center mb-20" style="border-radius: 10px;" hidden>
                             <h4 class="mb-10 col-md-12">Candidato escolhendo no momento (Tempo decorrido: 15:32)</h4>
                             <h4 class="mb-20 col-md-12">Rodada atual: 1ª Região Militar</h4>
 

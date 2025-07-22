@@ -57,7 +57,6 @@ if (json_last_error() !== JSON_ERROR_NONE || !is_array($rms_interesse)) {
     exit();
 }
 
-
 $id_especialidade = (int)($_POST['id_especialidade'] ?? 0);
 $rm_escolheu_servir = (int)($_POST['rm_escolheu_servir'] ?? 0);
 $crip = htmlspecialchars($_POST['crip'] ?? '');
@@ -112,7 +111,6 @@ foreach ($vetor_ordenado_candidatos as $linha) {
         $candidato_logado_encontrado = true;
         $posicao_candidato = $posicao_atual;
         $candidato_ja_escolheu = !empty($linha['rm_escolheu_servir']);
-
 
         // Verifica disponibilidade de vagas se for a vez do candidato
         if (!$candidato_ja_escolheu && $eh_proximo_da_vez) {
@@ -198,6 +196,7 @@ if ($id_candidato_x_especialidade === null) {
     exit();
 }
 
+
 // ============= PROCESSAMENTO DA ESCOLHA =============
 if ($rm_escolheu_servir == 754809) { // Desistência
     $justificativa = 'Cod 754809 - Não optou pelas Regiões Militares oferecidas';
@@ -229,8 +228,68 @@ if ($rm_escolheu_servir == 754809) { // Desistência
         }
     }
 } else {
-    // Salva a escolha da RM
-    $resultado = $conexao->cadastra_rm_candidato_vai_servir($id_usuario, $id_especialidade, $rm_escolheu_servir);
+    // ============= DEFINE AS POSIÇÕES DE COTAS =============
+    $total_vagas_rm = $totalVagasPorRegiao[$rm_escolheu_servir] ?? 0;
+    $posicoes_cotistas = definirPosicoesCotistas($total_vagas_rm);
+
+    // ============= VERIFICA CANDIDATOS JÁ ALOCADOS =============
+    $candidatos_na_rm = $conexao->candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir);
+    $cotistas_alocados = 0;
+    $ampla_alocados = 0;
+    $posicoes_ocupadas = [];
+
+    foreach ($candidatos_na_rm as $candidato) {
+        $posicoes_ocupadas[] = $candidato['ordemEscolhaGuarnicao'];
+        if (!empty($candidato['vaga_reservada'])) {
+            $cotistas_alocados++;
+        } else {
+            $ampla_alocados++;
+        }
+    }
+
+    // ============= DEFINE A ORDEM DE ESCOLHA =============
+    if ($eh_cotista) {
+        // Encontra a primeira posição de cota disponível
+        $ordemEscolhaGuarnicao = null;
+        foreach ($posicoes_cotistas as $posicao) {
+            if (!in_array($posicao, $posicoes_ocupadas)) {
+                $ordemEscolhaGuarnicao = $posicao;
+                break;
+            }
+        }
+
+        if ($ordemEscolhaGuarnicao !== null) {
+            $tipo_vaga = 'Cota';
+        } else {
+            // Se não há mais vagas de cota, encontra a próxima vaga geral disponível
+            $ordemEscolhaGuarnicao = 1;
+            while (in_array($ordemEscolhaGuarnicao, $posicoes_ocupadas) || in_array($ordemEscolhaGuarnicao, $posicoes_cotistas)) {
+                $ordemEscolhaGuarnicao++;
+            }
+            $tipo_vaga = 'Ampla Concorrência (Cota sem vaga)';
+        }
+    } else {
+        // Candidato de ampla: encontra a próxima vaga não reservada
+        $ordemEscolhaGuarnicao = 1;
+        while (in_array($ordemEscolhaGuarnicao, $posicoes_ocupadas) || in_array($ordemEscolhaGuarnicao, $posicoes_cotistas)) {
+            $ordemEscolhaGuarnicao++;
+        }
+        $tipo_vaga = 'Ampla Concorrência';
+    }
+
+    // Verifica se ainda há vagas disponíveis
+    if ($ordemEscolhaGuarnicao > $total_vagas_rm) {
+        erro("Erro 123456789! Não há mais vagas disponíveis nesta RM.");
+        exit();
+    }
+
+    // Salva a escolha
+    $resultado = $conexao->cadastra_rm_candidato_vai_servir(
+        $id_usuario,
+        $id_especialidade,
+        $rm_escolheu_servir,
+        $ordemEscolhaGuarnicao
+    );
 
     if ($resultado) {
         $conexao->insere_log(
@@ -240,7 +299,7 @@ if ($rm_escolheu_servir == 754809) { // Desistência
             "16149",
             "candidato_x_especialidade",
             "Update",
-            "Escolheu a RM $rm_escolheu_servir",
+            "Escolheu a RM $rm_escolheu_servir (Ordem: $ordemEscolhaGuarnicao - $tipo_vaga)",
             print_r($resultado, true)
         );
     } else {

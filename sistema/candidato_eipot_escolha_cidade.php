@@ -33,8 +33,6 @@ foreach ($lista_inscricoes as $inscricao) {
     $lista_cidades_epecialidades = $conexao->get_cidades_especialidade($inscricao['id_especialidade']);
     $vagas_preenchidas = $conexao->get_vagas_preenchidas($inscricao['id_especialidade']);
 
-
-
     include_once './codigos/ordena_candidatos_escolha_cidade.php';
 }
 
@@ -143,88 +141,130 @@ $datetime = date('d/m/Y H:i:s');
                 $escolhas_por_regiao[$regiao] = ($escolhas_por_regiao[$regiao] ?? 0) + $quantidade;
             }
 
-            // Verifica se o candidato logado é o próximo da vez
-            $eh_proximo_da_vez = true; // Assumimos que é o próximo até provar o contrário
+            // Verifica se o candidato logado é o próximo da vez (PRIMEIRA FASE)
+            $eh_proximo_da_vez = true;
             foreach ($vetor_ordenado_candidatos as $cand) {
                 if ((int)$cand['id'] === (int)$_SESSION['id_usuario']) {
-                    break; // Encontrou o candidato logado
+                    break;
                 }
 
                 if (empty($cand['rm_escolheu_servir'])) {
                     $eh_proximo_da_vez = false;
-                    break; // Tem alguém na frente que ainda não escolheu
+                    break;
                 }
             }
-            // Percorre candidatos ordenados pelo ranking
-            foreach ($vetor_ordenado_candidatos as $linha) {
-                $posicao_atual++;
-                $regiao = (int) $linha['rm_inscricao'];
 
-                // Se for o candidato logado
-                if ((int)$linha['id'] === (int)$_SESSION['id_usuario']) {
-                    $candidato_logado_encontrado = true;
-                    $posicao_candidato = $posicao_atual;
-                    $candidato_ja_escolheu = !empty($linha['rm_escolheu_servir']);
+            // SE FOR FASE DE ESCOLHA DE GUARNIÇÃO
+            if ($liberarEscolhaGuarnicao) {
+                // Obtém a RM escolhida pelo candidato logado
+                $rm_escolhida = null;
+                foreach ($vetor_ordenado_candidatos as $cand) {
+                    if ((int)$cand['id'] === (int)$_SESSION['id_usuario']) {
+                        $rm_escolhida = (int)$cand['rm_escolheu_servir'];
+                        break;
+                    }
+                }
 
-                    if (!$candidato_bloqueado_por_anterior && $eh_proximo_da_vez) {
-                        if (empty($linha['rm_escolheu_servir'])) {
-                            $tem_rm_disponivel = false;
-                            $rm_disponiveis = [];
+                if ($rm_escolhida) {
+                    // Filtra candidatos que escolheram a mesma RM
+                    $candidatos_rm_escolhida = array_filter($vetor_ordenado_candidatos, function ($c) use ($rm_escolhida) {
+                        return !empty($c['rm_escolheu_servir']) && (int)$c['rm_escolheu_servir'] === $rm_escolhida;
+                    });
 
-                            foreach ($rms_interesse as $regiao_id) {
-                                $total_vagas = $totalVagasPorRegiao[$regiao_id] ?? 0;
-                                $vagas_cotistas = calcularVagasCotistas($total_vagas);
-                                $vagas_ampla = $total_vagas - $vagas_cotistas;
+                    // Ordena pela ordem_escolha_guarnicao
+                    usort($candidatos_rm_escolhida, function ($a, $b) {
+                        return $a['ordem_escolha_guarnicao'] <=> $b['ordem_escolha_guarnicao'];
+                    });
 
-                                $ocupadas = $escolhas_por_regiao[$regiao_id] ?? 0;
-                                $ocupadas_ampla = 0;
-                                $ocupadas_cotistas = 0;
+                    // Verifica se há alguém na frente que ainda não escolheu guarnição
+                    $eh_proximo_da_vez = true;
+                    $candidato_bloqueado_por_anterior = false;
+                    $candidatos_faltando_a_frente = 0;
 
-                                // Contar quantas vagas já foram preenchidas por tipo
-                                foreach ($vetor_ordenado_candidatos as $c) {
-                                    if (!empty($c['rm_escolheu_servir']) && $c['rm_escolheu_servir'] == $regiao_id) {
-                                        if (!empty($c['vaga_reservada'])) {
-                                            $ocupadas_cotistas++;
-                                        } else {
-                                            $ocupadas_ampla++;
+                    foreach ($candidatos_rm_escolhida as $cand) {
+                        if ((int)$cand['id'] === (int)$_SESSION['id_usuario']) {
+                            break;
+                        }
+
+                        if (empty($cand['cidade_escolheu_servir'])) {
+                            $eh_proximo_da_vez = false;
+                            $candidato_bloqueado_por_anterior = true;
+                            $candidatos_faltando_a_frente++;
+                        }
+                    }
+                }
+            } else {
+                // PRIMEIRA FASE (ESCOLHA DE RM)
+                foreach ($vetor_ordenado_candidatos as $linha) {
+                    $posicao_atual++;
+                    $regiao = (int) $linha['rm_inscricao'];
+
+                    // Se for o candidato logado
+                    if ((int)$linha['id'] === (int)$_SESSION['id_usuario']) {
+                        $candidato_logado_encontrado = true;
+                        $posicao_candidato = $posicao_atual;
+                        $candidato_ja_escolheu = !empty($linha['rm_escolheu_servir']);
+
+                        if (!$candidato_bloqueado_por_anterior && $eh_proximo_da_vez) {
+                            if (empty($linha['rm_escolheu_servir'])) {
+                                $tem_rm_disponivel = false;
+                                $rm_disponiveis = [];
+
+                                foreach ($rms_interesse as $regiao_id) {
+                                    $total_vagas = $totalVagasPorRegiao[$regiao_id] ?? 0;
+                                    $vagas_cotistas = calcularVagasCotistas($total_vagas);
+                                    $vagas_ampla = $total_vagas - $vagas_cotistas;
+
+                                    $ocupadas = $escolhas_por_regiao[$regiao_id] ?? 0;
+                                    $ocupadas_ampla = 0;
+                                    $ocupadas_cotistas = 0;
+
+                                    // Contar quantas vagas já foram preenchidas por tipo
+                                    foreach ($vetor_ordenado_candidatos as $c) {
+                                        if (!empty($c['rm_escolheu_servir']) && $c['rm_escolheu_servir'] == $regiao_id) {
+                                            if (!empty($c['vaga_reservada'])) {
+                                                $ocupadas_cotistas++;
+                                            } else {
+                                                $ocupadas_ampla++;
+                                            }
+                                        }
+                                    }
+
+                                    // Verificar disponibilidade
+                                    if ($linha['vaga_reservada']) {
+                                        // Candidato cotista - pode pegar vaga cotista ou ampla (se não houver cotista)
+                                        if ($ocupadas_cotistas < $vagas_cotistas) {
+                                            $tem_rm_disponivel = true;
+                                            $rm_disponiveis[] = $regiao_id;
+                                        } elseif ($ocupadas_cotistas == 0 && $ocupadas_ampla < $vagas_ampla) {
+                                            $tem_rm_disponivel = true;
+                                            $rm_disponiveis[] = $regiao_id;
+                                        }
+                                    } else {
+                                        // Candidato ampla - só pode pegar vaga ampla
+                                        if ($ocupadas_ampla < $vagas_ampla) {
+                                            $tem_rm_disponivel = true;
+                                            $rm_disponiveis[] = $regiao_id;
                                         }
                                     }
                                 }
 
-                                // Verificar disponibilidade
-                                if ($linha['vaga_reservada']) {
-                                    // Candidato cotista - pode pegar vaga cotista ou ampla (se não houver cotista)
-                                    if ($ocupadas_cotistas < $vagas_cotistas) {
-                                        $tem_rm_disponivel = true;
-                                        $rm_disponiveis[] = $regiao_id;
-                                    } elseif ($ocupadas_cotistas == 0 && $ocupadas_ampla < $vagas_ampla) {
-                                        $tem_rm_disponivel = true;
-                                        $rm_disponiveis[] = $regiao_id;
-                                    }
+                                if (!$tem_rm_disponivel) {
+                                    $candidato_bloqueado_por_anterior = true;
                                 } else {
-                                    // Candidato ampla - só pode pegar vaga ampla
-                                    if ($ocupadas_ampla < $vagas_ampla) {
-                                        $tem_rm_disponivel = true;
-                                        $rm_disponiveis[] = $regiao_id;
-                                    }
+                                    $candidato_bloqueado_por_anterior = false;
                                 }
                             }
-
-                            if (!$tem_rm_disponivel) {
-                                $candidato_bloqueado_por_anterior = true;
-                            } else {
-                                $candidato_bloqueado_por_anterior = false;
-                            }
+                        } else {
+                            $candidato_bloqueado_por_anterior = true;
                         }
-                    } else {
-                        $candidato_bloqueado_por_anterior = true;
+                        break;
                     }
-                    break;
-                }
 
-                // Conta candidatos anteriores que ainda não escolheram
-                if (empty($linha['rm_escolheu_servir'])) {
-                    $candidatos_faltando_a_frente++;
+                    // Conta candidatos anteriores que ainda não escolheram
+                    if (empty($linha['rm_escolheu_servir'])) {
+                        $candidatos_faltando_a_frente++;
+                    }
                 }
             }
             ?>
@@ -253,6 +293,9 @@ $datetime = date('d/m/Y H:i:s');
                     <legend>Escolha agora sua Guarnição <img src="imagens/urgente.gif" height="25px"></legend>
                     <div class="alert alert-info p-20">
                         <b>Abaixo estão listadas as especialidades nas quais você se inscreveu.</b>
+                        <?php if ($candidato_bloqueado_por_anterior): ?>
+                            <p>Há <?php echo $candidatos_faltando_a_frente; ?> candidato(s) na sua frente para realizar a escolha de guarnição.</p>
+                        <?php endif; ?>
                     </div>
 
                 <?php elseif ($candidato_logado_encontrado): ?>
@@ -264,7 +307,7 @@ $datetime = date('d/m/Y H:i:s');
             </div>
 
             <div class="card">
-                <legend>Minhas inscrições no processo seletivo (Em ordem de Preferência): <?php echo ($rms_interesse_formatado); ?></legend>
+                <legend>Minhas inscrições no processo seletivo <?php if(!$liberarEscolhaGuarnicao) {echo (' (Em ordem de Preferência): ' . $rms_interesse_formatado);} ?></legend>
 
                 <div class="row">
                     <?php if ($candidato_logado_encontrado && $eh_proximo_da_vez && !$candidato_ja_escolheu && !$liberarEscolhaGuarnicao): ?>
@@ -295,44 +338,46 @@ $datetime = date('d/m/Y H:i:s');
                                                     $vagas_cotistas = calcularVagasCotistas($total_vagas);
                                                     $vagas_ampla = $total_vagas - $vagas_cotistas;
 
-                                                    $ocupadas = $escolhas_por_regiao[$rm] ?? 0;
                                                     $ocupadas_ampla = 0;
                                                     $ocupadas_cotistas = 0;
+                                                    $cotistas_na_ampla = 0;
 
                                                     foreach ($vetor_ordenado_candidatos as $c) {
                                                         if (!empty($c['rm_escolheu_servir']) && $c['rm_escolheu_servir'] == $rm) {
                                                             if (!empty($c['vaga_reservada'])) {
-                                                                $ocupadas_cotistas++;
+                                                                if ($c['ordemEscolhaGuarnicao'] <= $vagas_cotistas) {
+                                                                    $ocupadas_cotistas++;
+                                                                } else {
+                                                                    $cotistas_na_ampla++;
+                                                                    $ocupadas_ampla++;
+                                                                }
                                                             } else {
                                                                 $ocupadas_ampla++;
                                                             }
                                                         }
                                                     }
 
-                                                    $disponivel = false;
+                                                    $vagas_ampla_restantes = $vagas_ampla - $ocupadas_ampla;
+                                                    $vagas_cotistas_restantes = $vagas_cotistas - $ocupadas_cotistas;
+                                                    $total_restante = $total_vagas - ($ocupadas_ampla + $ocupadas_cotistas + $cotistas_na_ampla);
 
                                                     if ($linha['vaga_reservada']) {
-                                                        // Candidato cotista
-                                                        $disponivel = ($ocupadas_cotistas < $vagas_cotistas) ||
-                                                            ($ocupadas_cotistas == 0 && $ocupadas_ampla < $vagas_ampla);
+                                                        $mostrar_opcao = ($vagas_cotistas_restantes > 0) || ($vagas_ampla_restantes > 0);
                                                     } else {
-                                                        // Candidato ampla
-                                                        $disponivel = ($ocupadas_ampla < $vagas_ampla);
+                                                        $mostrar_opcao = ($vagas_ampla_restantes > 0) || ($ocupadas_cotistas < $vagas_cotistas);
                                                     }
 
-                                                    if ($disponivel && ($ocupadas < $total_vagas)):
-                                                    ?>
+                                                    if ($mostrar_opcao && ($total_restante > 0)): ?>
                                                         <option value="<?= $rm ?>">
                                                             <?= $index + 1 ?>ª Opção - <?= $rm ?>ª RM
-                                                            (<?= $total_vagas - $ocupadas ?> vagas -
-                                                            <?= $vagas_ampla - $ocupadas_ampla ?> ampla /
-                                                            <?= $vagas_cotistas - $ocupadas_cotistas ?> cota)
+                                                            (Total: <?= $total_restante ?> |
+                                                            Ampla: <?= max(0, $vagas_ampla_restantes) ?> |
+                                                            Cota: <?= max(0, $vagas_cotistas_restantes) ?>)
                                                         </option>
                                                     <?php endif; ?>
                                                 <?php endforeach; ?>
                                                 <option value="754809">Nenhuma das Opções (Desistência do Processo Seletivo)</option>
                                             </select>
-
 
                                             <br>
 
@@ -408,7 +453,6 @@ $datetime = date('d/m/Y H:i:s');
                                             $tem_vaga = false;
                                             foreach ($lista_cidades_epecialidades as $linha):
                                                 $rm = (int)$linha['regiao_militar'];
-                                                // Mostra apenas guarnições da RM escolhida
                                                 if ($rm !== $rm_escolhida) continue;
 
                                                 $nome = $linha['nome'];
@@ -447,7 +491,6 @@ $datetime = date('d/m/Y H:i:s');
                                     <?php endif; ?>
 
                                     <?php
-                                    // Verifica se o candidato pode selecionar
                                     $pode_selecionar = seleciona_cidade_vai_servir();
                                     $candidato_habilitado = (
                                         $value['concorrendo'] == 1 &&
@@ -468,14 +511,12 @@ $datetime = date('d/m/Y H:i:s');
                                                 $opcoes_exibidas = false;
                                                 foreach ($get_vagas_especialidade as $vaga):
                                                     $rm = (int)$vaga['regiao_militar'];
-                                                    // Filtra apenas guarnições da RM escolhida
                                                     if ($rm !== $rm_escolhida) continue;
 
                                                     $id_cidade = (int)$vaga['id_cidade'];
                                                     $vagas_disponiveis = (int)$vaga['vagas'];
 
                                                     if ($vagas_disponiveis > 0) {
-                                                        // Verifica regra 4x1 para guarnições
                                                         $preenchidas_na_rm = 0;
                                                         foreach ($vagas_preenchidas as $vp) {
                                                             if ((int)$vp['regiao_militar'] === $rm) {
@@ -487,9 +528,6 @@ $datetime = date('d/m/Y H:i:s');
                                                         $eh_vaga_cotista = ($proxima_posicao % 5 === 0);
                                                         $candidato_e_cotista = !empty($value['vaga_reservada']);
 
-                                                        // Mostra opção apenas se:
-                                                        // 1. Não for vaga cotista OU
-                                                        // 2. For vaga cotista E candidato é cotista
                                                         if (!$eh_vaga_cotista || ($eh_vaga_cotista && $candidato_e_cotista)) {
                                                             echo '<option value="' . $id_cidade . '">' . $vaga['cidade'] . ' (' . $vagas_disponiveis . ' vagas)</option>';
                                                             $opcoes_exibidas = true;

@@ -1924,7 +1924,8 @@ class Conexao
             ce.id AS id_ce, 
             ce.nota_prova_teorico_pratico,
             ce.etapa AS etapa,
-            ce.rm_escolheu_servir
+            ce.rm_escolheu_servir,
+            ce.ordem_escolha_guarnicao
         FROM candidato_x_especialidade ce
         INNER JOIN usuario u ON u.id = ce.id_candidato
         LEFT JOIN cidade c ON c.id = ce.cidade_escolheu_servir
@@ -2912,6 +2913,31 @@ order by total_pontos_somados desc");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // 15/07/2025 -> Iago Silva Incluindo função para obter candidatos por especialidade e RM escolhida
+    public function candidatos_por_rm_escolhida($id_especialidade)
+    {
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            ce.id AS id_ce,
+            ce.id_candidato,
+            ce.id_especialidade,
+            ce.rm_escolheu_servir,
+            ce.ordemEscolhaGuarnicao,
+            ce.vaga_reservada,
+            u.nome_completo,
+            u.cpf,
+            u.rm_destino
+        FROM candidato_x_especialidade ce
+        INNER JOIN usuarios u ON u.id = ce.id_usuario
+        WHERE ce.id_especialidade = ?
+          AND ce.rm_escolheu_servir IS NOT NULL 
+          AND ce.rm_escolheu_servir != ''
+        ORDER BY ce.ordemEscolhaGuarnicao
+    ");
+
+        $stmt->execute([$id_especialidade]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Documentos obrigatorios do Candidato">
@@ -8030,7 +8056,7 @@ order by total_pontos_somados desc");
         return true;
     }
 
-    public function cadastra_rm_candidato_vai_servir($id_candidato, $id_especialidade, $rm_escolheu_servir)
+    public function cadastra_rm_candidato_vai_servir($id_candidato, $id_especialidade, $rm_escolheu_servir, $ordemEscolhaGuarnicao)
     {
         $datetime = date('Y-m-d H:i:s');
         $usuario = $_SESSION['id_usuario'];
@@ -8038,7 +8064,8 @@ order by total_pontos_somados desc");
         try {
             $sqlInsert = "UPDATE candidato_x_especialidade SET rm_escolheu_servir = :rm_escolheu_servir,
                       _usuario_ultima_atualizacao = :id_candidato, 
-                      _data_ultima_atualizacao = :data 
+                      _data_ultima_atualizacao = :data,
+                    ordem_escolha_guarnicao = :ordemEscolhaGuarnicao
                       WHERE id_candidato = :id_candidato 
                       AND id_especialidade = :id_especialidade 
                       AND apagado = 0";
@@ -8050,6 +8077,7 @@ order by total_pontos_somados desc");
             $query->bindValue(":id_candidato", $id_candidato);
             $query->bindValue(":id_especialidade", $id_especialidade);
             $query->bindValue(":rm_escolheu_servir", $rm_escolheu_servir);
+            $query->bindValue(":ordemEscolhaGuarnicao", $ordemEscolhaGuarnicao);
             $query->bindValue(":data", $datetime);
 
             if ($query->execute()) {
@@ -8057,6 +8085,7 @@ order by total_pontos_somados desc");
                     'id_candidato' => $id_candidato,
                     'id_especialidade' => $id_especialidade,
                     'rm_escolheu_servir' => $rm_escolheu_servir,
+                    'ordem_escolha_guarnicao' => $ordemEscolhaGuarnicao,
                     '_data_ultima_atualizacao' => $datetime,
                     '_usuario_ultima_atualizacao' => $id_candidato,
                 ];

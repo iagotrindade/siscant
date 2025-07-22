@@ -688,6 +688,7 @@ function separa_vaga_rm($vagas)
     return $vagas_por_regiao;
 }
 
+// 21/06/2025 Iago Silva adicionado função para retornar o nome do posto graduacao abreviado
 function calcularVagasCotistas($totalVagasRM)
 {
     if ($totalVagasRM <= 2) {
@@ -697,6 +698,42 @@ function calcularVagasCotistas($totalVagasRM)
     } else {
         return floor($totalVagasRM / 5); // Para 5+ vagas, aplica regra 4:1
     }
+}
+
+// 21/06/2025 Iago Silva adicionado função para definir as vagas cotistas
+function definirVagasCotistas($total_vagas) {
+    $vagas_cotistas = [];
+    
+    if ($total_vagas <= 4) {
+        // Última vaga é cota (ex: 3 vagas → vaga 3; 4 vagas → vaga 4)
+        $vagas_cotistas[] = $total_vagas;
+    } else {
+        // Proporção 4x1 (ex: 5 vagas → vaga 5; 10 vagas → 5 e 10; 18 vagas → 5, 10, 15)
+        $intervalo = 5;
+        for ($i = $intervalo; $i <= $total_vagas; $i += $intervalo) {
+            $vagas_cotistas[] = $i;
+        }
+    }
+    
+    return $vagas_cotistas;
+}
+
+// ============= FUNÇÃO PARA DEFINIR POSIÇÕES DE COTAS =============
+function definirPosicoesCotistas($total_vagas)
+{
+    $posicoes = [];
+
+    if ($total_vagas <= 4) {
+        // Última vaga é cota (3 vagas → vaga 3; 4 vagas → vaga 4)
+        $posicoes[] = $total_vagas;
+    } else {
+        // Proporção 4x1 (5 vagas → vaga 5; 10 vagas → 5 e 10; 18 vagas → 5, 10, 15)
+        for ($i = 5; $i <= $total_vagas; $i += 5) {
+            $posicoes[] = $i;
+        }
+    }
+
+    return $posicoes;
 }
 
 function get_abrev_posto($posto_grad_abreviado)
