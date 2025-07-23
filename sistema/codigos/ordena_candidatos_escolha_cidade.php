@@ -6,10 +6,53 @@ $lista_candidatos = $conexao->get_candidatos_especialidade($id_especialidade);
 $vetor_ordenado_candidatos = [];
 
 foreach ($lista_candidatos as $linha) {
-    if($linha['etapa_candidato'] < 6) {
+    if ($linha['etapa_candidato'] < 6) {
         continue; // Ignora candidatos que não estão na etapa 6 ou superior
     }
-    
+
+
+    // Caso o candidato seja cotista, verifica se foi aprovado na heteroidentificação se não converte em ampla
+    if ($linha['vaga_reservada'] == 1) {
+        $pareceres = $conexao->get_pareceres_heteroidentificacao($linha['id']);
+
+        $fase1_confirmada = 0;
+        $fase1_total = 0;
+        $fase2_confirmada = 0;
+        $fase2_nao_confirmada = 0;
+        $fase2_nao_compareceu = 0;
+        $fase2_total = 0;
+
+        foreach ($pareceres as $parecer) {
+            if ((int)$parecer['fase'] === 1) {
+                $fase1_total++;
+                if ($parecer['parecer'] === 'confirmada') {
+                    $fase1_confirmada++;
+                }
+            } elseif ((int)$parecer['fase'] === 2) {
+                if ($parecer['parecer'] === 'confirmada') {
+                    $fase2_confirmada++;
+                } elseif ($parecer['parecer'] === 'nao_confirmada') {
+                    $fase2_nao_confirmada++;
+                } elseif ($parecer['parecer'] === 'nao_compareceu') {
+                    $fase2_nao_compareceu++;
+                }
+                $fase2_total++;
+            }
+        }
+
+        if ($fase1_total === 5 && $fase1_confirmada >= 3) {
+            $linha['vaga_reservada'] = 1; // Vaga reservada confirmada
+        } elseif ($fase2_total === 3) {
+            if ($fase2_confirmada >= 2) {
+                $linha['vaga_reservada'] = 1; // Vaga reservada confirmada
+            } elseif ($fase2_nao_confirmada >= 2 || $fase2_nao_compareceu >= 2) {
+                $linha['vaga_reservada'] = 0; // Vaga reservada não confirmada
+            }
+        } else {
+            continue; // Ignora se não atendeu nenhuma das fases
+        }
+    }
+
     // Critério Geral: Nota Final do EIPOT
     $nota_final_eipot = get_nota_final_eipot($linha['id']);
 
@@ -37,8 +80,6 @@ foreach ($lista_candidatos as $linha) {
         "cpf" => $linha['cpf'],
         "tempo_idade" => (int) $tempo_total_idade_dias,
         "autodeclaracao" => $linha['autodeclaracao'],
-
-        //Implementar verificação da heteroidentificação!!!
         "vaga_reservada" => $linha['vaga_reservada'],
         "mail" => $linha['mail'],
         "etapa" => $linha['etapa'],
@@ -93,5 +134,3 @@ foreach ($vagas_por_regiao as $regiao => $cidades) {
     }
     $totalVagasPorRegiao[$regiao] = $total;
 }
-
-

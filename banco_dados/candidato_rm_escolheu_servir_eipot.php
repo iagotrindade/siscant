@@ -100,7 +100,7 @@ $rm_disponiveis = [];
 foreach ($vetor_ordenado_candidatos as $linha) {
     $posicao_atual++;
 
-    // Verifica se há candidatos anteriores que não escolheram
+    // Se ainda não é o usuário e ainda não escolheu RM, conta como faltando
     if (empty($linha['rm_escolheu_servir']) && $linha['id'] != $id_usuario) {
         $candidatos_faltando_a_frente++;
         $eh_proximo_da_vez = false;
@@ -109,46 +109,10 @@ foreach ($vetor_ordenado_candidatos as $linha) {
     // Quando encontrar o candidato logado
     if ((int)$linha['id'] === $id_usuario) {
         $candidato_logado_encontrado = true;
+
+        // Pega a atual do candidato
         $posicao_candidato = $posicao_atual;
         $candidato_ja_escolheu = !empty($linha['rm_escolheu_servir']);
-
-        // Verifica disponibilidade de vagas se for a vez do candidato
-        if (!$candidato_ja_escolheu && $eh_proximo_da_vez) {
-            foreach ($rms_interesse as $regiao_id) {
-                $total_vagas = $totalVagasPorRegiao[$regiao_id] ?? 0;
-                $vagas_cotistas = calcularVagasCotistas($total_vagas);
-                $vagas_ampla = $total_vagas - $vagas_cotistas;
-
-                $ocupadas_ampla = 0;
-                $ocupadas_cotistas = 0;
-
-                // Conta vagas preenchidas por tipo
-                foreach ($vetor_ordenado_candidatos as $c) {
-                    if (!empty($c['rm_escolheu_servir']) && $c['rm_escolheu_servir'] == $regiao_id) {
-                        !empty($c['vaga_reservada']) ? $ocupadas_cotistas++ : $ocupadas_ampla++;
-                    }
-                }
-
-                // Verifica disponibilidade conforme tipo de vaga
-                if ($eh_cotista) {
-                    if (
-                        $ocupadas_cotistas < $vagas_cotistas ||
-                        ($ocupadas_cotistas == 0 && $ocupadas_ampla < $vagas_ampla)
-                    ) {
-                        $tem_rm_disponivel = true;
-                        $rm_disponiveis[] = $regiao_id;
-                    }
-                } else {
-                    if ($ocupadas_ampla < $vagas_ampla) {
-                        $tem_rm_disponivel = true;
-                        $rm_disponiveis[] = $regiao_id;
-                    }
-                }
-            }
-
-            $candidato_bloqueado_por_anterior = !$tem_rm_disponivel;
-        }
-        break;
     }
 }
 
@@ -164,17 +128,6 @@ if ($candidato_ja_escolheu) {
 
 if (!$eh_proximo_da_vez) {
     erro("Erro 4575384323523! Existem $candidatos_faltando_a_frente candidato(s) na sua frente que devem escolher primeiro.");
-    exit();
-}
-
-if ($candidato_bloqueado_por_anterior) {
-    erro("Erro 85673476547! Não há vagas disponíveis nas suas Regiões de interesse.");
-    exit();
-}
-
-// Verifica se a RM escolhida está entre as disponíveis
-if (!in_array($rm_escolheu_servir, $rm_disponiveis) && $rm_escolheu_servir != 754809) {
-    erro("Erro 456789123! Região Militar indisponível para sua posição.");
     exit();
 }
 
@@ -240,14 +193,20 @@ if ($rm_escolheu_servir == 754809) { // Desistência
 
     foreach ($candidatos_na_rm as $candidato) {
         $posicoes_ocupadas[] = $candidato['ordemEscolhaGuarnicao'];
-        if (!empty($candidato['vaga_reservada'])) {
+
+        // Verificar se ordemEscolhaGuarnicao é uma posição de cota (esta dentro do array de posicoes_cotistas)
+        if (in_array($candidato['ordemEscolhaGuarnicao'], $posicoes_cotistas)) {
             $cotistas_alocados++;
         } else {
             $ampla_alocados++;
         }
     }
 
+    // ============= VERIFICA SE A POSIÇÃO É DE COTA =============
+
     // ============= DEFINE A ORDEM DE ESCOLHA =============
+
+    // PROBLEMA: É NECESSÁRIO VERIFICAR TAMBÉM SE A PRIMEIRA POSIÇÃO DE COTAS JÁ "PASSOU"
     if ($eh_cotista) {
         // Encontra a primeira posição de cota disponível
         $ordemEscolhaGuarnicao = null;
