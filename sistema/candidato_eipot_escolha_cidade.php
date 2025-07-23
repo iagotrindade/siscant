@@ -134,7 +134,6 @@ $datetime = date('d/m/Y H:i:s');
 
             // Agrupa o total de escolhas feitas por RM (primeira escolha)
             $escolhas_por_regiao = [];
-
             foreach ($vagas_preenchidas as $item) {
                 $regiao = (int) $item['regiao_militar'];
                 $quantidade = (int) $item['preenchidas'];
@@ -151,6 +150,18 @@ $datetime = date('d/m/Y H:i:s');
                 if (empty($cand['rm_escolheu_servir'])) {
                     $eh_proximo_da_vez = false;
                     break;
+                }
+            }
+
+            // Função auxiliar
+            function vagaEhCotista($posicao_vaga, $total_vagas)
+            {
+                if ($total_vagas < 3) {
+                    return false;
+                } elseif ($total_vagas < 5) {
+                    return $posicao_vaga === $total_vagas; // última vaga cotista
+                } else {
+                    return $posicao_vaga % 5 === 0; // múltiplos de 5
                 }
             }
 
@@ -199,7 +210,6 @@ $datetime = date('d/m/Y H:i:s');
                     $posicao_atual++;
                     $regiao = (int) $linha['rm_inscricao'];
 
-                    // Se for o candidato logado
                     if ((int)$linha['id'] === (int)$_SESSION['id_usuario']) {
                         $candidato_logado_encontrado = true;
                         $posicao_candidato = $posicao_atual;
@@ -212,48 +222,38 @@ $datetime = date('d/m/Y H:i:s');
 
                                 foreach ($rms_interesse as $regiao_id) {
                                     $total_vagas = $totalVagasPorRegiao[$regiao_id] ?? 0;
-                                    $vagas_cotistas = calcularVagasCotistas($total_vagas);
-                                    $vagas_ampla = $total_vagas - $vagas_cotistas;
 
-                                    $ocupadas = $escolhas_por_regiao[$regiao_id] ?? 0;
-                                    $ocupadas_ampla = 0;
-                                    $ocupadas_cotistas = 0;
-
-                                    // Contar quantas vagas já foram preenchidas por tipo
+                                    // Contar quantas vagas já foram preenchidas (independente do tipo)
+                                    $ocupadas = 0;
                                     foreach ($vetor_ordenado_candidatos as $c) {
-                                        if (!empty($c['rm_escolheu_servir']) && $c['rm_escolheu_servir'] == $regiao_id) {
-                                            if (!empty($c['vaga_reservada'])) {
-                                                $ocupadas_cotistas++;
-                                            } else {
-                                                $ocupadas_ampla++;
-                                            }
+                                        if (!empty($c['rm_escolheu_servir']) && (int)$c['rm_escolheu_servir'] === $regiao_id) {
+                                            $ocupadas++;
                                         }
                                     }
 
-                                    // Verificar disponibilidade
-                                    if ($linha['vaga_reservada']) {
-                                        // Candidato cotista - pode pegar vaga cotista ou ampla (se não houver cotista)
-                                        if ($ocupadas_cotistas < $vagas_cotistas) {
+                                    $proxima_posicao = $ocupadas + 1;
+                                    $eh_posicao_cotista = vagaEhCotista($proxima_posicao, $total_vagas);
+
+                                    if (!empty($linha['vaga_reservada'])) {
+                                        // Cotista pode ocupar vaga cotista
+                                        if ($eh_posicao_cotista) {
                                             $tem_rm_disponivel = true;
                                             $rm_disponiveis[] = $regiao_id;
-                                        } elseif ($ocupadas_cotistas == 0 && $ocupadas_ampla < $vagas_ampla) {
+                                        } elseif ($ocupadas === 0 && !$eh_posicao_cotista) {
+                                            // Primeira vaga ainda é ampla e ninguém escolheu
                                             $tem_rm_disponivel = true;
                                             $rm_disponiveis[] = $regiao_id;
                                         }
                                     } else {
-                                        // Candidato ampla - só pode pegar vaga ampla
-                                        if ($ocupadas_ampla < $vagas_ampla) {
+                                        // Ampla só pode ocupar vaga ampla
+                                        if (!$eh_posicao_cotista) {
                                             $tem_rm_disponivel = true;
                                             $rm_disponiveis[] = $regiao_id;
                                         }
                                     }
                                 }
 
-                                if (!$tem_rm_disponivel) {
-                                    $candidato_bloqueado_por_anterior = true;
-                                } else {
-                                    $candidato_bloqueado_por_anterior = false;
-                                }
+                                $candidato_bloqueado_por_anterior = !$tem_rm_disponivel;
                             }
                         } else {
                             $candidato_bloqueado_por_anterior = true;
@@ -261,7 +261,6 @@ $datetime = date('d/m/Y H:i:s');
                         break;
                     }
 
-                    // Conta candidatos anteriores que ainda não escolheram
                     if (empty($linha['rm_escolheu_servir'])) {
                         $candidatos_faltando_a_frente++;
                     }
@@ -307,7 +306,9 @@ $datetime = date('d/m/Y H:i:s');
             </div>
 
             <div class="card">
-                <legend>Minhas inscrições no processo seletivo <?php if(!$liberarEscolhaGuarnicao) {echo (' (Em ordem de Preferência): ' . $rms_interesse_formatado);} ?></legend>
+                <legend>Minhas inscrições no processo seletivo <?php if (!$liberarEscolhaGuarnicao) {
+                                                                    echo (' (Em ordem de Preferência): ' . $rms_interesse_formatado);
+                                                                } ?></legend>
 
                 <div class="row">
                     <?php if ($candidato_logado_encontrado && $eh_proximo_da_vez && !$candidato_ja_escolheu && !$liberarEscolhaGuarnicao): ?>
@@ -338,21 +339,33 @@ $datetime = date('d/m/Y H:i:s');
                                                     $vagas_cotistas = calcularVagasCotistas($total_vagas);
                                                     $vagas_ampla = $total_vagas - $vagas_cotistas;
 
-                                                    $ocupadas_ampla = 0;
                                                     $ocupadas_cotistas = 0;
+                                                    $ocupadas_ampla = 0;
                                                     $cotistas_na_ampla = 0;
 
                                                     foreach ($vetor_ordenado_candidatos as $c) {
-                                                        if (!empty($c['rm_escolheu_servir']) && $c['rm_escolheu_servir'] == $rm) {
-                                                            if (!empty($c['vaga_reservada'])) {
-                                                                if ($c['ordemEscolhaGuarnicao'] <= $vagas_cotistas) {
+                                                        if (!empty($c['rm_escolheu_servir']) && (int)$c['rm_escolheu_servir'] === (int)$rm) {
+                                                            $ordem = (int)$c['ordem_escolha_guarnicao'];
+                                                            $total_vagas_rm = (int)$totalVagasPorRegiao[$rm];
+
+                                                            $eh_vaga_cotista = vagaEhCotista($ordem, $total_vagas_rm);
+
+
+                                                            $eh_cotista = !empty($c['vaga_reservada']);
+
+                                                            if ($eh_vaga_cotista) {
+                                                                if ($eh_cotista) {
                                                                     $ocupadas_cotistas++;
                                                                 } else {
-                                                                    $cotistas_na_ampla++;
-                                                                    $ocupadas_ampla++;
+                                                                    // Ampla ocupando vaga reservada (deveria ser evitado)
+                                                                    $ocupadas_ampla++; // ou apenas ignorar
                                                                 }
                                                             } else {
+                                                                // Vaga ampla
                                                                 $ocupadas_ampla++;
+                                                                if ($eh_cotista) {
+                                                                    $cotistas_na_ampla++;
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -361,13 +374,19 @@ $datetime = date('d/m/Y H:i:s');
                                                     $vagas_cotistas_restantes = $vagas_cotistas - $ocupadas_cotistas;
                                                     $total_restante = $total_vagas - ($ocupadas_ampla + $ocupadas_cotistas + $cotistas_na_ampla);
 
+                                                    // Nova lógica para ocultar opção se só restarem vagas de cotas
+                                                    $so_restam_vagas_de_cota = ($total_restante === $vagas_cotistas_restantes);
+
+                                                    // Verifica se o candidato pode ver essa opção
                                                     if ($linha['vaga_reservada']) {
-                                                        $mostrar_opcao = ($vagas_cotistas_restantes > 0) || ($vagas_ampla_restantes > 0);
+                                                        // Cotista pode ver se houver qualquer vaga restante
+                                                        $mostrar_opcao = $total_restante > 0;
                                                     } else {
-                                                        $mostrar_opcao = ($vagas_ampla_restantes > 0) || ($ocupadas_cotistas < $vagas_cotistas);
+                                                        // Ampla só pode ver se ainda restar vaga ampla
+                                                        $mostrar_opcao = !$so_restam_vagas_de_cota;
                                                     }
 
-                                                    if ($mostrar_opcao && ($total_restante > 0)): ?>
+                                                    if ($mostrar_opcao): ?>
                                                         <option value="<?= $rm ?>">
                                                             <?= $index + 1 ?>ª Opção - <?= $rm ?>ª RM
                                                             (Total: <?= $total_restante ?> |
@@ -502,6 +521,7 @@ $datetime = date('d/m/Y H:i:s');
                                     ?>
 
                                     <?php if ($candidato_habilitado): ?>
+
                                         <?php $crip = hash('sha256', $value['id_especialidade'] . "escolhe_cidade"); ?>
                                         <form action="../banco_dados/candidato_cidade_escolheu_servir_eipot.php" method="post">
                                             <br>
