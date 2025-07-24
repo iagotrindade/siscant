@@ -55,11 +55,13 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                         </thead>
                         <tbody>
                             <?php
-
-                            $candidatos = $conexao->get_inscritos_eipot_vagas_reservadas_tabelas($rm_usuario);
+                            $candidatos = $conexao->get_candidatos_eipot();
                             $recursos = $conexao->get_recursos_eipot($id_selecao, $rm_usuario);
 
                             foreach ($candidatos as $linha) {
+                                if($linha['vaga_reservada'] != 1) {
+                                    continue;
+                                }
                                 $pareceres = $conexao->get_pareceres_heteroidentificacao($linha['id']);
 
                                 $parecerHc = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 1);
@@ -83,7 +85,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
 
                                 $aparece = true;
 
-                                if ($linha['etapa'] < 5) {
+                                if ($linha['etapa'] < 4) {
                                     continue;
                                 }
 
@@ -110,8 +112,8 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                 <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">' . $linha['cpf'] . '</a></td>
                                 <td>' . $linha['nome_completo'] . '</td>
                                 <td>_' . $linha['etapa'] . '</td>
+                                 <td>_' . $linha['rm_inscricao'] . 'ª RM</td>
                                 <td>' . $linha['arma_especialidade'] . '</td>
-                                 <td>' . $linha['rm_inscricao'] . 'ª RM</td>
                                 <td>' . $parecerHc . '</td>
                                 <td>' . $parecerRevisora . '</td>
                                 <td>' . $recursoEtapa5 . '</td>';

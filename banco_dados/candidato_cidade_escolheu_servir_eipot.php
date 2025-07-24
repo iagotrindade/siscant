@@ -123,9 +123,17 @@ foreach ($get_especialidade_candidato as $especialidade) {
 // VERIFICA SE O CANDIDATO É O PROXÍMO A ESCOLHER A CIDADE
 include_once "../sistema/codigos/ordena_candidatos_escolha_cidade.php";
 
+foreach ($vetor_ordenado_candidatos as $cand) {
+    if ((int)$cand['id'] === (int)$_SESSION['id_usuario']) {
+        $rm_escolheu_servir = $cand['rm_escolheu_servir'];
+    }
+}
+
+$candidatos_na_rm = $conexao->candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir);
+
 $lugar = 0;
 $candidato_na_frente_nao_escolheu = false;
-foreach ($vetor_ordenado_candidatos as $linha) {
+foreach ($candidatos_na_rm as $linha) {
     $lugar++;
 
     if ($linha['cidade_escolheu_servir'] == null && $linha['id'] != $_SESSION['id_usuario'])

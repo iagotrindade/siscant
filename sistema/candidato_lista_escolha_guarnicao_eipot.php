@@ -12,7 +12,6 @@ $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
 
 $candidatos_eipot = $conexao->get_candidatos_eipot();
-$lista_candidatos = $conexao->get_candidatos_especialidade($id_especialidade);
 
 $ordem_arma = [
     'INFANTARIA',
@@ -86,40 +85,109 @@ unset($candidatos);
     </div>
 
     <?php foreach ($inscritos_por_arma as $arma => $candidatos) { ?>
+        <?php
+        $candidato_escolhendo = null;
+        $etapa = 'rm';
+
+        // Verifica se existe algum candidato que ainda não escolheu a RM
+        $proximo_rm = null;
+        foreach ($candidatos as $cand) {
+            if (empty($cand['rm_escolheu_servir'])) {
+                $proximo_rm = $cand;
+                break;
+            }
+        }
+
+        // Se ainda há alguém sem RM, esse é o próximo a escolher
+        if ($proximo_rm) {
+            $candidato_escolhendo = $proximo_rm;
+            $etapa = 'rm';
+        } else {
+            // Todos já escolheram RM, agora procura quem não escolheu a cidade
+            foreach ($candidatos as $cand) {
+                if (empty($cand['cidade_escolheu_servir'])) {
+                    $candidato_escolhendo = $cand;
+                    $etapa = 'cidade';
+                    break;
+                }
+            }
+        }
+
+        // Formata o campo rm_destino (se houver candidato atual)
+        if ($candidato_escolhendo && !empty($candidato_escolhendo['rm_destino'])) {
+            $candidato_escolhendo['rm_destino'] = implode(', ', array_map(function ($n) {
+                return $n . 'ª';
+            }, explode(',', $candidato_escolhendo['rm_destino'])));
+
+            $candidato_escolhendo['cpf'] = mascara($candidato_escolhendo['cpf'], '###.###.###-##');
+
+            $candidato_escolhendo['foto'] = $conexao->get_foto_usuario($candidato_escolhendo['id']);
+        }
+
+        // Encontrar o candidato anterior ao atual
+        $anterior = null;
+        foreach ($candidatos as $cand) {
+            if ($candidato_escolhendo && $cand['id'] == $candidato_escolhendo['id']) {
+                break;
+            }
+            $anterior = $cand;
+        }
+
+        // Calcula o tempo decorrido
+        $tempo_em_segundos = 0;
+
+        if ($candidato_escolhendo && !empty($candidato_escolhendo['_data_ultima_atualizacao'])) {
+            $ultimaAtualizacao = new DateTime($candidato_escolhendo['_data_ultima_atualizacao']);
+            $agora = new DateTime();
+            $tempo_em_segundos = max(0, $agora->getTimestamp() - $ultimaAtualizacao->getTimestamp());
+        }
+        ?>
         <div class="row">
             <div class="col-md-12">
-
                 <div class="card mb-4">
                     <div class="card-body">
                         <!-- Candidato em escolha -->
-                        <div class="p-10 alert-info col-md-12 text-center mb-20" style="border-radius: 10px;" hidden>
-                            <h4 class="mb-10 col-md-12">Candidato escolhendo no momento (Tempo decorrido: 15:32)</h4>
-                            <h4 class="mb-20 col-md-12">Rodada atual: 1ª Região Militar</h4>
+                        <?php if ($candidato_escolhendo): ?>
+                            <div class="p-10 alert-info col-md-12 text-center mb-20" style="border-radius: 10px;">
+                                <h4 class="mb-10 col-md-12">
+                                    Candidato escolhendo <?php echo $etapa === 'rm' ? 'a Região Militar (RM)' : 'a Guarnição (cidade)'; ?> no momento
+                                </h4>
 
-                            <div class="col-md-3">
-                                <img src="caminho_para_foto/<?php echo $candidato_escolhendo['foto'] ?? '../imagens/user.jpg'; ?>"
-                                    alt="Foto do Candidato"
-                                    class="rounded-circle me-4"
-                                    style="width: 80px; height: 80px; object-fit: cover;">
+                                <h4 class="mb-10 col-md-12">
+                                    <?php echo $candidato_escolhendo['nome_completo'] ?? 'Nome do Candidato'; ?>
+                                </h4>
+
+                                <h4>
+                                    RM Etapa Presencial:</strong> <?php echo $candidato_escolhendo['rm_inscricao'] ?? '-'; ?>ª Região Militar
+                                </h4>
+
+                                <b class="mb-20 col-md-12">
+                                    Tempo decorrido: <span id="timer">00:00</span>
+                                </b>
+
+                                <div class="mb-20 col-md-12">
+                                    <img src="fotos/<?php echo $candidato_escolhendo['foto'][0]['nome'] ?? '../imagens/user.jpg'; ?>"
+                                        alt="Foto do Candidato"
+                                        class="rounded-circle me-4"
+                                        style="width: 140px; height: 140px; object-fit: cover; border-radius: 5px;">
+                                </div>
+
+                                <div class="col-md-4 mt-20">
+                                    <P class="mb-1"><strong>CPF:</strong> <?php echo $candidato_escolhendo['cpf'] ?? 'CPF não informado'; ?></P>
+                                    <p class="mb-1"><strong>Email:</strong> <?php echo $candidato_escolhendo['mail'] ?? 'email@exemplo.com'; ?></p>
+                                </div>
+
+                                <div class="col-md-4 mt-20">
+                                    <p class="mb-1"><strong>Telefone:</strong> <?php echo $candidato_escolhendo['tel_celular'] ?? 'Não informado'; ?></p>
+                                    <p class="mb-1"><strong>Telefone de Recados:</strong> <?php echo $candidato_escolhendo['tel_residencial'] ?? 'Não informado'; ?></p>
+                                </div>
+
+                                <div class="col-md-4 mt-20">
+                                    <p class="mb-1"><strong>Regiões de Interesse:</strong> <?php echo $candidato_escolhendo['rm_destino'] ?? '-'; ?></p>
+                                    <p class="mb-0"><strong>Nota Final:</strong> <?php echo $candidato_escolhendo['nota_final'] ?? '-'; ?></p>
+                                </div>
                             </div>
-
-                            <div class="col-md-3 mt-20">
-                                <h5 class="mb-1"><?php echo $candidato_escolhendo['nome_completo'] ?? 'Nome do Candidato'; ?></h5>
-                                <p class="mb-1"><strong>Telefone:</strong> <?php echo $candidato_escolhendo['telefone'] ?? '(00) 00000-0000'; ?></p>
-                            </div>
-
-                            <div class="col-md-3 mt-20">
-
-                                <p class="mb-1"><strong>Email:</strong> <?php echo $candidato_escolhendo['email'] ?? 'email@exemplo.com'; ?></p>
-                                <p class="mb-0"><strong>RM Etapa Presencial:</strong> <?php echo $candidato_escolhendo['rm_inscricao'] ?? '-'; ?>ª Região Militar</p>
-                            </div>
-
-                            <div class="col-md-3 mt-20">
-
-                                <p class="mb-1"><strong>Regiões de Interesse:</strong> 1, 2, 3</p>
-                                <p class="mb-0"><strong>Nota Final:</strong> 8,50</p>
-                            </div>
-                        </div>
+                        <?php endif; ?>
 
                         <!-- Legenda da tabela -->
                         <legend class="mt-2">Candidatos de todo o Brasil na Etapa VI - <?php echo htmlspecialchars($arma); ?></legend>
@@ -134,7 +202,7 @@ unset($candidatos);
                                         <th>Concorrendo Cotas</th>
                                         <th>RM Etapa Presencial</th>
                                         <th>RM de Interesse</th>
-                                        <th>Guarnição Escolhida</th>
+                                        <th>Guarnição - RM Escolhida</th>
                                         <th>Ver</th>
                                     </tr>
                                 </thead>
@@ -189,7 +257,7 @@ unset($candidatos);
                                         echo '<td>' . $vaga_reservada . '</td>';
                                         echo '<td>' . $linha['rm_inscricao'] . 'ª Região Militar</td>';
                                         echo '<td>' . $linha['rm_destino'] . '</td>';
-                                        echo '<td>' . $linha['nome_cidade_escolhida'] . '</td>';
+                                        echo '<td>' . $linha['nome_cidade_escolhida'] . '/' . $linha['uf_cidade_escolhida'] . ' - ' . $linha['rm_escolheu_servir'] . 'ª RM</td>';
                                         echo '<td width="40px"><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">Ver</a></td>';
                                         echo '</tr>';
                                     } ?>
@@ -200,24 +268,43 @@ unset($candidatos);
                 </div>
             </div>
         </div>
-        <?php } ?>
-        
+    <?php } ?>
 
-        <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('.tabela-dinamica').DataTable({
-                    "order": [
-                        [0, "desc"]
-                    ],
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.13.5/i18n/pt-BR.json"
-                    }
-                });
+
+    <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.tabela-dinamica').DataTable({
+                "order": [
+                    [0, "desc"]
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.5/i18n/pt-BR.json"
+                }
             });
-        </script>
+        });
+    </script>
 </div>
+<script>
+    // Tempo já decorrido vindo do PHP
+    let tempoDecorrido = <?php echo $tempo_em_segundos; ?>;
+
+    function formatarTempo(segundos) {
+        const minutos = Math.floor(segundos / 60);
+        const segundosRestantes = segundos % 60;
+        return `${String(minutos).padStart(2, '0')}:${String(segundosRestantes).padStart(2, '0')}`;
+    }
+
+    function atualizarTimer() {
+        document.getElementById('timer').textContent = formatarTempo(tempoDecorrido);
+        tempoDecorrido++;
+    }
+
+    // Atualiza imediatamente e depois a cada segundo
+    atualizarTimer();
+    setInterval(atualizarTimer, 1000);
+</script>
 </body>
 
 </html>

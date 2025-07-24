@@ -701,9 +701,10 @@ function calcularVagasCotistas($totalVagasRM)
 }
 
 // 21/06/2025 Iago Silva adicionado função para definir as vagas cotistas
-function definirVagasCotistas($total_vagas) {
+function definirVagasCotistas($total_vagas)
+{
     $vagas_cotistas = [];
-    
+
     if ($total_vagas <= 4) {
         // Última vaga é cota (ex: 3 vagas → vaga 3; 4 vagas → vaga 4)
         $vagas_cotistas[] = $total_vagas;
@@ -714,7 +715,7 @@ function definirVagasCotistas($total_vagas) {
             $vagas_cotistas[] = $i;
         }
     }
-    
+
     return $vagas_cotistas;
 }
 
@@ -723,11 +724,16 @@ function definirPosicoesCotistas($total_vagas)
 {
     $posicoes = [];
 
+    if ($total_vagas <= 2) {
+        // Sem cotas para até 2 vagas
+        return [];
+    }
+
     if ($total_vagas <= 4) {
-        // Última vaga é cota (3 vagas → vaga 3; 4 vagas → vaga 4)
+        // Última vaga é cota
         $posicoes[] = $total_vagas;
     } else {
-        // Proporção 4x1 (5 vagas → vaga 5; 10 vagas → 5 e 10; 18 vagas → 5, 10, 15)
+        // Proporção 4x1 (cotas a cada 5 vagas)
         for ($i = 5; $i <= $total_vagas; $i += 5) {
             $posicoes[] = $i;
         }
