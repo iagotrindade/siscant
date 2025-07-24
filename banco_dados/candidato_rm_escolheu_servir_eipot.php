@@ -83,8 +83,6 @@ if (count($get_candidato) != 1 || $get_candidato[0]['concorrendo'] == '0') {
     exit();
 }
 
-$eh_cotista = !empty($get_candidato[0]['vaga_reservada']);
-
 // ============= VERIFICA ORDEM DE ESCOLHA E VAGAS =============
 include_once "../sistema/codigos/ordena_candidatos_escolha_cidade.php";
 
@@ -109,6 +107,7 @@ foreach ($vetor_ordenado_candidatos as $index => $linha) {
 
     // Quando encontrar o candidato logado
     if ($linha['id'] == $id_usuario) {
+        $eh_cotista = $linha['vaga_reservada'] == 1;
         $candidato_logado_encontrado = true;
 
         $posicao_candidato = $posicao_atual;
@@ -184,57 +183,47 @@ if ($rm_escolheu_servir == 754809) { // Desistência
         }
     }
 } else {
-    // ============= DEFINE AS POSIÇÕES DE COTAS =============
     $total_vagas_rm = $totalVagasPorRegiao[$rm_escolheu_servir] ?? 0;
     $posicoes_cotistas = definirPosicoesCotistas($total_vagas_rm);
-    
-    // ============= VERIFICA CANDIDATOS JÁ ALOCADOS =============
-    $candidatos_na_rm = $conexao->candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir);
-    
-    $cotistas_alocados = 0;
-    $ampla_alocados = 0;
-    $posicoes_ocupadas = [];
 
+    // ============= VERIFICA CANDIDATOS JÁ ALOCADOS ============
+    $candidatos_na_rm = $conexao->candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir);
+
+    $posicoes_ocupadas = [];
     foreach ($candidatos_na_rm as $candidato) {
         $posicoes_ocupadas[] = $candidato['ordemEscolhaGuarnicao'];
-
-        // Verificar se ordemEscolhaGuarnicao é uma posição de cota (esta dentro do array de posicoes_cotistas)
-        if (in_array($candidato['ordemEscolhaGuarnicao'], $posicoes_cotistas)) {
-            $cotistas_alocados++;
-        } else {
-            $ampla_alocados++;
-        }
     }
 
     // ============= DEFINE A ORDEM DE ESCOLHA =============
 
-    // PROBLEMA: É NECESSÁRIO VERIFICAR TAMBÉM SE A PRIMEIRA POSIÇÃO DE COTAS JÁ "PASSOU"
-    if ($eh_cotista) {
-        // Encontra a primeira posição de cota disponível
-        $ordemEscolhaGuarnicao = null;
-        foreach ($posicoes_cotistas as $posicao) {
-            if (!in_array($posicao, $posicoes_ocupadas)) {
-                $ordemEscolhaGuarnicao = $posicao;
-                break;
-            }
+    $ordemEscolhaGuarnicao = 1;
+    while (true) {
+        // Se ultrapassar o total de vagas da RM, não há mais vagas disponíveis
+        if ($ordemEscolhaGuarnicao > $total_vagas_rm) {
+            erro("Erro 123456789! Não há mais vagas disponíveis nesta RM.");
+            exit();
         }
 
-        if ($ordemEscolhaGuarnicao !== null) {
-            $tipo_vaga = 'Cota';
-        } else {
-            // Se não há mais vagas de cota, encontra a próxima vaga geral disponível
-            $ordemEscolhaGuarnicao = 1;
-            while (in_array($ordemEscolhaGuarnicao, $posicoes_ocupadas) || in_array($ordemEscolhaGuarnicao, $posicoes_cotistas)) {
-                $ordemEscolhaGuarnicao++;
-            }
-            $tipo_vaga = 'Ampla Concorrência (Cota sem vaga)';
-        }
-    } else {
-        // Candidato de ampla: encontra a próxima vaga não reservada
-        $ordemEscolhaGuarnicao = 1;
-        while (in_array($ordemEscolhaGuarnicao, $posicoes_ocupadas) || in_array($ordemEscolhaGuarnicao, $posicoes_cotistas)) {
+        // Se a posição já está ocupada, pula
+        if (in_array($ordemEscolhaGuarnicao, $posicoes_ocupadas)) {
             $ordemEscolhaGuarnicao++;
+            continue;
         }
+
+        // Se o candidato NÃO é cotista e a posição é reservada para cotas, pula
+        if (!$eh_cotista && in_array($ordemEscolhaGuarnicao, $posicoes_cotistas)) {
+            $ordemEscolhaGuarnicao++;
+            continue;
+        }
+
+        // Caso contrário, pode usar essa posição
+        break;
+    }
+
+    // Define tipo da vaga
+    if (in_array($ordemEscolhaGuarnicao, $posicoes_cotistas)) {
+        $tipo_vaga = $eh_cotista ? 'Cota' : 'Ampla pulando cota anterior';
+    } else {
         $tipo_vaga = 'Ampla Concorrência';
     }
 

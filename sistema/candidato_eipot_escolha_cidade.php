@@ -15,6 +15,7 @@ if (!isset($_SESSION['candidato_etapa']) || $_SESSION['candidato_etapa'] < 4) {
     exit();
 }
 
+$get_candidato = $conexao->get_usuario_id($_SESSION['id_usuario']);
 $rm_candidato = $conexao->rm_usuario($_SESSION['id_usuario']);
 $rms_interesse = explode(",", $rm_destino);
 
@@ -33,6 +34,14 @@ foreach ($lista_inscricoes as $inscricao) {
 
     include_once './codigos/ordena_candidatos_escolha_cidade.php';
 }
+
+foreach ($vetor_ordenado_candidatos as $cand) {
+    if ((int)$cand['id'] === (int)$_SESSION['id_usuario']) {
+        $rm_escolheu_servir = $cand['rm_escolheu_servir'];
+    }
+}
+
+$candidatos_na_rm = $conexao->candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir);
 
 // Inicializa como true (vamos verificar as condições para ver se precisa mudar)
 $liberarEscolhaGuarnicao = true;
@@ -168,7 +177,7 @@ $datetime = date('d/m/Y H:i:s');
             if ($liberarEscolhaGuarnicao) {
                 // Obtém a RM escolhida pelo candidato logado
                 $rm_escolhida = null;
-                foreach ($vetor_ordenado_candidatos as $cand) {
+                foreach ($candidatos_na_rm as $index => $cand) {
                     if ((int)$cand['id'] === (int)$_SESSION['id_usuario']) {
                         $rm_escolhida = (int)$cand['rm_escolheu_servir'];
                         break;
@@ -176,27 +185,23 @@ $datetime = date('d/m/Y H:i:s');
                 }
 
                 if ($rm_escolhida) {
-                    // Filtra candidatos que escolheram a mesma RM
-                    $candidatos_rm_escolhida = array_filter($vetor_ordenado_candidatos, function ($c) use ($rm_escolhida) {
-                        return !empty($c['rm_escolheu_servir']) && (int)$c['rm_escolheu_servir'] === $rm_escolhida;
-                    });
-
-                    // Ordena pela ordem_escolha_guarnicao
-                    usort($candidatos_rm_escolhida, function ($a, $b) {
-                        return $a['ordem_escolha_guarnicao'] <=> $b['ordem_escolha_guarnicao'];
-                    });
-
-                    // Verifica se há alguém na frente que ainda não escolheu guarnição
+                    // Aqui usamos diretamente os candidatos já filtrados e ordenados
+                    $candidato_ja_escolheu = true;
                     $eh_proximo_da_vez = true;
                     $candidato_bloqueado_por_anterior = false;
                     $candidatos_faltando_a_frente = 0;
 
-                    foreach ($candidatos_rm_escolhida as $cand) {
+                    foreach ($candidatos_na_rm as $cand) {
                         if ((int)$cand['id'] === (int)$_SESSION['id_usuario']) {
-                            break;
+                            if (empty($cand['cidade_escolheu_servir'])) {
+                                // Alguém antes ainda não escolheu
+                                $candidato_ja_escolheu = false;
+                            }
+                            break; // Chegou na vez do candidato logado
                         }
 
                         if (empty($cand['cidade_escolheu_servir'])) {
+                            // Alguém antes ainda não escolheu
                             $eh_proximo_da_vez = false;
                             $candidato_bloqueado_por_anterior = true;
                             $candidatos_faltando_a_frente++;
@@ -261,7 +266,6 @@ $datetime = date('d/m/Y H:i:s');
                         break;
                     }
 
-
                     if (empty($linha['rm_escolheu_servir'])) {
                         $candidatos_faltando_a_frente++;
                     }
@@ -289,25 +293,38 @@ $datetime = date('d/m/Y H:i:s');
                         <p>Você é o candidato número <?php echo $posicao_candidato; ?> no ranking.</p>
                     </div>
 
-                <?php elseif ($candidato_logado_encontrado && !$candidato_guarnicao_escolhida && $liberarEscolhaGuarnicao): ?>
+                <?php elseif ($liberarEscolhaGuarnicao && $candidato_ja_escolheu): ?>
+                    <legend>Escolha de Guarnição Realizada</legend>
+                    <div class="alert alert-info p-20">
+                        <b>Aguarde as próximas publicações no site da Região Militar escolhida.</b>
+                    </div>
+
+                <?php elseif ($liberarEscolhaGuarnicao && !$eh_proximo_da_vez): ?>
+                    <legend>Aguarde sua vez <img src="imagens/urgente.gif" height="25px"></legend>
+                    <div class="alert alert-info p-20">
+                        <b>Há <?php echo $candidatos_faltando_a_frente; ?> candidato(s) na sua frente para realizar a escolha.</b>
+                    </div>
+
+                <?php elseif ($liberarEscolhaGuarnicao && $eh_proximo_da_vez && !$candidato_ja_escolheu && $get_candidato[0]['concorrendo']): ?>
                     <legend>Escolha agora sua Guarnição <img src="imagens/urgente.gif" height="25px"></legend>
                     <div class="alert alert-info p-20">
-                        <b>Abaixo estão listadas as especialidades nas quais você se inscreveu.</b>
+                        <b>É a sua vez de escolher! Abaixo estão as Guarnições disponíveis na RM que você escolheu.</b>
+                        <p>Você é o candidato número <?php echo $posicao_candidato + 1; ?> no ranking.</p>
                         <?php if ($candidato_bloqueado_por_anterior): ?>
                             <p>Há <?php echo $candidatos_faltando_a_frente; ?> candidato(s) na sua frente para realizar a escolha de guarnição.</p>
                         <?php endif; ?>
                     </div>
 
-                <?php elseif ($candidato_logado_encontrado): ?>
-                    <legend>Escolha de Guarnição Realizada</legend>
-                    <div class="alert alert-info p-20">
-                        <b>Aguarde as próximas publicações no site da Região Militar escolhida.</b>
+                <?php elseif (!$get_candidato[0]['concorrendo']): ?>
+                    <legend>Você não está concorrendo <img src="imagens/urgente.gif" height="25px"></legend>
+                    <div class="alert alert-danger p-20">
+                        <b>Justificativa: <?= $get_candidato[0]['justificativa_concorrendo'] ?></b>
                     </div>
                 <?php endif; ?>
             </div>
 
             <div class="card">
-                <legend>Minhas inscrições no processo seletivo <?php if (!$liberarEscolhaGuarnicao) {
+                <legend>Minhas inscrições no processo seletivo <?php if (!$liberarEscolhaGuarnicao || !$get_candidato[0]['concorrendo']) {
                                                                     echo (' (Em ordem de Preferência): ' . $rms_interesse_formatado);
                                                                 } ?></legend>
 
@@ -328,6 +345,20 @@ $datetime = date('d/m/Y H:i:s');
                                                 <font color="green">Primeira Escolha: Região Militar</font>
                                             </b>
                                         </legend>
+
+                                        <!-- AVISO DE CANDIDATO COTISTA -->
+
+                                        <?php if ($linha['vaga_reservada'] == 1): ?>
+                                            <div class="alert alert-danger p-20">
+                                                <b>Atenção! Você é um candidato cotista. Sendo assim, pode escolher as vagas reservadas.</b>
+                                            </div>
+
+                                        <?php else: ?>
+                                            <div class="alert alert-danger p-20">
+                                                <b>Atenção! Você NÃO É um candidato cotista. Sendo assim, NÃO pode escolher as vagas reservadas.</b>
+                                            </div>
+                                        <?php endif; ?>
+
                                         <form action="../banco_dados/candidato_rm_escolheu_servir_eipot.php" method="post">
                                             <br>
                                             <select id="rm_escolheu" name="rm_escolheu_servir" class="form-control" onchange="selecao_cidade()" required>
@@ -388,14 +419,13 @@ $datetime = date('d/m/Y H:i:s');
                                                         $mostrar_opcao = !$so_restam_vagas_de_cota;
                                                     }
 
-                                                    if ($mostrar_opcao): ?>
-                                                        <option value="<?= $rm ?>">
-                                                            <?= $index + 1 ?>ª Opção - <?= $rm ?>ª RM
-                                                            (Total: <?= $total_restante ?> |
-                                                            Ampla: <?= max(0, $vagas_ampla_restantes) ?> |
-                                                            Cota: <?= max(0, $vagas_cotistas_restantes) ?>)
-                                                        </option>
-                                                    <?php endif; ?>
+                                                    ?>
+                                                    <option value="<?= $rm ?>">
+                                                        <?= $index + 1 ?>ª Opção - <?= $rm ?>ª RM
+                                                        (Total: <?= $total_restante ?> |
+                                                        Ampla: <?= max(0, $vagas_ampla_restantes) ?> |
+                                                        Cota: <?= max(0, $vagas_cotistas_restantes) ?>)
+                                                    </option>
                                                 <?php endforeach; ?>
                                                 <option value="754809">Nenhuma das Opções (Desistência do Processo Seletivo)</option>
                                             </select>
@@ -430,7 +460,7 @@ $datetime = date('d/m/Y H:i:s');
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($liberarEscolhaGuarnicao): ?>
+                    <?php if ($liberarEscolhaGuarnicao && $get_candidato[0]['concorrendo']): ?>
                         <div class="col-lg-12">
                             <?php foreach ($lista_inscricoes as $value): ?>
                                 <?php
@@ -445,7 +475,7 @@ $datetime = date('d/m/Y H:i:s');
                                 <div class="alert alert-<?= $cor_retangulo ?> p-20">
                                     <legend>
                                         <b>
-                                            <font color="green">Segunda Escolha: Guarnição - <?= $rm_escolhida ?>ª RM</font>
+                                            <font color="green">Segunda Escolha: Guarnição - <?= $rm_escolhida ? '' : 'ª Região Militar' ?></font>
                                         </b>
                                     </legend>
                                     <b>
@@ -505,8 +535,9 @@ $datetime = date('d/m/Y H:i:s');
                                         $get_cidade_escolhida = $conexao->get_cidade_id($value['cidade_escolheu_servir']);
                                         if (!empty($get_cidade_escolhida[0]['nome'])): ?>
                                             <br>
-                                            <font size="3" color="black">
-                                                <b>Guarnição escolhida para servir:</b> <?= $get_cidade_escolhida[0]['nome'] ?>
+                                            <font size="4" color="Green">
+                                                <b>Guarnição escolhida para servir: <?= $get_cidade_escolhida[0]['nome'] . '/' . $get_cidade_escolhida[0]['uf'] . ' - ' . $value['rm_escolheu_servir'] . 'ª Região Militar' ?>
+                                                </b>
                                             </font>
                                         <?php endif; ?>
                                     <?php endif; ?>
@@ -546,14 +577,8 @@ $datetime = date('d/m/Y H:i:s');
                                                             }
                                                         }
 
-                                                        $proxima_posicao = $preenchidas_na_rm + 1;
-                                                        $eh_vaga_cotista = ($proxima_posicao % 5 === 0);
-                                                        $candidato_e_cotista = !empty($value['vaga_reservada']);
-
-                                                        if (!$eh_vaga_cotista || ($eh_vaga_cotista && $candidato_e_cotista)) {
-                                                            echo '<option value="' . $id_cidade . '">' . $vaga['cidade'] . ' (' . $vagas_disponiveis . ' vagas)</option>';
-                                                            $opcoes_exibidas = true;
-                                                        }
+                                                        echo '<option value="' . $id_cidade . '">' . $vaga['cidade'] . ' (' . $vagas_disponiveis . ' vagas)</option>';
+                                                        $opcoes_exibidas = true;
                                                     }
                                                 endforeach;
 

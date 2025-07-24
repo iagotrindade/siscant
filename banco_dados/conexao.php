@@ -2002,6 +2002,7 @@ class Conexao
             ce.rm_escolheu_servir,
             ce.ordem_escolha_guarnicao AS ordemEscolhaGuarnicao,
             ce._data_ultima_atualizacao,
+            u.id,
             u.nome_completo,
             u.cpf,
             u.rm_destino,
@@ -2014,6 +2015,7 @@ class Conexao
         WHERE ce.id_especialidade = :id_especialidade
           AND ce.rm_escolheu_servir = :rm_escolheu_servir
           AND u.apagado = 0
+          ORDER BY ce.ordem_escolha_guarnicao ASC
     ");
 
         $stmt->bindValue(':id_especialidade', $id_especialidade);
@@ -2967,7 +2969,7 @@ order by total_pontos_somados desc");
 
     public function get_especialidade_candidato_eipot($id_usuario)
     {
-        $stmt = $this->pdo->prepare("SELECT ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, 
+        $stmt = $this->pdo->prepare("SELECT ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.rm_escolheu_servir, ce.ordem_escolha_guarnicao,  ce.concorrendo, ce.justificativa, 
                                     u.nome_completo, u.cpf, u.rm_destino,
                                     e.id id_especialidade, e.nome especialidade, e.ott_stt
                                     FROM candidato_x_especialidade ce 
