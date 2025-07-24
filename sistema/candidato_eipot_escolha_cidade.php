@@ -23,8 +23,6 @@ $rms_interesse_formatado = implode(', ', array_map(function ($n) {
 }, explode(',', $rm_destino)));
 
 $lista_inscricoes = $conexao->get_especialidade_candidato_eipot($_SESSION['id_usuario']);
-//var_dump($lista_inscricoes); exit; //159621
-
 
 foreach ($lista_inscricoes as $inscricao) {
     $id_especialidade = (int)$inscricao['id_especialidade'];
@@ -134,6 +132,7 @@ $datetime = date('d/m/Y H:i:s');
 
             // Agrupa o total de escolhas feitas por RM (primeira escolha)
             $escolhas_por_regiao = [];
+
             foreach ($vagas_preenchidas as $item) {
                 $regiao = (int) $item['regiao_militar'];
                 $quantidade = (int) $item['preenchidas'];
@@ -210,6 +209,7 @@ $datetime = date('d/m/Y H:i:s');
                     $posicao_atual++;
                     $regiao = (int) $linha['rm_inscricao'];
 
+
                     if ((int)$linha['id'] === (int)$_SESSION['id_usuario']) {
                         $candidato_logado_encontrado = true;
                         $posicao_candidato = $posicao_atual;
@@ -260,6 +260,7 @@ $datetime = date('d/m/Y H:i:s');
                         }
                         break;
                     }
+
 
                     if (empty($linha['rm_escolheu_servir'])) {
                         $candidatos_faltando_a_frente++;
@@ -338,6 +339,7 @@ $datetime = date('d/m/Y H:i:s');
                                                     $total_vagas = $totalVagasPorRegiao[$rm] ?? 0;
                                                     $vagas_cotistas = calcularVagasCotistas($total_vagas);
                                                     $vagas_ampla = $total_vagas - $vagas_cotistas;
+
 
                                                     $ocupadas_cotistas = 0;
                                                     $ocupadas_ampla = 0;
@@ -598,4 +600,3 @@ $datetime = date('d/m/Y H:i:s');
 </body>
 
 </html>
-<?php $conexao = null; ?>

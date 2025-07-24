@@ -62,7 +62,7 @@ $rm_escolheu_servir = (int)($_POST['rm_escolheu_servir'] ?? 0);
 $crip = htmlspecialchars($_POST['crip'] ?? '');
 
 $lista_cidades_epecialidades = $conexao->get_cidades_especialidade($id_especialidade);
-$vagas_preenchidas = $conexao->get_vagas_preenchidas($id_especialidade);
+$candidatos_escolheram_rm = $conexao->candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir);
 
 if ($crip === "" || $id_especialidade === 0 || !hash_equals($crip, hash('sha256', $id_especialidade . "escolhe_rm"))) {
     erro("Erro 48948456444444! Dados inválidos.");
@@ -83,129 +83,191 @@ if (count($get_candidato) != 1 || $get_candidato[0]['concorrendo'] == '0') {
     exit();
 }
 
+$eh_cotista = !empty($get_candidato[0]['vaga_reservada']);
+
 // ============= VERIFICA ORDEM DE ESCOLHA E VAGAS =============
 include_once "../sistema/codigos/ordena_candidatos_escolha_cidade.php";
 
-// CÓDIGO DO FRONT //
+$candidato_logado_encontrado = false;
+$candidato_ja_escolheu = false;
 $candidato_bloqueado_por_anterior = false;
 $candidatos_faltando_a_frente = 0;
-$candidato_guarnicao_escolhida = null;
-$candidato_ja_escolheu = false;
-$candidato_logado_encontrado = false;
-$eh_proximo_da_vez = false;
-$posicao_candidato = 0;
 $posicao_atual = 0;
-$ordem_escolha_atual = 1;
-$ordem_escolha_disponivel = 1;
-$esperando_vaga_cota = [];
-
-// Agrupa o total de escolhas feitas por RM (primeira escolha)
-$escolhas_por_regiao = [];
-foreach ($vagas_preenchidas as $item) {
-    $regiao = (int) $item['regiao_militar'];
-    $quantidade = (int) $item['preenchidas'];
-    $escolhas_por_regiao[$regiao] = ($escolhas_por_regiao[$regiao] ?? 0) + $quantidade;
-}
-
-// Verifica se o candidato logado é o próximo da vez (PRIMEIRA FASE)
+$posicao_candidato = 0;
 $eh_proximo_da_vez = true;
-foreach ($vetor_ordenado_candidatos as $cand) {
-    if ((int)$cand['id'] === (int)$_SESSION['id_usuario']) {
+$tem_rm_disponivel = false;
+$rm_disponiveis = [];
+
+foreach ($vetor_ordenado_candidatos as $index => $linha) {
+    $posicao_atual++;
+
+    // Se ainda não é o usuário logado e ainda não escolheu RM, conta como faltando à frente
+    if (empty($linha['rm_escolheu_servir']) && $linha['id'] != $id_usuario) {
+        $candidatos_faltando_a_frente++;
+        $eh_proximo_da_vez = false; // Define que ainda tem alguém na frente
+    }
+
+    // Quando encontrar o candidato logado
+    if ($linha['id'] == $id_usuario) {
+        $candidato_logado_encontrado = true;
+
+        $posicao_candidato = $posicao_atual;
+
+        // Verifica se o candidato já escolheu uma RM
+        $candidato_ja_escolheu = !empty($linha['rm_escolheu_servir']);
+
+        // Se ninguém mais está faltando à frente e o candidato ainda não escolheu, é o próximo da vez
+        if ($candidatos_faltando_a_frente === 0 && !$candidato_ja_escolheu) {
+            $eh_proximo_da_vez = true;
+        }
         break;
     }
-
-    if (empty($cand['rm_escolheu_servir'])) {
-        $eh_proximo_da_vez = false;
-        break;
-    }
 }
 
-// Função para saber se uma posição é de vaga cotista
-function vagaEhCotista($posicao, $total)
-{
-    // Última vaga pode ser de cota se total < 5
-    if ($total < 5 && $posicao === $total) return true;
-
-    // Vaga reservada a cada 5 vagas (5ª, 10ª, 15ª...)
-    return ($posicao % 5 === 0);
-}
-
-$ordemEscolhaGuarnicao = null;
-$esperando_vaga_cota = [];
-
-// PRIMEIRA FASE (ESCOLHA DE RM)
-$pula_vaga_reservada = false;
-
-$ordens_cota_pendentes = []; // ← Aqui guardamos as posições reservadas para cotas que ficaram sem cotista
-
-foreach ($vetor_ordenado_candidatos as &$linha) {
-    $eh_cotista = !empty($linha['vaga_reservada']);
-    $ja_escolheu = !empty($linha['rm_escolheu_servir']);
-
-    $eh_vaga_cota = vagaEhCotista($ordem_escolha_atual, $totalVagasPorRegiao[$rm_escolheu_servir]);
-
-    // Se a vaga atual é de cota, mas o candidato não é cotista
-    if ($eh_vaga_cota && !$eh_cotista) {
-        $ordens_cota_pendentes[] = $ordem_escolha_atual; // guarda essa vaga para depois
-        $ordem_escolha_atual++;
-        continue;
-    }
-
-    // Se o candidato for cotista e houver alguma vaga de cota pendente
-    if ($eh_cotista && !empty($ordens_cota_pendentes)) {
-        $ordem_usada = array_shift($ordens_cota_pendentes); // pega a primeira vaga reservada não ocupada
-        $linha['ordem_escolha_guarnicao'] = $ordem_usada;
-
-        if ((int)$linha['id'] === $id_usuario) {
-            $ordemEscolhaGuarnicao = $ordem_usada;
-        }
-
-        continue; // cotista usou vaga pendente, não usa a vaga atual
-    }
-
-    // Qualquer candidato (cotista ou não) pode ocupar vaga geral
-    $linha['ordem_escolha_guarnicao'] = $ordem_escolha_atual;
-    if ((int)$linha['id'] === $id_usuario) {
-        $ordemEscolhaGuarnicao = $ordem_escolha_atual;
-    }
-
-    $ordem_escolha_atual++;
-}
-
-// SEGUNDA FASE — Se o candidato cotista ainda não recebeu posição
-if (!isset($ordemEscolhaGuarnicao)) {
-    foreach ($vetor_ordenado_candidatos as $linha) {
-        if ((int)$linha['id'] === $id_usuario && !empty($linha['vaga_reservada']) && empty($linha['rm_escolheu_servir'])) {
-            $ordemEscolhaGuarnicao = $ordem_escolha_atual;
-            break;
-        }
-    }
-}
-
-// E finalmente, registra:
-$resultado = $conexao->cadastra_rm_candidato_vai_servir(
-    $id_usuario,
-    $id_especialidade,
-    $rm_escolheu_servir,
-    $ordemEscolhaGuarnicao
-);
-
-if ($resultado) {
-    $conexao->insere_log(
-        $id_usuario,
-        $_SESSION['cpf'],
-        $id_candidato_x_especialidade,
-        "16149",
-        "candidato_x_especialidade",
-        "Update",
-        "Escolheu a RM $rm_escolheu_servir (Ordem: $ordemEscolhaGuarnicao - $tipo_vaga)",
-        print_r($resultado, true)
-    );
-} else {
-    erro("Erro 263475475! Falha ao salvar sua escolha.");
+if ($candidato_ja_escolheu) {
+    erro("Erro 2473478458! Você já escolheu uma Região Militar.");
     exit();
 }
 
+if (!$eh_proximo_da_vez) {
+    erro("Erro 4575384323523! Existem $candidatos_faltando_a_frente candidato(s) na sua frente que devem escolher primeiro.");
+    exit();
+}
+
+// ============= VERIFICA ESPECIALIDADE DO CANDIDATO =============
+$get_especialidade_candidato = $conexao->get_especialidade_candidato($id_usuario);
+$id_candidato_x_especialidade = null;
+$nome_especialidade = null;
+
+foreach ($get_especialidade_candidato as $especialidade) {
+    if ($especialidade['id_especialidade'] == $id_especialidade) {
+        $id_candidato_x_especialidade = $especialidade['id_candidato_x_especialidade'];
+        $nome_especialidade = $especialidade['especialidade'];
+        break;
+    }
+}
+
+if ($id_candidato_x_especialidade === null) {
+    erro("Erro 3462437345745! Especialidade não encontrada.");
+    exit();
+}
+
+
+// ============= PROCESSAMENTO DA ESCOLHA =============
+if ($rm_escolheu_servir == 754809) { // Desistência
+    $justificativa = 'Cod 754809 - Não optou pelas Regiões Militares oferecidas';
+    $resultado = $conexao->status_concorrendo_especialidade($id_candidato_x_especialidade, 0, $justificativa);
+
+    if ($resultado) {
+        $conexao->insere_log(
+            $id_usuario,
+            $_SESSION['cpf'],
+            $id_candidato_x_especialidade,
+            "16150",
+            "candidato_x_especialidade",
+            "Update",
+            "Desistência da escolha de RM",
+            print_r($resultado, true)
+        );
+
+        // Verifica se ainda está concorrendo em outras especialidades
+        $esta_concorrendo = false;
+        foreach ($get_especialidade_candidato as $esp) {
+            if ($esp['concorrendo'] == '1' && $esp['id_especialidade'] != $id_especialidade) {
+                $esta_concorrendo = true;
+                break;
+            }
+        }
+
+        if (!$esta_concorrendo) {
+            $conexao->status_concorrendo($id_usuario, 0, $justificativa);
+        }
+    }
+} else {
+    // ============= DEFINE AS POSIÇÕES DE COTAS =============
+    $total_vagas_rm = $totalVagasPorRegiao[$rm_escolheu_servir] ?? 0;
+    $posicoes_cotistas = definirPosicoesCotistas($total_vagas_rm);
+    
+    // ============= VERIFICA CANDIDATOS JÁ ALOCADOS =============
+    $candidatos_na_rm = $conexao->candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir);
+    
+    $cotistas_alocados = 0;
+    $ampla_alocados = 0;
+    $posicoes_ocupadas = [];
+
+    foreach ($candidatos_na_rm as $candidato) {
+        $posicoes_ocupadas[] = $candidato['ordemEscolhaGuarnicao'];
+
+        // Verificar se ordemEscolhaGuarnicao é uma posição de cota (esta dentro do array de posicoes_cotistas)
+        if (in_array($candidato['ordemEscolhaGuarnicao'], $posicoes_cotistas)) {
+            $cotistas_alocados++;
+        } else {
+            $ampla_alocados++;
+        }
+    }
+
+    // ============= DEFINE A ORDEM DE ESCOLHA =============
+
+    // PROBLEMA: É NECESSÁRIO VERIFICAR TAMBÉM SE A PRIMEIRA POSIÇÃO DE COTAS JÁ "PASSOU"
+    if ($eh_cotista) {
+        // Encontra a primeira posição de cota disponível
+        $ordemEscolhaGuarnicao = null;
+        foreach ($posicoes_cotistas as $posicao) {
+            if (!in_array($posicao, $posicoes_ocupadas)) {
+                $ordemEscolhaGuarnicao = $posicao;
+                break;
+            }
+        }
+
+        if ($ordemEscolhaGuarnicao !== null) {
+            $tipo_vaga = 'Cota';
+        } else {
+            // Se não há mais vagas de cota, encontra a próxima vaga geral disponível
+            $ordemEscolhaGuarnicao = 1;
+            while (in_array($ordemEscolhaGuarnicao, $posicoes_ocupadas) || in_array($ordemEscolhaGuarnicao, $posicoes_cotistas)) {
+                $ordemEscolhaGuarnicao++;
+            }
+            $tipo_vaga = 'Ampla Concorrência (Cota sem vaga)';
+        }
+    } else {
+        // Candidato de ampla: encontra a próxima vaga não reservada
+        $ordemEscolhaGuarnicao = 1;
+        while (in_array($ordemEscolhaGuarnicao, $posicoes_ocupadas) || in_array($ordemEscolhaGuarnicao, $posicoes_cotistas)) {
+            $ordemEscolhaGuarnicao++;
+        }
+        $tipo_vaga = 'Ampla Concorrência';
+    }
+
+    // Verifica se ainda há vagas disponíveis
+    if ($ordemEscolhaGuarnicao > $total_vagas_rm) {
+        erro("Erro 123456789! Não há mais vagas disponíveis nesta RM.");
+        exit();
+    }
+
+    // Salva a escolha
+    $resultado = $conexao->cadastra_rm_candidato_vai_servir(
+        $id_usuario,
+        $id_especialidade,
+        $rm_escolheu_servir,
+        $ordemEscolhaGuarnicao
+    );
+
+    if ($resultado) {
+        $conexao->insere_log(
+            $id_usuario,
+            $_SESSION['cpf'],
+            $id_candidato_x_especialidade,
+            "16149",
+            "candidato_x_especialidade",
+            "Update",
+            "Escolheu a RM $rm_escolheu_servir (Ordem: $ordemEscolhaGuarnicao - $tipo_vaga)",
+            print_r($resultado, true)
+        );
+    } else {
+        erro("Erro 263475475! Falha ao salvar sua escolha.");
+        exit();
+    }
+}
 
 header("Location: ../sistema/candidato_eipot_escolha_cidade.php");
 exit();

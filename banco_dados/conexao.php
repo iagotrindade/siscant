@@ -1945,6 +1945,84 @@ class Conexao
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function cadastra_rm_candidato_vai_servir($id_candidato, $id_especialidade, $rm_escolheu_servir, $ordemEscolhaGuarnicao)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+
+        try {
+            $sqlInsert = "UPDATE candidato_x_especialidade SET rm_escolheu_servir = :rm_escolheu_servir,
+                      _usuario_ultima_atualizacao = :id_candidato, 
+                      _data_ultima_atualizacao = :data,
+                    ordem_escolha_guarnicao = :ordemEscolhaGuarnicao
+                      WHERE id_candidato = :id_candidato 
+                      AND id_especialidade = :id_especialidade 
+                      AND apagado = 0";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_candidato", $id_candidato);
+            $query->bindValue(":id_especialidade", $id_especialidade);
+            $query->bindValue(":rm_escolheu_servir", $rm_escolheu_servir);
+            $query->bindValue(":ordemEscolhaGuarnicao", $ordemEscolhaGuarnicao);
+            $query->bindValue(":data", $datetime);
+
+            if ($query->execute()) {
+                $data = [
+                    'id_candidato' => $id_candidato,
+                    'id_especialidade' => $id_especialidade,
+                    'rm_escolheu_servir' => $rm_escolheu_servir,
+                    'ordem_escolha_guarnicao' => $ordemEscolhaGuarnicao,
+                    '_data_ultima_atualizacao' => $datetime,
+                    '_usuario_ultima_atualizacao' => $id_candidato,
+                ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            // Log do erro pode ser adicionado aqui
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    public function candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir)
+    {
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            ce.id AS id_candidato_x_especialidade,
+            ce.cidade_escolheu_servir,
+            ce.concorrendo,
+            ce.justificativa,
+            ce.rm_escolheu_servir,
+            ce.ordem_escolha_guarnicao AS ordemEscolhaGuarnicao,
+            ce._data_ultima_atualizacao,
+            u.nome_completo,
+            u.cpf,
+            u.rm_destino,
+            e.id AS id_especialidade,
+            e.nome AS especialidade,
+            e.ott_stt
+        FROM candidato_x_especialidade ce
+        INNER JOIN usuario u ON u.id = ce.id_candidato
+        INNER JOIN especialidade e ON e.id = ce.id_especialidade
+        WHERE ce.id_especialidade = :id_especialidade
+          AND ce.rm_escolheu_servir = :rm_escolheu_servir
+          AND u.apagado = 0
+    ");
+
+        $stmt->bindValue(':id_especialidade', $id_especialidade);
+        $stmt->bindValue(':rm_escolheu_servir', $rm_escolheu_servir);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function get_candidatos_especialidade_eipot($id_especialidade, $rm_usuario)
     {
         $stmt = $this->pdo->prepare("select u.*, c.nome cidade_escolheu_servir, ce.id id_ce, ce.nota_prova_teorico_pratico
@@ -2889,55 +2967,19 @@ order by total_pontos_somados desc");
 
     public function get_especialidade_candidato_eipot($id_usuario)
     {
-        $stmt = $this->pdo->prepare("SELECT 
-        ce.id AS id_candidato_x_especialidade,
-        ce.cidade_escolheu_servir,
-        ce.concorrendo,
-        ce.justificativa,
-        ce.rm_escolheu_servir,
-        ce._data_ultima_atualizacao,
-        u.nome_completo,
-        u.cpf,
-        u.rm_destino,
-        e.id AS id_especialidade,
-        e.nome AS especialidade,
-        e.ott_stt
-    FROM candidato_x_especialidade ce 
-    INNER JOIN usuario u ON u.id = ce.id_candidato
-    INNER JOIN especialidade e ON e.id = ce.id_especialidade
-    WHERE u.id = :id_usuario AND u.apagado = 0");
-
+        $stmt = $this->pdo->prepare("SELECT ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, 
+                                    u.nome_completo, u.cpf, u.rm_destino,
+                                    e.id id_especialidade, e.nome especialidade, e.ott_stt
+                                    FROM candidato_x_especialidade ce 
+                                    INNER JOIN usuario u ON u.id = ce.id_candidato
+                                    INNER JOIN especialidade e ON e.id = ce.id_especialidade
+                                    WHERE u.id = :id_usuario AND u.apagado = 0");
         $stmt->bindValue(':id_usuario', $id_usuario);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $run = $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
     }
 
-    // 15/07/2025 -> Iago Silva Incluindo função para obter candidatos por especialidade e RM escolhida
-    public function candidatos_por_rm_escolhida($id_especialidade)
-    {
-        $stmt = $this->pdo->prepare("
-        SELECT 
-            ce.id AS id_ce,
-            ce.id_candidato,
-            ce.id_especialidade,
-            ce.rm_escolheu_servir,
-            ce.ordemEscolhaGuarnicao,
-            ce.vaga_reservada,
-            u.nome_completo,
-            u.cpf,
-            u.rm_destino
-        FROM candidato_x_especialidade ce
-        INNER JOIN usuarios u ON u.id = ce.id_usuario
-        WHERE ce.id_especialidade = ?
-          AND ce.rm_escolheu_servir IS NOT NULL 
-          AND ce.rm_escolheu_servir != ''
-        ORDER BY ce.ordemEscolhaGuarnicao
-    ");
-
-        $stmt->execute([$id_especialidade]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Documentos obrigatorios do Candidato">
@@ -8054,52 +8096,6 @@ order by total_pontos_somados desc");
             return false;
         }
         return true;
-    }
-
-    public function cadastra_rm_candidato_vai_servir($id_candidato, $id_especialidade, $rm_escolheu_servir, $ordemEscolhaGuarnicao)
-    {
-        $datetime = date('Y-m-d H:i:s');
-        $usuario = $_SESSION['id_usuario'];
-
-        try {
-            $sqlInsert = "UPDATE candidato_x_especialidade SET rm_escolheu_servir = :rm_escolheu_servir,
-                      _usuario_ultima_atualizacao = :id_candidato, 
-                      _data_ultima_atualizacao = :data,
-                    ordem_escolha_guarnicao = :ordemEscolhaGuarnicao
-                      WHERE id_candidato = :id_candidato 
-                      AND id_especialidade = :id_especialidade 
-                      AND apagado = 0";
-
-            $this->pdo->beginTransaction();
-
-            $query = $this->pdo->prepare($sqlInsert);
-
-            $query->bindValue(":id_candidato", $id_candidato);
-            $query->bindValue(":id_especialidade", $id_especialidade);
-            $query->bindValue(":rm_escolheu_servir", $rm_escolheu_servir);
-            $query->bindValue(":ordemEscolhaGuarnicao", $ordemEscolhaGuarnicao);
-            $query->bindValue(":data", $datetime);
-
-            if ($query->execute()) {
-                $data = [
-                    'id_candidato' => $id_candidato,
-                    'id_especialidade' => $id_especialidade,
-                    'rm_escolheu_servir' => $rm_escolheu_servir,
-                    'ordem_escolha_guarnicao' => $ordemEscolhaGuarnicao,
-                    '_data_ultima_atualizacao' => $datetime,
-                    '_usuario_ultima_atualizacao' => $id_candidato,
-                ];
-                $this->pdo->commit();
-                return $data;
-            } else {
-                $this->pdo->rollBack();
-                return false;
-            }
-        } catch (Exception $e) {
-            // Log do erro pode ser adicionado aqui
-            $this->pdo->rollBack();
-            return false;
-        }
     }
     // </editor-fold>
 
