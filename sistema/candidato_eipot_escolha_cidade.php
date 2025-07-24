@@ -411,6 +411,7 @@ $datetime = date('d/m/Y H:i:s');
 
                                                     $vagas_ampla = $total_vagas - $vagas_cotistas;
 
+
                                                     $ocupadas_cotistas = 0;
                                                     $ocupadas_ampla = 0;
                                                     $cotistas_na_ampla = 0;
