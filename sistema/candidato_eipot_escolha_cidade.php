@@ -47,6 +47,7 @@ $liberarEscolhaGuarnicao = true;
 
 // 1. Verifica se todos os candidatos já escolheram RM
 $todos_escolheram = true;
+
 foreach ($vetor_ordenado_candidatos as $cand) {
     if (empty($cand['rm_escolheu_servir'])) {
         $todos_escolheram = false;
@@ -353,7 +354,6 @@ $datetime = date('d/m/Y H:i:s');
                 <legend>Minhas inscrições no processo seletivo <?php if (!$liberarEscolhaGuarnicao || !$get_candidato[0]['concorrendo']) {
                                                                     echo (' (Em ordem de Preferência): ' . $rms_interesse_formatado);
                                                                 } ?></legend>
-
                 <div class="row">
                     <?php if ($candidato_logado_encontrado && $eh_proximo_da_vez && !$candidato_ja_escolheu && !$liberarEscolhaGuarnicao): ?>
                         <div class="col-lg-12">
@@ -363,6 +363,16 @@ $datetime = date('d/m/Y H:i:s');
                                     $crip = hash('sha256', $value['id_especialidade'] . "escolhe_rm");
                                     $ott_stt = $value['ott_stt'] == 'eipot' ? 'EIPOT' : null;
                                     $cor_retangulo = "success";
+
+                                    $existe_rm_interesse_com_vaga = false;
+
+                                    foreach ($rms_interesse as $rm) {
+                                        if (!empty($totalVagasPorRegiao[$rm])) {
+                                            // Encontrou RM de interesse com vaga (valor > 0)
+                                            $existe_rm_interesse_com_vaga = true;
+                                            break;
+                                        }
+                                    }
 
                                     $existe_cotista_disponivel = false;
                                     foreach ($vetor_ordenado_candidatos as $cand) {
@@ -403,14 +413,15 @@ $datetime = date('d/m/Y H:i:s');
                                             <select id="rm_escolheu" name="rm_escolheu_servir" class="form-control" onchange="selecao_cidade()" required>
                                                 <option value="">Selecione qualquer Região Militar em que deseja servir</option>
                                                 <?php $vagasPorRegiaoEncoded = base64_encode(json_encode($totalVagasPorRegiao)); ?>
+
                                                 <?php $rmsInteresse = base64_encode(json_encode($rms_interesse)); ?>
                                                 <?php foreach ($rms_interesse as $index => $rm): ?>
                                                     <?php
+                                                    $alguma_rm_disponivel = false;
                                                     $total_vagas = $totalVagasPorRegiao[$rm] ?? 0;
                                                     $vagas_cotistas = calcularVagasCotistas($total_vagas);
 
                                                     $vagas_ampla = $total_vagas - $vagas_cotistas;
-
 
                                                     $ocupadas_cotistas = 0;
                                                     $ocupadas_ampla = 0;
@@ -443,6 +454,7 @@ $datetime = date('d/m/Y H:i:s');
                                                     }
 
                                                     $vagas_ampla_restantes = $vagas_ampla - $ocupadas_ampla;
+
                                                     $vagas_cotistas_restantes = $vagas_cotistas - $ocupadas_cotistas;
                                                     $total_restante = $total_vagas - ($ocupadas_ampla + $ocupadas_cotistas);
 
@@ -458,6 +470,9 @@ $datetime = date('d/m/Y H:i:s');
                                                         $mostrar_opcao = !$so_restam_vagas_de_cota;
                                                     }
 
+                                                    if ($mostrar_opcao && $existe_rm_interesse_com_vaga) {
+                                                        $alguma_rm_disponivel = true;
+                                                    }
                                                     ?>
                                                     <option value="<?= $rm ?>">
                                                         <?= $index + 1 ?>ª Prioridade Declarada na Inscrição - <?= $rm ?>ª RM
@@ -467,6 +482,9 @@ $datetime = date('d/m/Y H:i:s');
                                                     </option>
                                                 <?php endforeach; ?>
                                                 <option value="754809">Nenhuma das Opções (Desistência das Vagas Ofertas)</option>
+                                                <?php if (!$alguma_rm_disponivel): ?>
+                                                    <option value="754810">Não há mais vagas disponíveis em sua ARMA/QUADRO/SERVIÇO para sua classificação considerando a Ampla Concorrência e/ou Cotas</option>
+                                                <?php endif; ?>
                                             </select>
 
                                             <br>
@@ -514,7 +532,7 @@ $datetime = date('d/m/Y H:i:s');
                                 <div class="alert alert-<?= $cor_retangulo ?> p-20">
                                     <legend>
                                         <b>
-                                            <font color="green">Segunda Escolha: Guarnição - <?= $rm_escolhida ? '' : 'ª Região Militar' ?></font>
+                                            <font color="green">Segunda Escolha: Guarnição - <?= $rm_escolhida . 'ª Região Militar' ?></font>
                                         </b>
                                     </legend>
                                     <b>

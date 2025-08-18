@@ -21,10 +21,10 @@ $_SESSION['selecao'] = 1058;
 $_SESSION['apresentacao_candidato'] = "Seleção de Oficiais e Sargento Técnicos Temporários ";
 
 // AMBIENTE DE TESTES
-//$_SESSION['pasta_arquivos'] = "arquivos/";
+$_SESSION['pasta_arquivos'] = "arquivos/";
 
 //AMBIENTE DE PRODUÇÃO
-$_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
+//$_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
 
 
 

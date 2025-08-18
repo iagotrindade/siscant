@@ -202,6 +202,8 @@ else
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css -->
     <link rel="stylesheet" type="text/css" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     
     <!-- JQUERY -->
     <script src="js/jquery-3.3.1.min.js"></script>
@@ -306,7 +308,7 @@ else
       <aside class="main-sidebar hidden-print">
         <section class="sidebar">
           <div class="user-panel">
-            <div class="pull-left "><img height="50px" style="box-shadow: 0px 0px 10px #197249" class="img-circle" src="<?php echo "fotos/$usuario_foto"?>" alt="User Image"></div>
+            <div class="pull-left "><img height="50px" style="box-shadow: 0px 0px 10px #006400" class="img-circle" src="<?php echo "fotos/$usuario_foto"?>" alt="User Image"></div>
             <div class="pull-left info">
               <p class="designation">
                 <?php

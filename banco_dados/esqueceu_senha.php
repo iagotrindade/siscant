@@ -1,16 +1,23 @@
 <?php
 include_once '../sistema/funcoes.php';
+include_once 'conexao.php';
 session_start();
 
-if(!$_POST)
-{
+if (!$_POST) {
     erro_mensagem("Erro 235344!");
     exit();
 }
 
-if(!isset($_SESSION['selecao']) || !isset($_SESSION['chave']))
-{
+if (!isset($_SESSION['selecao']) || !isset($_SESSION['chave'])) {
     header("Location: ../esqueceu_senha.php?erro=nao_encontrado&erro_master=134656");
+    exit();
+}
+$conexao = new Conexao();
+
+$selecao = $conexao->get_selecao_id();
+
+if ($selecao[0]['codigo'] == 'cet') {
+    erro_mensagem("Não é possível resetar a senha em Seleção CET!");
     exit();
 }
 
@@ -20,34 +27,31 @@ $mail_usuario = htmlspecialchars(trim($_POST['mail']));
 $nova_senha_crip = null;
 $rand = rand(100, 10000);
 $string = "altera_senha";
-$codigo_criptografar = $rand.time().$string;
-$nova_senha = substr(md5($codigo_criptografar) ,0,6);
+$codigo_criptografar = $rand . time() . $string;
+$nova_senha = substr(md5($codigo_criptografar), 0, 6);
 $nova_senha_crip =  hash('sha256', $nova_senha);
 
-include_once 'conexao.php';
-$conexao = new Conexao();
 
-$get_usuario= $conexao->get_usuario_cpf($cpf_usuario);
 
-if($get_usuario == null)
-{
+
+$get_usuario = $conexao->get_usuario_cpf($cpf_usuario);
+
+if ($get_usuario == null) {
     $conexao = null;
     header("Location: ../esqueceu_senha.php?erro=nao_encontrado&erro_master=27457");
     exit();
 }
 
-if(!filter_var($mail_usuario, FILTER_VALIDATE_EMAIL))
-{
+if (!filter_var($mail_usuario, FILTER_VALIDATE_EMAIL)) {
     $conexao = null;
     header("Location: ../esqueceu_senha.php?erro=nao_encontrado&erro_master=348567895");
     exit();
 }
 
-if($get_usuario[0]['mail'] != $mail_usuario)
-{
+if ($get_usuario[0]['mail'] != $mail_usuario) {
     $conexao = null;
     header("Location: ../esqueceu_senha.php?erro=nao_encontrado&erro_master=43457665");
-    exit(); 
+    exit();
 }
 
 $nome = null;
@@ -59,73 +63,63 @@ $nome_guerra = $get_usuario[0]['nome_guerra'];
 $posto_grad = $get_usuario[0]['posto_grad'];
 $candidato = $get_usuario[0]['candidato'];
 
-if($cpf_usuario != $cpf_candidato)
-{
+if ($cpf_usuario != $cpf_candidato) {
     $conexao = null;
     header("Location: ../esqueceu_senha.php?erro=nao_encontrado&erro_master=52134565346");
     exit();
 }
 
-if($candidato != 0 && $candidato != 1)
-{
+if ($candidato != 0 && $candidato != 1) {
     $conexao = null;
     header("Location: ../esqueceu_senha.php?erro=nao_encontrado&erro_master=66456436");
     exit();
 }
 
-if($candidato == 1)
-{
-    if($nome_completo == null)
-    {
+if ($candidato == 1) {
+    if ($nome_completo == null) {
         $conexao = null;
         header("Location: ../esqueceu_senha.php?erro=nao_encontrado&erro_master=789746654");
         exit();
-    }
-    else $nome = $nome_completo;
+    } else $nome = $nome_completo;
 }
-if($candidato == 0)
-{
-    if($nome_guerra == null || $posto_grad == null)
-    {
+if ($candidato == 0) {
+    if ($nome_guerra == null || $posto_grad == null) {
         $conexao = null;
         header("Location: ../esqueceu_senha.php?erro=nao_encontrado&erro_master=856165");
         exit();
-    }
-    else $nome = $posto_grad . " ". $nome_guerra;
+    } else $nome = $posto_grad . " " . $nome_guerra;
 }
-    
-if($id_usuario == null)
-{
+
+if ($id_usuario == null) {
     $conexao = null;
     header("Location: ../esqueceu_senha.php?erro=nao_encontrado");
     exit();
 }
 
-$resultado = $conexao->esqueci_reseta_senha($id_usuario,$cpf_usuario,$nova_senha_crip);
+$resultado = $conexao->esqueci_reseta_senha($id_usuario, $cpf_usuario, $nova_senha_crip);
 $alteracoes_detalhadas =  print_r($resultado, true);
 
-if($resultado)
-{
-    
-    $_SESSION['id_usuario'] = $id_usuario;
-    
-    if($candidato == 0)
-        $insere_log = $conexao->insere_log($id_usuario, $cpf_usuario, $id_usuario, "16109", "usuario", "Update", "Usuário $nome esqueceu e resetou a senha CPF: $cpf_usuario", $alteracoes_detalhadas);
-    
-    if($candidato == 1)
-        $insere_log = $conexao->insere_log($id_usuario, $cpf_usuario, $id_usuario, "16109", "usuario", "Update", "Candidato $nome esqueceu e resetou a senha CPF: $cpf_usuario", $alteracoes_detalhadas);
-    
-  //  $foi_enviado_email = null;
+if ($resultado) {
 
-  //var_dump($mail_usuario); exit;
-    
-    if($mail_usuario != null)
-    //    $enviar->enviarEmailComSwaks($mail_usuario, $assunto, $mensagem, $smtpServer);
+    $_SESSION['id_usuario'] = $id_usuario;
+
+    if ($candidato == 0)
+        $insere_log = $conexao->insere_log($id_usuario, $cpf_usuario, $id_usuario, "16109", "usuario", "Update", "Usuário $nome esqueceu e resetou a senha CPF: $cpf_usuario", $alteracoes_detalhadas);
+
+    if ($candidato == 1)
+        $insere_log = $conexao->insere_log($id_usuario, $cpf_usuario, $id_usuario, "16109", "usuario", "Update", "Candidato $nome esqueceu e resetou a senha CPF: $cpf_usuario", $alteracoes_detalhadas);
+
+    //  $foi_enviado_email = null;
+
+    //var_dump($mail_usuario); exit;
+
+    if ($mail_usuario != null)
+        //    $enviar->enviarEmailComSwaks($mail_usuario, $assunto, $mensagem, $smtpServer);
         include_once './sendmail.php';
-        header ("Location: ../esqueceu_senha.php?senha_alterada=1");
-     //   include_once './sendmail.php';
-  
-     /*
+    header("Location: ../esqueceu_senha.php?senha_alterada=1");
+    //   include_once './sendmail.php';
+
+    /*
     $conexao = null;
     $_SESSION['id_usuario'] = null;
     if($foi_enviado_email)
@@ -135,6 +129,3 @@ if($resultado)
 
         */
 }
-
-
-?>

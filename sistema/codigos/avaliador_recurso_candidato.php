@@ -1,7 +1,7 @@
 <a name="recursos"></a>
 <!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
 <div class="" <?php if ($_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'admin' || isset($_SESSION['eipot']) == 1) echo "hidden"; ?>>
-    <div class="col-md-12" >
+    <div class="" >
         <div class="card">
             <div class="alert alert-dismissible ">
                 <legend>Análise de Recurso</legend>
@@ -75,7 +75,7 @@
                             // Arquivo que o candidato adicionou
                             $arquivo_add_candidato_recurso = null;
                             if ($linha['arq_nome_arquivo'] != null)
-                                $arquivo_add_candidato_recurso = '<a href="baixaPDF.php?codigo=rec_cand_vis&nome_arquivo=' . $linha['arq_nome_arquivo'] . '" target="_blank">Recurso adicionado pelo candidato -> <img src="imagens/pdf.png" height="70px"></a>';
+                                $arquivo_add_candidato_recurso = '<a href="arquivos_add_p_cand/recursos/' . $linha['arq_nome_arquivo'] . '" target="_blank">Recurso adicionado pelo candidato -> <img src="imagens/pdf.png" height="70px"></a>';
 
 
                             echo '

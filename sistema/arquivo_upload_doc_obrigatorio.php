@@ -1,12 +1,14 @@
 <?php
-
 session_start();
-$datetime = date('Y-m-d H:i:s');
-$ip = $_SERVER['REMOTE_ADDR'];
+
 include_once '../banco_dados/conexao.php';
 include_once '../sistema/funcoes.php';
+
 $navegador = getBrowser();
 $conexao = new Conexao();
+
+$datetime = date('Y-m-d H:i:s');
+$ip = $_SERVER['REMOTE_ADDR'];
 
 if(!isset($_SESSION['id_usuario']) || $_SESSION['id_usuario'] == null)
 {
@@ -22,7 +24,9 @@ if($id_usuario_session <= 0 || $id_usuario_session == '')
     exit();
 }
 
-if($_SESSION['candidato'] != 1 || $_SESSION['perfil'] != 'candidato')
+$selecao = $conexao->get_selecao_id();
+
+if($selecao[0]['codigo'] != 'cet' && $_SESSION['candidato'] != 1)
 {
     erro("Erro 67453432! Arquivo não adicionado!");
     exit();
@@ -53,9 +57,13 @@ if($_POST['id_arquivo_obrigatorio'] == null)
     exit();
 }
 
+if($_POST['id_candidato'] != null)
+{
+    $id_candidato = $_POST['id_candidato'];
+}
+
 if(isset($_POST['id_arquivo_obrigatorio']))
     $id_arquivo_obrigatorio = $_POST['id_arquivo_obrigatorio'];
-
 try
 {
 
@@ -83,12 +91,11 @@ try
         exit();
     }
 
-    
     $codigo_criptografar = rand(1, 10000).$datetime."arquivo_obrigatorio";
     //$nome_arquivo = substr(md5( $codigo_criptografar) ,0,12);
     $nome_arquivo = hash('sha256', $codigo_criptografar); //md5($codigo_criptografar);
     
-    $nome_arquivo = $id_usuario_session . "_DO_". $id_arquivo_obrigatorio . "_" . $nome_arquivo;    
+    $nome_arquivo = $id_candidato . "_DO_". $id_arquivo_obrigatorio . "_" . $nome_arquivo;    
     $nome_original = $_FILES['arquivo']['name'];    
 
     // Pasta onde o arquivo vai ser salvo
@@ -167,7 +174,7 @@ try
         exit();
     }
     
-    $verifica_documento_obrigatorio_candidato = $conexao->verifica_documento_obrigatorio_candidato($id_arquivo_obrigatorio,$id_usuario_session);
+    $verifica_documento_obrigatorio_candidato = $conexao->verifica_documento_obrigatorio_candidato($id_arquivo_obrigatorio,$id_candidato);
     if(count($verifica_documento_obrigatorio_candidato) > 0)
     {
         $conexao = null;
@@ -175,11 +182,10 @@ try
         exit();
     }
     
-    
     if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $_UP['pasta'] . $nome_arquivo)) 
     {
         // Upload efetuado com sucesso, exibe uma mensagem e um link para o arquivo
-        $resultado = $conexao->insere_arquivo_obrigatorio($id_usuario_session,$id_arquivo_obrigatorio,$label,$nome_arquivo,$extensao,$nome_original,$tamanho_do_arquivo);
+        $resultado = $conexao->insere_arquivo_obrigatorio($id_candidato, $id_arquivo_obrigatorio, $label,$nome_arquivo, $extensao, $nome_original, $tamanho_do_arquivo);
         if($resultado)
         {
             $last_id = (int)$resultado['id_adicionado'];
@@ -187,7 +193,6 @@ try
             $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $last_id, "14110", "documento_obrigatorio", "Insert", "Inseriu o documento $label", $alteracoes_detalhadas);
         }
         header ("Location: documentos_obrigatorios_visualiza.php#fim_pagina");
-        
     } 
     else 
     {

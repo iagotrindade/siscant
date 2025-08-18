@@ -117,7 +117,7 @@ if ($get_usuario[0]['perfil'] != "avaliador") {
                                     $id_usuario = $_SESSION['id_usuario'];
                                     $rm_usuario = $conexao->rm_usuario($id_usuario);
 
-                                    $oms = $conexao->get_oms($rm_usuario);
+                                    $oms = $conexao->get_all_oms();
                                     foreach ($oms as $value) {
                                         if ($value['id'] == $get_usuario[0]['id_om'])
                                             echo '<option selected value="' . $value['id'] . '">' . $value['nome'] . '</option>';

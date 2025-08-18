@@ -160,7 +160,8 @@ if($perfil == "ouvidor")
                     <a href="relatorios.php">
                     <div class="widget-small alert-success"><font color="black"><i class="icon fa fa-file-text-o fa-3x"> </font></i>
                       <div class="info">
-                          <h4><font color="black">Geração de PDFs Personalizados</h4>
+                          <!-- 04/08/2025 -> Iago Silva Alteração de nome do CARD-->
+                          <h4><font color="black">PUBLICAÇÕES E GERAÇÃO DE DOCUMENTOS</h4>
                       </div>
                     </div>
                     </a>

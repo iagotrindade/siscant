@@ -313,16 +313,16 @@ if ($_SESSION['perfil'] == "avaliador") {
 
                         <div class="row">
                             <div class="col-lg-3">
-                                <b>Pontuação da Prova Prática:</b><br>
-                                <input type="text" value="' . $prova_pratica_musica . '" name="pontuacao_pratica">
-                            </div>
-                            <div class="col-lg-3">
                                 <b>Pontuação da Prova Escrita:</b><br>
                                 <input type="text"value="' . $prova_teorica_musica . '"  name="pontuacao_teorica">
                             </div>
                             <div class="col-lg-3">
                                 <b>Pontuação da Prova Oral:</b><br>
                                 <input type="text" value="' . $prova_oral_musica . '" name="pontuacao_oral">
+                            </div>
+                            <div class="col-lg-3">
+                                <b>Pontuação da Prova Prática:</b><br>
+                                <input type="text" value="' . $prova_pratica_musica . '" name="pontuacao_pratica">
                             </div>
                             <div class="col-lg-3">
                                  ' . $foto_html . ' 
@@ -399,15 +399,14 @@ if ($_SESSION['perfil'] == "avaliador") {
                     <?php
                     //if($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'avaliador') echo " hidden "; 
                     //if($_SESSION['perfil'] != 'admin') echo " hidden "; 
-                    if ($_SESSION['selecao_regiao'] != 6) echo " hidden ";
+                    if ($_SESSION['selecao_regiao'] != 6 && $_SESSION['codigo'] != 'cet') echo " hidden ";
                     //echo " hidden ";
                     ?>>
 
                     <br>
                     <br>
                     <div class="col-md-12">
-                        <div <?php // echo " hidden " 
-                                ?> class="alert alert-info">
+                        <div class="alert alert-info">
                             <legend>Adicionar currículo para o candidato na especialidade<u><?php echo mb_strtoupper($valor['ott_stt'], "UTF-8") . " - " . $valor['especialidade'] ?></u></legend>
 
                             <form method="post" action="arquivo_upload_operador_candidato.php" enctype="multipart/form-data">
@@ -568,7 +567,7 @@ if ($_SESSION['perfil'] == "avaliador") {
                                     <input hidden name="id_especialidade" value="<?php echo $valor['id_especialidade'] ?>">
                                     <input hidden name="etapa_atual" value="<?php echo $valor['etapa'] ?>">
                                     <input hidden name="nome_especialidade" value="<?php echo $valor['especialidade'] ?>">
-                                    
+
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="animated-checkbox form-group">

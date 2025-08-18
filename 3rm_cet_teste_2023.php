@@ -26,9 +26,10 @@ $_SESSION['apresentacao_candidato'] = "Seleção CET 2023";
 //$_SESSION['pasta_arquivos'] = "arquivos/";
 
 //AMBIENTE DE PRODUÇÃO
-$_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
+//$_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
 
-
+// AMBIENTE DE TESTES
+$_SESSION['pasta_arquivos'] = "arquivos/";
 
 ?>
 <!DOCTYPE html>
