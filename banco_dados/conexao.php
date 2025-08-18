@@ -1914,6 +1914,7 @@ class Conexao
     // <editor-fold defaultstate="collapsed" desc="Get Candidatos Especialidade do Processo">
 
     // 21/05/2025 - Adicionando o campo etapa criado na tabela candidato_x_especialidade e alterando o nome atribuido a etapa do candidato
+    // 05/08/2025 - Iago Silva -> Removendo o "AND u.etapa = 6 e adicionado as notas de música
     public function get_candidatos_especialidade($id_especialidade)
     {
         $stmt = $this->pdo->prepare("
@@ -1923,6 +1924,9 @@ class Conexao
             c.nome AS cidade_escolheu_servir, 
             ce.id AS id_ce, 
             ce.nota_prova_teorico_pratico,
+            ce.prova_pratica_musica,
+            ce.prova_teorica_musica,
+            ce.prova_oral_musica,
             ce.etapa AS etapa,
             ce.rm_escolheu_servir,
             ce.ordem_escolha_guarnicao
@@ -1989,40 +1993,6 @@ class Conexao
             $this->pdo->rollBack();
             return false;
         }
-    }
-
-    public function candidatos_por_rm_escolhida($id_especialidade, $rm_escolheu_servir)
-    {
-        $stmt = $this->pdo->prepare("
-        SELECT 
-            ce.id AS id_candidato_x_especialidade,
-            ce.cidade_escolheu_servir,
-            ce.concorrendo,
-            ce.justificativa,
-            ce.rm_escolheu_servir,
-            ce.ordem_escolha_guarnicao AS ordemEscolhaGuarnicao,
-            ce._data_ultima_atualizacao,
-            u.id,
-            u.nome_completo,
-            u.cpf,
-            u.rm_destino,
-            e.id AS id_especialidade,
-            e.nome AS especialidade,
-            e.ott_stt
-        FROM candidato_x_especialidade ce
-        INNER JOIN usuario u ON u.id = ce.id_candidato
-        INNER JOIN especialidade e ON e.id = ce.id_especialidade
-        WHERE ce.id_especialidade = :id_especialidade
-          AND ce.rm_escolheu_servir = :rm_escolheu_servir
-          AND u.apagado = 0
-          ORDER BY ce.ordem_escolha_guarnicao ASC
-    ");
-
-        $stmt->bindValue(':id_especialidade', $id_especialidade);
-        $stmt->bindValue(':rm_escolheu_servir', $rm_escolheu_servir);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function get_candidatos_especialidade_eipot($id_especialidade, $rm_usuario)
@@ -2656,7 +2626,33 @@ class Conexao
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function get_candidatos_concorrendo_docs_obrigaorios()
+    {
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            u.id,
+            u.nome_completo,
+            u.cpf,
+            u.etapa,
+            u.sexo
+        FROM usuario u
+        INNER JOIN candidato_x_especialidade ce 
+            ON ce.id_candidato = u.id 
+           AND ce.apagado = 0 
+           AND ce.concorrendo = 1
+        WHERE u.perfil = 'candidato' 
+          AND u.candidato = 1 
+          AND u.concorrendo = 1 
+          AND u.apagado = 0 
+          AND u.medico_obrigatorio IS NULL
+          AND u.id_selecao = :selecao
+    ");
 
+        $stmt->bindValue(':selecao', $_SESSION['selecao']);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function get_candidatos_concorrendo_eipot($rm_usuario)
     {
@@ -2687,6 +2683,7 @@ class Conexao
             ce.id AS id_candidato_especialidade, 
             ce.cidade_escolheu_servir,
             ce.rm_escolheu_servir,
+            ce.ordem_escolha_guarnicao,
             ce._data_ultima_atualizacao,
             c.nome AS nome_cidade_escolhida,
             c.uf AS uf_cidade_escolhida,
@@ -2698,6 +2695,37 @@ class Conexao
         WHERE u.apagado = 0 
         AND u.id_selecao = :selecao
         AND u.concorrendo = 1
+        ORDER BY u.nome_completo ASC
+    ");
+
+        $stmt->bindValue(':selecao', $_SESSION['selecao']);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+
+    // 29/07/2025 -> Iago Silva -> Criando função que retorna candidatos para cadastro reserva
+    public function get_candidatos_eipot_reserva()
+    {
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            u.*, 
+            u.id AS id_usuario, 
+            ce.id AS id_candidato_especialidade, 
+            ce.cidade_escolheu_servir,
+            ce.rm_escolheu_servir,
+            ce.ordem_escolha_guarnicao,
+            ce._data_ultima_atualizacao,
+            c.nome AS nome_cidade_escolhida,
+            c.uf AS uf_cidade_escolhida,
+            e.nome AS arma_especialidade
+        FROM usuario u
+        INNER JOIN candidato_x_especialidade ce ON ce.id_candidato = u.id
+        INNER JOIN especialidade e ON ce.id_especialidade = e.id
+        LEFT JOIN cidade c ON c.id = ce.cidade_escolheu_servir
+        WHERE u.apagado = 0 
+        AND u.id_selecao = :selecao
         ORDER BY u.nome_completo ASC
     ");
 
@@ -3011,6 +3039,7 @@ order by total_pontos_somados desc");
         WHERE ce.id_especialidade = :id_especialidade
           AND ce.rm_escolheu_servir = :rm_escolheu_servir
           AND u.apagado = 0
+          AND u.concorrendo = 1
           ORDER BY ce.ordem_escolha_guarnicao ASC
     ");
 

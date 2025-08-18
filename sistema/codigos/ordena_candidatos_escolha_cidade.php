@@ -48,8 +48,10 @@ foreach ($lista_candidatos as $linha) {
             } elseif ($fase2_nao_confirmada >= 2 || $fase2_nao_compareceu >= 2) {
                 $linha['vaga_reservada'] = 0; // Vaga reservada não confirmada
             }
-        } else {
-            continue; // Ignora se não atendeu nenhuma das fases
+        }
+        // PROBLEMA: Se o candidato não tiver revisora ou não comparecer, ele não pode ser considerado para a vaga reservada
+        else {
+            $linha['vaga_reservada'] = 0; // Define como Ampla se não atendeu nenhuma das fases
         }
     }
 

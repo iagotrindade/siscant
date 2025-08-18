@@ -36,6 +36,7 @@ include_once './codigos/verifica_cadastro_especialidade_candidato.php';
             <?php if (!inscricao()) echo " <font color = 'red' size='5px'> INSCRIÇÕES ENCERRADAS </font> " ?>
             <div class="card" <?php if (!inscricao()) echo ' hidden ' ?>>
                 <form action="../banco_dados/candidato_cadastra_especialidade.php" method="post" onsubmit="return verifica_cadastro_especialidade_candidato()">
+                    <input hidden name="id_candidato" value="<?php echo $_SESSION['id_usuario'] ?>">
                     <legend>Selecione as opções para dar continuidade</legend>
                     <div class="row">
 

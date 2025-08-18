@@ -95,20 +95,22 @@ if ($ano_selecao == null || $rm_selecao == null || $rm_selecao == null) {
                         <div class="col-lg-6">
 
                             <?php
-                            if ($_SESSION['cadastro_candidato_email_enviado'])
-                                echo '<center>
+                            if ($selecao_candidato[0]['codigo'] != 'cet') {
+                                if ($_SESSION['cadastro_candidato_email_enviado'])
+                                    echo '<center>
                                      Foi enviado um e-mail para: <u> ' . $resultado[0]['mail'] . ' </u>
                                      <img src="imagens/mail.png" width="100px"> <br>
                                  </center>';
-                            else
-                                echo '<center>
+                                else
+                                    echo '<center>
                                      <img src="imagens/urgente.gif" width="100 px">
                                      ATENÇÃO! Por algum motivo não foi enviado para o seu e-mail o lembrete da sua senha temporária!
                                      <br> Por isso anote a senha <b><u>' . $_SESSION['senha_cadastrada'] . ' </b></u>, acesse o sistema e confirme o seu e-mail.<br>
                                     Caso o seu e-mail esteja correto, não se preocupe! O e-mail que deveria ter sido enviado é APENAS um lembrete da sua senha temporária.
                                  </center>';
-                            ?>
+                            }
 
+                            ?>
                         </div>
                     </div>
                     <div class="row">

@@ -1,123 +1,152 @@
-<?php 
+<?php
 session_start();
-    
+
 $erro = null;
-if(isset($_GET['erro']))
-{
-    if($_GET['erro'] == 'nao_encontrado')
-        $erro = 'nao_encontrado';
+if (isset($_GET['erro']) && $_GET['erro'] == 'nao_encontrado') {
+  $erro = 'nao_encontrado';
 }
+
 $sucesso = null;
-if(isset($_GET['senha_alterada']))
-{
-    if($_GET['senha_alterada'] == 1)
-        $sucesso = 'sucesso';
-    if($_GET['senha_alterada'] == 0)
-        $sucesso = 'erro';
+if (isset($_GET['senha_alterada'])) {
+  if ($_GET['senha_alterada'] == 1) $sucesso = 'sucesso';
+  if ($_GET['senha_alterada'] == 0) $sucesso = 'erro';
 }
 
-if(!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) 
-{
-    header("Location: ../index.php?erro=123456");
-    exit();
-}  
-
+if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
+  header("Location: ../index.php?erro=123456");
+  exit();
+}
 ?>
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="sistema/css/main.css">
-    <link rel="stylesheet" type="text/css" href="sistema/css/font-awesome-4.7.0/css/font-awesome.min.css">
-    <title>SiSCanT</title>
-    
-    <script type="text/javascript" src="sistema/js/plugins/sweetalert.min.js"></script>
-    <script type="text/javascript" src="sistema/js/plugins/bootstrap-notify.min.js"></script>
-    
-    <script src="sistema/ajax/ajax.js"></script>
-    <script src="sistema/ajax/funcoes.js"></script>
+<html lang="pt-BR">
 
-<script>
-function limpa_mensagem()
-{
-    $('#mensagem').text('');
-}
-
-function verifica_campos()
-{
-    var usuario = $('#usuario').val();
-    var mail = $('#mail').val();
-    
-    if(usuario == '' || mail == '')
-    {
-        $('#mensagem').text('O Campos CPF e E-Mail são obrigatórios!');
-        return false;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiSCanT - Reset de Senha</title>
+  <link href="sistema/css/bootstrap5.3.3.css" rel="stylesheet">
+  <link rel="stylesheet" href="sistema/css/font-awesome-4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(to bottom, #197249 50%, #ffffff 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
     }
-    
-    if(!$.isNumeric($('#usuario').val()))
-    {
+
+    .reset-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      z-index: 1;
+    }
+
+    .reset-card img {
+      max-width: 80px;
+      margin-bottom: 15px;
+    }
+
+    .btn-primary {
+      background-color: #197249;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #145c3c;
+    }
+
+    a {
+      color: #197249;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #145c3c;
+    }
+  </style>
+  <script src="sistema/js/bootstrap5.3.3.js"></script>
+  <script>
+    function limpa_mensagem() {
+      $('#mensagem').text('');
+    }
+
+    function verifica_campos() {
+      var usuario = $('#usuario').val();
+      var mail = $('#mail').val();
+
+      if (usuario === '' || mail === '') {
+        $('#mensagem').text('Os campos CPF e E-Mail são obrigatórios!');
+        return false;
+      }
+      if (!$.isNumeric(usuario)) {
         $('#mensagem').text('Digite somente números no CPF');
         return false;
+      }
+      return true;
     }
-    return true;
-}
-</script>
+  </script>
+</head>
 
-  </head>
-  <body>
-    <section class="material-half-bg">
-      <div class="cover"></div>
-    </section>
-    <section class="login-content">
-        <img src="sistema/imagens/3rm.png" width="80px">
-        <font color="white"><b>Sistema de Seleção de Candidatos Temporários</b></font>
-      <div class="logo">
+<body>
+
+  <div class="reset-card">
+    <div class="text-center">
+      <img src="sistema/imagens/3rm.png" alt="Logo">
+      <h4><b>SiSCanT</b></h4>
+      <p class="text-muted mb-0">Sistema de Seleção de Candidatos Temporários</p>
+      <small>Resetar Senha</small>
+    </div>
+
+    <?php if ($erro === 'nao_encontrado'): ?>
+      <div class="alert alert-danger text-center p-2 mt-3">
+        CPF e E-Mail não encontrado!
       </div>
-      <div class="login-box">
-          
+    <?php endif; ?>
 
-          
-          <form class="login-form" method="post" action="banco_dados/esqueceu_senha.php" onsubmit="return verifica_campos()">
-            
-              <center><font size="5px"><b>SiSCanT </b></font></center><br>
-              
-              <div class="form-group btn-container">
-                <p class="semibold-text mb-0"><center><b>Uma senha será enviada para o seu E-Mail </b></center></p>
-            </div>
-
-            <div class="form-group">
-              <input class="form-control" id="usuario" onfocus="limpa_mensagem()" onkeypress="limpa_mensagem()" name="cpf" type="text" placeholder="CPF" autofocus>
-            </div>
-            <div class="form-group">
-              <input class="form-control" onfocus="limpa_mensagem()" onkeypress="limpa_mensagem()" id="mail" type="text" name="mail" placeholder="E-Mail">
-            </div>
-
-            <div id="div_mensagem"> <center><font color="red"><b><span id="mensagem"></span></b></font></center> </div>
-
-            <div id="div_usuario_senha_invalido" <?php  if($erro != 'nao_encontrado') echo "hidden"; ?> > <center><font color="red"><b>CPF e E-Mail não encontrado!</b></font></center> </div>
-            <div id="sucesso" <?php  if($sucesso == null) echo "hidden"; ?> > <center><font color="green"><b>Nova senha enviada para o seu E-Mail!</b></font></center> </div>
-            <?php if($sucesso == 'erro') echo '<div> <center><font color="red"><b>ERRO! O E-mail não foi enviado!</b></font></center> </div>' ?>
-            <div class="form-group btn-container" <?php  if($sucesso != null) echo "hidden"; ?> >
-                <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>ENVIAR</button>
-            </div>
-            <div class="form-group btn-container" <?php  if($sucesso == null) echo "hidden"; ?> >
-                <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>ENTRAR</button>
-            </div>
-        </form>
+    <?php if ($sucesso === 'sucesso'): ?>
+      <div class="alert alert-success text-center p-2 mt-3">
+        Nova senha enviada para o seu E-Mail!
       </div>
-        
-        <div class="form-group">
-            <br><a href="javascript:history.back()"><button class="btn btn-default btn-block">VOLTAR</button></a>
-        </div>
-        
-    </section>
-      
-    <script src="sistema/js/jquery-3.3.1.min.js"></script>
-    <script src="sistema/js/bootstrap.min.js"></script>
-    <script src="sistema/js/plugins/pace.min.js"></script>
-    <script src="sistema/js/main.js"></script>
-  </body>
-  
+    <?php elseif ($sucesso === 'erro'): ?>
+      <div class="alert alert-danger text-center p-2 mt-3">
+        ERRO! O E-mail não foi enviado!
+      </div>
+    <?php endif; ?>
+
+    <div id="mensagem" class="text-danger text-center mb-2"></div>
+
+    <form method="post" action="banco_dados/esqueceu_senha.php" onsubmit="return verifica_campos()">
+      <div class="mb-3">
+        <input class="form-control" required id="usuario" name="cpf" type="text" placeholder="CPF" onfocus="limpa_mensagem()" onkeypress="limpa_mensagem()" autofocus>
+      </div>
+      <div class="mb-3">
+        <input class="form-control" required id="mail" name="mail" type="text" placeholder="E-Mail" onfocus="limpa_mensagem()" onkeypress="limpa_mensagem()">
+      </div>
+
+      <?php if ($sucesso === null): ?>
+        <button class="btn btn-primary w-100" type="submit">
+          <i class="fa fa-sign-in fa-lg fa-fw"></i> ENVIAR
+        </button>
+      <?php else: ?>
+        <a href="<?=$_SESSION['nome_arquivo']?>" class="btn btn-primary w-100">
+          <i class="fa fa-sign-in fa-lg fa-fw"></i> ENTRAR
+        </a>
+      <?php endif; ?> 
+    </form>
+
+    <hr>
+    <div class="text-center">
+      <a class="btn btn-outline-secondary w-100" href="javascript:history.back()">VOLTAR</a>
+    </div>
+  </div>
+
+  <script src="sistema/js/bootstrap5.3.3.js"></script>
+</body>
+
 </html>

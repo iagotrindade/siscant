@@ -49,7 +49,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     <li <?php if ($perfil != "admin" && $perfil != "consulta") echo "hidden" ?> class="treeview">
     <a href="#"><i class="fa fa-cogs"></i><span>Cadastros</span><i class="fa fa-angle-right"></i></a>
     <ul class="treeview-menu">
-        <!-- <li class="treeview"><a href="curriculo_cadastro.php"><i class="fa fa-files-o"></i> Arquivos Currículo</a></li> -->
+        <li class="treeview"><a href="admin_candidato_cadastro.php"><i class="fa fa-user-plus"></i>Candidatos</a></li>
         <li <?php if ($_SESSION['selecao_codigo'] != 'mfdv') echo "hidden" ?> class="treeview"><a href="medico_obrigatorio_cadastro.php"><i class="fa fa-user-md"></i> Médico Obrigatório</a></li>
         <li <?php if (isset($_SESSION['eipot']) && $rm_usuario != 3 && $perfil != "admin") echo "hidden" ?> class="treeview"><a href="documentacao_obrigatoria_visualiza.php"><i class="fa fa-files-o"></i> Documentos Obrigatórios</a></li>
         <li <?php if (!isset($_SESSION['eipot']) || $rm_usuario != 3 || $perfil != "admin") echo "hidden" ?> class="treeview"><a href="especialidade_visualiza_eipot.php"><i class="fa fa-shield"></i> Armas</a></li>

@@ -454,9 +454,22 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_concorrendo.php';
             }
 
-            // 14 MAIO 2024 
+            // 14 MAIO 2025 
             if ($_SESSION['perfil'] == 'admin') {
                 include_once 'codigos/candidato_altera_email_admin.php';
+            }
+
+            if ($resultado_selecao[0]['codigo'] == 'cet' && $_SESSION['perfil'] == 'admin') {
+                include_once 'codigos/admin_cadastra_especialidade.php';
+            }
+
+            if ($resultado_selecao[0]['codigo'] == 'cet' && $_SESSION['perfil'] == 'admin') {
+                include_once 'codigos/admin_cadastra_docs_obrigatorios.php';
+            }
+
+            //13 AGOSTO 2025 - IAGO SILVA
+            if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consultor' || $_SESSION['perfil'] == 'chc' || $_SESSION['perfil'] == 'cr') {
+                include_once 'codigos/candidato_heteroidentificacao.php';
             }
 
             if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'avaliador') {
@@ -514,4 +527,4 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
         ?>
 
-    <!--/DIV FINAL CANDIDATO INFORMAÇÕES -->
+        <!--/DIV FINAL CANDIDATO INFORMAÇÕES -->

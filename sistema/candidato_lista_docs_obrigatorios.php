@@ -69,8 +69,6 @@ else
         </div>
     </div>
 
-
-
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -84,7 +82,6 @@ else
                                 <th>Nome</th>
                                 <th>Arq Pag</th>
                                 <th>Etapa</th>
-                                <th>Especialdiades</th>
                                 <th>Docs Faltando</th>
                                 <th>Docs Adicionados</th>
                                 <th>Docs Válidos</th>
@@ -114,16 +111,13 @@ else
                                 // DOCs Faltando
                                 $quantidade_docs_faltando = 0;
                                 $lista_docs_obrigatorios_faltando = $conexao->get_documentos_obrigatorios_sobrando_candidato($linha['id']);
-                                $get_candidato = $conexao->get_usuario_id($linha['id']);
-                                $lista_docs_obrigatorios_sobrando = retorna_docs_obrigatorios_sobrando_candidato($get_candidato, $lista_docs_obrigatorios_faltando);
+
+                                $lista_docs_obrigatorios_sobrando = retorna_docs_obrigatorios_sobrando_candidato($linha, $lista_docs_obrigatorios_faltando);
                                 $quantidade_docs_faltando = count($lista_docs_obrigatorios_sobrando);
 
                                 // Especialidades
-                                $lista_especialidades_candidato = $conexao->get_especialidade_candidato($linha['id']);
-                                $quantidade_especialidades_candidato = count($lista_especialidades_candidato);
-
-
-                                //
+                                //$lista_especialidades_candidato = $conexao->get_especialidade_candidato($linha['id']);
+                                //$quantidade_especialidades_candidato = count($lista_especialidades_candidato);
 
                                 $lista_docs_obrigatorios = $conexao->get_docs_obrigatorios_inseridos_candidato($linha['id']);
                                 $quantidade_docs_adicionados = count($lista_docs_obrigatorios);
@@ -138,7 +132,6 @@ else
                                     if ($doc['valido'] == '1')
                                         $quantidade_docs_validos++;
                                 }
-
 
                                 $total_docs_adicionados = $total_docs_adicionados + (int)$quantidade_docs_adicionados;
                                 $total_docs_avaliados = $total_docs_avaliados + $quantidade_docs_avaliados;
@@ -183,8 +176,7 @@ else
                                     <td>' . $linha['cpf'] . '</td>
                                     <td>' . $linha['nome_completo'] . '</td>
                                     <td>' . $add_arqu_pag . '</td>                                    
-                                    <td>_' . $linha['etapa'] . '</td>                                    
-                                    <td>' . $quantidade_especialidades_candidato . '</td>                                    
+                                    <td>_' . $linha['etapa'] . '</td>                                  
                                     <td>' . $quantidade_docs_faltando . '</td>                                    
                                     <td>' . $quantidade_docs_adicionados . '</td>
                                     <td bgcolor="' . $cor_docs_validos . '">' . $quantidade_docs_validos . '</td>
@@ -232,6 +224,7 @@ else
 <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
     $('#tabela_dinamica').DataTable({
+        "pageLength": 50,
         "order": [
             [0, "asc"]
         ]

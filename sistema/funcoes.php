@@ -26,10 +26,6 @@ function sobreposicao_datas($data_inicial_teste, $data_final_teste, $data_inicia
         return true;
 }
 
-
-
-
-
 function get_data_extenso()
 {
     $mes = "Janeiro";
@@ -309,6 +305,15 @@ function retorna_docs_obrigatorios_sobrando_candidato($candidato, $lista_docs_ob
         return $array_docs_sobrando;
     }
     return $array_docs_sobrando;
+}
+
+function extrair_hora_numerica($hora_textual)
+{
+    // Pega apenas o número da hora, ex: "0800h" => 800
+    if (preg_match('/(\d{4})h/', $hora_textual, $matches)) {
+        return (int) $matches[1]; // ex: 0800 => 800 como inteiro
+    }
+    return PHP_INT_MAX; // Para garantir que, se não tiver hora, não seja menor que nenhuma outra
 }
 
 function avaliacao()
@@ -740,6 +745,49 @@ function definirPosicoesCotistas($total_vagas)
     }
 
     return $posicoes;
+}
+
+function eliminar_candidato_sem_rm($id_candidato, $id_candidato_x_especialidade)
+{
+    if (file_exists("../banco_dados/conexao.php"))
+        include_once '../banco_dados/conexao.php';
+
+    if (file_exists("../../banco_dados/conexao.php"))
+        include_once '../../banco_dados/conexao.php';
+
+    if (file_exists("banco_dados/conexao.php"))
+        include_once 'banco_dados/conexao.php';
+
+    if (file_exists("conexao.php"))
+        include_once 'conexao.php';
+
+
+    $conexao = new Conexao();
+
+    $justificativa = 'Cod 754809 - Prezado candidato, não há mais vagas disponíveis para a especialidade escolhida. Você será considerado como cadastro reserva.';
+    $resultado = $conexao->status_concorrendo_especialidade($id_candidato_x_especialidade, 0, $justificativa);
+
+    if ($resultado) {
+        $conexao->insere_log(
+            $id_candidato,
+            $_SESSION['cpf'],
+            $id_candidato_x_especialidade,
+            "16150",
+            "candidato_x_especialidade",
+            "Update",
+            "Desistência da escolha de RM",
+            print_r($resultado, true)
+        );
+
+        if (!$esta_concorrendo) {
+            $conexao->status_concorrendo($id_candidato, 0, $justificativa);
+        }
+    }
+
+    $conexao = null;
+
+    echo "<script>window.location.href = '../sistema/index.php';</script>";
+    exit();
 }
 
 function get_abrev_posto($posto_grad_abreviado)

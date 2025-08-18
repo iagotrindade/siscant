@@ -79,7 +79,7 @@ if ($etapa == 2) {
 
         // Processa cada especialidade
         foreach ($candidato['especialidades'] as $especialidade) {
-            if ((int)$especialidade['concorrendo'] === 1) {
+            if ((int)$especialidade['concorrendo'] === 1 && (int)$especialidade['apagado'] === 0) {
                 $resultadoEspecialidade = $conexao->altera_etapa_especialidade($candidato['id'], $especialidade['id_especialidade'], $etapa);
 
                 if ($resultadoEspecialidade) {

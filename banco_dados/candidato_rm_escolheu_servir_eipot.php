@@ -182,6 +182,35 @@ if ($rm_escolheu_servir == 754809) { // Desistência
             $conexao->status_concorrendo($id_usuario, 0, $justificativa);
         }
     }
+} elseif ($rm_escolheu_servir == 754810) {
+    $justificativa = 'NÃO há mais vaga(s) diponível(eis) para a sua classificação em sua ARMA/QUADRO/SERVIÇO na(s) Região(ões) Militar(es) de interesse declarada(s) na Inscrição';
+    $resultado = $conexao->status_concorrendo_especialidade($id_candidato_x_especialidade, 0, $justificativa);
+
+    if ($resultado) {
+        $conexao->insere_log(
+            $id_usuario,
+            $_SESSION['cpf'],
+            $id_candidato_x_especialidade,
+            "16150",
+            "candidato_x_especialidade",
+            "Update",
+            "Desistência da escolha de RM",
+            print_r($resultado, true)
+        );
+
+        // Verifica se ainda está concorrendo em outras especialidades
+        $esta_concorrendo = false;
+        foreach ($get_especialidade_candidato as $esp) {
+            if ($esp['concorrendo'] == '1' && $esp['id_especialidade'] != $id_especialidade) {
+                $esta_concorrendo = true;
+                break;
+            }
+        }
+
+        if (!$esta_concorrendo) {
+            $conexao->status_concorrendo($id_usuario, 0, $justificativa);
+        }
+    }
 } else {
     $total_vagas_rm = $totalVagasPorRegiao[$rm_escolheu_servir] ?? 0;
     $posicoes_cotistas = definirPosicoesCotistas($total_vagas_rm);

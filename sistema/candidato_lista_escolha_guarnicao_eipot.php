@@ -13,6 +13,7 @@ $rm_usuario = $conexao->rm_usuario($id_usuario);
 
 $candidatos_eipot = $conexao->get_candidatos_eipot();
 
+
 $ordem_arma = [
     'INFANTARIA',
     'CAVALARIA',
@@ -31,6 +32,7 @@ foreach ($candidatos_eipot as $inscrito) {
         continue;
     }
     $inscrito['nota_final'] = get_nota_final_eipot($inscrito['id']);
+    $inscrito['especialidade_info'] = $conexao->get_especialidade_candidato_eipot($inscrito['id_candidato_especialidade']);
     $arma = $inscrito['arma_especialidade'] ?? 'Não Informada';
     $inscritos_por_arma[$arma][] = $inscrito;
 }
@@ -113,6 +115,9 @@ unset($candidatos);
             }
         }
 
+        if ($etapa == 'rm') {
+        }
+
         // Formata o campo rm_destino (se houver candidato atual)
         if ($candidato_escolhendo && !empty($candidato_escolhendo['rm_destino'])) {
             $candidato_escolhendo['rm_destino'] = implode(', ', array_map(function ($n) {
@@ -126,20 +131,27 @@ unset($candidatos);
 
         // Encontrar o candidato anterior ao atual
         $anterior = null;
+
         foreach ($candidatos as $cand) {
-            if ($candidato_escolhendo && $cand['id'] == $candidato_escolhendo['id']) {
+            if (
+                $candidato_escolhendo &&
+                $cand['id'] == $candidato_escolhendo['id'] &&
+                $candidato_escolhendo['arma_especialidade'] == $arma
+            ) {
                 break;
             }
+
             $anterior = $cand;
         }
 
-        // Calcula o tempo decorrido
-        $tempo_em_segundos = 0;
+        $segundos = null;
 
-        if ($candidato_escolhendo && !empty($candidato_escolhendo['_data_ultima_atualizacao'])) {
-            $ultimaAtualizacao = new DateTime($candidato_escolhendo['_data_ultima_atualizacao']);
+        if ($anterior) {
+            $data_ultima_escolha = $anterior['_data_ultima_atualizacao'];
+            $data = new DateTime($data_ultima_escolha);
             $agora = new DateTime();
-            $tempo_em_segundos = max(0, $agora->getTimestamp() - $ultimaAtualizacao->getTimestamp());
+            $intervalo = $data->diff($agora);
+            $segundos = ($intervalo->days * 86400) + ($intervalo->h * 3600) + ($intervalo->i * 60) + $intervalo->s;
         }
         ?>
         <div class="row">
@@ -162,8 +174,25 @@ unset($candidatos);
                                 </h4>
 
                                 <b class="mb-20 col-md-12">
-                                    Tempo decorrido: <span id="timer">00:00</span>
+                                    Tempo decorrido: <span id="timer_<?= $candidato_escolhendo['id'] ?>"><?= sprintf('%02d:%02d:%02d', floor($segundos / 3600), floor(($segundos % 3600) / 60), $segundos % 60 ?? '00:00'); ?></span>
                                 </b>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        let seconds_<?= $candidato_escolhendo['id'] ?> = <?= $segundos ?>;
+                                        const timerEl_<?= $candidato_escolhendo['id'] ?> = document.getElementById('timer_<?= $candidato_escolhendo['id'] ?>');
+
+                                        function updateTimer_<?= $candidato_escolhendo['id'] ?>() {
+                                            seconds_<?= $candidato_escolhendo['id'] ?>++;
+                                            const h = String(Math.floor(seconds_<?= $candidato_escolhendo['id'] ?> / 3600)).padStart(2, '0');
+                                            const m = String(Math.floor((seconds_<?= $candidato_escolhendo['id'] ?> % 3600) / 60)).padStart(2, '0');
+                                            const s = String(seconds_<?= $candidato_escolhendo['id'] ?> % 60).padStart(2, '0');
+                                            timerEl_<?= $candidato_escolhendo['id'] ?>.textContent = `${h}:${m}:${s}`;
+                                        }
+
+                                        setInterval(updateTimer_<?= $candidato_escolhendo['id'] ?>, 1000);
+                                    });
+                                </script>
 
                                 <div class="mb-20 col-md-12">
                                     <img src="fotos/<?php echo $candidato_escolhendo['foto'][0]['nome'] ?? '../imagens/user.jpg'; ?>"
@@ -285,26 +314,26 @@ unset($candidatos);
             });
         });
     </script>
+
+    <script>
+        (function() {
+            let seconds = <?= $segundos ?>;
+            const timerEl = document.getElementById('timer_<?= $id ?>');
+
+            function updateTimer() {
+                seconds++;
+
+                const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
+                const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+                const secs = String(seconds % 60).padStart(2, '0');
+
+                timerEl.textContent = `${hours}:${minutes}:${secs}`;
+            }
+
+            setInterval(updateTimer, 1000);
+        })();
+    </script>
 </div>
-<script>
-    // Tempo já decorrido vindo do PHP
-    let tempoDecorrido = <?php echo $tempo_em_segundos; ?>;
-
-    function formatarTempo(segundos) {
-        const minutos = Math.floor(segundos / 60);
-        const segundosRestantes = segundos % 60;
-        return `${String(minutos).padStart(2, '0')}:${String(segundosRestantes).padStart(2, '0')}`;
-    }
-
-    function atualizarTimer() {
-        document.getElementById('timer').textContent = formatarTempo(tempoDecorrido);
-        tempoDecorrido++;
-    }
-
-    // Atualiza imediatamente e depois a cada segundo
-    atualizarTimer();
-    setInterval(atualizarTimer, 1000);
-</script>
 </body>
 
 </html>
