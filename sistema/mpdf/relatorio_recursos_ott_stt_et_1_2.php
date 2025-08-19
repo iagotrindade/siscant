@@ -98,7 +98,7 @@ usort($lista_candidatos_recurso, function ($a, $b) {
 foreach ($lista_candidatos_recurso as $candidato) {
     $contador = 1;
 
-    if ($candidato['etapa'] != $etapa || $candidato['id_selecao'] != $_SESSION['selecao']) {
+    if ($candidato['cpf'] == '01261393007' || $candidato['cpf'] == '05122425000' || $candidato['etapa'] != $etapa || $candidato['id_selecao'] != $_SESSION['selecao']) {
         continue;
     }
 

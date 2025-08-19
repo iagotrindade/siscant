@@ -18,7 +18,6 @@ $_SESSION['chave'] = $codigo_chave;
 $_SESSION['nome_arquivo'] = "3rm_ott_stt_2025.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
 $_SESSION['selecao'] = 1058;
-$_SESSION['selecao'] = 1058;
 $_SESSION['apresentacao_candidato'] = "Seleção de Oficiais e Sargentos Técnicos Temporários ";
 
 // AMBIENTE DE TESTES
@@ -29,7 +28,6 @@ $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
 
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
 <html lang="pt-BR">
 
 <head>
@@ -42,7 +40,7 @@ $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
     body {
       margin: 0;
       height: 100vh;
-      background: linear-gradient(to bottom, #197249 50%, #ffffff 50%);
+      background: linear-gradient(to bottom, #006400 50%, #ffffff 50%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -64,7 +62,7 @@ $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
     }
 
     .btn-primary {
-      background-color: #197249;
+      background-color: #006400;
       border: none;
     }
 
@@ -73,7 +71,7 @@ $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
     }
 
     a {
-      color: #197249;
+      color: #006400;
     }
 
     a:hover {
