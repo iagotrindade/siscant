@@ -40,7 +40,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != "ouvidor" && $_SESS
                             <tr>
                                 <td>
                                     <div style="text-align: center; border-radius:10px; padding: 25px;">
-                                        <video width="1280" height="720" controls style="border-radius:5px; box-shadow: 0px 0px 10px #197249">
+                                        <video width="1280" height="720" controls style="border-radius:5px; box-shadow: 0px 0px 10px #006400">
                                             <source src="tutoriais/video_tres.mp4" type="video/mp4">
                                             Seu navegador não suporta a tag de vídeo.
                                         </video>

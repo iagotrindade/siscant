@@ -8,8 +8,8 @@
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
-/* Cor predominante #197249 */
-/* Cor predominante secundária #357854 */
+/* Cor predominante #006400 */
+/* Cor predominante secundária #004d00 */
 
 html {
   -ms-text-size-adjust: 100%;
@@ -337,7 +337,7 @@ textarea {
 }
 
 a {
-  color: #197249;
+  color: #006400;
   text-decoration: none;
   cursor: pointer;
 }
@@ -599,12 +599,12 @@ mark,
 }
 
 .text-primary {
-  color: #197249;
+  color: #006400;
 }
 
 a.text-primary:hover,
 a.text-primary:focus {
-  color: #00635a;
+  color: #004d00;
 }
 
 .text-success {
@@ -648,12 +648,12 @@ a.text-danger:focus {
 }
 
 .bg-primary {
-  background-color: #197249;
+  background-color: #006400;
 }
 
 a.bg-primary:hover,
 a.bg-primary:focus {
-  background-color: #00635a;
+  background-color: #004d00;
 }
 
 .bg-success {
@@ -2015,7 +2015,7 @@ output {
 }
 
 .form-control:focus {
-  border: 2px solid #197249;
+  border: 2px solid #006400;
   outline: 0;
 }
 
@@ -2658,7 +2658,7 @@ fieldset[disabled] a.btn {
 /*FREITAS*/
 .btn-pesquisa {
   color: #fff;
-  background-color: #197249;
+  background-color: #006400;
   border-color: #fff;
 }
 
@@ -2703,18 +2703,18 @@ fieldset[disabled] .btn-default.focus {
 
 .btn-primary {
   color: #fff;
-  background-color: #197249;
+  background-color: #006400;
   border-color: transparent;
 }
 
 .btn-primary:focus, .btn-primary.focus {
   color: #fff;
-  background-color: #357854;
+  background-color: #004d00;
 }
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #357854;
+  background-color: #004d00;
 }
 
 .btn-primary:active, .btn-primary.active,
@@ -2738,11 +2738,11 @@ fieldset[disabled] .btn-default.focus {
 fieldset[disabled] .btn-primary:hover,
 fieldset[disabled] .btn-primary:focus,
 fieldset[disabled] .btn-primary.focus {
-  background-color: #197249;
+  background-color: #006400;
 }
 
 .btn-primary .badge {
-  color: #197249;
+  color: #006400;
   background-color: #fff;
 }
 
@@ -2927,7 +2927,7 @@ fieldset[disabled] .btn-danger.focus {
 }
 
 .btn-link {
-  color: #197249;
+  color: #006400;
   font-weight: normal;
   border-radius: 0;
 }
@@ -3109,7 +3109,7 @@ tbody.collapse.in {
   color: #fff;
   text-decoration: none;
   outline: 0;
-  background-color: #197249;
+  background-color: #006400;
 }
 
 .dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
@@ -3594,7 +3594,7 @@ tbody.collapse.in {
 
 .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
   background-color: #eeeeee;
-  border-color: #197249;
+  border-color: #006400;
 }
 
 .nav .nav-divider {
@@ -3636,13 +3636,13 @@ tbody.collapse.in {
 }
 
 .nav-tabs > li > a:hover {
-  color: #197249;
-  border-bottom-color: #197249;
+  color: #006400;
+  border-bottom-color: #006400;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-  color: #197249;
-  border-bottom: 2px solid #197249;
+  color: #006400;
+  border-bottom: 2px solid #006400;
   cursor: default;
 }
 
@@ -3660,7 +3660,7 @@ tbody.collapse.in {
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
   color: #fff;
-  background-color: #197249;
+  background-color: #006400;
 }
 
 .nav-stacked > li {
@@ -4144,8 +4144,8 @@ tbody.collapse.in {
 }
 
 .navbar-default {
-  background-color: #197249;
-  border-color: #197249;
+  background-color: #006400;
+  border-color: #006400;
 }
 
 .navbar-default .navbar-brand {
@@ -4388,7 +4388,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   padding: 8px 15px;
   line-height: 1.428571429;
   text-decoration: none;
-  color: #197249;
+  color: #006400;
   background-color: #fff;
   border: 1px solid #ddd;
   margin-left: -1px;
@@ -4422,8 +4422,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination > .active > span:focus {
   z-index: 3;
   color: #fff;
-  background-color: #197249;
-  border-color: #197249;
+  background-color: #006400;
+  border-color: #006400;
   cursor: default;
 }
 
@@ -4568,11 +4568,11 @@ a.label:hover, a.label:focus {
 }
 
 .label-primary {
-  background-color: #197249;
+  background-color: #006400;
 }
 
 .label-primary[href]:hover, .label-primary[href]:focus {
-  background-color: #00635a;
+  background-color: #004d00;
 }
 
 .label-success {
@@ -4643,7 +4643,7 @@ a.label:hover, a.label:focus {
 
 .list-group-item.active > .badge,
 .nav-pills > .active > a > .badge {
-  color: #197249;
+  color: #006400;
   background-color: #fff;
 }
 
@@ -5006,8 +5006,8 @@ button.list-group-item {
 .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
   z-index: 2;
   color: #fff;
-  background-color: #197249;
-  border-color: #197249;
+  background-color: #006400;
+  border-color: #006400;
 }
 
 .list-group-item.active .list-group-item-heading,
@@ -5465,26 +5465,26 @@ button.list-group-item-danger.active:focus {
 }
 
 .panel-primary {
-  border-color: #197249;
+  border-color: #006400;
 }
 
 .panel-primary > .panel-heading {
   color: #fff;
-  background-color: #197249;
-  border-color: #197249;
+  background-color: #006400;
+  border-color: #006400;
 }
 
 .panel-primary > .panel-heading + .panel-collapse > .panel-body {
-  border-top-color: #197249;
+  border-top-color: #006400;
 }
 
 .panel-primary > .panel-heading .badge {
-  color: #197249;
+  color: #006400;
   background-color: #fff;
 }
 
 .panel-primary > .panel-footer + .panel-collapse > .panel-body {
-  border-bottom-color: #197249;
+  border-bottom-color: #006400;
 }
 
 .panel-success {
@@ -10946,7 +10946,7 @@ body.stop-scrolling {
 }
 
 .sweet-alert input:focus {
-  border-color: #197249;
+  border-color: #006400;
   outline: none;
 }
 
@@ -10970,7 +10970,7 @@ body.stop-scrolling {
 }
 
 .sweet-alert button {
-  background-color: #197249 !important;
+  background-color: #006400 !important;
   color: white;
   border: none;
   -webkit-box-shadow: none;
@@ -10994,7 +10994,7 @@ body.stop-scrolling {
 }
 
 .sweet-alert button:active {
-  background-color: #00635a;
+  background-color: #004d00;
 }
 
 .sweet-alert button.cancel {
@@ -11844,7 +11844,7 @@ body.stop-scrolling {
 
 .select2-dropdown {
   background-color: white;
-  border: 2px solid #197249;
+  border: 2px solid #006400;
   border-radius: 4px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -12040,7 +12040,7 @@ body.stop-scrolling {
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: #197249;
+  background-color: #006400;
   color: #FFF;
   border-radius: 3px;
   cursor: default;
@@ -12079,7 +12079,7 @@ body.stop-scrolling {
 }
 
 .select2-container--default.select2-container--focus .select2-selection--multiple {
-  border-color: #197249;
+  border-color: #006400;
   outline: 0;
 }
 
@@ -12096,18 +12096,18 @@ body.stop-scrolling {
 .select2-container--default.select2-container--open.select2-container--above .select2-selection--multiple {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  border-color: #197249;
+  border-color: #006400;
 }
 
 .select2-container--default.select2-container--open.select2-container--below .select2-selection--single,
 .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  border-color: #197249;
+  border-color: #006400;
 }
 
 .select2-container--default .select2-search--dropdown .select2-search__field {
-  border: 1px solid #197249;
+  border: 1px solid #006400;
   border-radius: 3px;
 }
 
@@ -12171,7 +12171,7 @@ body.stop-scrolling {
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: #197249;
+  background-color: #006400;
   color: white;
 }
 
@@ -12183,7 +12183,7 @@ body.stop-scrolling {
 
 .select2-container--classic .select2-selection--single {
   background-color: #f7f7f7;
-  border: 2px solid #197249;
+  border: 2px solid #006400;
   border-radius: 3px;
   outline: 0;
   background-image: -o-linear-gradient(top, white 50%, #eeeeee 100%);
@@ -12193,7 +12193,7 @@ body.stop-scrolling {
 }
 
 .select2-container--classic .select2-selection--single:focus {
-  border: 1px solid #197249;
+  border: 1px solid #006400;
 }
 
 .select2-container--classic .select2-selection--single .select2-selection__rendered {
@@ -12257,7 +12257,7 @@ body.stop-scrolling {
 }
 
 .select2-container--classic.select2-container--open .select2-selection--single {
-  border: 1px solid #197249;
+  border: 1px solid #006400;
 }
 
 .select2-container--classic.select2-container--open .select2-selection--single .select2-selection__arrow {
@@ -12299,7 +12299,7 @@ body.stop-scrolling {
 }
 
 .select2-container--classic .select2-selection--multiple:focus {
-  border: 1px solid #197249;
+  border: 1px solid #006400;
 }
 
 .select2-container--classic .select2-selection--multiple .select2-selection__rendered {
@@ -12350,7 +12350,7 @@ body.stop-scrolling {
 }
 
 .select2-container--classic.select2-container--open .select2-selection--multiple {
-  border: 1px solid #197249;
+  border: 1px solid #006400;
 }
 
 .select2-container--classic.select2-container--open.select2-container--above .select2-selection--multiple {
@@ -12414,7 +12414,7 @@ body.stop-scrolling {
 }
 
 .select2-container--classic.select2-container--open .select2-dropdown {
-  border-color: #197249;
+  border-color: #006400;
 }
 
 .pace {
@@ -12791,7 +12791,7 @@ NOTE: use percentage font sizes or else old IE chokes
 
 .fc-state-down,
 .fc-state-active {
-  background-color: #197249;
+  background-color: #006400;
   color: #FFF;
   background-image: none;
   -webkit-box-shadow: none;
@@ -13064,8 +13064,8 @@ temporary rendered events).
   padding: 5px;
   line-height: 1.3;
   border-radius: 3px;
-  border: 1px solid #197249;
-  background-color: #197249;
+  border: 1px solid #006400;
+  background-color: #006400;
   font-weight: normal;
   /* undo jqui's ui-widget-header bold */
   margin-bottom: 5px;
@@ -13637,16 +13637,16 @@ be a descendant of the grid when it is being dragged.
 
 ::-moz-selection {
   color: #FFF;
-  background-color: #00635a;
+  background-color: #004d00;
 }
 
 ::selection {
   color: #FFF;
-  background-color: #00635a;
+  background-color: #004d00;
 }
 
 .main-header .navbar {
-  background-color: #197249;
+  background-color: #006400;
 }
 
 .main-header .navbar .top-nav > li > a {
@@ -13683,7 +13683,7 @@ be a descendant of the grid when it is being dragged.
 }
 /*FREITAS COR FUNDO LOGO */
 .main-header .logo {
-  background-color: #197249;
+  background-color: #006400;
   color: #FFF;
   border-right: 1px solid #fff;
   border-bottom: 1px solid #fff;
@@ -13715,7 +13715,7 @@ be a descendant of the grid when it is being dragged.
 .sidebar-menu > li.active > a {
   color: #fff;
   background: #0d1214;
-  border-color: #197249 !important;
+  border-color: #006400 !important;
 }
 
 .sidebar-menu .treeview-menu {
@@ -13736,12 +13736,12 @@ be a descendant of the grid when it is being dragged.
 }
 
 .only-sidebar.sidebar-collapse .sidebar .logo .sidebar-toggle {
-  color: #197249;
+  color: #006400;
 }
 
 .only-sidebar .sidebar .logo {
   color: #FFF;
-  background-color: #197249;
+  background-color: #006400;
 }
 
 .only-sidebar .sidebar .logo .sidebar-toggle {
@@ -14633,7 +14633,7 @@ be a descendant of the grid when it is being dragged.
 
 .animated-checkbox input[type="checkbox"]:checked + .label-text:before {
   content: "\f14a";
-  color: #197249;
+  color: #006400;
   -webkit-animation: tick 180ms ease-in;
           animation: tick 180ms ease-in;
 }
@@ -14678,7 +14678,7 @@ be a descendant of the grid when it is being dragged.
 
 .animated-radio-button input[type="radio"]:checked + .label-text:before {
   content: "\f192";
-  color: #197249;
+  color: #006400;
   -webkit-animation: tick 180ms ease-in;
           animation: tick 180ms ease-in;
 }
@@ -14757,7 +14757,7 @@ be a descendant of the grid when it is being dragged.
 
 .toggle input[type="checkbox"]:checked + .button-indecator:before {
   content: "\f205";
-  color: #197249;
+  color: #006400;
   -webkit-animation: toggleBtn 0.3s ease-in-out;
           animation: toggleBtn 0.3s ease-in-out;
 }
@@ -14811,7 +14811,7 @@ be a descendant of the grid when it is being dragged.
 
 .toggle-flip input[type="checkbox"] + .flip-indecator:after {
   content: attr(data-toggle-on);
-  background-color: #197249;
+  background-color: #006400;
   color: #fff;
   -webkit-transform: rotateY(-180deg);
           transform: rotateY(-180deg);
@@ -14870,7 +14870,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .material-half-bg .cover {
-  background-color: #197249;
+  background-color: #006400;
   height: 50vh;
 }
 
@@ -14904,7 +14904,7 @@ be a descendant of the grid when it is being dragged.
 .path {
   stroke-dasharray: 1,200;
   stroke-dashoffset: 0;
-  stroke: #197249;
+  stroke: #006400;
   -webkit-animation: dash 1.5s ease-in-out infinite;
           animation: dash 1.5s ease-in-out infinite;
   stroke-linecap: round;
@@ -15041,7 +15041,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .widget-small.primary {
-  background-color: #197249;
+  background-color: #006400;
 }
 
 .widget-small.primary.coloured-icon {
@@ -15050,7 +15050,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .widget-small.primary.coloured-icon .icon {
-  background-color: #197249;
+  background-color: #006400;
   color: #fff;
 }
 
@@ -15140,7 +15140,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .messanger .messages .message.me .info {
-  background-color: #197249;
+  background-color: #006400;
   color: #FFF;
 }
 
@@ -15157,7 +15157,7 @@ be a descendant of the grid when it is being dragged.
   height: 0;
   border-style: solid;
   border-width: 0 16px 16px 0;
-  border-color: transparent #197249 transparent transparent;
+  border-color: transparent #006400 transparent transparent;
   -webkit-transform: rotate(270deg);
       -ms-transform: rotate(270deg);
           transform: rotate(270deg);
@@ -15200,7 +15200,7 @@ be a descendant of the grid when it is being dragged.
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  border: 1px solid #197249;
+  border: 1px solid #006400;
   outline: none;
   padding: 5px 10px;
 }
@@ -15488,7 +15488,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .user .user-tabs > li.active > a {
-  border-left: 3px solid #197249;
+  border-left: 3px solid #006400;
   border-bottom: 0;
   background-color: #eee !important;
 }

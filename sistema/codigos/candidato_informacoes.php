@@ -274,7 +274,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
                         <tr>
                             <td colspan="3">
-                                <center><img style="box-shadow: 0px 0px 10px #197249; border-radius: 5px;" src="fotos/<?php echo $foto_nome ?>" width="200px"></center>
+                                <center><img style="box-shadow: 0px 0px 10px #006400; border-radius: 5px;" src="fotos/<?php echo $foto_nome ?>" width="200px"></center>
                             </td>
                         </tr>
 

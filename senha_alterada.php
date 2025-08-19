@@ -36,7 +36,7 @@ if ($_GET['c'] != hash('sha256', $id_usuario_session)) {
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(to bottom, #197249 50%, #f5f5f5 50%);
+      background: linear-gradient(to bottom, #006400 50%, #f5f5f5 50%);
     }
 
     .container {
@@ -58,12 +58,12 @@ if ($_GET['c'] != hash('sha256', $id_usuario_session)) {
     h3 {
       margin: 10px 0;
       font-size: 1.5rem;
-      color: #197249;
+      color: #006400;
     }
 
     .success-icon {
       font-size: 2rem;
-      color: #197249;
+      color: #006400;
     }
 
     p {
@@ -73,7 +73,7 @@ if ($_GET['c'] != hash('sha256', $id_usuario_session)) {
     }
 
     .btn-primary {
-      background-color: #197249;
+      background-color: #006400;
       border: none;
       padding: 10px;
       font-size: 1rem;

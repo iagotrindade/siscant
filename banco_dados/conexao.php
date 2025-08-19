@@ -826,9 +826,96 @@ class Conexao
         return $result ? $result['rm_inscricao'] : null;
     }
 
+    // 15 AGO 25 -> Iago Silva Adicionando função para inserir perguntas no Assistente Virtual
+    public function insere_pergunta_resposta($pergunta, $resposta, $usuario_id)
+    {
+        try {
+            $dataHora = date('Y-m-d H:i:s');
+
+            // Inicia transação
+            $this->pdo->beginTransaction();
+
+            $stmt = $this->pdo->prepare("
+            INSERT INTO perguntas_assistente 
+                (pergunta, resposta, id_usuario_inseriu, data_insercao) 
+            VALUES 
+                (:pergunta, :resposta, :id_usuario_inseriu, :data_insercao)
+        ");
+
+            $stmt->bindValue(':pergunta', $pergunta);
+            $stmt->bindValue(':resposta', $resposta);
+            $stmt->bindValue(':id_usuario_inseriu', $usuario_id);
+            $stmt->bindValue(':data_insercao', $dataHora);
+
+            $stmt->execute();
+
+            // Confirma a transação
+            $this->pdo->commit();
+
+            return [
+                'id' => $this->pdo->lastInsertId(),
+                'pergunta' => $pergunta,
+                'resposta' => $resposta,
+                'id_usuario_inseriu' => $usuario_id,
+                'data_insercao' => $dataHora
+            ];
+        } catch (PDOException $e) {
+            // Desfaz transação se der erro
+            $this->pdo->rollBack();
+            throw new Exception("Erro ao inserir pergunta e resposta: " . $e->getMessage());
+        }
+    }
+
+    public function get_pergunta_resposta_id($id)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM perguntas_assistente WHERE id = :id
+        ");
+
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
 
+    // 15 AGO 25 -> Iago Silva Adicionando função para buscar as perguntas do Assistente Virtual
+    public function get_perguntas_assistente()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM perguntas_assistente");
+        $stmt->execute();
 
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    // 15 AGO 25 -> Iago Silva Adicionando função para apagar as perguntas do Assistente Virtual
+    public function apaga_pergunta_resposta($id_pergunta)
+    {
+        // Busca os dados antes de apagar
+        $stmt = $this->pdo->prepare("
+        SELECT * 
+        FROM perguntas_assistente 
+        WHERE id = :id_pergunta
+    ");
+        $stmt->bindValue(':id_pergunta', $id_pergunta, PDO::PARAM_INT);
+        $stmt->execute();
+        $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Se existir, apaga
+        if ($dados) {
+            $stmt = $this->pdo->prepare("
+            DELETE FROM perguntas_assistente 
+            WHERE id = :id_pergunta
+        ");
+            $stmt->bindValue(':id_pergunta', $id_pergunta, PDO::PARAM_INT);
+            $stmt->execute();
+        }
+
+        // Retorna os dados apagados (ou null se não existir)
+        return $dados ?: null;
+    }
 
     // </editor-fold>
 

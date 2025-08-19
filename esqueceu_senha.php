@@ -30,7 +30,7 @@ if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
     body {
       margin: 0;
       height: 100vh;
-      background: linear-gradient(to bottom, #197249 50%, #ffffff 50%);
+      background: linear-gradient(to bottom, #006400 50%, #ffffff 50%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -53,7 +53,7 @@ if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
     }
 
     .btn-primary {
-      background-color: #197249;
+      background-color: #006400;
       border: none;
     }
 
@@ -62,7 +62,7 @@ if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
     }
 
     a {
-      color: #197249;
+      color: #006400;
       text-decoration: none;
     }
 

@@ -18,6 +18,7 @@ $_SESSION['chave'] = $codigo_chave;
 $_SESSION['nome_arquivo'] = "3rm_ott_stt_2025.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
 $_SESSION['selecao'] = 1058;
+$_SESSION['selecao'] = 1058;
 $_SESSION['apresentacao_candidato'] = "Seleção de Oficiais e Sargentos Técnicos Temporários ";
 
 // AMBIENTE DE TESTES
@@ -28,6 +29,7 @@ $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
 
 ?>
 <!DOCTYPE html>
+<html lang="pt-BR">
 <html lang="pt-BR">
 
 <head>

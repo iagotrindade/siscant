@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(to bottom, #197249 50%, #f4f4f4 50%);
+      background: linear-gradient(to bottom, #006400 50%, #f4f4f4 50%);
     }
 
     .container {
@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .title {
       text-align: center;
       margin-bottom: 10px;
-      color: #197249;
+      color: #006400;
     }
 
     p.info {
@@ -133,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       padding: 12px;
       border: none;
       border-radius: 8px;
-      background: #197249;
+      background: #006400;
       color: white;
       font-size: 16px;
       cursor: pointer;
