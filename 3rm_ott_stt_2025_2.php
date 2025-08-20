@@ -10,19 +10,17 @@ if (isset($_GET['usuario_senha']))
     $usuario_senha = 'invalido';
 
 $rand = rand(100, 10000);
-$string = "selecao_mfdv_2025";
+$string = "selecao_ott_stt_2025_2";
 $codigo_criptografar = $rand . time() . $string;
 $codigo_chave = substr(md5($codigo_criptografar), 0, 6);
 $_SESSION['chave'] = $codigo_chave;
 
-$_SESSION['nome_arquivo'] = "3rm_mfdv_2025.php";
+$_SESSION['nome_arquivo'] = "3rm_ott_stt_2025_2.php";
 // A seleção é referente ao index da tabela do banco de dados SELEÇÃO
-$_SESSION['selecao'] = 1152;
+$_SESSION['selecao'] = 1169;
+$_SESSION['tipo_selecao'] = 'cet'; // minas e biblioteca
 
-$_SESSION['mfdv'] = 1;
-$_SESSION['tipo_selecao'] = 'mfdv';
-
-$_SESSION['apresentacao_candidato'] = "Seleção de Médicos, Farmacêuticos, Dentistas e Veterinários (MFDV)";
+$_SESSION['apresentacao_candidato'] = "Seleção de Oficiais e Sargentos Técnicos Temporários";
 
 
 // AMBIENTE DE TESTES
@@ -111,8 +109,8 @@ $_SESSION['pasta_arquivos'] = "/var/www/html/sistema/pdf/";
     <div class="text-center">
       <img src="sistema/imagens/3rm.png" alt="Logo">
       <h4><b>SiSCanT</b></h4>
-      <p class="text-muted mb-0">Seleção de Médicos, Farmacêuticos, Dentistas e Veterinários</p>
-      <p class="text-muted">Seleção 2025/2026 - MFDV</p>
+      <p class="text-muted mb-0">Seleção de Oficiais Técnicos Temporários</p>
+      <p class="text-muted">Seleção 2025/2026 - OTT Eng Minas e Biblioteconomia</p>
     </div>
 
     <?php if ($usuario_senha === 'invalido'): ?>

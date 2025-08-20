@@ -866,6 +866,45 @@ class Conexao
         }
     }
 
+    //20/08/2025 -> Iago Silva Inserindo função para editar conhecimento do Assistente Virtual
+    public function edita_pergunta_resposta($id, $pergunta, $resposta, $usuario_id)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            $sql = "UPDATE perguntas_assistente SET 
+                    pergunta = :pergunta,
+                    resposta = :resposta, 
+                    id_usuario_inseriu = :usuario_id
+                WHERE id = :id_pergunta";
+
+            $query = $this->pdo->prepare($sql);
+
+            $query->bindValue(":id_pergunta", $id, PDO::PARAM_INT);
+            $query->bindValue(":pergunta", $pergunta, PDO::PARAM_STR);
+            $query->bindValue(":resposta", $resposta, PDO::PARAM_STR);
+            $query->bindValue(":usuario_id", $usuario_id, PDO::PARAM_INT);
+
+            if ($query->execute()) {
+                $this->pdo->commit();
+
+                return [
+                    'pergunta' => $pergunta,
+                    'resposta' => $resposta,
+                    'id_usuario_inseriu' => $usuario_id,
+                ];
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            return false;
+        }
+    }
+
     public function get_pergunta_resposta_id($id)
     {
         $stmt = $this->pdo->prepare("

@@ -188,14 +188,17 @@ $lista_especialidades = $conexao->get_especialidade();
                                             </div>
                                         </div>
 
-                                        <script>
-                                            $(document).ready(function() {
-                                                $('.select2').select2({
-                                                    placeholder: "Selecione as especialidades",
-                                                    allowClear: true
-                                                });
-                                            });
-                                        </script>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <input name="data_inicial" type="date" class="form-control" style="height: 40px;">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <input name="data_final" type="date" class="form-control" style="height: 40px;">
+                                            </div>
+                                        </div>
 
                                         <div class="col-md-12">
                                             <button type="submit" class="btn btn-primary btn-block">GERAR</button>
@@ -364,14 +367,17 @@ $lista_especialidades = $conexao->get_especialidade();
                                             </div>
                                         </div>
 
-                                        <script>
-                                            $(document).ready(function() {
-                                                $('.select2').select2({
-                                                    placeholder: "Selecione as especialidades",
-                                                    allowClear: true
-                                                });
-                                            });
-                                        </script>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <input name="data_inicial" type="date" class="form-control" style="height: 40px;">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <input name="data_final" type="date" class="form-control" style="height: 40px;">
+                                            </div>
+                                        </div>
 
                                         <div class="col-md-12">
                                             <button type="submit" class="btn btn-primary btn-block">GERAR</button>

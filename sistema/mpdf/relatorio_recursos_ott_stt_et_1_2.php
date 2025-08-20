@@ -16,6 +16,9 @@ $paragrafo_dois = $_POST['paragrafo_dois'];
 
 $data = $_POST['data'];
 
+$data_inicial = $_POST['data_inicial'];
+$data_final = $_POST['data_final'];
+
 $etapa = $_POST['etapa'];
 
 session_start();
@@ -98,8 +101,23 @@ usort($lista_candidatos_recurso, function ($a, $b) {
 foreach ($lista_candidatos_recurso as $candidato) {
     $contador = 1;
 
-    if ($candidato['cpf'] == '01261393007' || $candidato['cpf'] == '05122425000' || $candidato['etapa'] != $etapa || $candidato['id_selecao'] != $_SESSION['selecao']) {
+    // Filtro por etapa e seleção
+    if ($candidato['etapa'] != $etapa || $candidato['id_selecao'] != $_SESSION['selecao']) {
         continue;
+    }
+
+    // Filtro por intervalo de datas
+    if (!empty($data_inicial) && !empty($data_final)) {
+        $data_abertura = $candidato['data_abertura'];
+
+        // Normaliza formatos (caso venham diferentes)
+        $data_abertura_ts = strtotime($data_abertura);
+        $data_inicial_ts  = strtotime($data_inicial);
+        $data_final_ts    = strtotime($data_final);
+
+        if ($data_abertura_ts < $data_inicial_ts || $data_abertura_ts > $data_final_ts) {
+            continue;
+        }
     }
 
     $cpf = substr($candidato['cpf'], 0, -5) . "*****";
@@ -110,9 +128,9 @@ foreach ($lista_candidatos_recurso as $candidato) {
             <td style='font-size: 12px; text-align: center;'>" . strtoupper($candidato['status_final']) . "</td>
             <td style='font-size: 12px; text-align: center;'>" . strtoupper($candidato['nome_especialidade']) . "</td>
         </tr>";
-    $contador++;
 
     $mpdf->WriteHTML($html);
+    $contador++;
 }
 
 $html = "</table>";

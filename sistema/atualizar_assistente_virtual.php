@@ -23,18 +23,19 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     exit();
 }
 
+$conhecimento = $conexao->get_pergunta_resposta_id($_GET['id_pergunta']);
 ?>
 
 <div class="content-wrapper">
     <div class="page-title">
         <div>
-            <h1>Assistente Virtual <i class="fa bi bi-robot"></i></h1>
+            <h1>Atualizar Assistente Virtual <i class="fa bi bi-robot"></i></h1>
         </div>
         <div>
             <ul class="breadcrumb">
                 <li><i class="fa fa-home fa-lg"></i></li>
                 <li><a href="index.php">Página Inicial</a></li>
-                <li>Assistente Virtual</li>
+                <li>Atualizar Assistente Virtual</li>
             </ul>
         </div>
     </div>
@@ -46,18 +47,19 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                <i class="glyphicon glyphicon-comment"></i> Adicionar Nova Pergunta ao Assistente Virtual
+                                <i class="glyphicon glyphicon-comment"></i> Atualizar Pergunta do Assistente Virtual
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <form action="../banco_dados/pergunta_cadastra.php" method="post" onsubmit="return validar_formulario()">
+                            <form action="../banco_dados/pergunta_editar.php" method="post">
                                 <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
+                                <input type="hidden" name="id" value="<?php echo($conhecimento['id']); ?>">
 
                                 <div class="form-group">
                                     <label for="pergunta" class="control-label"><strong>Pergunta</strong></label>
                                     <textarea name="pergunta" id="pergunta" class="form-control"
                                         placeholder="Digite a pergunta que os usuários podem fazer..."
-                                        rows="3" style="min-height: 100px;"></textarea>
+                                        rows="3" style="min-height: 100px;"><?= $conhecimento['pergunta'] ?></textarea>
                                     <p class="help-block">Exemplo: "Como faço para me inscrever no processo?"</p>
                                 </div>
 
@@ -65,7 +67,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                     <label for="resposta" class="control-label"><strong>Resposta</strong></label>
                                     <textarea name="resposta" id="resposta" class="form-control"
                                         placeholder="Digite a resposta que o assistente deve fornecer..."
-                                        rows="5" style="min-height: 150px;"></textarea>
+                                        rows="5" style="min-height: 150px;"><?= $conhecimento['resposta'] ?></textarea>
                                     <p class="help-block">Forneça uma resposta clara e completa</p>
                                 </div>
 
@@ -176,103 +178,10 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                     </div>
                 </div>
             </div>
-
-            <!-- Tabela de Perguntas Cadastradas -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <i class="glyphicon glyphicon-list"></i> Perguntas Cadastradas no Assistente Virtual
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered" id="tabela_dinamica">
-                                    <thead>
-                                        <tr class="active">
-                                            <th class="text-center">Pergunta</th>
-                                            <th class="text-center">Resposta</th>
-                                            <th class="text-center">Usuario que Cadastrou</th>
-                                            <th class="text-center">Data de Cadastro</th>
-                                            <th width="120px" class="text-center">Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $lista_perguntas = $conexao->get_perguntas_assistente();
-                                        ?>
-
-                                        <?php foreach ($lista_perguntas as $linha): ?>
-                                            <?php
-                                            // Busca o nome do usuário que cadastrou a pergunta                         
-                                            $usuario_cadastro = $conexao->get_usuario_id($linha['id_usuario_inseriu']);
-                                            ?>
-                                            <tr>
-                                                <td class="text-center">
-                                                    <?= $linha['pergunta'] ?>
-                                                </td>
-
-                                                <td>
-                                                    <?= $linha['resposta'] ?>
-                                                </td>
-
-                                                <td>
-                                                    <?= $usuario_cadastro[0]['posto_grad'] . ' ' . $usuario_cadastro[0]['nome_guerra'] ?>
-                                                </td>
-
-                                                <td>
-                                                    <?= trata_data_hora($linha['data_insercao']) ?>
-                                                </td>
-
-                                                <td class="text-center">
-                                                    <div class="btn-group btn-group-sm">
-                                                        <a href="atualizar_assistente_virtual.php?id_pergunta=<?= $linha['id'] ?>"
-                                                            class="mr-10"
-                                                            data-toggle="tooltip"
-                                                            title="Editar">
-                                                            <i class="bi bi-pencil-fill" style="font-size: 20px;"></i>
-                                                        </a>
-                                                        <a onclick="funcao_apagar('<?= $linha['id'] ?>', 'pergunta')"
-                                                            class=""
-                                                            data-toggle="tooltip"
-                                                            title="Excluir">
-                                                            <i class="bi bi-trash text-danger" style="font-size: 20px;"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-
-    <script>
-        // Ativa os tooltips
-        $(function() {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-
-        // Função para validar o formulário (mantida do original)
-        function validar_formulario() {
-            // Sua lógica de validação aqui
-            return true;
-        }
-    </script>
 </div>
 </div>
-<script src="sistema/js/bootstrap5.3.3.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
-<script type="text/javascript">
-    $('#tabela_dinamica').DataTable();
-</script>
 </body>
 
 </html>
