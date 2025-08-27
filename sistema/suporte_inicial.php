@@ -4,6 +4,7 @@ include_once './menu_candidato.php';
 include_once './codigos/suporte_inicial_valida.php';
 ?>
 
+
 <!-- 06/07/2025 - Iago Silva Pequenos ajustes e melhorias no Layout -->
 <div class="content-wrapper">
     <div class="card">

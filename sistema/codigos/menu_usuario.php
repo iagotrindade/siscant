@@ -81,11 +81,10 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
         <li <?php if (!isset($_SESSION['eipot']) || $perfil == "chc" || $perfil == "cr") echo "hidden" ?> class="treeview"><a href="eipot_etapa_III.php"><i class="fa fa-address-book"></i><?php if ($_SESSION['perfil'] == "jise") echo ('JISE');
                                                                                                                                                                                             else echo ('Dados Cadastro IS - SIPMED') ?></a>
-
         <li <?php if (!isset($_SESSION['eipot']) || $perfil != 'admin' && $perfil != 'consulta' && $perfil != 'chc' && $perfil != 'cr') echo "hidden" ?> class="treeview"><a href="eipot_etapa_v.php"><i class="fa fa-check-circle"></i><?php if ($_SESSION['perfil'] == "chc" || $_SESSION['perfil'] == "cr") echo ('Heteroidentificação');
                                                                                                                                                                                                                                         else echo ('Heteroidentificação') ?></a>
-
         <li <?php if (!isset($_SESSION['eipot']) || $perfil != "admin") echo " hidden " ?> class="treeview"><a href="candidato_lista_escolha_guarnicao_eipot.php"><i class="fa fa-map-pin"></i><span>Escolha de Guarnição </span></a></li>
+
         <li <?php if ($perfil == "jise" || $perfil == "chc" || $perfil == "cr") echo " hidden " ?> class="treeview"><a href="usuario_lista.php"><i class="fa fa-user"></i>Usuários</a></li>
     </ul>
 </li>
@@ -109,6 +108,9 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 -->
 
 <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="assistente_virtual.php"><i class="fa bi bi-robot"></i><span>Assistente Virtual</span></a></li>
+
+<!-- Adicionando o item de Aviso aos Candidatos no Menu -->
+<li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="avisos.php"><i class="fa bi bi-megaphone"></i><span>Avisos aos Candidatos</span></a></li>
 
 <!-- <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="suporte_inicial_lista.php"><i class="fa fa-comments"></i><span>Suporte</span></a></li>                         -->
 

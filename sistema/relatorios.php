@@ -112,7 +112,7 @@ $lista_especialidades = $conexao->get_especialidade();
                                         <div class="col-lg-12">
                                             <div class="form-group">
                                                 <label>Selecione as Especialidades (deixe em branco para todas): </label>
-                                                <select name="especialidades[]" class="select2 form-control" multiple>
+                                                <select style="width: 100%;" name="especialidades[]" class="select2 form-control" multiple>
                                                     <?php
                                                     $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
                                                     foreach ($lista_especialidades as $value) { ?>
@@ -128,7 +128,6 @@ $lista_especialidades = $conexao->get_especialidade();
                                         <script>
                                             $(document).ready(function() {
                                                 $('.select2').select2({
-                                                    placeholder: "Selecione as especialidades",
                                                     allowClear: true
                                                 });
                                             });
@@ -146,15 +145,17 @@ $lista_especialidades = $conexao->get_especialidade();
                         <div class="alert alert-info">
                             <legend>Resultado da Análise de Recursos Etapa I <img src="imagens/pdf.png" height="30px"></legend>
                             <div class="card-body">
-
-                                <label class="text-danger">Requisitos/Detalhamento</label>
-                                <div class="alert" style="text-align: left;">
-                                    <ul class="text-danger" style="padding: 0; font-weight: 600;">
-                                        <li>Cadastrar e julgar todos os recursos da Etapa I no SISCANT</li>
-                                        <li>Serão considerados apenas recursos cadastrados com a Etapa I</li>
-                                    </ul>
+                                <div class="card">
+                                    <div class="alert alert-danger">
+                                        <label class="text-danger">Requisitos/Detalhamento</label>
+                                        <div class="" style="text-align: left;">
+                                            <ul class="text-danger" style="padding: 0; font-weight: 600;">
+                                                <li>Cadastrar e julgar todos os recursos da Etapa I no SISCANT</li>
+                                                <li>Serão considerados apenas recursos cadastrados com a Etapa I</li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
-
                                 <form action="mpdf/relatorio_recursos_ott_stt_et_1_2.php" method="POST">
                                     <input type="hidden" name="etapa" value="1">
                                     <div class="row">
@@ -307,7 +308,6 @@ $lista_especialidades = $conexao->get_especialidade();
                                         <script>
                                             $(document).ready(function() {
                                                 $('.select2').select2({
-                                                    placeholder: "Selecione as especialidades",
                                                     allowClear: true
                                                 });
                                             });
@@ -993,7 +993,6 @@ $lista_especialidades = $conexao->get_especialidade();
                                         <script>
                                             $(document).ready(function() {
                                                 $('.select2').select2({
-                                                    placeholder: "Selecione as especialidades",
                                                     allowClear: true
                                                 });
                                             });
@@ -1121,6 +1120,8 @@ $lista_especialidades = $conexao->get_especialidade();
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <!-- Bootstrap 3 JS -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="js/plugins/select2.min.js"></script>
 </body>
 
 </html>

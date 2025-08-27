@@ -41,6 +41,7 @@
                       <th>CPF</th>
                       <th>Nome</th>
                       <th>Etapa</th>
+                      <th>Data de Abertura</th>
                       <th>Status Aval</th>
                       <th>Status Final</th>
                       <th>Avaliador?</th>
@@ -98,12 +99,14 @@
                             $fontColor = "";
                             if($linha['concorrendo'] == 0) $fontColor = '#FF8C73';
                             
+                                // 21/08/2025 -> Iago Silva Inserindo campo de data_abertura na tabela
                                 echo '
                                 <tr bgcolor = '.$fontColor.'>
                                 <td>'.$linha['id'].'</td>
                                 <td><a href="usuario_visualiza.php?id_usuario='.$linha['id_candidato'].'">'.$linha['cpf'].'</a></td>
                                 <td>'.$linha['nome_completo'].'</td>
                                 <td>_'.$linha['etapa'].'</td>
+                                <td>'.trata_data($linha['data_abertura']).'</td>
                                 <td>_'.$status.'_</td>
                                 <td>*'.$status_final.'*</td>
                                 <td>_'.$avaliador.'</td>
