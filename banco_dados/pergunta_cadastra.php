@@ -34,17 +34,17 @@ if ($usuario_logado[0]['assinatura_sistema'] != $_SESSION['assinatura_sistema'])
     exit();
 }
 
+$etapa = $_POST['etapa'];
 $pergunta = trim($_POST['pergunta']);
 $resposta = $_POST['resposta'];
 
-if ($pergunta == null || $resposta == "") {
+if ($pergunta == null || $resposta == "" || $etapa == "") {
     erro("Os campos Pergunta e Resposta são obrigatórios!");
     exit();
 }
 
-
 if ($_POST) {
-    $resultado = $conexao->insere_pergunta_resposta($pergunta, $resposta, $usuario_logado[0]['id']);
+    $resultado = $conexao->insere_pergunta_resposta($etapa, $pergunta, $resposta, $usuario_logado[0]['id']);
 }
 
 $alteracoes_detalhadas =  print_r($resultado);

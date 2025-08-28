@@ -54,6 +54,21 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
 
                                 <div class="form-group">
+                                    <label for="etapa" class="control-label"><strong>Etapa</strong></label>
+                                    <select name="etapa" id="etapa" class="form-control"
+                                        placeholder="Digite a pergunta que os usuários podem fazer...">
+                                        <option value="1">TODAS</option>
+                                        <option value="1">1</option>
+                                        <option value="1">2</option>
+                                        <option value="1">3</option>
+                                        <option value="1">4</option>
+                                        <option value="1">5</option>
+                                        <option value="1">6</option>
+                                        <option value="1">7</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="pergunta" class="control-label"><strong>Pergunta</strong></label>
                                     <textarea name="pergunta" id="pergunta" class="form-control"
                                         placeholder="Digite a pergunta que os usuários podem fazer..."
