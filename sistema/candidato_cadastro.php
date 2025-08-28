@@ -377,14 +377,14 @@ include_once './codigos/candidato_valida_cadastro.php';
 
                         <div class="row">
                             <div class="col-lg-12 mb-3">
-                                <select id="autodeclaracao" name="autodeclaracao" onchange="mostra_vaga_reservada()" class="form-select" required>
+                                <select id="autodeclaracao" name="autodeclaracao" onchange="mostra_vaga_reservada('<?php echo ($_SESSION['tipo_selecao'] ?? 'ott_stt'); ?>')" class="form-select" required>
                                     <option value="" selected disabled>Autodeclaração</option>
                                     <option value="branco">Branco</option>
                                     <option value="preto">Preto</option>
                                     <option value="pardo">Pardo</option>
                                     <option value="indio">Índio</option>
                                     <option value="amarelo">Amarelo</option>
-                                    <option value="quilombola">Quilombola</option>
+                                    <option value="quilombola" <?php if (!isset($_SESSION['tipo_selecao'])) echo ('hidden'); ?>>Quilombola</option>
                                 </select>
                             </div>
 
@@ -587,88 +587,84 @@ include_once './codigos/candidato_valida_cadastro.php';
                 </div>
 
                 <!-- INSTITUIÇÃO DE ENSINO -->
-                <div class="card mb-4 fade-in conditional-section" id="instituicao-section">
-                    <h5 class="section-header"><i class="fa fa-university me-2"></i>Instituição de Ensino de Formação</h5>
-                    <div class="form-section">
-                        <div class="row">
-                            <div class="col-lg-4 mb-3">
-                                <div class="floating-label">
-                                    <input type="text" maxlength="200" name="nome_ie" class="form-control floating-input" placeholder=" " required>
-                                    <label class="required-field">Nome do Instituto de Ensino</label>
+                <?php if (isset($_SESSION['mfdv'])) : ?>
+                    <div class="card mb-4 fade-in" id="instituicao-section">
+                        <h5 class="section-header"><i class="fa fa-university me-2"></i>Instituição de Ensino de Formação</h5>
+                        <div class="form-section">
+                            <div class="row">
+                                <div class="col-lg-4 mb-3">
+                                    <div class="floating-label">
+                                        <input type="text" maxlength="200" name="nome_ie" class="form-control floating-input" placeholder=" " required>
+                                        <label class="required-field">Nome do Instituto de Ensino</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-2 mb-3">
-                                <label class="form-label required-field">Ano de formação</label>
-                                <select name="ano_formacao" class="form-select" required>
-                                    <option value="" selected disabled>Selecione o ano</option>
-                                    <?php
-                                    for ($i = date("Y"); $i >= 1980; $i--) {
-                                        echo '<option value="' . $i . '">' . $i . '</option>';
-                                    }
-                                    ?>
-                                </select>
-                            </div>
+                                <div class="col-lg-2 mb-3">
+                                    <select name="ano_formacao" class="form-select" required>
+                                        <option value="" selected disabled>Ano de formação</option>
+                                        <?php
+                                        for ($i = date("Y"); $i >= 1980; $i--) {
+                                            echo '<option value="' . $i . '">' . $i . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
 
-                            <div class="col-lg-2 mb-3">
-                                <label class="form-label required-field">UF da Instituição de Ensino</label>
-                                <select id="uf_ie" name="uf_ie" class="form-select" onchange="busca_cidades_ie()" required>
-                                    <option value="" selected disabled>Selecione a UF</option>
-                                    <option value="AC">AC</option>
-                                    <option value="AL">AL</option>
-                                    <option value="AM">AM</option>
-                                    <option value="AP">AP</option>
-                                    <option value="BA">BA</option>
-                                    <option value="CE">CE</option>
-                                    <option value="DF">DF</option>
-                                    <option value="ES">ES</option>
-                                    <option value="GO">GO</option>
-                                    <option value="MA">MA</option>
-                                    <option value="MG">MG</option>
-                                    <option value="MS">MS</option>
-                                    <option value="MT">MT</option>
-                                    <option value="PA">PA</option>
-                                    <option value="PB">PB</option>
-                                    <option value="PE">PE</option>
-                                    <option value="PI">PI</option>
-                                    <option value="PR">PR</option>
-                                    <option value="RJ">RJ</option>
-                                    <option value="RN">RN</option>
-                                    <option value="RO">RO</option>
-                                    <option value="RR">RR</option>
-                                    <option value="RS">RS</option>
-                                    <option value="SC">SC</option>
-                                    <option value="SE">SE</option>
-                                    <option value="SP">SP</option>
-                                    <option value="TO">TO</option>
-                                </select>
-                            </div>
+                                <div class="col-lg-2 mb-3">
+                                    <select id="uf_ie" name="uf_ie" class="form-select" onchange="busca_cidades_ie()" required>
+                                        <option value="" selected disabled>UF da Instituição de Ensino</option>
+                                        <option value="AC">AC</option>
+                                        <option value="AL">AL</option>
+                                        <option value="AM">AM</option>
+                                        <option value="AP">AP</option>
+                                        <option value="BA">BA</option>
+                                        <option value="CE">CE</option>
+                                        <option value="DF">DF</option>
+                                        <option value="ES">ES</option>
+                                        <option value="GO">GO</option>
+                                        <option value="MA">MA</option>
+                                        <option value="MG">MG</option>
+                                        <option value="MS">MS</option>
+                                        <option value="MT">MT</option>
+                                        <option value="PA">PA</option>
+                                        <option value="PB">PB</option>
+                                        <option value="PE">PE</option>
+                                        <option value="PI">PI</option>
+                                        <option value="PR">PR</option>
+                                        <option value="RJ">RJ</option>
+                                        <option value="RN">RN</option>
+                                        <option value="RO">RO</option>
+                                        <option value="RR">RR</option>
+                                        <option value="RS">RS</option>
+                                        <option value="SC">SC</option>
+                                        <option value="SE">SE</option>
+                                        <option value="SP">SP</option>
+                                        <option value="TO">TO</option>
+                                    </select>
+                                </div>
 
-                            <div class="col-lg-4 mb-3">
-                                <label class="form-label required-field">Cidade da Instituição de Ensino</label>
-                                <select id="cidade_ie" name="cidade_ie" class="form-select" required>
-                                    <option value="" selected disabled>Selecione primeiramente a UF</option>
-                                </select>
+                                <div class="col-lg-4 mb-3">
+                                    <select id="cidade_ie" name="cidade_ie" class="form-select" required>
+                                        <option value="" selected disabled>Cidade da Instituição de Ensino</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
+                <?php endif; ?>
                 <!-- TEMPO DE SERVIÇO PÚBLICO -->
                 <div class="card mb-4 fade-in conditional-section" id="servico-publico-section">
                     <h5 class="section-header"><i class="fa fa-briefcase me-2"></i>Tempo de serviço público até a data final da inscrição</h5>
                     <div class="form-section">
                         <div class="row">
                             <div class="col-lg-3 mb-3">
-                                <label class="form-label required-field">Possui tempo de serviço público até a data final da inscrição?</label>
                                 <select id="tempo_sv_pub" name="tempo_sv_pub" class="form-select" onchange="tempo_servico_publico()" required>
-                                    <option value="" selected disabled>Selecione a opção</option>
+                                    <option value="" selected disabled>Possui tempo de serviço público</option>
                                     <option value="0">Não</option>
                                     <option value="1">Sim</option>
                                 </select>
                             </div>
                             <div class="col-lg-3 mb-3">
                                 <div id="div_tempo_sv_pub_anos" class="conditional-section">
-                                    <label class="form-label">Anos</label>
                                     <select id="tempo_sv_pub_anos" name="tempo_sv_pub_anos" class="form-select">
                                         <option value="" selected disabled>Selecione quantos anos</option>
                                         <option value="0">0</option>
@@ -692,7 +688,6 @@ include_once './codigos/candidato_valida_cadastro.php';
                             </div>
                             <div class="col-lg-3 mb-3">
                                 <div id="div_tempo_sv_pub_meses" class="conditional-section">
-                                    <label class="form-label">Meses</label>
                                     <select id="tempo_sv_pub_meses" name="tempo_sv_pub_meses" class="form-select">
                                         <option value="" selected disabled>Selecione quantos meses</option>
                                         <option value="0">0</option>
@@ -712,7 +707,6 @@ include_once './codigos/candidato_valida_cadastro.php';
                             </div>
                             <div class="col-lg-3 mb-3">
                                 <div id="div_tempo_sv_pub_dias" class="conditional-section">
-                                    <label class="form-label">Dias</label>
                                     <select id="tempo_sv_pub_dias" name="tempo_sv_pub_dias" class="form-select">
                                         <option value="" selected disabled>Selecione quantos dias</option>
                                         <option value="0">0</option>
@@ -758,21 +752,19 @@ include_once './codigos/candidato_valida_cadastro.php';
                 </div>
 
                 <!-- TEMPO DE SERVIÇO MILITAR -->
-                <div class="card mb-4 fade-in conditional-section" id="servico-militar-section">
-                    <h5 class="section-header"><i class="fa fa-medal me-2"></i>Tempo de serviço militar (nas Forças Armadas) até a data final da inscrição</h5>
+                <div class="card mb-4 fade-in" id="servico-militar-section">
+                    <h5 class="section-header"><i class="fa fa-clock-o me-2"></i>Tempo de serviço militar (nas Forças Armadas) até a data final da inscrição</h5>
                     <div class="form-section">
                         <div class="row">
                             <div class="col-lg-3 mb-3">
-                                <label class="form-label required-field">Possui tempo de serviço militar (nas Forças Armadas) até a data final da inscrição?</label>
                                 <select id="tempo_sv_mil" name="tempo_sv_mil" class="form-select" onchange="tempo_servico_militar()" required>
-                                    <option value="" selected disabled>Selecione a opção</option>
+                                    <option value="" selected disabled>Possui tempo de serviço militar (nas Forças Armadas)</option>
                                     <option value="0">Não</option>
                                     <option value="1">Sim</option>
                                 </select>
                             </div>
                             <div class="col-lg-3 mb-3">
                                 <div id="div_tempo_sv_mil_anos" class="conditional-section">
-                                    <label class="form-label">Anos</label>
                                     <select id="tempo_sv_mil_anos" name="tempo_sv_mil_anos" class="form-select">
                                         <option value="" selected disabled>Selecione quantos anos</option>
                                         <option value="0">0</option>
@@ -796,7 +788,6 @@ include_once './codigos/candidato_valida_cadastro.php';
                             </div>
                             <div class="col-lg-3 mb-3">
                                 <div id="div_tempo_sv_mil_meses" class="conditional-section">
-                                    <label class="form-label">Meses</label>
                                     <select id="tempo_sv_mil_meses" name="tempo_sv_mil_meses" class="form-select">
                                         <option value="" selected disabled>Selecione quantos meses</option>
                                         <option value="0">0</option>
@@ -816,7 +807,6 @@ include_once './codigos/candidato_valida_cadastro.php';
                             </div>
                             <div class="col-lg-3 mb-3">
                                 <div id="div_tempo_sv_mil_dias" class="conditional-section">
-                                    <label class="form-label">Dias</label>
                                     <select id="tempo_sv_mil_dias" name="tempo_sv_mil_dias" class="form-select">
                                         <option value="" selected disabled>Selecione quantos dias</option>
                                         <option value="0">0</option>
@@ -863,7 +853,7 @@ include_once './codigos/candidato_valida_cadastro.php';
 
                 <!-- CIVIL OU MILITAR -->
                 <div class="card mb-4 fade-in">
-                    <h5 class="section-header"><i class="fa fa-user-shield me-2"></i>Civil ou Militar Temporário das Forças Armada</h5>
+                    <h5 class="section-header"><i class="fa fa-question-circle-o me-2"></i>Civil ou Militar Temporário das Forças Armada</h5>
                     <div class="form-section">
                         <div class="row">
                             <div class="col-lg-3 mb-3">
@@ -879,7 +869,9 @@ include_once './codigos/candidato_valida_cadastro.php';
                                     <option value="" selected disabled>Selecione se já foi Militar</option>
                                     <option value="nao">Não</option>
                                     <option value="sim">Sim</option>
-                                    <option value="sim_eas">Sim, já fiz o EAS</option>
+                                    <?php if (isset($_SESSION['mfdv'])) : ?>
+                                        <option value="sim_eas">Sim, já fiz o EAS</option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
 
@@ -1142,20 +1134,6 @@ include_once './codigos/candidato_valida_cadastro.php';
             $('#div_tempo_sv_pub_anos').hide();
             $('#div_tempo_sv_pub_meses').hide();
             $('#div_tempo_sv_pub_dias').hide();
-        }
-    }
-
-    function tempo_servico_militar() {
-        const tempoServico = $('#tempo_sv_mil').val();
-
-        if (tempoServico === '1') {
-            $('#div_tempo_sv_mil_anos').show();
-            $('#div_tempo_sv_mil_meses').show();
-            $('#div_tempo_sv_mil_dias').show();
-        } else {
-            $('#div_tempo_sv_mil_anos').hide();
-            $('#div_tempo_sv_mil_meses').hide();
-            $('#div_tempo_sv_mil_dias').hide();
         }
     }
 
