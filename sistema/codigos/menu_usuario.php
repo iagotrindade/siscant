@@ -110,7 +110,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="assistente_virtual.php"><i class="fa bi bi-robot"></i><span>Assistente Virtual</span></a></li>
 
 <!-- Adicionando o item de Aviso aos Candidatos no Menu -->
-<li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="avisos.php"><i class="fa bi bi-megaphone"></i><span>Avisos aos Candidatos</span></a></li>
+<li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="notificacoes.php"><i class="fa fa-bullhorn"></i><span>Notificações</span></a></li>
 
 <!-- <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="suporte_inicial_lista.php"><i class="fa fa-comments"></i><span>Suporte</span></a></li>                         -->
 

@@ -34,17 +34,16 @@ if ($usuario_logado[0]['assinatura_sistema'] != $_SESSION['assinatura_sistema'])
     exit();
 }
 
-$id = $_POST['id'];
-$pergunta = trim($_POST['pergunta']);
-$resposta = $_POST['resposta'];
+$titulo = trim($_POST['titulo']);
+$mensagem = $_POST['mensagem'];
 
-if ($pergunta == null || $resposta == "") {
-    erro("Os campos Pergunta e Resposta são obrigatórios!");
+if ($titulo == null || $mensagem == "") {
+    erro("Os campos Título e Mensagem são obrigatórios!");
     exit();
 }
 
 if ($_POST) {
-    $resultado = $conexao->edita_pergunta_resposta($id, $pergunta, $resposta, $usuario_logado[0]['id']);
+    $resultado = $conexao->insere_notificacao($titulo, $mensagem, $usuario_logado[0]['id']);
 }
 
 $alteracoes_detalhadas =  print_r($resultado);
@@ -54,17 +53,17 @@ if ($resultado)
         $_SESSION['id_usuario'],
         $_SESSION['cpf'],
         $alteracoes_detalhadas['id'],
-        "22104",
-        "Assistente Virtual",
-        "Update",
-        "Editou a pergunta: $pergunta e resposta: $resposta",
+        "22105",
+        "Notificações",
+        "Insert",
+        "Inseriu a notificação: $titulo e mensagem: $mensagem",
         "$alteracoes_detalhadas"
     );
 else {
     $conexao = null;
-    erro("Erro 4564 Pergunta e Resposta não atualizadas!");
+    erro("Erro 4564 Pergunta e Resposta não cadastradas!");
     exit();
 }
 
-header("Location: ../sistema/atualizar_assistente_virtual.php?id_pergunta=$id");
+header("Location: ../sistema/notificacoes.php?sucesso=1");
 exit();

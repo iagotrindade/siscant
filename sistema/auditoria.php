@@ -863,14 +863,32 @@ if (isset($_GET['codigo'])) {
 
                                         <tr>
                                             <td>Assistente Virtual</td>
-                                            <td>Adicionou uma pergunta e resposta a base de dados do Assisten Virtual</td>
+                                            <td>Adicionou uma pergunta e resposta a base de dados do Assistente Virtual</td>
                                             <td>22102</td>
                                         </tr>
 
                                         <tr>
                                             <td>Assistente Virtual</td>
-                                            <td>Apagou uma pergunta e resposta a base de dados do Assisten Virtual</td>
+                                            <td>Apagou uma pergunta e resposta a base de dados do Assistente Virtual</td>
                                             <td>22103</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Assistente Virtual</td>
+                                            <td>Editou uma pergunta e resposta a base de dados do Assistente Virtual</td>
+                                            <td>22104</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Notificações</td>
+                                            <td>Enviou uma notificação para os candidatos</td>
+                                            <td>22105</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Notificações</td>
+                                            <td>Excluiu uma notificação para os candidatos</td>
+                                            <td>22106</td>
                                         </tr>
                                     </tbody>
                                 </table>

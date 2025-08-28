@@ -9876,5 +9876,115 @@ order by total_pontos_somados desc");
     }
     // </editor-fold>
 
+    // 25/07/2025 - Iago Silva - Adicionando função para buscar as notificações da seleção
+    public function get_notificacoes($id_selecao)
+    {
+        try {
+            $sql = "SELECT 
+            n.*, 
+            n.id AS id_notificacao, 
+            u.id AS id_usuario, 
+            u.nome_completo AS nome_usuario, 
+            u.mail AS email_usuario,
+            u.posto_grad,
+            u.nome_guerra
+            FROM notificacao AS n
+            LEFT JOIN usuario AS u ON n.id_usuario_inseriu = u.id
+            WHERE n.id_selecao = :id_selecao
+            ORDER BY n.data_envio DESC";
 
+            $query = $this->pdo->prepare($sql);
+            $query->bindValue(':id_selecao', $id_selecao, PDO::PARAM_INT);
+            $query->execute();
+
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Erro ao buscar notificações: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // 25/07/2025 - Iago Silva - Adicionando função para buscar uma notificação específica pelo ID
+    public function get_notificacao_id($id_notificacao)
+    {
+        try {
+            $sql = "SELECT *
+                    FROM notificacao AS n
+                    LEFT JOIN usuario AS u ON n.id_usuario_inseriu = u.id
+                    WHERE n.id = :id_notificacao
+                    LIMIT 1";
+
+            $query = $this->pdo->prepare($sql);
+            $query->bindValue(':id_notificacao', $id_notificacao);
+            $query->execute();
+
+            return $query->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Erro ao buscar notificação por ID: " . $e->getMessage());
+            return false;
+        };
+    }
+
+    // 25/07/2025 - Iago Silva - Adicionando função para inserir uma nova notificação
+    public function insere_notificacao($titulo, $mensagem)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+        $id_selecao = $_SESSION['selecao'];
+
+        try {
+            $sqlInsert = "INSERT INTO notificacao (id_selecao, titulo, mensagem, id_usuario_inseriu, data_envio) 
+                          VALUES (:id_selecao, :titulo, :mensagem, :id_usuario_inseriu, :data_envio)";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_selecao", $id_selecao);
+            $query->bindValue(":titulo", $titulo);
+            $query->bindValue(":mensagem", $mensagem);
+            $query->bindValue(":id_usuario_inseriu", $usuario);
+            $query->bindValue(":data_envio", $datetime);
+
+            if ($query->execute()) {
+                $data = [
+                    'id_selecao' => $id_selecao,
+                    'titulo' => $titulo,
+                    'mensagem' => $mensagem,
+                    'id_usuario_inseriu' => $usuario,
+                    'data_envio' => $datetime,
+                ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    // 25/07/2025 - Iago Silva - Adicionando função para apagar uma notificação pelo ID
+    public function apaga_notificacao($id_notificacao)
+    {
+        try {
+            $sqlDelete = "DELETE FROM notificacao WHERE id = :id_notificacao";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlDelete);
+            $query->bindValue(":id_notificacao", $id_notificacao);
+
+            if ($query->execute()) {
+                $this->pdo->commit();
+                return true;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
