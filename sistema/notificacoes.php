@@ -117,11 +117,26 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                     <div class="card-body">
                         <form method="POST" action="../banco_dados/notificacao_cadastra.php">
                             <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
-                            <div class="mb-3">
+                            <div class="mb-10">
+                                <label for="notificationEtapa" class="form-label">Etapa da Notificação</label>
+                                <select class="form-control" id="notificationEtapa" name="etapa" required>
+                                    <option value="">Selecione a etapa</option>
+                                    <option value="">Todas</option>
+                                    <option value="1">Etapa 1</option>
+                                    <option value="2">Etapa 2</option>
+                                    <option value="3">Etapa 3</option>
+                                    <option value="4">Etapa 4</option>
+                                    <option value="5">Etapa 5</option>
+                                    <option value="6">Etapa 6</option>
+                                    <option value="7">Etapa 7</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-10">
                                 <label for="notificationTitle" class="form-label">Título da Notificação</label>
                                 <input type="text" class="form-control" id="notificationTitle" name="titulo" placeholder="Digite um título para a notificação" required>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-10">
                                 <label for="notificationMessage" class="form-label">Mensagem</label>
                                 <textarea class="form-control" id="notificationMessage" name="mensagem" rows="5" placeholder="Digite a mensagem para os candidatos..." maxlength="800" required></textarea>
                                 <div class="char-count"><span id="charCount">0</span>/800 caracteres</div>
@@ -183,7 +198,11 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                                 <div class="notification-card card mb-20">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-start" style="display: flex; align-items: center; justify-content: space-between;">
-                                            <h5 class="card-title"><?= $notificacao['titulo'] ?></h5>
+                                            <div class="card-title">
+                                                <h5 class=""><?= $notificacao['titulo'] ?></h5>
+                                                <span class="badge bg-secondary">Etapa: <?= $notificacao['etapa'] ?? 'TODAS' ?></span>
+                                            </div>
+                                            
                                             <button class="btn btn-md btn-delete" onclick="funcao_apagar('<?= $notificacao['id'] ?>', 'notificacao')"> <i class="fa fa-trash"></i> </button>
                                         </div>
                                         <p class="card-text"><?= $notificacao['mensagem'] ?></p>

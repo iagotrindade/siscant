@@ -34,16 +34,18 @@ if ($usuario_logado[0]['assinatura_sistema'] != $_SESSION['assinatura_sistema'])
     exit();
 }
 
+$etapa = $_POST['etapa'];
 $titulo = trim($_POST['titulo']);
 $mensagem = $_POST['mensagem'];
 
 if ($titulo == null || $mensagem == "") {
-    erro("Os campos Título e Mensagem são obrigatórios!");
+    erro("Os campos Título, Mensagem e Etapa são obrigatórios!");
     exit();
 }
 
 if ($_POST) {
-    $resultado = $conexao->insere_notificacao($titulo, $mensagem, $usuario_logado[0]['id']);
+    $etapa = $etapa == "" ? null : $etapa;
+    $resultado = $conexao->insere_notificacao($etapa, $titulo, $mensagem);
 }
 
 $alteracoes_detalhadas =  print_r($resultado);

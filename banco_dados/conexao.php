@@ -827,7 +827,7 @@ class Conexao
     }
 
     // 15 AGO 25 -> Iago Silva Adicionando função para inserir perguntas no Assistente Virtual
-    public function insere_pergunta_resposta($pergunta, $resposta, $usuario_id)
+    public function insere_pergunta_resposta($etapa, $pergunta, $resposta, $usuario_id)
     {
         try {
             $dataHora = date('Y-m-d H:i:s');
@@ -837,11 +837,12 @@ class Conexao
 
             $stmt = $this->pdo->prepare("
             INSERT INTO perguntas_assistente 
-                (pergunta, resposta, id_usuario_inseriu, data_insercao) 
+                (etapa, pergunta, resposta, id_usuario_inseriu, data_insercao) 
             VALUES 
-                (:pergunta, :resposta, :id_usuario_inseriu, :data_insercao)
+                (:etapa, :pergunta, :resposta, :id_usuario_inseriu, :data_insercao)
         ");
 
+            $stmt->bindValue(':etapa', $etapa);
             $stmt->bindValue(':pergunta', $pergunta);
             $stmt->bindValue(':resposta', $resposta);
             $stmt->bindValue(':id_usuario_inseriu', $usuario_id);
@@ -9926,21 +9927,22 @@ order by total_pontos_somados desc");
     }
 
     // 25/07/2025 - Iago Silva - Adicionando função para inserir uma nova notificação
-    public function insere_notificacao($titulo, $mensagem)
+    public function insere_notificacao($etapa, $titulo, $mensagem)
     {
         $datetime = date('Y-m-d H:i:s');
         $usuario = $_SESSION['id_usuario'];
         $id_selecao = $_SESSION['selecao'];
 
         try {
-            $sqlInsert = "INSERT INTO notificacao (id_selecao, titulo, mensagem, id_usuario_inseriu, data_envio) 
-                          VALUES (:id_selecao, :titulo, :mensagem, :id_usuario_inseriu, :data_envio)";
+            $sqlInsert = "INSERT INTO notificacao (id_selecao, etapa, titulo, mensagem, id_usuario_inseriu, data_envio) 
+                          VALUES (:id_selecao, :etapa, :titulo, :mensagem, :id_usuario_inseriu, :data_envio)";
 
             $this->pdo->beginTransaction();
 
             $query = $this->pdo->prepare($sqlInsert);
 
             $query->bindValue(":id_selecao", $id_selecao);
+            $query->bindValue(":etapa", $etapa);
             $query->bindValue(":titulo", $titulo);
             $query->bindValue(":mensagem", $mensagem);
             $query->bindValue(":id_usuario_inseriu", $usuario);
@@ -9949,6 +9951,7 @@ order by total_pontos_somados desc");
             if ($query->execute()) {
                 $data = [
                     'id_selecao' => $id_selecao,
+                    'etapa' => $etapa,
                     'titulo' => $titulo,
                     'mensagem' => $mensagem,
                     'id_usuario_inseriu' => $usuario,

@@ -57,14 +57,15 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                     <label for="etapa" class="control-label"><strong>Etapa</strong></label>
                                     <select name="etapa" id="etapa" class="form-control"
                                         placeholder="Digite a pergunta que os usuários podem fazer...">
+                                        <option value="" selected>Selecione a Etapa</option>
                                         <option value="1">TODAS</option>
-                                        <option value="1">1</option>
-                                        <option value="1">2</option>
-                                        <option value="1">3</option>
-                                        <option value="1">4</option>
-                                        <option value="1">5</option>
-                                        <option value="1">6</option>
-                                        <option value="1">7</option>
+                                        <option value="1">Etapa 1</option>
+                                        <option value="2">Etapa 2</option>
+                                        <option value="3">Etapa 3</option>
+                                        <option value="4">Etapa 4</option>
+                                        <option value="5">Etapa 5</option>
+                                        <option value="6">Etapa 6</option>
+                                        <option value="7">Etapa 7</option>
                                     </select>
                                 </div>
 
@@ -206,6 +207,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <table class="table table-hover table-striped table-bordered" id="tabela_dinamica">
                                     <thead>
                                         <tr class="active">
+                                            <th class="text-center">Etapa</th>
                                             <th class="text-center">Pergunta</th>
                                             <th class="text-center">Resposta</th>
                                             <th class="text-center">Usuario que Cadastrou</th>
@@ -224,6 +226,10 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                             $usuario_cadastro = $conexao->get_usuario_id($linha['id_usuario_inseriu']);
                                             ?>
                                             <tr>
+                                                <td class="text-center">
+                                                    <?= $linha['etapa'] ?? 'TODAS' ?>
+                                                </td>
+
                                                 <td class="text-center">
                                                     <?= $linha['pergunta'] ?>
                                                 </td>
