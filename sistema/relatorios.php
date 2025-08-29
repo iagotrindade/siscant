@@ -1074,6 +1074,32 @@ $lista_especialidades = $conexao->get_especialidade();
                             </div>
                         </div>
 
+                        <div class="alert alert-info">
+                            <legend>Dados dos Candidatos para Cadastro no SIPMED <img src="imagens/pdf.png" height="30px"></legend>
+                            <div class="card-body">
+                                <form action="mpdf/relatorio_sipmed_ott_stt.php" method="POST">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label for="titulo">título</label>
+                                                <input name="titulo" maxlength="100" class="form-control" value="Dados Cadastro para Inspeção de Saúde no SIPMED - Xª RM">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label for="paragrafo_um">Parágrafo</label>
+                                                <input name="paragrafo_um" maxlength="100" class="form-control" value="Tendo em vista a convocação dos candidatos OTT/STT 20XX/20XX, abaixo relacionados, para a realização de Inspeção de Saúde na Xª RM, solicito que os mesmos sejam cadastrados no Sistema de Perícias Médicas - SIPMED para a realização das Inspeções de Saúde no período entre XX a XX Maio XX.">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <button type="submit" class="btn btn-primary btn-block">GERAR</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
                         <!--
                             <div class="card">
                                 <legend>Agenda de comparecimento <img src="imagens/pdf.png" height="30px"></legend>
