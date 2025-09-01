@@ -169,7 +169,7 @@ $conexao = new Conexao();
                         <?php
                         $newCount = 0;
                         foreach ($notificacoes as $notificacao) {
-                            if (strtotime($notificacao['data_envio']) >= strtotime('-7 days')) {
+                            if (strtotime($notificacao['data_envio']) >= strtotime('-5 days')) {
                                 $newCount++;
                             }
                         }

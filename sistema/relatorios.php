@@ -887,7 +887,7 @@ $lista_especialidades = $conexao->get_especialidade();
                 <div class="row">
                     <h4 class="col-md-12">
                         <a data-toggle="collapse" href="#et_personalizada">
-                            PUBLICAÇÕES PERSONALIZADAS
+                            PUBLICAÇÕES PERSONALIZADAS/OUTROS
                         </a>
                     </h4>
                 </div>
@@ -1091,6 +1091,38 @@ $lista_especialidades = $conexao->get_especialidade();
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-lg-12">
+                                            <button type="submit" class="btn btn-primary btn-block">GERAR</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <legend>Candidatos Autodeclarados Cotistas <img src="imagens/pdf.png" height="30px"></legend>
+
+                            <div class="card-body">
+                                <form action="mpdf/relatorio_cotistas.php" method="POST">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <input name="titulo" maxlength="100" class="form-control" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <input name="subtitulo" class="form-control" value="RELAÇÃO DE CANDIDATOS AUTODECLARADOS COTISTAS">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <input name="paragrafo_um" class="form-control" value="Nas tableas abaixo estão listados os candidatos que se autodeclararão como cotistas no momento da Inscrição">
+                                            </div>
+                                        </div>
+
                                         <div class="col-lg-12">
                                             <button type="submit" class="btn btn-primary btn-block">GERAR</button>
                                         </div>
