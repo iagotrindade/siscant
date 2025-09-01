@@ -2,14 +2,12 @@
 include_once 'menu.php';
 include_once 'codigos/funcao_apagar.php';
 
-if($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta')
-{
+if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta') {
     erro("Erro 544654: Página não encontrada");
     exit();
 }
 
-if(isset($_GET['datas_atualizadas']) && $_GET['datas_atualizadas'] == 1)
-{
+if (isset($_GET['datas_atualizadas']) && $_GET['datas_atualizadas'] == 1) {
     echo '<script type="text/javascript">
     window.onload = function() 
     {
@@ -22,8 +20,7 @@ if(isset($_GET['datas_atualizadas']) && $_GET['datas_atualizadas'] == 1)
     };
     </script>';
 }
-if(isset($_GET['sucesso']) && $_GET['sucesso'] == "inscricao")
-{
+if (isset($_GET['sucesso']) && $_GET['sucesso'] == "inscricao") {
     echo '<script type="text/javascript">
     window.onload = function() 
     {
@@ -36,8 +33,7 @@ if(isset($_GET['sucesso']) && $_GET['sucesso'] == "inscricao")
     };
     </script>';
 }
-if(isset($_GET['sucesso']) && $_GET['sucesso'] == "avaliacao_curricular")
-{
+if (isset($_GET['sucesso']) && $_GET['sucesso'] == "avaliacao_curricular") {
     echo '<script type="text/javascript">
     window.onload = function() 
     {
@@ -50,8 +46,7 @@ if(isset($_GET['sucesso']) && $_GET['sucesso'] == "avaliacao_curricular")
     };
     </script>';
 }
-if(isset($_GET['sucesso']) && $_GET['sucesso'] == "exame_medico")
-{
+if (isset($_GET['sucesso']) && $_GET['sucesso'] == "exame_medico") {
     echo '<script type="text/javascript">
     window.onload = function() 
     {
@@ -64,8 +59,7 @@ if(isset($_GET['sucesso']) && $_GET['sucesso'] == "exame_medico")
     };
     </script>';
 }
-if(isset($_GET['sucesso']) && $_GET['sucesso'] == "selecao_encerrada")
-{
+if (isset($_GET['sucesso']) && $_GET['sucesso'] == "selecao_encerrada") {
     echo '<script type="text/javascript">
     window.onload = function() 
     {
@@ -78,8 +72,7 @@ if(isset($_GET['sucesso']) && $_GET['sucesso'] == "selecao_encerrada")
     };
     </script>';
 }
-if(isset($_GET['sucesso']) && $_GET['sucesso'] == "exame_medico_apagado")
-{
+if (isset($_GET['sucesso']) && $_GET['sucesso'] == "exame_medico_apagado") {
     echo '<script type="text/javascript">
     window.onload = function() 
     {
@@ -92,14 +85,28 @@ if(isset($_GET['sucesso']) && $_GET['sucesso'] == "exame_medico_apagado")
     };
     </script>';
 }
+if (isset($_GET['sucesso'])) {
+    echo '<script type="text/javascript">
+    window.onload = function() 
+    {
+        $.notify({
+                title: "<center><b>SUCESSO!</b><br> ",
+                message: " O arquivo do Aviso de Convocação foi atualizado!"
+        },{
+                type: "info"
+        });
+    };
+    </script>';
+}
 
-$get_selecao = $conexao->get_selecao_id();  
-if($get_selecao == null)
-{
+$get_selecao = $conexao->get_selecao_id();
+if ($get_selecao == null) {
     erro("Erro 54234544654: Erro fatal");
     exit();
 }
 
+$aviso_convocacao = $get_selecao[0]['aviso_convocacao'];
+$libera_suporte_inicial = $get_selecao[0]['liberacao_suporte_inicial'];
 $liberado_comprovante = $get_selecao[0]['liberacao_comprovante_inscricao'];
 $eliminar_caso_nao_adicione_foto = $get_selecao[0]['eliminar_caso_nao_adicione_foto'];
 $eliminar_docs_obrigatorios = $get_selecao[0]['eliminar_docs_obrigatorios'];
@@ -119,676 +126,848 @@ $selecao_pagamento = $get_selecao[0]['pagamento'];
 $valor_gru = $get_selecao[0]['valor_gru'];
 $apelido_ug = $get_selecao[0]['apelido_ug'];
 
-//$verifica_existencia = $conexao->get_recurso_visualiza($id_selecao);
-
-//var_dump($verifica_existencia);//verifica dum do sql para testar o check; 
-//exit;
 ?>
 
 <script>
-    function pagamento_para_selecao()
-    {
-        if($(cobrar_candidato). is(":checked"))
-        {
-           $(div_valor).show();
-           $(div_apelido).show();
-        }
-        else
-        {
-           $(div_valor).hide();
-           $(div_apelido).hide();
+    function pagamento_para_selecao() {
+        if ($(cobrar_candidato).is(":checked")) {
+            $(div_valor).show();
+            $(div_apelido).show();
+        } else {
+            $(div_valor).hide();
+            $(div_apelido).hide();
         }
     }
 </script>
 
+<!--31/08/2025 -> Iago Silva Remodelando layout -->
+<style>
+    :root {
+        --primary-color: #006400;
+        /* Verde escuro como cor primária */
+        --secondary-color: #228B22;
+        /* Verde floresta como secundária */
+        --accent-color: #8B0000;
+        /* Vermelho escuro como acento */
+        --light-color: #F5F5F5;
+        /* Cinza muito claro */
+        --success-color: #2E8B57;
+        /* Verde mar como cor de sucesso */
+        --text-color: #333333;
+        /* Cor do texto principal */
+        --border-color: #D3D3D3;
+        /* Cor das bordas */
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        border: 1px solid var(--border-color);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 15px 20px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header i {
+        margin-right: 8px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: var(--text-color);
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #004d00;
+        /* Tom mais escuro do verde primário */
+        transform: scale(1.02);
+    }
+
+    .alert {
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: none;
+    }
+
+
+    .section-title {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 10px;
+        margin: 30px 0 20px 0;
+        font-weight: 700;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        padding: 10px 15px;
+        border: 1px solid var(--border-color);
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
+    }
+
+    . {
+        margin: 15px 0;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(34, 139, 34, 0.1);
+    }
+
+    .table-dark {
+        background-color: var(--primary-color) !important;
+    }
+
+    .badge-status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .config-group {
+        margin-bottom: 25px;
+    }
+
+    .pdf-icon {
+        color: var(--accent-color);
+        width: 30px;
+        transition: transform 0.2s;
+    }
+
+    .pdf-icon:hover {
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 15px;
+        }
+    }
+</style>
 <div class="content-wrapper">
-  <div class="page-title">
-    <div>
-      <h1>Configuração da Seleção <i class="fa fa-cogs"></i></h1>
-    </div>
-    <div>
-      <ul class="breadcrumb">
-        <li><i class="fa fa-home fa-lg"></i></li>
-        <li><a href="index.php">Página Inicial</a></li>
-        <li>Configuração da Seleção</li>
-      </ul>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card">
-            <legend>Agenda da Inscrição </legend> 
-            <form action="../banco_dados/agenda_inscricao_atualiza.php" method="post">
-                
-                <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
-                
-                <div  class="row">
-                    <div  class="col-lg-6">
-                        <div id="div_nome" class="form-group"> 
-                            <label for="nome">Data de início da inscrição</label> 
-                            <input value="<?php if($data_inicio_inscricao != null) echo trata_data ($data_inicio_inscricao) ?>" name="data_inicio_inscricoes" maxlength="120" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>Último dia para inscrição</label>
-                            <input value="<?php if($data_inicio_inscricao != null) echo trata_data ($data_fim_inscricao) ?>" maxlength="20" name="data_fim_inscricoes" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                    <div  class="col-lg-12">
-                        <button  type="submit"  class="btn btn-primary btn-block">ATUALIZAR</button>
-                    </div>
-                </div>
-            </form>
+    <div class="page-title">
+        <div>
+            <h1>Configuração da Seleção <i class="fa fa-cogs"></i></h1>
+        </div>
+        <div>
+            <ul class="breadcrumb">
+                <li><i class="fa fa-home fa-lg"></i></li>
+                <li><a href="index.php">Página Inicial</a></li>
+                <li>Configuração da Seleção</li>
+            </ul>
         </div>
     </div>
-      
-    <div class="col-md-6">
-      <div class="card">
-            <legend>Agenda da adição de arquivos de isenção </legend> 
-            <form action="../banco_dados/agenda_isencao_atualiza.php" method="post">
-                
-                <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
-                
-                <div  class="row">
-                    <div  class="col-lg-6">
-                        <div id="div_nome" class="form-group"> 
-                            <label for="nome">Data de início da isenção</label> 
-                            <input value="<?php if($data_inicio_isencao != null) echo trata_data ($data_inicio_isencao) ?>" name="data_inicio_isencao" maxlength="120" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>Último dia para isenção</label>
-                            <input value="<?php if($data_fim_isencao != null) echo trata_data ($data_fim_isencao) ?>" maxlength="20" name="data_fim_isencao" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                    <div  class="col-lg-12">
-                        <button  type="submit"  class="btn btn-primary btn-block">ATUALIZAR</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-      
-    <div class="col-md-6">
-      <div class="card">
-            <legend>Agenda da avaliação de currículos e docs obrigatórios</legend> 
-            <form action="../banco_dados/agenda_avaliacao_atualiza.php" method="post">
-                
-                <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
-                
-                <div  class="row">
-                    <div  class="col-lg-6">
-                        <div id="div_nome" class="form-group"> 
-                            <label for="nome">Data de início das avaliações</label> 
-                            <input value="<?php if($data_inicio_avaliacao != null) echo trata_data ($data_inicio_avaliacao) ?>" name="data_inicio_avaliacao" maxlength="120" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>Último dia para avaliações</label>
-                            <input value="<?php if($data_inicio_avaliacao != null) echo trata_data ($data_fim_avaliacao) ?>" maxlength="20" name="data_fim_avaliacao" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                    <div  class="col-lg-12">
-                        <button  type="submit"  class="btn btn-primary btn-block">ATUALIZAR</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-      
-      
-    <div class="col-md-6">
-      <div class="card">
-            <legend>Data de nascimento para inscrição</legend> 
-            <form action="../banco_dados/data_maxima_nascimento.php" method="post">
-                
-                <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
-                
-                <div  class="row">
-                    <div  class="col-lg-6">
-                        <div id="div_nome" class="form-group"> 
-                            <label for="nome">Deve ser menor do que</label> 
-                            <input value="<?php if($data_minima_nascimento != null) echo trata_data($data_minima_nascimento) ?>" name="data_minima_nascimento" maxlength="120" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_nome" class="form-group"> 
-                            <label for="nome">Deve ser maior do que (limite de idade)</label> 
-                            <input value="<?php if($data_maxima_nascimento != null) echo trata_data($data_maxima_nascimento) ?>" name="data_maxima_nascimento" maxlength="120" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                
-                    
-                
-                <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                    <div  class="col-lg-12">
-                        <button  type="submit"  class="btn btn-primary btn-block">ATUALIZAR</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-      
-          
-      <div class="col-md-6">
-            <div class="card">
-                <legend>Cobrar pagamento do candidato</legend> 
-                <form action="../banco_dados/cobrar_pagamento_candidato.php" method="post">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Agrupamento por categorias -->
 
-                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                    <div class="row">
-                        <div  class="col-lg-12">
-                            
-                            <div class="alert alert-dismissible alert-info">
-                                <font color="red"><b>ATENÇÃO:</b></font> Ao selecionar esta opção, o campo para o candidato adicionar o arquivo de pagamento vai aparecer e o candidato não passará para próxima etapa caso ele não tenha efetuado o pagamento ou comprovado e aprovada a isenção.
-                            </div> 
-                            
-                            <div class="animated-checkbox form-group">
-                                <label>
-                                    <input id='cobrar_candidato' type="checkbox" onclick="pagamento_para_selecao()" name="pagamento" <?php if($selecao_pagamento) echo "checked" ?>>
-                                    <span class="label-text">Cobrar pagamento do candidato</span>
-                                </label>
+            <!-- Documentos e Arquivos -->
+            <div class="col-12 ">
+                <h3 class="section-title mt-0"><i class="fa fa-files-o"></i> Documentos e Arquivos</h3>
+            </div>
+
+            <!-- Aviso de Convocação -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="fa fa-file-text-o"></i> Aviso de Convocação</span>
+                        <a href="arquivos/avisos_de_convocacao/<?php echo $aviso_convocacao; ?>" target="_blank">
+                            <img src="../sistema/imagens/pdf.png" class="pdf-icon" title="Visualizar Aviso de Convocação">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <strong><i class="fa fa-exclamation-circle"></i> ATENÇÃO:</strong> O Assistente Virtual mostrará esse documento aos candidatos em determinadas situações.
+                        </div>
+                        <form action="../banco_dados/aviso_convocacao_atualiza.php" method="POST" enctype="multipart/form-data">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
+
+                            <div class="mb-10">
+                                <label for="avisoFile" class="form-label">Aviso de Convocação Assinado</label>
+                                <input type="file" class="form-control" id="avisoFile" name="arquivo">
                             </div>
-                            
-                            <div  <?php if(!$selecao_pagamento) echo ' hidden '; ?> id='div_valor'>
-                                <div class="form-group">
-                                <label>Valor a ser cobrado</label>
-                                <input maxlength="10" value="<?php echo 'R$ ' .$valor_gru ?>" name="valor_cobrado" class="form-control">
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comprovante de Inscrição -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-ticket"></i> Comprovante de Inscrição
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/liberar_comprovante_inscricao.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <div class="">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="comprovanteSwitch" name="liberacao" <?php if ($liberado_comprovante == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="comprovanteSwitch">
+                                        Liberar a visualização do comprovante de inscrição para o candidato
+                                    </label>
                                 </div>
                             </div>
 
-                            <div  <?php if(!$selecao_pagamento) echo ' hidden '; ?> id='div_apelido'>
-                                <div class="form-group">
-                                <label>Apelido da UG/Gestão responsável pela arrecadação (5 dígitos). Exemplo da 3ª RM: 02435</label>
-                                <input value='<?php if($_SESSION['selecao_regiao'] == '3') echo '02435'; else echo $apelido_ug ?>' maxlength="10" name="apelido" class="form-control">
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agenda e Prazos -->
+            <div class="col-12">
+                <h3 class="section-title"><i class="fa fa-calendar"></i> Agenda e Prazos</h3>
+            </div>
+
+            <!-- Agenda da Inscrição -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-pencil-square-o"></i> Agenda da Inscrição
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/agenda_inscricao_atualiza.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
+
+                            <div class="row">
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataInicioInscricao" class="form-label">Data de início da inscrição</label>
+                                    <input type="text" class="form-control" id="dataInicioInscricao" name="data_inicio_inscricoes" value="<?php if ($data_inicio_inscricao != null) echo trata_data($data_inicio_inscricao); ?>">
+                                </div>
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataFimInscricao" class="form-label">Último dia para inscrição</label>
+                                    <input type="text" class="form-control" id="dataFimInscricao" name="data_fim_inscricoes" value="<?php if ($data_fim_inscricao != null) echo trata_data($data_fim_inscricao); ?>">
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                        <div  class="col-lg-12">
-                            <button   type="submit"  class="btn btn-primary btn-block">SALVAR</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-      
-      <div class="col-md-6">
-            <div class="card">
-                <legend>Encerrar seleção</legend> 
-                <form action="../banco_dados/encerra_selecao.php" method="post">
 
-                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                    <div class="row">
-                        <div  class="col-lg-12">
-                            <div class="alert alert-dismissible alert-info">
-                                    <font color="red"><b>ATENÇÃO:</b></font> Quando a seleção estiver encerrada, somente o administrador poderá fazer o login!
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                </button>
                             </div>
-                            
-                            <div class="animated-checkbox form-group">
-                                <label>
-                                    <input type="checkbox" name="encerra_selecao" <?php if($selecao_encerrada == 1) echo "checked" ?>>
-                                    <span class="label-text">Encerrar seleção</span>
-                                </label>
-                            </div>
-                        </div>
+                        </form>
                     </div>
-                    
-                    <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                        <div  class="col-lg-12">
-                            <button   type="submit"  class="btn btn-primary btn-block">SALVAR</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-      
-      <div class="col-md-6">
-            <div class="card">
-                <legend>Liberar para o candidato a visualização da avaliação curricular</legend> 
-                <form action="../banco_dados/liberar_candidato_avaliacao_curricular.php" method="post">
 
-                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                    <div class="row">
-                        <div  class="col-lg-12">
-                            
-                            <div <?php if($libera_avaliacao_curricular == 1) echo "hidden" ?> class="alert alert-dismissible alert-info">
-                                    <font color="red"><b>ATENÇÃO:</b></font> Quando liberado o candidato visualizará a avaliação do seu currículo adicionado.
-                            </div>  
-                            <div class="animated-checkbox form-group">
-                                <label>
-                                    <input type="checkbox" name="liberacao" <?php if($libera_avaliacao_curricular == 1) echo "checked" ?>>
-                                    <span class="label-text">Liberar a visualização da avaliação curricular</span>
-                                </label>
-                            </div>
-                        </div>
+            <!-- Agenda da Isenção -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-dollar"></i> Agenda da Isenção
                     </div>
-                    
-                    <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                        <div  class="col-lg-12">
-                            <button   type="submit"  class="btn btn-primary btn-block">SALVAR</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-      
-          <div class="col-md-6">
-            <div class="card">
-                <legend>Liberar para o candidato a visualização da avaliação dos Documentos Obrigatórios</legend> 
-                <form action="../banco_dados/liberar_candidato_avaliacao_docs_obrigatorios.php" method="post">
+                    <div class="card-body">
+                        <form action="../banco_dados/agenda_isencao_atualiza.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
 
-                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                    <div class="row">
-                        <div  class="col-lg-12">
-                            
-                            <div <?php if($liberacao_avaliacao_docs_obrigatorios == 1) echo "hidden" ?> class="alert alert-dismissible alert-info">
-                                    <font color="red"><b>ATENÇÃO:</b></font> Quando liberado o candidato visualizará a avaliação dos Documentos Obrigatórios assim como a justificativa adicionada.
-                            </div>  
-                            <div class="animated-checkbox form-group">
-                                <label>
-                                    <input type="checkbox" name="liberacao" <?php if($liberacao_avaliacao_docs_obrigatorios == 1) echo "checked" ?>>
-                                    <span class="label-text">Liberar a visualização de avaliação de Docs Obrigatórios</span>
-                                </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataInicioIsencao" class="form-label">Data de início da isenção</label>
+                                    <input type="text" class="form-control" id="dataInicioIsencao" name="data_inicio_isencao" value="<?php if ($data_inicio_isencao != null) echo trata_data($data_inicio_isencao); ?>">
+                                </div>
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataFimIsencao" class="form-label">Último dia para isenção</label>
+                                    <input type="text" class="form-control" id="dataFimIsencao" name="data_fim_isencao" value="<?php if ($data_fim_isencao != null) echo trata_data($data_fim_isencao); ?>">
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                        <div  class="col-lg-12">
-                            <button   type="submit"  class="btn btn-primary btn-block">SALVAR</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div> 
-      
-      <div class="col-md-6">
-            <div class="card">
-                <legend>Eliminar candidato na etapa 1 caso ele não tenha adicionado todos os documentos obrigatórios</legend> 
-                <form action="../banco_dados/eliminar_caso_nao_adicione_docs_obrigatorios.php" method="post">
 
-                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                    <div class="row">
-                        <div  class="col-lg-12">
-                            <div class="animated-checkbox form-group">
-                                <label>
-                                    <input type="checkbox" name="eliminar" <?php if($eliminar_docs_obrigatorios == 1) echo "checked" ?>>
-                                    <span class="label-text">Eliminar candidado caso não adicione os docs obrigatórios</span>
-                                </label>
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                    
-                    <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                        <div  class="col-lg-12">
-                            <button   type="submit"  class="btn btn-primary btn-block">SALVAR</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-      
-      <div class="col-md-6">
-            <div class="card">
-                <legend>Liberar para o candidato a visualização do comprovante de inscrição</legend> 
-                <form action="../banco_dados/liberar_comprovante_inscricao.php" method="post">
 
-                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                    <div class="row">
-                        <div  class="col-lg-12">
-                            <div class="animated-checkbox form-group">
-                                <label>
-                                    <input type="checkbox" name="liberacao" <?php if($liberado_comprovante == 1) echo "checked" ?>>
-                                    <span class="label-text">Liberar a visualização do comprovante de inscrição para o candidato</span>
-                                </label>
-                            </div>
-                        </div>
+            <!-- Agenda da Avaliação -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-check-square-o"></i> Agenda da Avaliação
                     </div>
-                    
-                    <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                        <div  class="col-lg-12">
-                            <button   type="submit"  class="btn btn-primary btn-block">SALVAR</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-      
-      
-      
-      <div class="col-md-6">
-            <div class="card">
-                <legend>Eliminar candidato na etapa 1 caso ele não adicione a sua foto</legend> 
-                <form action="../banco_dados/eliminar_caso_nao_adicione_foto.php" method="post">
+                    <div class="card-body">
+                        <form action="../banco_dados/agenda_avaliacao_atualiza.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
 
-                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                    <div class="row">
-                        <div  class="col-lg-12">
-                            <div class="animated-checkbox form-group">
-                                <label>
-                                    <input type="checkbox" name="eliminar" <?php if($eliminar_caso_nao_adicione_foto == 1) echo "checked" ?>>
-                                    <span class="label-text">Eliminar candidado caso não adicione foto</span>
-                                </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataInicioAvaliacao" class="form-label">Data de início das avaliações</label>
+                                    <input type="text" class="form-control" id="dataInicioAvaliacao" name="data_inicio_avaliacao" value="<?php if ($data_inicio_avaliacao != null) echo trata_data($data_inicio_avaliacao); ?>">
+                                </div>
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataFimAvaliacao" class="form-label">Último dia para avaliações</label>
+                                    <input type="text" class="form-control" id="dataFimAvaliacao" name="data_fim_avaliacao" value="<?php if ($data_fim_avaliacao != null) echo trata_data($data_fim_avaliacao); ?>">
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                        <div  class="col-lg-12">
-                            <button   type="submit"  class="btn btn-primary btn-block">SALVAR</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-      
-      
-      
-      <div class="col-md-6">
-            <div class="card">
-                <legend>Liberar para o candidato selecionar as prioridades da especialidade</legend> 
-                <form action="../banco_dados/liberar_prioridade_candidato.php" method="post">
 
-                    <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                    <div class="row">
-                        <div  class="col-lg-12">
-                            <div class="animated-checkbox form-group">
-                                <label>
-                                    <input type="checkbox" name="liberacao" <?php if($selecao_libera_prioridade_candidato == 1) echo "checked" ?>>
-                                    <span class="label-text">Liberar para o candidato visualizar e cadastrar as prioridades de cada especialidade</span>
-                                </label>
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                    
-                    <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                        <div  class="col-lg-12">
-                            <button   type="submit"  class="btn btn-primary btn-block">SALVAR</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-      
-      
-      <div class="col-md-6">
-      <div class="card">
-            <legend>Liberação para o candidato selecionar a cidade onde quer servir</legend> 
-            <form action="../banco_dados/agenda_cidade_candidato.php" method="post">
-                
-                <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
-                <div  class="row">
-                    <div  class="col-lg-6">
-                        <div id="div_nome" class="form-group"> 
-                            <label>Data de início</label> 
-                            <input value="<?php if($data_inicio_cidade != null) echo trata_data ($data_inicio_cidade) ?>" name="data_inicio_cidade" maxlength="120" class="form-control">
-                        </div>
+
+            <!-- Agenda da Cidade -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-map"></i> Agenda da Seleção de Cidade
                     </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>Data de fim</label>
-                            <input value="<?php if($data_fim_cidade != null) echo trata_data ($data_fim_cidade) ?>" maxlength="20" name="data_fim_cidade" class="form-control">
+                    <div class="card-body">
+                        <form action="../banco_dados/agenda_cidade_candidato.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
+
+                            <div class="row">
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataInicioCidade" class="form-label">Data de início</label>
+                                    <input type="text" class="form-control" id="dataInicioCidade" name="data_inicio_cidade" value="<?php if ($data_inicio_cidade != null) echo trata_data($data_inicio_cidade); ?>">
+                                </div>
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataFimCidade" class="form-label">Data de fim</label>
+                                    <input type="text" class="form-control" id="dataFimCidade" name="data_fim_cidade" value="<?php if ($data_fim_cidade != null) echo trata_data($data_fim_cidade); ?>">
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agenda de Recursos -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-gavel"></i> Agenda de Recursos
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/candidato_adiciona_recurso.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
+
+                            <div class="row">
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataInicioRecurso" class="form-label">Data de início</label>
+                                    <input type="text" class="form-control" id="dataInicioRecurso" name="data_inicio_recurso" value="<?php if ($data_inicio_recurso != null) echo trata_data($data_inicio_recurso); ?>">
+                                </div>
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataFimRecurso" class="form-label">Data de fim</label>
+                                    <input type="text" class="form-control" id="dataFimRecurso" name="data_fim_recurso" value="<?php if ($data_fim_recurso != null) echo trata_data($data_fim_recurso); ?>">
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liberações e Configurações -->
+            <div class="col-12">
+                <h3 class="section-title"><i class="fa fa-unlock-alt"></i> Liberações e Configurações</h3>
+            </div>
+
+            <!-- Suporte Inicial -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-comments-o"></i> Suporte Inicial
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/liberar_suporte_inicial.php" method="POST">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <?php if ($libera_suporte_inicial != 1): ?>
+                                <div class="alert alert-info">
+                                    <strong><i class="fa fa-exclamation-circle"></i> ATENÇÃO:</strong> Quando liberado, o candidato não inscrito visualizará o formulário de Suporte.
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="suporteSwitch" name="liberacao" <?php if ($libera_suporte_inicial == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="suporteSwitch">
+                                        Liberar para os candidatos ainda não inscritos enviarem mensagens ao Suporte
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualização da Avaliação Curricular -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-graduation-cap"></i> Visualização da Avaliação Curricular
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/liberar_candidato_avaliacao_curricular.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <?php if ($libera_avaliacao_curricular != 1): ?>
+                                <div class="alert alert-info">
+                                    <strong><i class="fa fa-exclamation-circle"></i> ATENÇÃO:</strong> Quando liberado, o candidato visualizará a avaliação do seu currículo adicionado.
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="avaliacaoCurricularSwitch" name="liberacao" <?php if ($libera_avaliacao_curricular == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="avaliacaoCurricularSwitch">
+                                        Liberar a visualização da avaliação curricular
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualização de Docs Obrigatórios -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-files-o"></i> Visualização de Docs Obrigatórios
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/liberar_candidato_avaliacao_docs_obrigatorios.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <?php if ($liberacao_avaliacao_docs_obrigatorios != 1): ?>
+                                <div class="alert alert-info">
+                                    <strong><i class="fa fa-exclamation-circle"></i> ATENÇÃO:</strong> Quando liberado, o candidato visualizará a avaliação dos Documentos Obrigatórios assim como a justificativa adicionada.
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="docsObrigatoriosSwitch" name="liberacao" <?php if ($liberacao_avaliacao_docs_obrigatorios == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="docsObrigatoriosSwitch">
+                                        Liberar a visualização de avaliação de Docs Obrigatórios
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prioridades de Especialidade -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-list-ol"></i> Prioridades de Especialidade
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/liberar_prioridade_candidato.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <div class="">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="prioridadeSwitch" name="liberacao" <?php if ($selecao_libera_prioridade_candidato == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="prioridadeSwitch">
+                                        Liberar para o candidato visualizar e cadastrar as prioridades de cada especialidade
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Regras e Validações -->
+            <div class="col-12">
+                <h3 class="section-title"><i class="fa fa-legal"></i> Regras e Validações</h3>
+            </div>
+
+            <!-- Data de Nascimento -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-birthday-cake"></i> Data de Nascimento para Inscrição
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/data_maxima_nascimento.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
+
+                            <div class="row">
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataMinimaNascimento" class="form-label">Deve ser menor do que</label>
+                                    <input type="text" class="form-control" id="dataMinimaNascimento" name="data_minima_nascimento" value="<?php if ($data_minima_nascimento != null) echo trata_data($data_minima_nascimento); ?>">
+                                </div>
+                                <div class="col-md-6 mb-10">
+                                    <label for="dataMaximaNascimento" class="form-label">Deve ser maior do que (limite de idade)</label>
+                                    <input type="text" class="form-control" id="dataMaximaNascimento" name="data_maxima_nascimento" value="<?php if ($data_maxima_nascimento != null) echo trata_data($data_maxima_nascimento); ?>">
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagamento do Candidato -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-dollar"></i> Pagamento do Candidato
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/cobrar_pagamento_candidato.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <div class="alert alert-info">
+                                <strong><i class="fa fa-exclamation-circle"></i> ATENÇÃO:</strong> Ao selecionar esta opção, o campo para o candidato adicionar o arquivo de pagamento vai aparecer e o candidato não passará para próxima etapa caso ele não tenha efetuado o pagamento ou comprovado e aprovada a isenção.
+                            </div>
+
+                            <div class=" mb-10">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="pagamentoSwitch" name="pagamento" onclick="pagamento_para_selecao()" <?php if ($selecao_pagamento) echo "checked"; ?>>
+                                    <label class="form-check-label" for="pagamentoSwitch">
+                                        Cobrar pagamento do candidato
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="div_valor" <?php if (!$selecao_pagamento) echo 'hidden'; ?> class="mb-10">
+                                <label for="valorCobrado" class="form-label">Valor a ser cobrado</label>
+                                <input type="text" class="form-control" id="valorCobrado" name="valor_cobrado" value="<?php echo 'R$ ' . $valor_gru; ?>">
+                            </div>
+
+                            <div id="div_apelido" <?php if (!$selecao_pagamento) echo 'hidden'; ?> class="mb-10">
+                                <label for="apelidoUg" class="form-label">Apelido da UG/Gestão responsável pela arrecadação (5 dígitos)</label>
+                                <input type="text" class="form-control" id="apelidoUg" name="apelido" value="<?php if ($_SESSION['selecao_regiao'] == '3') echo '02435';
+                                                                                                                else echo $apelido_ug; ?>">
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eliminação por Documentos Obrigatórios -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-ban"></i> Eliminação por Documentos Obrigatórios
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/eliminar_caso_nao_adicione_docs_obrigatorios.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <div class="">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="eliminarDocsSwitch" name="eliminar" <?php if ($eliminar_docs_obrigatorios == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="eliminarDocsSwitch">
+                                        Eliminar candidato caso não adicione os docs obrigatórios
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eliminação por Foto -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-user-times"></i> Eliminação por Foto
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/eliminar_caso_nao_adicione_foto.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <div class="">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="eliminarFotoSwitch" name="eliminar" <?php if ($eliminar_caso_nao_adicione_foto == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="eliminarFotoSwitch">
+                                        Eliminar candidato caso não adicione foto
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Encerramento de Seleção -->
+            <div class="col-xl-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-lock"></i> Encerramento de Seleção
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/encerra_selecao.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                            <div class="alert alert-info">
+                                <strong><i class="fa fa-exclamation-circle"></i> ATENÇÃO:</strong> Quando a seleção estiver encerrada, somente o administrador poderá fazer o login!
+                            </div>
+
+                            <div class="">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="encerrarSelecaoSwitch" name="encerra_selecao" <?php if ($selecao_encerrada == 1) echo "checked"; ?>>
+                                    <label class="form-check-label" for="encerrarSelecaoSwitch">
+                                        Encerrar seleção
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-save"></i> SALVAR
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exame Médico -->
+            <div class="col-12">
+                <h3 class="section-title"><i class="fa fa-stethoscope"></i> Exame Médico</h3>
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-plus-circle"></i> Cadastrar Nova JISE
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/exame_medico_cadastra.php" method="post">
+                            <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
+
+                            <div class="row">
+                                <div class="col-md-6 col-lg-3 mb-10">
+                                    <label for="sessaoExame" class="form-label">Nº da Sessão</label>
+                                    <input type="text" class="form-control" id="sessaoExame" name="sessao">
+                                </div>
+                                <div class="col-md-6 col-lg-3 mb-10">
+                                    <label for="dataExame" class="form-label">Dia do Exame</label>
+                                    <input type="text" class="form-control" id="dataExame" name="data">
+                                </div>
+                                <div class="col-md-6 col-lg-3 mb-10">
+                                    <label for="cidadeExame" class="form-label">Cidade</label>
+                                    <input type="text" class="form-control" id="cidadeExame" name="cidade">
+                                </div>
+                                <div class="col-md-6 col-lg-3 mb-10">
+                                    <label for="presidenteExame" class="form-label">Presidente</label>
+                                    <input type="text" class="form-control" id="presidenteExame" name="presidente">
+                                </div>
+                                <div class="col-md-6 col-lg-3 mb-10">
+                                    <label for="membro1Exame" class="form-label">1º Membro</label>
+                                    <input type="text" class="form-control" id="membro1Exame" name="membro_1">
+                                </div>
+                                <div class="col-md-6 col-lg-3 mb-10">
+                                    <label for="membro2Exame" class="form-label">2º Membro</label>
+                                    <input type="text" class="form-control" id="membro2Exame" name="membro_2">
+                                </div>
+                            </div>
+
+                            <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-plus-circle"></i> CADASTRAR
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="mt-4">
+                            <h5><i class="fa fa-list"></i> JISE's Cadastradas</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered" id="tabela_dinamica">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Sessão</th>
+                                            <th>Dia do Exame</th>
+                                            <th>Cidade</th>
+                                            <th>Presidente</th>
+                                            <th>1º Membro</th>
+                                            <th>2º Membro</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $get_exames_saude = $conexao->get_exames_medico();
+
+                                        foreach ($get_exames_saude as $linha) {
+                                            $dia_exame = "";
+                                            if ($linha['dia_exame'] != null) $dia_exame = trata_data($linha['dia_exame']);
+
+                                            echo '
+                                            <tr>
+                                                <td>' . $linha['sessao'] . '</td>
+                                                <td>' . $dia_exame . '</td>
+                                                <td>' . $linha['cidade'] . '</td>
+                                                <td>' . $linha['presidente'] . '</td>
+                                                <td>' . $linha['membro_1'] . '</td>
+                                                <td>' . $linha['membro_2'] . '</td>
+                                                <td>
+                                                    <a onclick="funcao_apagar(\'' . $linha['id'] . '\', \'exame_medico\')" class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-trash-alt"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>';
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                    <div  class="col-lg-12">
-                        <button  type="submit"  class="btn btn-primary btn-block">ATUALIZAR</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-      
-      
-      <div class="col-md-6">
-      <div class="card">
-            <legend>Liberação para o candidato adicionar recursos</legend> 
-            <form action="../banco_dados/candidato_adiciona_recurso.php" method="post">
-                
-                <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
-                
-                <div  class="row">
-                    <div  class="col-lg-6">
-                        <div id="div_nome" class="form-group"> 
-                            <label>Data de início</label> 
-                            <input value="<?php if($data_inicio_recurso != null) echo trata_data ($data_inicio_recurso) ?>" name="data_inicio_recurso" maxlength="120" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>Data de fim</label>
-                            <input value="<?php if($data_fim_recurso != null) echo trata_data($data_fim_recurso) ?>" maxlength="20" name="data_fim_recurso" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                    <div  class="col-lg-12">
-                        <button  type="submit"  class="btn btn-primary btn-block">ATUALIZAR</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!--
-    <div class="col-md-6">
-    <div class="card">
-        <legend>Liberação para o candidato VISUALIZAR recursos - Por Região</legend> 
-        <form action="../banco_dados/candidato_visualiza_recurso.php" method="post">
-            <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-            <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
-         
-            <div class="row">
-                <div class="col-lg-12">
-                    <label>Selecione as opções:</label>
-                    <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="opcoes[]" value="um_regiao" id="um_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['um_regiao'] === '1') ? 'checked' : ''; ?>>
-                <label class="form-check-label" for="um_regiao">1ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="dois_regiao" id="dois_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['dois_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="dois_regiao">2ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="tres_regiao" id="tres_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['tres_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="tres_regiao">3ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="quatro_regiao" id="quatro_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['quatro_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="quatro_regiao">4ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="cinco_regiao" id="cinco_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['cinco_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="cinco_regiao">5ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="seis_regiao" id="seis_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['seis_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="seis_regiao">6ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="sete_regiao" id="sete_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['sete_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="sete_regiao">7ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="oito_regiao" id="oito_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['oito_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="oito_regiao">8ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="nove_regiao" id="nove_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['nove_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="nove_regiao">9ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="dez_regiao" id="dez_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['dez_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="dez_regiao">10ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="onze_regiao" id="onze_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['onze_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="onze_regiao">11ª Região Militar</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="opcoes[]" value="doze_regiao" id="doze_regiao" <?php foreach ($verifica_existencia as $verifica) echo ($verifica['doze_regiao'] === '1') ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="doze_regiao">12ª Região Militar</label>
-                    </div>
-
-                </div>
-            </div> 
-
-            <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                <div class="col-lg-12">
-                    <button type="submit" class="btn btn-primary btn-block">ATUALIZAR</button>
-                </div>-->
-          
-        </form>
-   
-      
-     
-      <div class="col-md-12">
-            <div class="card">
-                 <a name="exame_medico"></a>
-                <legend>Exame de Médico</legend> 
-                <form action="../banco_dados/exame_medico_cadastra.php" method="post">
-                
-                <input hidden name="crip" value="<?php echo  hash('sha256', $_SESSION['chave']."freitas"); ?>">
-                <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
-                
-                <div  class="row">
-                    <div  class="col-lg-6">
-                        <div id="div_nome" class="form-group"> 
-                            <label for="nome">Nº da Sessão</label> 
-                            <input value="" name="sessao" maxlength="40" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>Dia do Exame</label>
-                            <input value="" maxlength="20" name="data" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>Cidade</label>
-                            <input value="" maxlength="140" name="cidade" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>Presidente</label>
-                            <input value="" maxlength="140" name="presidente" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>1º Membro</label>
-                            <input value="" maxlength="140" name="membro_1" class="form-control">
-                        </div>
-                    </div>
-                    <div  class="col-lg-6">
-                        <div id="div_ramal" class="form-group">
-                            <label>2º Membro</label>
-                            <input value="" maxlength="140" name="membro_2" class="form-control">
-                        </div>
-                    </div>
-                    
-                </div>
-                
-                <div <?php if($perfil != "admin") echo "hidden" ?> class="row">
-                    <div  class="col-lg-12">
-                        <button  type="submit"  class="btn btn-primary btn-block">CADASTRAR</button>
-                    </div>
-                </div>
-                
-                
-                <br>
-                <div class="row">
-                    <div  class="col-lg-12">
-                        <legend>Cadastros dos exames de saúde</legend>
-                        <table class="table table-hover table-bordered" id="tabela_dinamica">
-                        <thead>
-                            <tr>
-                              <th>Sessão</th>
-                              <th>Dia do Exame</th>
-                              <th>Cidade</th>
-                              <th>Presidente</th>
-                              <th>1º Membro</th>
-                              <th>2º Membro</th>
-                              <th>Deletar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <?php
-                                $get_exames_saude = $conexao->get_exames_medico();  
-                            
-                                foreach($get_exames_saude as $linha)
-                                {
-                                    $dia_exame = "";
-                                    if($linha['dia_exame'] != null) $dia_exame = trata_data ($linha['dia_exame']);
-                                    
-                                    echo '
-                                    <tr>
-                                    <td>'.$linha['sessao'].'</td>
-                                    <td>'.$dia_exame.'</td>
-                                    <td>'.$linha['cidade'].'</td>
-                                    <td>'.$linha['presidente'].'</td>
-                                    <td>'.$linha['membro_1'].'</td>
-                                    <td>'.$linha['membro_2'].'</td>
-                                    <td width="30px"><a onclick="funcao_apagar(\''.$linha['id'].'\', \'exame_medico\')"><img title="Apagar" src="imagens/apagar.png" width="30px"></a></td>
-                                    </tr>';
-                                }
-                            ?>
-                        </tbody>
-                    </table>
-                    </div>
-                    </div>
-                    </div> 
-                </div>
-            </form>
-       
-      
-      <div class="col-md-12">
-        <a href="javascript:history.back()"><button class="btn btn-default btn-block">VOLTAR</button></a>
-      </div>
 </div>
-</div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Função para mostrar/ocultar campos de pagamento
+    function pagamento_para_selecao() {
+        const checkbox = document.getElementById('pagamentoSwitch');
+        const divValor = document.getElementById('div_valor');
+        const divApelido = document.getElementById('div_apelido');
 
+        if (checkbox.checked) {
+            divValor.removeAttribute('hidden');
+            divApelido.removeAttribute('hidden');
+        } else {
+            divValor.setAttribute('hidden', 'true');
+            divApelido.setAttribute('hidden', 'true');
+        }
+    }
+
+    // Inicialização para garantir estado correto ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+        pagamento_para_selecao();
+    });
+</script>
 </div>
 <script type="text/javascript">
-     //$('#om').select2();
-     //$('#secao').select2();
-</script> 
+    //$('#om').select2();
+    //$('#secao').select2();
+</script>
 
 </body>
+
 </html>
 <?php $conexao = null; ?>

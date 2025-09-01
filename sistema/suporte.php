@@ -6,6 +6,8 @@ if ($_SESSION['selecao_regiao'] == 7) exit();
 $conexao = new Conexao();
 $lista_perguntas = $conexao->get_perguntas_assistente();
 
+$selecao = $conexao->get_selecao_id();
+
 $define_concorrendo = $concorrendo
     ? 'está concorrendo'
     : 'não está concorrendo pelo seguinte motivo: ' . $justificativa_concorrendo_processo;
@@ -47,18 +49,15 @@ if (!empty($define_especialidades_nao_concorrendo)) {
 }
 
 // Monta o texto final da situação
-$situacao = "Situação no Processo Seletivo:
-- Seu número de Inscrição no Processo Seletivo é <strong>" . $_SESSION['id_usuario'] . "</strong>
-- Você " . $define_concorrendo . ".\n"
-    . $define_especialidades_concorrendo . "\n"
-    . $define_especialidades_nao_concorrendo . "
-
-Mais informações podem ser encontradas na Página Inicial do SiSCanT bem como nas publicações disponíveis no site da 3ª Região Militar.</br>
-<a href='documentos/aviso_convocacao.pdf' target='_blank' style='text-decoration:none; display:flex; align-items:center;'>
-    <img src='imagens/pdf.png' alt='PDF' style='width:25px; height:25px; margin-right:8px;'>Aviso de Convocação (PDF)
+$situacao = "Situação no Processo Seletivo: - Seu número de Inscrição no Processo Seletivo é <strong>" . $_SESSION['id_usuario'] . "</strong> - Você " . $define_concorrendo . ".\n" . $define_especialidades_concorrendo . "\n" . $define_especialidades_nao_concorrendo . " Mais informações podem ser encontradas na Página Inicial do SiSCanT bem como nas publicações disponíveis no site da 3ª Região Militar.</br> 
+<a href='arquivos/avisos_de_convocacao/" . $selecao[0]['aviso_convocacao'] . "' target='_blank' style='text-decoration:none; display:flex; align-items:center;'>
+    <img src='imagens/pdf.png' alt='PDF' style='width:25px; height:25px; margin-right:8px;'> Aviso de Convocação (PDF)
 </a>
+<br>
 https://www.3rm.eb.mil.br - Site da 3ª Região Militar
+<br>
 https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
+
 ?>
 <style>
     :root {
@@ -77,6 +76,12 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         padding: 3rem;
         margin-bottom: 2rem;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .chat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
 
     .chat-header {
@@ -284,6 +289,82 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
     .alert-content strong {
         color: #E65100;
     }
+
+    .card-modern {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s, box-shadow 0.3s;
+        margin-bottom: 20px;
+        background: white;
+    }
+
+    .card-modern:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header-modern {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 15px 20px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-body-modern {
+        padding: 20px;
+    }
+
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .status-pending {
+        background-color: #fff4e0;
+        color: #e0a800;
+    }
+
+    .status-answered {
+        background-color: #e6f7f1;
+        color: #1cc88a;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--secondary-color);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: #d1d3e2;
+    }
+
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .filter-btn {
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-size: 0.9rem;
+    }
+
+    .divider {
+        height: 1px;
+        background: #e3e6f0;
+        margin: 15px 0;
+    }
 </style>
 <script type="text/javascript">
     function valida_suporte() {
@@ -326,7 +407,7 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" <?php if ($_SESSION['selecao_regiao'] != 3) echo 'hidden'; ?>>
         <div class="col-lg-12">
             <div class="chat-card col-md-12">
                 <div class="chat-header">
@@ -336,25 +417,39 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
 
                 <div class="chat-container" id="chatContainer">
                     <div class="message bot-message">
-                        Olá <?= ucwords(strtolower($_SESSION['nome_completo'])) . "!" ?>! Sou o assistente virtual do SiSCanT. Posso te ajudar com informações sobre:<br><br>
-                        - Processo de inscrição<br>
-                        - Documentos necessários<br>
-                        - Etapas do processo seletivo<br>
-                        - Acompanhamento de resultados<br>
-                        - Outras dúvidas sobre o SiSCanT<br>
-                        <span class="message-time"><?= date('H:s') ?></span>
-                    </div>
+                        Olá <strong><?= ucwords(strtolower($_SESSION['nome_completo'])) . "!" ?></strong>! Sou o Assistente Virtual do SiSCanT. Posso te ajudar com informações sobre:<br><br>
+                        <ul>
+                            <li>Processo de Inscrição</li>
+                            <li>Documentos necessários</li>
+                            <li>Etapas do processo seletivo</li>
+                            <li>Acompanhamento de resultados</li>
+                            <li>Assuntos específicos de cada Etapa</li>
+                            <li>Outras dúvidas sobre o Processo Seletivo</li>
+                        </ul>
+                        <br>
+                        Se precisar de ajuda, digite sua dúvida ou clique nas perguntas sugeridas abaixo. Caso eu não consiga lhe ajudar, vou te direcionar para o suporte.
+                        <br>
+                        <br>
+                        Recomendamos sempre que consulte o Aviso de Convocação, disponível logo abaixo e no site da 3ª RM, pois todas as etapas e procedimentos do Processo Seletivo estão descritos de maneira detalhada nele.
+                        <br>
+                        <br>
+                        <a href="<?php echo 'arquivos/avisos_de_convocacao/' . $selecao[0]['aviso_convocacao']; ?>" target='_blank' style='text-decoration:none; display:flex; align-items:center;'>
+                            <img src='imagens/pdf.png' alt='PDF' style='width:25px; height:25px; margin-right:8px;'>Aviso de Convocação (PDF)
+                        </a>
 
-                    <!-- Indicador de digitação (será mostrado via JavaScript) -->
-                    <div class="typing-indicator" id="typingIndicator" style="display: none;">
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
+                        <span class="message-time"><?= date('H:s') ?></span>
                     </div>
                 </div>
 
+                <!-- Indicador de digitação (será mostrado via JavaScript) -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+
                 <div class="chat-input">
-                    <input type="text" id="userInput" placeholder="Digite sua mensagem..." autocomplete="off">
+                    <input type="text" id="userInput" placeholder="Digite sua mensagem..." autocomplete="off" minlength="20" required>
                     <button id="sendButton"><i class="bi bi-send"></i></button>
                 </div>
 
@@ -365,28 +460,93 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                     <div class="question-chip" onclick="insertQuestion(this)">Consultar minha situação no Processo Seletivo</div>
                     <div class="question-chip" onclick="insertQuestion(this)">Quais documentos preciso para me inscrever?</div>
                     <div class="question-chip" onclick="insertQuestion(this)">Quais são as etapas do processo seletivo?</div>
-                    <div class="question-chip" onclick="insertQuestion(this)">Posso me inscrever em mais de um cargo?</div>
+                    <div class="question-chip" onclick="insertQuestion(this)">Posso me inscrever em mais de uma especialidade?</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row" hidden id="suporte">
-        <div class="col-lg-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><i class="glyphicon glyphicon-envelope"></i> Contato com o Suporte</h3>
+    <div class="row">
+        <div class="col-lg-12 mx-auto">
+            <div class="card-modern">
+                <div class="card-header-modern">
+                    <div>
+                        <i class="fa fa-comments me-2"></i> Mensagens com o Suporte
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <form action="../banco_dados/suporte_cadastra.php" method="post" onsubmit="return valida_suporte()">
+                <div class="card-body-modern">
+                    <div class="filter-buttons">
+                        <button class="btn btn-primary filter-btn active" data-filter="all">Todas</button>
+                        <button class="btn btn-outline-primary filter-btn" data-filter="answered">Respondidas</button>
+                        <button class="btn btn-outline-primary filter-btn" data-filter="pending">Pendentes</button>
+                    </div>
+
+                    <div class="chat-container" id="chatContainerSupport">
+                        <?php
+                        $lista_suporte = $conexao->get_suporte_candidato($_SESSION['id_usuario']);
+                        ?>
+
+                        <?php if (empty($lista_suporte)): ?>
+                            <div class="empty-state">
+                                <i class="far fa-comment-alt"></i>
+                                <h4>Nenhuma mensagem encontrada</h4>
+                                <p>Você ainda não enviou nenhuma mensagem.</p>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($lista_suporte as $index => $linha): ?>
+                                <?php
+                                $data_envio    = $linha['data_enviado']   ? trata_data_hora($linha['data_enviado'])   : '-';
+                                $mensagem      = $linha['mensagem']       ? nl2br(htmlspecialchars($linha['mensagem'])) : '-';
+                                $resposta      = $linha['resposta']       ? nl2br(htmlspecialchars($linha['resposta'])) : '-';
+                                $data_resposta = $linha['data_resposta']  ? trata_data_hora($linha['data_resposta'])  : '-';
+                                $status        = $linha['data_resposta']  ? 'answered' : 'pending';
+                                $status_text   = $linha['data_resposta']  ? 'Respondido' : 'Pendente';
+                                ?>
+
+                                <div class="message user-message <?= $status ?>">
+                                    <div><?= $mensagem ?></div>
+                                    <span class="message-time"><?= $data_envio ?></span>
+                                </div>
+
+                                <?php if ($resposta && $resposta !== '-'): ?>
+                                    <div class="message bot-message <?= $status ?>">
+                                        <div><?= $resposta ?></div>
+                                        <span class="message-time"><?= $data_resposta ?></span>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div>
+                                        <span class="status-badge status-<?= $status ?>"><?= $status_text ?></span>
+                                    </div>
+                                </div>
+
+                                <?php if ($index < count($lista_suporte) - 1): ?>
+                                    <div class="divider"></div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+
+                    <form action="../banco_dados/suporte_cadastra.php"
+                        method="post"
+                        onsubmit="return valida_suporte()"
+                        <?php if ($_SESSION['selecao_regiao'] == 3) echo 'hidden'; ?>
+                        id="suporte">
+
+                        <input type="hidden"
+                            value="<?= hash('sha256', $_SESSION['chave'] . 'freitas') ?>"
+                            name="crip">
+
                         <div class="alert alert-info">
-                            <i class="glyphicon glyphicon-info-sign"></i> Será enviado um e-mail de resposta para: <strong><?php echo $mail ?></strong>.
+                            <i class="glyphicon glyphicon-info-sign"></i>
+                            Será enviado um e-mail de resposta para:
+                            <strong><?= $mail ?></strong>.
                             Caso seu e-mail esteja desatualizado, edite seu cadastro.
                         </div>
 
-                        <div class="form-group">
-                            <label for="motivo" class="control-label">Motivo do Contato</label>
-                            <select id="motivo" name="motivo" class="form-control">
+                        <div class="chat-input">
+                            <select id="motivo" name="motivo" class="form-control mb-10">
                                 <option value="">Selecione o motivo...</option>
                                 <option value="duvida_pagamento_isento">Dúvida sobre isenção de pagamento</option>
                                 <option value="duvida_ex_medico">Dúvida sobre Exames Médicos</option>
@@ -406,70 +566,14 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label for="mensagem_suporte" class="control-label">Mensagem</label>
-                            <textarea maxlength="2000" id="mensagem_suporte" name="mensagem" class="form-control" rows="5"
-                                placeholder="Descreva detalhadamente sua dúvida ou problema..."></textarea>
+                        <div class="chat-input">
+                            <input type="text"
+                                placeholder="Digite sua mensagem..."
+                                autocomplete="off"
+                                name="mensagem">
+                            <button type="submit"><i class="bi bi-send"></i></button>
                         </div>
-
-                        <div class="alert alert-danger" id="div_mensagem_erro" style="display: none;">
-                            <i class="glyphicon glyphicon-exclamation-sign"></i>
-                            <span id="mensagem_erro"></span>
-                        </div>
-
-                        <input type="hidden" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas") ?>" name="crip">
-
-                        <button name="enviar" type="submit" class="btn btn-primary btn-block btn-md">
-                            <i class="glyphicon glyphicon-send"></i> ENVIAR MENSAGEM
-                        </button>
                     </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-comments"></i> Histórico de Mensagens</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped table-bordered" id="tabela_dinamica">
-                            <thead>
-                                <tr class="active">
-                                    <th width="30%">Mensagem</th>
-                                    <th width="15%">Data Envio</th>
-                                    <th width="30%">Resposta</th>
-                                    <th width="15%">Data Resposta</th>
-                                    <th width="10%">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $lista_suporte = $conexao->get_suporte_candidato($_SESSION['id_usuario']);
-                                foreach ($lista_suporte as $linha) {
-                                    $data_envio = $linha['data_enviado'] ? trata_data($linha['data_enviado']) : '-';
-                                    $mensagem = $linha['mensagem'] ? $linha['mensagem'] : '-';
-                                    $resposta = $linha['resposta'] ? $linha['resposta'] : '-';
-                                    $data_resposta = $linha['data_resposta'] ? trata_data($linha['data_resposta']) : '-';
-                                    $status = $linha['data_resposta'] ? '<span class="label label-success">Respondido</span>' : '<span class="label label-warning">Pendente</span>';
-
-                                    echo '
-                                <tr>
-                                    <td>' . nl2br(htmlspecialchars($mensagem)) . '</td>
-                                    <td>' . $data_envio . '</td>
-                                    <td>' . nl2br(htmlspecialchars($resposta)) . '</td>
-                                    <td>' . $data_resposta . '</td>
-                                    <td class="text-center">' . $status . '</td>
-                                </tr>';
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <a name="fimpagina"></a>
                 </div>
             </div>
         </div>
@@ -477,149 +581,228 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
 
     <script src="js/bootstrap5.3.3.js"></script>
     <script>
-        // Função para validar o formulário (adaptada para o novo layout)
-        function valida_suporte() {
-            // Limpa mensagens de erro anteriores
-            $('#div_mensagem_erro').hide();
+        document.addEventListener('DOMContentLoaded', function() {
+            /**
+             * ===============================
+             * CONSTANTES/HELPERS
+             * ===============================
+             */
+            // ATENÇÃO: seu código usa jQuery ($). Garanta que jQuery está carregado.
+            const perguntasRespostas = <?php echo json_encode($lista_perguntas, JSON_UNESCAPED_UNICODE); ?>;
 
-            // Validação do motivo
-            if ($('#motivo').val() === '') {
-                $('#mensagem_erro').text('Por favor, selecione o motivo do contato.');
-                $('#div_mensagem_erro').show();
-                return false;
+            // Mantidos, mesmo que não usados diretamente, para não perder nenhuma lógica declarada
+            const regexes = {
+                newline: /\n/g,
+                titles: /(^|\n)([^\n:]{3,}):(?=\s|$)/g,
+                orderedListItems: /(?:\n|^)(\d+)\.\s+(.*?)(?=\n|$)/g,
+                unorderedListItems: /(?:\n|^)[-*+]\s+(.*?)(?=\n|$)/g,
+                url: /(https?:\/\/[^\s<]+[^\s<.)])/g,
+                codeBlocks: /(`{3})([\s\S]*?)\1/g,
+                inlineCode: /`([^`]+)`/g,
+                quotes: /^>\s+(.*$)/gm,
+                strike: /~~(.*?)~~/g
+            };
+
+            const iconMap = {
+                'documentos?': '📄',
+                'prazos?': '⏰',
+                'resultados?': '🏆',
+                'inscrições?': '📝'
+            };
+
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const messages = document.querySelectorAll('#chatContainerSupport .message');
+
+            /**
+             * ===============================
+             * UI
+             * ===============================
+             */
+            function scrollToBottom() {
+                const chatContainer = document.querySelector('#chatContainerSupport');
+                if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            scrollToBottom();
+            setTimeout(scrollToBottom, 100);
+
+            function addMessage(text, isUser) {
+                const chatContainer = document.getElementById('chatContainer');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+
+                const now = new Date();
+                const timeString = now.getHours().toString().padStart(2, '0') + ':' +
+                    now.getMinutes().toString().padStart(2, '0');
+
+                messageDiv.innerHTML = text + `<span class="message-time">${timeString}</span>`;
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             }
 
-            // Validação da mensagem
-            if ($('#mensagem_suporte').val().trim() === '') {
-                $('#mensagem_erro').text('Por favor, descreva sua dúvida ou problema.');
-                $('#div_mensagem_erro').show();
-                return false;
+            function showSuggestions(query) {
+                const suggestionsContainer = document.getElementById('suggestions');
+                suggestionsContainer.innerHTML = '';
+                if (!query) return;
+
+                const LIMIAR = 40;
+                const matches = perguntasRespostas
+                    .filter(item => calcularSimilaridade(query, item.pergunta) >= LIMIAR)
+                    .sort((a, b) => calcularSimilaridade(query, b.pergunta) - calcularSimilaridade(query, a.pergunta))
+                    .slice(0, 5);
+
+                matches.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.textContent = item.pergunta;
+                    div.addEventListener('click', () => {
+                        document.getElementById('userInput').value = item.pergunta;
+                        suggestionsContainer.innerHTML = '';
+                        document.getElementById('userInput').focus();
+                    });
+                    suggestionsContainer.appendChild(div);
+                });
             }
 
-            return true;
-        }
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
 
-        let tentativas = 0;
-        // Converte o array PHP para JS
-        const perguntasRespostas = <?php echo json_encode($lista_perguntas, JSON_UNESCAPED_UNICODE); ?>;
+                    // atualiza os botões ativos
+                    filterButtons.forEach(btn => btn.classList.remove('active', 'btn-primary'));
+                    filterButtons.forEach(btn => btn.classList.add('btn-outline-primary'));
+                    button.classList.add('active', 'btn-primary');
+                    button.classList.remove('btn-outline-primary');
 
-        // Definir regexes e iconMap antes de usar
-        const regexes = {
-            newline: /\n/g,
-            titles: /(^|\n)([^\n:]{3,}):(?=\s|$)/g,
-            orderedListItems: /(?:\n|^)(\d+)\.\s+(.*?)(?=\n|$)/g,
-            unorderedListItems: /(?:\n|^)[-*+]\s+(.*?)(?=\n|$)/g,
-            url: /(https?:\/\/[^\s<]+[^\s<.)])/g,
-            codeBlocks: /(`{3})([\s\S]*?)\1/g,
-            inlineCode: /`([^`]+)`/g,
-            quotes: /^>\s+(.*$)/gm,
-            strike: /~~(.*?)~~/g
-        };
+                    // aplica filtro
+                    messages.forEach(msg => {
+                        if (filter === 'all') {
+                            msg.style.display = '';
+                        } else {
+                            msg.style.display = msg.classList.contains(filter) ? '' : 'none';
+                        }
+                    });
 
-        const iconMap = {
-            'documentos?': '📄',
-            'prazos?': '⏰',
-            'resultados?': '🏆',
-            'inscrições?': '📝'
-        };
+                    // também esconder/mostrar status-badges e dividers junto
+                    document.querySelectorAll('#chatContainerSupport .status-badge, #chatContainerSupport .divider')
+                        .forEach(el => {
+                            if (filter === 'all') {
+                                el.style.display = '';
+                            } else {
+                                // pega o status do badge/divider pelo elemento anterior
+                                const parent = el.closest('.d-flex, .divider');
+                                const relatedMsg = parent?.previousElementSibling;
+                                if (relatedMsg && relatedMsg.classList.contains(filter)) {
+                                    el.style.display = '';
+                                } else {
+                                    el.style.display = 'none';
+                                }
+                            }
+                        });
+                });
+            });
 
-
-        // Função Levenshtein
-        function levenshteinDistance(a, b) {
-            const matrix = [];
-            for (let i = 0; i <= b.length; i++) matrix[i] = [i];
-            for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-
-            for (let i = 1; i <= b.length; i++) {
-                for (let j = 1; j <= a.length; j++) {
-                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                        matrix[i][j] = matrix[i - 1][j - 1];
-                    } else {
-                        matrix[i][j] = Math.min(
-                            matrix[i - 1][j] + 1,
-                            matrix[i][j - 1] + 1,
-                            matrix[i - 1][j - 1] + 1
-                        );
+            /**
+             * ===============================
+             * VALIDAÇÃO (exposta globalmente)
+             * ===============================
+             */
+            function valida_suporte() {
+                if (window.jQuery) {
+                    $('#div_mensagem_erro').hide();
+                    if ($('#motivo').val() === '') {
+                        $('#mensagem_erro').text('Por favor, selecione o motivo do contato.');
+                        $('#div_mensagem_erro').show();
+                        return false;
                     }
+                    if ($('#mensagem_suporte').val().trim() === '') {
+                        $('#mensagem_erro').text('Por favor, descreva sua dúvida ou problema.');
+                        $('#div_mensagem_erro').show();
+                        return false;
+                    }
+                    return true;
+                } else {
+                    // fallback sem jQuery, para não quebrar
+                    const divErro = document.getElementById('div_mensagem_erro');
+                    const msgErro = document.getElementById('mensagem_erro');
+                    const motivo = document.getElementById('motivo');
+                    const mensagem = document.getElementById('mensagem_suporte');
+
+                    if (divErro) divErro.style.display = 'none';
+                    if (motivo && motivo.value === '') {
+                        if (msgErro) msgErro.textContent = 'Por favor, selecione o motivo do contato.';
+                        if (divErro) divErro.style.display = 'block';
+                        return false;
+                    }
+                    if (mensagem && mensagem.value.trim() === '') {
+                        if (msgErro) msgErro.textContent = 'Por favor, descreva sua dúvida ou problema.';
+                        if (divErro) divErro.style.display = 'block';
+                        return false;
+                    }
+                    return true;
                 }
             }
-            return matrix[b.length][a.length];
-        }
+            // torna disponível para onsubmit="return valida_suporte()"
+            window.valida_suporte = valida_suporte;
 
-        // Calcula similaridade em %
-        function calcularSimilaridade(str1, str2) {
-            str1 = str1.toLowerCase().trim();
-            str2 = str2.toLowerCase().trim();
-            const distancia = levenshteinDistance(str1, str2);
-            const maxLen = Math.max(str1.length, str2.length);
-            return maxLen === 0 ? 100 : ((1 - distancia / maxLen) * 100);
-        }
+            /**
+             * ===============================
+             * SIMILARIDADE
+             * ===============================
+             */
+            function levenshteinDistance(a, b) {
+                const matrix = [];
+                for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+                for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
 
-        // Adiciona mensagem ao chat
-        function addMessage(text, isUser) {
-            const chatContainer = document.getElementById('chatContainer');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+                for (let i = 1; i <= b.length; i++) {
+                    for (let j = 1; j <= a.length; j++) {
+                        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                            matrix[i][j] = matrix[i - 1][j - 1];
+                        } else {
+                            matrix[i][j] = Math.min(
+                                matrix[i - 1][j] + 1,
+                                matrix[i][j - 1] + 1,
+                                matrix[i - 1][j - 1] + 1
+                            );
+                        }
+                    }
+                }
+                return matrix[b.length][a.length];
+            }
 
-            const now = new Date();
-            const timeString = now.getHours().toString().padStart(2, '0') + ':' +
-                now.getMinutes().toString().padStart(2, '0');
+            function calcularSimilaridade(str1, str2) {
+                str1 = str1.toLowerCase().trim();
+                str2 = str2.toLowerCase().trim();
+                const distancia = levenshteinDistance(str1, str2);
+                const maxLen = Math.max(str1.length, str2.length);
+                return maxLen === 0 ? 100 : ((1 - distancia / maxLen) * 100);
+            }
 
-            messageDiv.innerHTML = text + `<span class="message-time">${timeString}</span>`;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
+            /**
+             * ===============================
+             * BOT
+             * ===============================
+             */
+            let tentativas = 0;
 
-        // Mostra sugestões abaixo do input
-        function showSuggestions(query) {
-            const suggestionsContainer = document.getElementById('suggestions');
-            suggestionsContainer.innerHTML = '';
-            if (!query) return;
+            function getBotResponse(userMessage) {
+                const typingIndicator = document.getElementById('typingIndicator');
+                const chatContainer = document.getElementById('chatContainer');
+                if (typingIndicator) typingIndicator.style.display = 'flex';
+                if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            const LIMIAR = 40;
-            const matches = perguntasRespostas.filter(item => calcularSimilaridade(query, item.pergunta) >= LIMIAR)
-                .sort((a, b) => calcularSimilaridade(query, b.pergunta) - calcularSimilaridade(query, a.pergunta))
-                .slice(0, 5); // até 5 sugestões
+                setTimeout(() => {
+                    if (typingIndicator) typingIndicator.style.display = 'none';
 
-            matches.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'suggestion-item';
-                div.textContent = item.pergunta;
-                div.addEventListener('click', () => {
-                    document.getElementById('userInput').value = item.pergunta;
-                    suggestionsContainer.innerHTML = '';
-                    document.getElementById('userInput').focus();
-                });
-                suggestionsContainer.appendChild(div);
-            });
-        }
+                    if (userMessage === "Consultar minha situação no Processo Seletivo") {
+                        const botResponse = <?php echo json_encode($situacao, JSON_UNESCAPED_UNICODE); ?>;
+                        addMessage(formatarResposta(botResponse), false);
+                        return;
+                    }
 
-        // Busca resposta do bot
-        function getBotResponse(userMessage) {
-
-
-            const typingIndicator = document.getElementById('typingIndicator');
-            typingIndicator.style.display = 'flex';
-            const chatContainer = document.getElementById('chatContainer');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            setTimeout(() => {
-                typingIndicator.style.display = 'none';
-
-                if (userMessage == "Consultar minha situação no Processo Seletivo") {
-                    botResponse = '';
-
-                    botResponse = <?php echo json_encode($situacao, JSON_UNESCAPED_UNICODE); ?>;
-
-                    addMessage(formatarResposta(botResponse), false);
-                } else {
-
-
-
-                    let melhorResposta = null;
-                    let maiorSimilaridade = 0;
+                    let melhorResposta = null,
+                        maiorSimilaridade = 0;
                     const LIMIAR = 50;
-
                     perguntasRespostas.forEach(item => {
                         const similaridade = calcularSimilaridade(userMessage, item.pergunta);
                         if (similaridade > maiorSimilaridade) {
@@ -633,141 +816,143 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                         tentativas = 0;
                         botResponse = melhorResposta;
                     } else {
-                        tentativas++; // Incrementa no JavaScript
-
-                        if (tentativas == 3) {
+                        tentativas++;
+                        if (tentativas === 3) {
                             botResponse = `Parece que não consegui resolver sua dúvida desta vez 🤔
-                <br/>Mas não se preocupe! Você pode enviar sua pergunta diretamente abaixo desta conversa, e um dos membros da Comissão responsável vai analisar e te responder da melhor forma possível.<br/>
-                Fique à vontade para detalhar ao máximo sua questão — assim, poderemos ajudar você com mais precisão!`;
+<br/>Mas não se preocupe! Você pode enviar sua pergunta diretamente abaixo desta conversa, e um dos membros da Comissão responsável vai analisar e te responder da melhor forma possível.<br/>
+Fique à vontade para detalhar ao máximo sua questão — assim, poderemos ajudar você com mais precisão!`;
 
-                            //remover atributo hidden das divs de suporte
-
-                            document.querySelectorAll('#suporte').forEach(function(div) {
-                                console.log(div);
-                                div.removeAttribute('hidden');
-                            });
+                            document.querySelectorAll('#suporte').forEach(div => div.removeAttribute('hidden'));
                         } else {
+                            const pdfUrl = '<?php echo 'arquivos/avisos_de_convocacao/' . $selecao[0]['aviso_convocacao']; ?>';
                             botResponse = `Não encontrei uma resposta exata 🤔
-                <br/>Mas posso te ajudar com informações sobre<br/>
-                - Processo de inscrição
-                - Documentos necessários
-                - Etapas do processo seletivo
-                - Resultados
-                Tente reformular sua pergunta, ou consulte o Aviso de Convocação disponível logo abaixo<br><br>`;
-
-                            // Adiciona ícone PDF
-                            const pdfUrl = 'documentos/aviso_convocacao.pdf'; // caminho do seu PDF
-                            botResponse += `
-                <br/><a href="${pdfUrl}" target="_blank" style="text-decoration:none; display:flex; align-items:center;">
-                    <img src="imagens/pdf.png" alt="PDF" style="width:25px; height:25px; margin-right:8px;">Aviso de Convocação (PDF)
-                </a>`;
+<br/>Mas posso te ajudar com informações sobre<br/>
+- Processo de Inscrição
+- Documentos necessários
+- Etapas do processo seletivo
+- Acompanhamento de Resultados
+- Assuntos específicos de cada Etapa
+- Outras dúvidas sobre o Processo Seletivo
+Tente reformular sua pergunta, ou consulte o Aviso de Convocação disponível logo abaixo<br><br>
+<a href="${pdfUrl}" target="_blank" style="text-decoration:none; display:flex; align-items:center;">
+    <img src="imagens/pdf.png" alt="PDF" style="width:25px; height:25px; margin-right:8px;">Aviso de Convocação (PDF)
+</a>`;
                         }
-
-
                     }
-
                     addMessage(formatarResposta(botResponse), false);
-                }
-            }, 1200);
-
-        }
-
-        // Eventos
-        const userInput = document.getElementById('userInput');
-        userInput.addEventListener('input', () => showSuggestions(userInput.value));
-        userInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') document.getElementById('sendButton').click();
-        });
-
-        document.getElementById('sendButton').addEventListener('click', function() {
-            const message = userInput.value.trim();
-            if (message) {
-                addMessage(message, true);
-                userInput.value = '';
-                document.getElementById('suggestions').innerHTML = '';
-                getBotResponse(message);
+                }, 2000);
             }
-        });
 
-        // FAQ accordion
-        document.querySelectorAll('.accordion-button').forEach(button => {
-            button.addEventListener('click', function() {
-                this.classList.toggle('active');
-            });
-        });
+            // se quiser chamar getBotResponse via onclick/html, exponha:
+            // window.getBotResponse = getBotResponse;
 
-        // Função para inserir pergunta sugerida no input
-        function insertQuestion(element) {
+            /**
+             * ===============================
+             * EVENTOS
+             * ===============================
+             */
             const userInput = document.getElementById('userInput');
-            userInput.value = element.textContent;
-            userInput.focus();
-        }
+            const sendButton = document.getElementById('sendButton');
 
-        function formatarResposta(resposta) {
-            if (!resposta) return "";
+            if (userInput) {
+                userInput.addEventListener('input', () => showSuggestions(userInput.value));
+                userInput.addEventListener('keypress', e => {
+                    if (e.key === 'Enter' && sendButton) sendButton.click();
+                });
+            }
+            if (sendButton) {
+                sendButton.addEventListener('click', () => {
+                    const message = (userInput?.value || '').trim();
+                    if (message) {
+                        addMessage(message, true);
+                        if (userInput) userInput.value = '';
+                        const sug = document.getElementById('suggestions');
+                        if (sug) sug.innerHTML = '';
+                        getBotResponse(message);
+                    }
+                });
+            }
 
-            let txt = resposta;
+            // Accordion
+            document.querySelectorAll('.accordion-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
 
-            // 2) Blocos de alerta (Importante / Atenção)
-            txt = txt.replace(/^(?:\s*)(Importante:|Atenção:)([\s\S]*?)(?=\n{2,}|$)/gmi, (_, titulo, corpo) => {
-                corpo = corpo.replace(/^\s*\n?/, ''); // remove quebra logo após o título
-                corpo = corpo.replace(/\n+$/, ''); // remove quebras no final
-                return `<div class="alert-message">
+            // FUNÇÃO QUE VOCÊ CITOU — agora exposta globalmente
+            function insertQuestion(element) {
+                const userInput = document.getElementById('userInput');
+                if (!userInput || !element) return;
+                userInput.value = element.textContent;
+                userInput.focus();
+            }
+            // torna disponível para onclick="insertQuestion(this)"
+            window.insertQuestion = insertQuestion;
+
+            /**
+             * ===============================
+             * FORMATADOR
+             * ===============================
+             */
+            function formatarResposta(resposta) {
+                if (!resposta) return "";
+                let txt = resposta;
+
+                // Alertas (Importante/Atenção)
+                txt = txt.replace(/^(?:\s*)(Importante:|Atenção:)([\s\S]*?)(?=\n{2,}|$)/gmi, (_, titulo, corpo) => {
+                    corpo = corpo.replace(/^\s*\n?/, '').replace(/\n+$/, '');
+                    return `<div class="alert-message">
   <div class="alert-icon">⚠️</div>
   <div class="alert-content"><strong>${titulo}</strong> ${corpo}</div>
 </div>`;
-            });
+                });
 
-            // 3) Listas ORDENADAS
-            txt = txt.replace(/^(?:\s*\d+\.\s+.*(?:\n|$))+?/gm, (bloco) => {
-                const itens = bloco.trim().split(/\n/)
-                    .map(l => l.replace(/^\s*\d+\.\s+/, '').trim())
-                    .filter(Boolean);
-                return itens.length ? `<ol><li>${itens.join('</li><li>')}</li></ol>\n` : bloco;
-            });
+                // Listas ordenadas
+                txt = txt.replace(/^(?:\s*\d+\.\s+.*(?:\n|$))+?/gm, (bloco) => {
+                    const itens = bloco.trim().split(/\n/)
+                        .map(l => l.replace(/^\s*\d+\.\s+/, '').trim())
+                        .filter(Boolean);
+                    return itens.length ? `<ol><li>${itens.join('</li><li>')}</li></ol>\n` : bloco;
+                });
 
-            // 4) Listas NÃO ordenadas
-            txt = txt.replace(/^(?:\s*-\s+.*(?:\n|$))+?/gm, (bloco) => {
-                const itens = bloco.trim().split(/\n/)
-                    .map(l => l.replace(/^\s*-\s+/, '').trim())
-                    .filter(Boolean);
-                return itens.length ? `<ul><li>${itens.join('</li><li>')}</li></ul>\n` : bloco;
-            });
+                // Listas não ordenadas
+                txt = txt.replace(/^(?:\s*-\s+.*(?:\n|$))+?/gm, (bloco) => {
+                    const itens = bloco.trim().split(/\n/)
+                        .map(l => l.replace(/^\s*-\s+/, '').trim())
+                        .filter(Boolean);
+                    return itens.length ? `<ul><li>${itens.join('</li><li>')}</li></ul>\n` : bloco;
+                });
 
-            // 5) Títulos
-            txt = txt.replace(/^(?!<)([^<\n]{3,}):\s*$(?!<\/)/gm, '<h5>$1</h5>');
+                // Títulos
+                txt = txt.replace(/^(?!<)([^<\n]{3,}):\s*$(?!<\/)/gm, '<h5>$1</h5>');
 
-            // 6) Links clicáveis
-            txt = txt.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)])(?=\s|$)/g, (url) => {
-                const clean = url.replace(/\s+/g, '');
-                return `<a href="${clean}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">👉 Acessar</a>`;
-            });
+                // Links clicáveis
+                txt = txt.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)])(?=\s|$)/g, (url) => {
+                    const clean = url.replace(/\s+/g, '');
+                    return `<a href="${clean}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">👉 Acessar</a>`;
+                });
 
-            // 7) Quebras de linha restantes -> <br>
-            // Evita quebrar dentro de div.alert-message
-            txt = txt.replace(/(?<!<\/div>|<\/ul>|<\/ol>|<\/h4>)\n/g, (m, offset, full) => {
-                // não insere <br> se estiver logo após <div class="alert-content">
-                if (/class="alert-content">[^<]*$/.test(full.slice(0, offset))) return '';
-                return '<br>';
-            });
+                // Quebras de linha -> <br> (com cuidados)
+                txt = txt.replace(/(?<!<\/div>|<\/ul>|<\/ol>|<\/h4>)\n/g, (m, offset, full) => {
+                    if (/class="alert-content">[^<]*$/.test(full.slice(0, offset))) return '';
+                    return '<br>';
+                });
+                txt = txt.replace(/(<br>\s*){2,}/g, '<br>');
 
-            // Colapsa múltiplos <br>
-            txt = txt.replace(/(<br>\s*){2,}/g, '<br>');
+                // Destaque de palavras-chave
+                const keywords = ["documentos", "documento", "prazo", "prazos", "resultado", "resultados",
+                    "inscrição", "inscrições", "publicação", "publicações", "etapas", "etapa",
+                    "Aviso de Convocação"
+                ];
+                keywords.forEach(w => {
+                    const re = new RegExp(`\\b(${w})\\b`, 'gi');
+                    txt = txt.replace(re, '<strong>$1</strong>');
+                });
 
-            // 8) Destaque de palavras-chave
-            const keywords = ["documentos", "documento", "prazo", "prazos", "resultado", "resultados", "inscrição", "inscrições", "publicação", "publicações", "etapas", "etapa"];
-            keywords.forEach(w => {
-                const re = new RegExp(`\\b(${w})\\b`, 'gi');
-                txt = txt.replace(re, '<strong>$1</strong>');
-            });
-
-            return txt;
-        }
-    </script>
-    <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript">
-        $('#tabela_dinamica').DataTable();
+                return txt;
+            }
+        });
     </script>
 
 </div>

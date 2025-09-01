@@ -2,7 +2,13 @@
 include_once './menu_candidato.php';
 include_once './codigos/candidato_campos_cadastra.php';
 include_once './codigos/candidato_valida_cadastro.php';
+
+$conexao = new Conexao();
+
+$selecao = $conexao->get_selecao_id(); // Seleção
 ?>
+
+<!-- 31/08/2025 - Iago Silva Pequenos ajustes e melhorias no Layout -->
 <style>
     :root {
         --primary-color: #006400;
@@ -250,16 +256,18 @@ include_once './codigos/candidato_valida_cadastro.php';
 
     <div class="content-wrapper">
         <div class="container-fluid">
-            <!-- Banner de Suporte -->
-            <div class="support-banner">
-                <div>
-                    <h4 class="mb-1"><i class="fa fa-question-circle me-2"></i>Dificuldade ao se cadastrar?</h4>
-                    <p class="mb-0">Entre em contato com nossa equipe de suporte</p>
+            <?php if ($libera_suporte_inicial == 1) : ?>
+                <!-- Banner de Suporte -->
+                <div class="support-banner">
+                    <div>
+                        <h4 class="mb-1"><i class="fa fa-question-circle me-2"></i>Dificuldade ao se cadastrar?</h4>
+                        <p class="mb-0">Entre em contato com nossa equipe de suporte</p>
+                    </div>
+                    <a class="btn btn-primary" href="suporte_inicial.php">
+                        <i class="fa fa-comments me-2"></i>Solicitar Suporte
+                    </a>
                 </div>
-                <a class="btn btn-primary" href="suporte_inicial.php">
-                    <i class="fa fa-comments me-2"></i>Solicitar Suporte
-                </a>
-            </div>
+            <?php endif; ?>
 
             <form action="../banco_dados/candidato_cadastra.php" method="post" onsubmit="return candidato_valida_cadastro()" class="needs-validation" novalidate>
 
@@ -460,7 +468,7 @@ include_once './codigos/candidato_valida_cadastro.php';
 
                             <div class="col-lg-4 mb-3">
                                 <div class="floating-label">
-                                    <input type="text" id="bairro" name="Bairro" class="form-control floating-input" placeholder=" " required>
+                                    <input type="text" id="bairro" name="bairro" class="form-control floating-input" placeholder=" " required>
                                     <label for="bairro" class="required-field">Bairro</label>
                                 </div>
                             </div>
@@ -1079,17 +1087,6 @@ include_once './codigos/candidato_valida_cadastro.php';
         $("#telefone").mask("(99) 9999-9999");
         $("#data_expedicao").mask("99/99/9999");
 
-        // Validação de formulário Bootstrap
-        var forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
 
         // Prevenir colar no campo de confirmação de e-mail
         document.getElementById('mail2').addEventListener('paste', function(e) {
@@ -1134,74 +1131,6 @@ include_once './codigos/candidato_valida_cadastro.php';
             $('#div_tempo_sv_pub_anos').hide();
             $('#div_tempo_sv_pub_meses').hide();
             $('#div_tempo_sv_pub_dias').hide();
-        }
-    }
-
-    function select_civil_militar() {
-        const tipo = $('#civil_militar').val();
-
-        if (tipo === 'militar') {
-            $('#div_ja_foi_militar').hide();
-            $('#div_certificado').show();
-            $('#div_documento').show();
-            $('#div_data_expedicao').show();
-            $('#div_arma').show();
-            $('#div_forca').show();
-            $('#div_posto_grad').show();
-            $('#div_incorporacao').show();
-            $('#div_licenciamento').show();
-        } else {
-            $('#div_ja_foi_militar').show();
-            $('#div_certificado').hide();
-            $('#div_documento').hide();
-            $('#div_data_expedicao').hide();
-            $('#div_arma').hide();
-            $('#div_forca').hide();
-            $('#div_posto_grad').hide();
-            $('#div_incorporacao').hide();
-            $('#div_licenciamento').hide();
-        }
-    }
-
-    function select_ja_foi_militar() {
-        const jaFoiMilitar = $('#ja_foi_militar').val();
-
-        if (jaFoiMilitar === 'sim' || jaFoiMilitar === 'sim_eas') {
-            $('#div_certificado').show();
-            $('#div_documento').show();
-            $('#div_data_expedicao').show();
-            $('#div_arma').show();
-            $('#div_forca').show();
-            $('#div_posto_grad').show();
-            $('#div_incorporacao').show();
-            $('#div_licenciamento').show();
-
-            $('#certificado').append($('<option>', {
-                value: "",
-                text: "Selecione a opção"
-            }));
-
-            $('#certificado').append($('<option>', {
-                value: "csm",
-                text: "Certidão de Situação Militar (CSM)"
-            }));
-            $('#certificado').append($('<option>', {
-                value: "1crm",
-                text: "Certificado de Reservista Militar 1ª Categoria (CRM)"
-            }));
-            $('#certificado').append($('<option>', {
-                value: "2crm",
-                text: "Certificado de Reservista Militar 2ª Categoria (CRM)"
-            }));
-        } else {
-            $('#div_certificado').hide();
-            $('#div_documento').hide();
-            $('#div_data_expedicao').hide();
-            $('#div_arma').hide();
-            $('#div_forca').hide();
-            $('#div_posto_grad').hide();
-            $('#div_incorporacao').hide();
-            $('#div_licenciamento').hide();
         }
     }
 </script>

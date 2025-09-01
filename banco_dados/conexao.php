@@ -8764,7 +8764,45 @@ order by total_pontos_somados desc");
     }
     // </editor-fold>
 
-    // <editor-fold defaultstate="collapsed" desc="Atualiza data de início e fim da inscricao">
+    // 30/08/2025 -> Iago Silva Criando a função para atualizar o aviso de convocação
+    public function selecao_atualiza_aviso_convocacao($nome_arquivo) {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+        $id_selecao = $_SESSION['selecao'];
+        $zero = 0;
+
+        try {
+            $sqlInsert = "UPDATE selecao SET aviso_convocacao=:aviso_convocacao WHERE id= :id";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id", $id_selecao);
+            $query->bindValue(":aviso_convocacao", $nome_arquivo);
+
+            if ($query->execute()) {
+                $_SESSION['selecao_aviso_convocacao'] = $nome_arquivo;
+
+                $data =
+                    [
+                        'id_selecao' => $id_selecao,
+                        'aviso_convocacao' => $nome_arquivo,
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        return false;
+    }
+
     public function selecao_atualiza_data_inscricao($data_inicio, $data_fim)
     {
         $datetime = date('Y-m-d H:i:s');
@@ -9456,6 +9494,41 @@ order by total_pontos_somados desc");
     }
 
     // </editor-fold>
+    // 31/08/2025 -> Iago Silva Criando a função para liberar o suporte inicial
+    public function libera_suporte_inicial($liberacao) {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+        $id_selecao = $_SESSION['selecao'];
+
+        try {
+            $sqlInsert = "UPDATE selecao SET liberacao_suporte_inicial=:libera WHERE id= :id";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id", $id_selecao);
+            $query->bindValue(":libera", $liberacao);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'id_selecao' => $id_selecao,
+                        'liberacao_suporte_inicial' => $liberacao,
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        return true;
+    }
 
     // <editor-fold defaultstate="collapsed" desc="LIBERA VISUALIZAÇÃO DA AVALIAÇÃO CURRICULAR DO CANDIDATO">
     public function libera_avaliacao_curricular($liberacao)
