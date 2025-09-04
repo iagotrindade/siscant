@@ -43,6 +43,9 @@ $pagamento_selecao = false;
 if ($_SESSION['selecao_pagamento'])
     $pagamento_selecao = true;
 
+$libera_suporte_inicial = $selecao_usuario_logado[0]['liberacao_suporte_inicial'];
+$aviso_convocacao = $selecao_usuario_logado[0]['aviso_convocacao'];
+
 $data_inicio_inscricao = $selecao_usuario_logado[0]['data_inicio_inscricao'];
 $data_fim_inscricao = $selecao_usuario_logado[0]['data_fim_inscricao'];
 

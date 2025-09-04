@@ -367,14 +367,13 @@ class Conexao
 
     // <editor-fold defaultstate="collapsed" desc="Resposta Suporte Candidato">
 
-    public function insere_resposta_candidato($id_suporte, $resposta)
+    public function insere_resposta_candidato($id_suporte, $resposta, $id_usuario)
     {
-        $id_ususario = $_SESSION['id_usuario'];
         $datetime = date('Y-m-d H:i:s');
 
         try {
             $sql = "UPDATE suporte_candidato SET 
-            respondida='1', id_usuario_respondeu=:id_ususario, 
+            respondida='1', id_usuario_respondeu=:id_usuario, 
             resposta=:resposta, data_resposta=:datetime WHERE id=:id_suporte";
 
             $this->pdo->beginTransaction();
@@ -384,7 +383,7 @@ class Conexao
             $query->bindValue(":id_suporte", $id_suporte);
             $query->bindValue(":resposta", $resposta);
             $query->bindValue(":datetime", $datetime);
-            $query->bindValue(":id_ususario", $id_ususario);
+            $query->bindValue(":id_usuario", $id_usuario);
 
             if ($query->execute()) {
 
@@ -392,7 +391,7 @@ class Conexao
                     [
                         'id_suporte' => $id_suporte,
                         'resposta' => $resposta,
-                        'id_usuario_respondeu' => $datetime,
+                        'id_usuario_respondeu' => $id_usuario,
                         'datetime' => $datetime,
                     ];
 
