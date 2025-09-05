@@ -1,260 +1,252 @@
 <?php
-// 27/08/2025 -> Iago Silva Adicionado página de notificações para envio de mensagens aos candidatos
+// 27/08/2025 -> Iago Silva Adicionado página de notificações para os candidatos
 include_once 'menu.php';
 include_once 'codigos/funcao_apagar.php';
 
-if (!isset($_SESSION))
-    session_start();
-
-$resultado_selecao = $conexao->get_selecao_id();
-if (
-    $resultado_selecao[0]['codigo'] == 'ott_stt'
-    || $resultado_selecao[0]['codigo'] == 'mfdv'
-    || $resultado_selecao[0]['codigo'] == 'cet'
-    || $resultado_selecao[0]['codigo'] == 'ott'
-    || $resultado_selecao[0]['codigo'] == 'stt'
-) {
-    $_SESSION['eipot'] = 0;
-    unset($_SESSION['eipot']);
-}
-
-
-if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
-    erro("Erro 235332446!");
-    exit();
-}
-
-$notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
+$conexao = new Conexao();
 ?>
 
 <style>
+    :root {
+        --primary-color: #006400;
+        --secondary-color: #004d00;
+        --light-bg: #f8f9fc;
+        --card-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
     .notification-card {
         border: none;
-        border-radius: 8px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        box-shadow: var(--card-shadow);
         margin-bottom: 20px;
-        transition: transform 0.2s;
+        transition: transform 0.3s, box-shadow 0.3s;
+        background: linear-gradient(to bottom, #ffffff, #f8f9fc);
+        overflow: hidden;
     }
 
     .notification-card:hover {
-        transform: translateY(-3px);
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+    }
+
+    .notification-card.new {
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .notification-header {
+        background: linear-gradient(to right, #f8f9fc, #ffffff);
+        padding: 15px 20px;
+        border-bottom: 1px solid #e3e6f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .notification-title {
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 0;
+        font-size: 1.7rem;
     }
 
     .notification-date {
-        font-size: 1.1rem;
-        color: #6c757d;
+        font-size: 1.2rem;
+        color: #858796;
+        background-color: #eaecf4;
+        padding: 4px 10px;
+        border-radius: 20px;
     }
 
-    .btn-send {
-        color: white;
-        padding: 10px 20px;
-        border-radius: 6px;
-        border: none;
-        font-weight: 6 00;
+    .notification-body {
+        padding: 20px;
     }
 
-    .btn-delete {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 4px;
-    }
-
-    .btn-delete:hover {
-        background-color: #bb2d3b;
+    .notification-content {
+        font-size: 1.4rem;
+        line-height: 1.6;
+        color: #4a4b4f;
     }
 
     .empty-state {
         text-align: center;
-        padding: 40px 0;
-        color: #6c757d;
+        padding: 60px 20px;
+        color: var(--primary-color);
     }
 
     .empty-state i {
         font-size: 5rem;
         margin-bottom: 20px;
-        color: #dee2e6;
+        opacity: 0.5;
     }
 
-    .form-control:focus {
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    .empty-state h3 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--primary-color);
     }
 
-    .char-count {
-        font-size: 0.85rem;
-        color: #6c757d;
-        text-align: right;
+    .filter-buttons {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
-    .toast {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
+    .filter-btn {
+        border-radius: 20px;
+        padding: 8px 20px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .filter-btn:hover {
+        background: var(--primary-color);
+        color: #ffffff;
+        border-color: var(--primary-color);
+    }
+
+    .filter-btn.active {
+        color: #ffffff;
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .badge-new {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        margin-left: 8px;
+    }
+
+    .notification-actions {
+        display: flex;
+        gap: 10px;
+        padding: 15px 20px;
+        border-top: 1px solid #e3e6f0;
+        background-color: #f8f9fc;
+    }
+
+    @media (max-width: 768px) {
+        .filter-buttons {
+            flex-direction: column;
+        }
+
+        .notification-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .notification-date {
+            align-self: flex-start;
+        }
     }
 </style>
 
-<div class="">
-    <div class="content-wrapper">
-        <div class="page-title">
-            <div>
-                <h1>Envio de Notificações <i class="fa fa-bullhorn"></i></h1>
-            </div>
-            <div>
-                <ul class="breadcrumb">
-                    <li><i class="fa fa-home fa-lg"></i></li>
-                    <li><a href="index.php">Página Inicial</a></li>
-                    <li>Envio de Notificações</li>
-                </ul>
-            </div>
+<div class="content-wrapper">
+    <div class="page-title">
+        <div>
+            <h1>Notificações da Seleção <i class="fa fa-bell"></i></h1>
         </div>
+        <div>
+            <ul class="breadcrumb">
+                <li><i class="fa fa-home fa-lg"></i></li>
+                <li><a href="index.php">Página Inicial</a></li>
+            </ul>
+        </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <form method="POST" action="../banco_dados/notificacao_cadastra.php">
-                            <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
-                            <div class="mb-10">
-                                <label for="notificationEtapa" class="form-label">Etapa da Notificação</label>
-                                <select class="form-control" id="notificationEtapa" name="etapa" required>
-                                    <option value="">Selecione a etapa</option>
-                                    <option value="">Todas</option>
-                                    <option value="1">Etapa 1</option>
-                                    <option value="2">Etapa 2</option>
-                                    <option value="3">Etapa 3</option>
-                                    <option value="4">Etapa 4</option>
-                                    <option value="5">Etapa 5</option>
-                                    <option value="6">Etapa 6</option>
-                                    <option value="7">Etapa 7</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-10">
-                                <label for="notificationTitle" class="form-label">Título da Notificação</label>
-                                <input type="text" class="form-control" id="notificationTitle" name="titulo" placeholder="Digite um título para a notificação" required>
-                            </div>
-                            <div class="mb-10">
-                                <label for="notificationMessage" class="form-label">Mensagem</label>
-                                <textarea class="form-control" id="notificationMessage" name="mensagem" rows="5" placeholder="Digite a mensagem para os candidatos..." maxlength="800" required></textarea>
-                                <div class="char-count"><span id="charCount">0</span>/800 caracteres</div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-send">
-                                <i class="fa fa-paper-plane me-2"></i> Enviar Notificação
-                            </button>
-                        </form>
-                    </div>
-                </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="filter-buttons">
+                <button class="btn btn-outline-primary filter-btn active" data-filter="all">
+                    Todas as Notificações
+                </button>
+                <button class="btn btn-outline-primary filter-btn" data-filter="new">
+                    Recentes <span class="badge-new" id="newCount">
+                        <?php
+                        $newCount = 0;
+                        foreach ($notificacoes as $notificacao) {
+                            if (strtotime($notificacao['data_envio']) >= strtotime('-5 days')) {
+                                $newCount++;
+                            }
+                        }
+                        echo $newCount;
+                        ?>
+                    </span>
+                </button>
+                <button class="btn btn-outline-primary filter-btn" data-filter="old">
+                    Antigas
+                </button>
             </div>
 
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="">Informações</h5>
+            <div id="notificationsContainer">
+                <!-- Notificações serão carregadas aqui -->
+                <?php if (empty($notificacoes)) : ?>
+                    <div class="empty-state">
+                        <i class="fa fa-bell-slash"></i>
+                        <h3>Nenhuma notificação disponível</h3>
+                        <p>Quando houver novas notificações, elas aparecerão aqui.</p>
                     </div>
-                    <div class="card-body">
-                        <div class="alert alert-info">
-                            <i class="fa fa-info-circle me-2"></i>
-                            <strong>Atenção:</strong> Após o envio, a notificação não poderá ser editada, apenas excluída.
+                <?php endif; ?>
+
+                <?php foreach ($notificacoes as $notificacao) : ?>
+                    <div class="notification-card <?php //Verificar se $data_envio é maior que 7 dias
+                                                    if (strtotime($notificacao['data_envio']) < strtotime('-5 days')) {
+                                                        echo 'old';
+                                                    } else {
+                                                        echo 'new';
+                                                    }
+                                                    ?>">
+                        <div class="notification-header">
+                            <h3 class="notification-title"><?= $notificacao['titulo'] ?></h3>
+                            <span class="notification-date"><?= trata_data_hora($notificacao['data_envio']) ?></span>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Notificações enviadas
-                                <span class="badge bg-primary rounded-pill" id="notificationCount"><?= count($notificacoes) ?></span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Último envio
-                                <span class="text-muted" id="lastSent"><?= !empty($notificacoes) ? trata_data_hora(end($notificacoes)['data_envio']) : 'Nenhum' ?></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header bg-white" style="display: flex; justify-content: space-between; align-items: center;">
-                        <h5 class="">Notificações Enviadas</h5>
-                        <button class="btn btn-sm btn-outline-secondary mb-20" id="toggleNotifications">
-                            <i class="fa fa-chevron-down"></i>
-                        </button>
-                    </div>
-                    <div class="card-body p-0">
-                        <div id="notificationsList">
-                            <!-- As notificações serão carregadas aqui -->
-                            <?php if (empty($notificacoes)) : ?>
-                                <div class="empty-state">
-                                    <i class="fa fa-bullhorn"></i>
-                                    <h4>Nenhuma notificação enviada</h4>
-                                    <p>As notificações enviadas aparecerão aqui.</p>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php foreach ($notificacoes as $notificacao) : ?>
-                                <div class="notification-card card mb-20">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start" style="display: flex; align-items: center; justify-content: space-between;">
-                                            <div class="card-title">
-                                                <h5 class=""><?= $notificacao['titulo'] ?></h5>
-                                                <span class="badge bg-secondary">Etapa: <?= $notificacao['etapa'] ?? 'TODAS' ?></span>
-                                            </div>
-                                            
-                                            <button class="btn btn-md btn-delete" onclick="funcao_apagar('<?= $notificacao['id'] ?>', 'notificacao')"> <i class="fa fa-trash"></i> </button>
-                                        </div>
-                                        <p class="card-text"><?= $notificacao['mensagem'] ?></p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <small class="notification-date">Enviado em: <?= trata_data_hora($notificacao['data_envio']) ?> por <?= $notificacao['posto_grad'] . ' - ' . $notificacao['nome_guerra'] ?></small>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
+                        <div class="notification-body">
+                            <p class="notification-content"><?= $notificacao['mensagem'] ?></p>
                         </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+
 <script>
+    // Filtrar notificações
     document.addEventListener('DOMContentLoaded', function() {
-        // Elementos do DOM
-        const notificationMessage = document.getElementById('notificationMessage');
-        const charCount = document.getElementById('charCount');
-        const notificationsList = document.getElementById('notificationsList');
-        const toggleNotifications = document.getElementById('toggleNotifications');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const notificationsContainer = document.getElementById('notificationsContainer');
 
-        // Contador de caracteres
-        notificationMessage.addEventListener('input', function() {
-            charCount.textContent = this.value.length;
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.getAttribute('data-filter');
+                filterNotifications(filter);
+            });
         });
 
-        // Alternar visualização da lista de notificações
-        toggleNotifications.addEventListener('click', function() {
-            const notificationsCardBody = notificationsList.parentElement;
-            if (notificationsCardBody.style.display === 'none') {
-                notificationsCardBody.style.display = 'block';
-                toggleNotifications.innerHTML = '<i class="fa fa-chevron-down"></i>';
-            } else {
-                notificationsCardBody.style.display = 'none';
-                toggleNotifications.innerHTML = '<i class="fa fa-chevron-up"></i>';
-            }
-        });
+        function filterNotifications(filter) {
+            const notifications = notificationsContainer.querySelectorAll('.notification-card');
+            notifications.forEach(notification => {
+                if (filter === 'all') {
+                    notification.style.display = 'block';
+                } else if (filter === 'new' && notification.classList.contains('new')) {
+                    notification.style.display = 'block';
+                } else if (filter === 'old' && !notification.classList.contains('new')) {
+                    notification.style.display = 'block';
+                } else {
+                    notification.style.display = 'none';
+                }
+            });
+        }
     });
 </script>
-
-</div>
-<script src="sistema/js/bootstrap5.3.3.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
-
 </body>
 
 </html>
-<?php
-$conexao = null;
-?>
+<?php $conexao = null; ?>

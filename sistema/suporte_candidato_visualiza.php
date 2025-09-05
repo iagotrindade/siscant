@@ -336,6 +336,7 @@ if ($data_enviado != null)
         flex-direction: row-reverse;
         border: 1px solid var(--user-message-border);
         box-shadow: 0 2px 8px rgba(0, 100, 0, 0.08);
+        border-right: 3px solid #4453feff;
     }
 
     .bot-message {

@@ -37,4 +37,4 @@ if ($resultado)
     );
 
 $conexao = null;
-header("Location: ../sistema/notificacoes.php");
+header("Location: ../sistema/cadastra_notificacoes.php");
