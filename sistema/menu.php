@@ -43,6 +43,9 @@ $pagamento_selecao = false;
 if ($_SESSION['selecao_pagamento'])
     $pagamento_selecao = true;
 
+$libera_suporte_inicial = $selecao_usuario_logado[0]['liberacao_suporte_inicial'];
+$aviso_convocacao = $selecao_usuario_logado[0]['aviso_convocacao'];
+
 $data_inicio_inscricao = $selecao_usuario_logado[0]['data_inicio_inscricao'];
 $data_fim_inscricao = $selecao_usuario_logado[0]['data_fim_inscricao'];
 
@@ -272,45 +275,14 @@ foreach ($notificacoes as $notificacao) {
                     <ul class="top-nav">
                         <!-- 27/08/2025 -> Iago Silva Adicionando botão para notificações -->
                         <li>
-                            <a href="candidato_notificacoes.php" title="Notificações">
+                            <a href="notificacoes.php" title="Notificações">
                                 <i class="fa fa-2x fa-bell"></i>
                                 <?php if ($novas_notificacoes) echo "<span class='badge badge-success' style='margin-left: -10px; background-color:red;'>".$novas_notificacoes_count."</span>"; ?>
                             </a>
                         </li>
 
                         <li>
-                            <?php
-
-                            $pagina_saida = $_SESSION['nome_arquivo'];
-                            /*
-                        $pagina_saida = $rm_atual_selecao."rm_".$codigo_atual_selecao."_".$ano_atual_selecao.".php";
-                        
-                        if($_SESSION['selecao'] == '5')
-                            $pagina_saida = "3rm_ott_2020.php";
-                        if($_SESSION['selecao'] == '9')
-                            $pagina_saida = "3rm_ott_2021.php";
-                        if($_SESSION['selecao'] == '22')
-                            $pagina_saida = "3rm_stt_2021.php";
-                        if($_SESSION['selecao'] == '23')
-                            $pagina_saida = "2rm_ott_2021.php";
-                        if($_SESSION['selecao'] == '27')
-                            $pagina_saida = "6rm_ott_2021.php";
-                        if($_SESSION['selecao'] == '28')
-                            $pagina_saida = "2rm_ott__stt_2021.php";
-                        if($_SESSION['selecao'] == '30')
-                            $pagina_saida = "2rm_ott___stt_2021.php";
-                        if($_SESSION['selecao'] == '31')
-                            $pagina_saida = "2rm_ott____stt_2021.php";
-                        if($_SESSION['selecao'] == '32')
-                            $pagina_saida = "3rm_ott__stt_2022.php";
-                        if($_SESSION['selecao'] == '33')
-                            $pagina_saida = "2rm_ott__stt_2022.php";
-                        if($_SESSION['selecao'] == '34')
-                            $pagina_saida = "3rm_mfdv__2022.php";
-                     */
-                            ?>
-
-                            <a class="dropdown-toggle" href="../<?php echo $pagina_saida ?>" title="Sair">
+                            <a class="dropdown-toggle" href="../<?= $_SESSION['nome_arquivo'] ?>" title="Sair">
                                 <i class="fa fa-2x fa-sign-out"></i>
                             </a>
                         </li>

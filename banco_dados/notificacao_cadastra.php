@@ -67,5 +67,5 @@ else {
     exit();
 }
 
-header("Location: ../sistema/notificacoes.php?sucesso=1");
+header("Location: ../sistema/cadastra_notificacoes.php?sucesso=1");
 exit();

@@ -238,10 +238,6 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
     }
 
-    . {
-        margin: 15px 0;
-    }
-
     .form-check-input:checked {
         background-color: var(--primary-color);
         border-color: var(--primary-color);
@@ -308,9 +304,13 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                 <div class="card">
                     <div class="card-header">
                         <span><i class="fa fa-file-text-o"></i> Aviso de Convocação</span>
-                        <a href="arquivos/avisos_de_convocacao/<?php echo $aviso_convocacao; ?>" target="_blank">
-                            <img src="../sistema/imagens/pdf.png" class="pdf-icon" title="Visualizar Aviso de Convocação">
-                        </a>
+
+                        <!-- 03/09/2025 -> Iago Silva Validando se o Aviso de Convocação existe para exibi-lo -->
+                        <?php if ($aviso_convocacao) : ?>
+                            <a href="arquivos/avisos_de_convocacao/<?php echo $aviso_convocacao; ?>" target="_blank">
+                                <img src="../sistema/imagens/pdf.png" class="pdf-icon" title="Visualizar Aviso de Convocação">
+                            </a>
+                        <?php endif; ?>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info">
@@ -327,7 +327,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
                             <div <?php if ($perfil != "admin") echo "hidden"; ?>>
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                    <i class="fa fa-refresh"></i> ATUALIZAR
                                 </button>
                             </div>
                         </form>
@@ -393,7 +393,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
                             <div <?php if ($perfil != "admin") echo "hidden"; ?>>
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                    <i class="fa fa-refresh"></i> ATUALIZAR
                                 </button>
                             </div>
                         </form>
@@ -425,7 +425,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
                             <div <?php if ($perfil != "admin") echo "hidden"; ?>>
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                    <i class="fa fa-refresh"></i> ATUALIZAR
                                 </button>
                             </div>
                         </form>
@@ -457,7 +457,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
                             <div <?php if ($perfil != "admin") echo "hidden"; ?>>
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                    <i class="fa fa-refresh"></i> ATUALIZAR
                                 </button>
                             </div>
                         </form>
@@ -489,7 +489,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
                             <div <?php if ($perfil != "admin") echo "hidden"; ?>>
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                    <i class="fa fa-refresh"></i> ATUALIZAR
                                 </button>
                             </div>
                         </form>
@@ -521,7 +521,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
                             <div <?php if ($perfil != "admin") echo "hidden"; ?>>
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                    <i class="fa fa-refresh"></i> ATUALIZAR
                                 </button>
                             </div>
                         </form>
@@ -697,7 +697,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
                             <div <?php if ($perfil != "admin") echo "hidden"; ?>>
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fa fa-sync-alt"></i> ATUALIZAR
+                                    <i class="fa fa-refresh"></i> ATUALIZAR
                                 </button>
                             </div>
                         </form>
@@ -893,7 +893,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                             <h5><i class="fa fa-list"></i> JISE's Cadastradas</h5>
                             <div class="table-responsive">
                                 <table class="table table-hover table-bordered" id="tabela_dinamica">
-                                    <thead class="table-dark">
+                                    <thead class="">
                                         <tr>
                                             <th>Sessão</th>
                                             <th>Dia do Exame</th>
@@ -922,7 +922,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                                                 <td>' . $linha['membro_2'] . '</td>
                                                 <td>
                                                     <a onclick="funcao_apagar(\'' . $linha['id'] . '\', \'exame_medico\')" class="btn btn-sm btn-danger">
-                                                        <i class="fa fa-trash-alt"></i>
+                                                        X
                                                     </a>
                                                 </td>
                                             </tr>';

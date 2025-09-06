@@ -106,11 +106,11 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
 <!-- <li <?php if ($perfil != "avaliador" && $perfil != "admin") echo "hidden" ?>><a href="candidato_lista_avaliador.php"><i class="fa fa-check-square-o"></i><span>Avaliação</span></a></li>                         
 -->
-
-<li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="assistente_virtual.php"><i class="fa bi bi-robot"></i><span>Assistente Virtual</span></a></li>
-
+<?php if($resultado_selecao[0]['rm'] == 3) : ?>
+    <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="assistente_virtual.php"><i class="fa bi bi-robot"></i><span>Assistente Virtual</span></a></li>
+<?php endif;?>
 <!-- Adicionando o item de Aviso aos Candidatos no Menu -->
-<li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="notificacoes.php"><i class="fa fa-bullhorn"></i><span>Notificações</span></a></li>
+<li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="cadastra_notificacoes.php"><i class="fa fa-bullhorn"></i><span>Notificações</span></a></li>
 
 <!-- <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="suporte_inicial_lista.php"><i class="fa fa-comments"></i><span>Suporte</span></a></li>                         -->
 

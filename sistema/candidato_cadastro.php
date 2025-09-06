@@ -6,6 +6,7 @@ include_once './codigos/candidato_valida_cadastro.php';
 $conexao = new Conexao();
 
 $selecao = $conexao->get_selecao_id(); // Seleção
+$libera_suporte_inicial = $selecao[0]['liberacao_suporte_inicial'];
 ?>
 
 <!-- 31/08/2025 - Iago Silva Pequenos ajustes e melhorias no Layout -->
@@ -256,6 +257,7 @@ $selecao = $conexao->get_selecao_id(); // Seleção
 
     <div class="content-wrapper">
         <div class="container-fluid">
+            <!-- 03/09/2025 -> Iago Silva Validando se a variável existe -->
             <?php if ($libera_suporte_inicial == 1) : ?>
                 <!-- Banner de Suporte -->
                 <div class="support-banner">
@@ -270,16 +272,29 @@ $selecao = $conexao->get_selecao_id(); // Seleção
             <?php endif; ?>
 
             <form action="../banco_dados/candidato_cadastra.php" method="post" onsubmit="return candidato_valida_cadastro()" class="needs-validation" novalidate>
-
                 <!-- DADOS PESSOAIS -->
                 <div class="card mb-4 fade-in">
                     <h5 class="section-header"><i class="fa fa-user me-2"></i>Dados Pessoais</h5>
                     <div class="form-section">
                         <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="check_nome_social" name="check_nome_social" onchange="mostra_nome_social()">
+                                    <label class="form-check-label" for="check_nome_social">Possuo nome social</label>
+                                </div>
+                            </div>
+
                             <div class="col-lg-4 mb-3">
                                 <div class="floating-label">
                                     <input type="text" id="nome_completo" name="nome_completo" maxlength="120" class="form-control floating-input" placeholder=" " required>
                                     <label for="nome_completo" class="required-field">Nome completo</label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 conditional-section" id="div_nome_social">
+                                <div class="floating-label">
+                                    <input type="text" id="nome_social" name="nome_social" maxlength="120" class="form-control floating-input" placeholder=" ">
+                                    <label for="nome_social">Nome social</label>
                                 </div>
                             </div>
 
@@ -297,9 +312,7 @@ $selecao = $conexao->get_selecao_id(); // Seleção
                                     <label for="identidade" class="required-field">Identidade (Número/Órgão expedidor)</label>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <div class="floating-label">
                                     <input type="text" id="data_nascimento" name="data_nascimento" maxlength="25" class="form-control floating-input" placeholder=" " required>
@@ -321,9 +334,7 @@ $selecao = $conexao->get_selecao_id(); // Seleção
                                     <label for="nascionalidade" class="required-field">Nacionalidade (País)</label>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <div class="floating-label">
                                     <input type="text" id="naturalidade" maxlength="30" name="naturalidade" class="form-control floating-input" placeholder=" " required>
@@ -356,9 +367,8 @@ $selecao = $conexao->get_selecao_id(); // Seleção
                                     <option value="outro">Outro</option>
                                 </select>
                             </div>
-                        </div>
 
-                        <div class="row">
+
 
 
                             <div class="col-lg-4 mb-3">
@@ -381,9 +391,8 @@ $selecao = $conexao->get_selecao_id(); // Seleção
                                     <label for="companheiro">Nome do Companheiro(a)</label>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
+
                             <div class="col-lg-12 mb-3">
                                 <select id="autodeclaracao" name="autodeclaracao" onchange="mostra_vaga_reservada('<?php echo ($_SESSION['tipo_selecao'] ?? 'ott_stt'); ?>')" class="form-select" required>
                                     <option value="" selected disabled>Autodeclaração</option>
@@ -404,26 +413,11 @@ $selecao = $conexao->get_selecao_id(); // Seleção
                                     </label>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row conditional-section">
-                            <div class="col-lg-6">
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="check_nome_social" name="check_nome_social" onchange="mostra_nome_social()">
-                                    <label class="form-check-label" for="check_nome_social">Possuo nome social</label>
-                                </div>
+                            <div id='div_erro_dados_pessoais' class="alert alert-danger mt-3 conditional-section">
+                                <i class="fa fa-exclamation-triangle me-2"></i>
+                                <span id="erro_dados_pessoais"></span>
                             </div>
-                            <div class="col-lg-6">
-                                <div id="div_nome_social" class="floating-label conditional-section">
-                                    <input type="text" id="nome_social" name="nome_social" maxlength="120" class="form-control floating-input" placeholder=" ">
-                                    <label for="nome_social">Nome social</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id='div_erro_dados_pessoais' class="alert alert-danger mt-3 conditional-section">
-                            <i class="fa fa-exclamation-triangle me-2"></i>
-                            <span id="erro_dados_pessoais"></span>
                         </div>
                     </div>
                 </div>
@@ -1084,7 +1078,7 @@ $selecao = $conexao->get_selecao_id(); // Seleção
         $("#data_nascimento").mask("99/99/9999");
         $("#cep").mask("99999-999");
         $("#celular").mask("(99) 99999-9999");
-        $("#telefone").mask("(99) 9999-9999");
+        $("#telefone").mask("(99) 99999-9999");
         $("#data_expedicao").mask("99/99/9999");
 
 

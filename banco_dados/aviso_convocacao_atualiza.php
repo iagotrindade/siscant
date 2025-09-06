@@ -5,6 +5,10 @@ session_start();
 include_once 'conexao.php';
 $conexao = new Conexao();
 
+// 03/09/2025 -> Iago Silva Aumentando temporariamente o tamanho do upload de arquivos
+ini_set('upload_max_filesize', '20M'); // Define o tamanho máximo do arquivo para 20MB
+ini_set('post_max_size', '20M');      // Define o tamanho máximo da mensagem POST (geralmente maior que upload_max_filesize)
+
 if (!$_POST) {
     erro_mensagem("Erro 5623444!");
     exit();
@@ -72,7 +76,7 @@ try {
         $_UP['pasta'] = '../sistema/arquivos/avisos_de_convocacao/';
 
         // Tamanho máximo do arquivo (em Bytes)
-        $_UP['tamanho'] = 1024 * 1024 * 5; // 2Mb
+        $_UP['tamanho'] = 1024 * 1024 * 20; 
 
         // Array com as extensões permitidas
         $_UP['extensoes'] = array('pdf', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods', 'png', 'jpg', 'jpeg');
