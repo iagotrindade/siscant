@@ -867,12 +867,13 @@ class Conexao
     }
 
     //20/08/2025 -> Iago Silva Inserindo função para editar conhecimento do Assistente Virtual
-    public function edita_pergunta_resposta($id, $pergunta, $resposta, $usuario_id)
+    public function edita_pergunta_resposta($id, $etapa, $pergunta, $resposta, $usuario_id)
     {
         try {
             $this->pdo->beginTransaction();
 
             $sql = "UPDATE perguntas_assistente SET 
+                    etapa = :etapa,
                     pergunta = :pergunta,
                     resposta = :resposta, 
                     id_usuario_inseriu = :usuario_id
@@ -881,6 +882,7 @@ class Conexao
             $query = $this->pdo->prepare($sql);
 
             $query->bindValue(":id_pergunta", $id, PDO::PARAM_INT);
+            $query->bindValue(":etapa", $etapa, PDO::PARAM_STR);
             $query->bindValue(":pergunta", $pergunta, PDO::PARAM_STR);
             $query->bindValue(":resposta", $resposta, PDO::PARAM_STR);
             $query->bindValue(":usuario_id", $usuario_id, PDO::PARAM_INT);
@@ -889,6 +891,8 @@ class Conexao
                 $this->pdo->commit();
 
                 return [
+                    'id' => $id,
+                    'etapa' => $etapa,
                     'pergunta' => $pergunta,
                     'resposta' => $resposta,
                     'id_usuario_inseriu' => $usuario_id,

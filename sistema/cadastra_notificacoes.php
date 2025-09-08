@@ -112,16 +112,22 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
         </div>
 
         <div class="row">
-            <div class="col-md-8">
-                <div class="card">
+            <div class="col-xl-6 col-md-7">
+                <div class="card mb-20">
+                    <div class="card-header mb-20" style="background-color: #006400; color: white;">
+                        <h4>
+                            <i class="fa fa-bell me-2"></i> Enviar Nova Notificação
+                        </h4>
+                    </div>
                     <div class="card-body">
                         <form method="POST" action="../banco_dados/notificacao_cadastra.php">
                             <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
+
                             <div class="mb-10">
                                 <label for="notificationEtapa" class="form-label">Etapa da Notificação</label>
-                                <select class="form-control" id="notificationEtapa" name="etapa" required>
+                                <select class="form-control" id="notificationEtapa" name="etapa" required style="border-radius: 6px; padding: 10px 15px; border: 1px solid #D3D3D3;">
                                     <option value="">Selecione a etapa</option>
-                                    <option value="">Todas</option>
+                                    <option value="0">Todas</option>
                                     <option value="1">Etapa 1</option>
                                     <option value="2">Etapa 2</option>
                                     <option value="3">Etapa 3</option>
@@ -134,14 +140,20 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
 
                             <div class="mb-10">
                                 <label for="notificationTitle" class="form-label">Título da Notificação</label>
-                                <input type="text" class="form-control" id="notificationTitle" name="titulo" placeholder="Digite um título para a notificação" required>
+                                <input type="text" class="form-control" id="notificationTitle" name="titulo"
+                                    placeholder="Digite um título para a notificação" required
+                                    style="border-radius: 6px; padding: 10px 15px; border: 1px solid #D3D3D3;">
                             </div>
+
                             <div class="mb-10">
                                 <label for="notificationMessage" class="form-label">Mensagem</label>
-                                <textarea class="form-control" id="notificationMessage" name="mensagem" rows="5" placeholder="Digite a mensagem para os candidatos..." maxlength="800" required></textarea>
-                                <div class="char-count"><span id="charCount">0</span>/800 caracteres</div>
+                                <textarea class="form-control" id="notificationMessage" name="mensagem" rows="5"
+                                    placeholder="Digite a mensagem para os candidatos..." maxlength="1000" required
+                                    style="border-radius: 6px; padding: 10px 15px; border: 1px solid #D3D3D3;"></textarea>
+                                <div class="form-text text-end"><span id="charCount">0</span>/1000 caracteres</div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-send">
+
+                            <button type="submit" class="btn btn-primary w-100">
                                 <i class="fa fa-paper-plane me-2"></i> Enviar Notificação
                             </button>
                         </form>
@@ -149,20 +161,23 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="">Informações</h5>
+            <div class="col-xl-2 col-md-5">
+                <div class="card mb-20">
+                    <div class="card-header mb-20" style="background-color: #006400; color: white;">
+                        <h4>
+                            <i class="fa fa-info-circle me-2"></i> Informações
+                        </h4>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info">
-                            <i class="fa fa-info-circle me-2"></i>
+                            <i class="fa fa-exclamation-circle me-2"></i>
                             <strong>Atenção:</strong> Após o envio, a notificação não poderá ser editada, apenas excluída.
                         </div>
+
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Notificações enviadas
-                                <span class="badge bg-primary rounded-pill" id="notificationCount"><?= count($notificacoes) ?></span>
+                                <span class="badge rounded-pill" style="background-color: #006400;"><?= count($notificacoes) ?></span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Último envio
@@ -174,40 +189,52 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
             </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header bg-white" style="display: flex; justify-content: space-between; align-items: center;">
-                        <h5 class="">Notificações Enviadas</h5>
-                        <button class="btn btn-sm btn-outline-secondary mb-20" id="toggleNotifications">
-                            <i class="fa fa-chevron-down"></i>
+                    <div class="card-header d-flex justify-content-between align-items-center mb-20" style="background-color: #006400; color: white;">
+                        <h4>
+                            <i class="fa fa-bullhorn me-2"></i> Notificações Enviadas
+                        </h4>
+                        <button class="btn btn-sm" id="toggleNotifications" style="background-color:#006400;">
+                            <i class="fa fa-chevron-down" style="margin: 0;"></i>
                         </button>
                     </div>
+
                     <div class="card-body p-0">
                         <div id="notificationsList">
-                            <!-- As notificações serão carregadas aqui -->
                             <?php if (empty($notificacoes)) : ?>
-                                <div class="empty-state">
-                                    <i class="fa fa-bullhorn"></i>
-                                    <h4>Nenhuma notificação enviada</h4>
-                                    <p>As notificações enviadas aparecerão aqui.</p>
+                                <div class="text-center py-5">
+                                    <i class="fa fa-bullhorn fa-3x mb-10" style="color: #D3D3D3;"></i>
+                                    <h4 class="text-muted">Nenhuma notificação enviada</h4>
+                                    <p class="text-muted">As notificações enviadas aparecerão aqui.</p>
                                 </div>
                             <?php endif; ?>
 
                             <?php foreach ($notificacoes as $notificacao) : ?>
-                                <div class="notification-card card mb-20">
+                                <div class="card mb-10 mx-3 mt-10">
                                     <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start" style="display: flex; align-items: center; justify-content: space-between;">
-                                            <div class="card-title">
-                                                <h5 class=""><?= $notificacao['titulo'] ?></h5>
-                                                <span class="badge bg-secondary">Etapa: <?= $notificacao['etapa'] ?? 'TODAS' ?></span>
+                                        <div class="mb-2" style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div class="mb-10">
+                                                <h4 class="card-title mb-10"><?= $notificacao['titulo'] ?></h4>
+                                                <span class="badge notification-badge" style="background-color: #228B22;">
+                                                    Etapa: <?= $notificacao['etapa'] == 0 ? 'TODAS' : $notificacao['etapa'] ?>
+                                                </span>
                                             </div>
-                                            
-                                            <button class="btn btn-md btn-delete" onclick="funcao_apagar('<?= $notificacao['id'] ?>', 'notificacao')"> <i class="fa fa-trash"></i> </button>
+
+                                            <button class="btn btn-md alert-danger mb-10"
+                                                onclick="funcao_apagar('<?= $notificacao['id'] ?>', 'notificacao')">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
                                         </div>
-                                        <p class="card-text"><?= $notificacao['mensagem'] ?></p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <small class="notification-date">Enviado em: <?= trata_data_hora($notificacao['data_envio']) ?> por <?= $notificacao['posto_grad'] . ' - ' . $notificacao['nome_guerra'] ?></small>
+
+                                        <p class="card-text"><?= nl2br(htmlspecialchars($notificacao['mensagem'])) ?></p>
+
+                                        <div class="d-flex justify-content-between align-items-center mt-10">
+                                            <small class="text-muted">
+                                                Enviado em: <?= trata_data_hora($notificacao['data_envio']) ?>
+                                                por <?= $notificacao['posto_grad'] . ' - ' . $notificacao['nome_guerra'] ?>
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
@@ -217,6 +244,165 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                 </div>
             </div>
         </div>
+
+        <style>
+            :root {
+                --primary-color: #006400;
+                /* Verde escuro como cor primária */
+                --secondary-color: #228B22;
+                /* Verde mar como cor de sucesso */
+                --text-color: #333333;
+                /* Cor do texto principal */
+                --border-color: #D3D3D3;
+                /* Cor das bordas */
+            }
+
+            .card {
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+                border: 1px solid var(--border-color);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-header {
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 10px 10px 0 0 !important;
+                padding: 5px 20px;
+                font-weight: 600;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .card-header i {
+                margin-right: 8px;
+            }
+
+            .form-label {
+                font-weight: 500;
+                margin-bottom: 5px;
+                color: var(--text-color);
+            }
+
+            .btn-primary {
+                background-color: var(--primary-color);
+                border: none;
+                padding: 10px 20px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+
+            .btn-primary:hover {
+                background-color: #004d00;
+                /* Tom mais escuro do verde primário */
+                transform: scale(1.01);
+            }
+
+            .alert {
+                border-radius: 8px;
+                margin-bottom: 15px;
+                border: none;
+            }
+
+
+            .section-title {
+                color: var(--primary-color);
+                border-bottom: 2px solid var(--secondary-color);
+                padding-bottom: 10px;
+                margin: 30px 0 20px 0;
+                font-weight: 700;
+            }
+
+            .form-control {
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+            }
+
+            .form-control:focus {
+                border-color: var(--secondary-color);
+                box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
+            }
+
+            .form-check-input:checked {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+
+            .table-hover tbody tr:hover {
+                background-color: rgba(34, 139, 34, 0.1);
+            }
+
+
+            .form-control,
+            .form-select {
+                border-radius: 6px;
+                padding: 10px 15px;
+                border: 1px solid #D3D3D3;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+
+            .form-control:focus,
+            .form-select:focus {
+                border-color: #228B22;
+                outline: 0;
+                box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
+            }
+
+            .btn-primary {
+                background-color: #006400;
+                border: none;
+                padding: 10px 20px;
+                font-weight: 600;
+            }
+
+            .btn-primary:hover {
+                background-color: #004d00;
+            }
+
+            .alert-info {
+                background-color: #E8F5E9;
+                border-color: #C8E6C9;
+                color: #2E7D32;
+            }
+
+            .notification-badge {
+                font-size: 1em;
+                padding: 0.5em 0.8em;
+            }
+        </style>
+
+        <script>
+            // Contador de caracteres
+            document.getElementById('notificationMessage').addEventListener('input', function() {
+                const charCount = this.value.length;
+                document.getElementById('charCount').textContent = charCount;
+            });
+
+            // Alternar visibilidade das notificações
+            document.getElementById('toggleNotifications').addEventListener('click', function() {
+                const notificationsList = document.getElementById('notificationsList');
+                const icon = this.querySelector('i');
+
+                if (notificationsList.style.display === 'none') {
+                    notificationsList.style.display = 'block';
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    notificationsList.style.display = 'none';
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        </script>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

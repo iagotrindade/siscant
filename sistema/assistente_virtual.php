@@ -25,6 +25,103 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
 ?>
 
+<style>
+    :root {
+        --primary-color: #006400;
+        /* Verde escuro como cor primária */
+        --secondary-color: #228B22;
+        /* Verde mar como cor de sucesso */
+        --text-color: #333333;
+        /* Cor do texto principal */
+        --border-color: #D3D3D3;
+        /* Cor das bordas */
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        border: 1px solid var(--border-color);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 5px 20px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header i {
+        margin-right: 8px;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: var(--text-color);
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background-color: #004d00;
+        /* Tom mais escuro do verde primário */
+        transform: scale(1.01);
+    }
+
+    .alert {
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: none;
+    }
+
+
+    .section-title {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 10px;
+        margin: 30px 0 20px 0;
+        font-weight: 700;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(34, 139, 34, 0.1);
+    }
+</style>
+
 <div class="content-wrapper">
     <div class="page-title">
         <div>
@@ -39,154 +136,149 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
             <!-- Formulário de Cadastro (somente para admin) -->
-            <div class="row" <?php if ($_SESSION['perfil'] != "admin") echo "hidden" ?>>
-                <div class="col-md-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <i class="glyphicon glyphicon-comment"></i> Adicionar Nova Pergunta ao Assistente Virtual
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <form action="../banco_dados/pergunta_cadastra.php" method="post" onsubmit="return validar_formulario()">
-                                <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
+            <?php if ($_SESSION['perfil'] == "admin"): ?>
+                <div class="card mb-20">
+                    <div class="card-header mb-20" style="background-color: #006400; color: white;">
+                        <h4 class="">
+                            <i class="fa fa-comments me-2"></i> Adicionar Nova Pergunta ao Assistente Virtual
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/pergunta_cadastra.php" method="post" onsubmit="return validar_formulario()">
+                            <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
 
-                                <div class="form-group">
-                                    <label for="etapa" class="control-label"><strong>Etapa</strong></label>
-                                    <select name="etapa" id="etapa" class="form-control"
-                                        placeholder="Digite a pergunta que os usuários podem fazer...">
-                                        <option value="" selected>Selecione a Etapa</option>
-                                        <option value="1">TODAS</option>
-                                        <option value="1">Etapa 1</option>
-                                        <option value="2">Etapa 2</option>
-                                        <option value="3">Etapa 3</option>
-                                        <option value="4">Etapa 4</option>
-                                        <option value="5">Etapa 5</option>
-                                        <option value="6">Etapa 6</option>
-                                        <option value="7">Etapa 7</option>
-                                    </select>
-                                </div>
+                            <div class="mb-10">
+                                <label for="etapa" class="form-label"><strong>Etapa</strong></label>
+                                <select name="etapa" id="etapa" class="form-control">
+                                    <option value="" selected>Selecione a Etapa</option>
+                                    <option value="0">TODAS</option>
+                                    <option value="1">Etapa 1</option>
+                                    <option value="2">Etapa 2</option>
+                                    <option value="3">Etapa 3</option>
+                                    <option value="4">Etapa 4</option>
+                                    <option value="5">Etapa 5</option>
+                                    <option value="6">Etapa 6</option>
+                                    <option value="7">Etapa 7</option>
+                                </select>
+                            </div>
 
-                                <div class="form-group">
-                                    <label for="pergunta" class="control-label"><strong>Pergunta</strong></label>
-                                    <textarea name="pergunta" id="pergunta" class="form-control"
-                                        placeholder="Digite a pergunta que os usuários podem fazer..."
-                                        rows="3" style="min-height: 100px;"></textarea>
-                                    <p class="help-block">Exemplo: "Como faço para me inscrever no processo?"</p>
-                                </div>
+                            <div class="mb-10">
+                                <label for="pergunta" class="form-label"><strong>Pergunta</strong></label>
+                                <textarea name="pergunta" id="pergunta" class="form-control"
+                                    placeholder="Digite a pergunta que os usuários podem fazer..."
+                                    rows="3" style="min-height: 100px;"></textarea>
+                                <div class="form-text">Exemplo: "Como faço para me inscrever no processo?"</div>
+                            </div>
 
-                                <div class="form-group">
-                                    <label for="resposta" class="control-label"><strong>Resposta</strong></label>
-                                    <textarea name="resposta" id="resposta" class="form-control"
-                                        placeholder="Digite a resposta que o assistente deve fornecer..."
-                                        rows="5" style="min-height: 150px;"></textarea>
-                                    <p class="help-block">Forneça uma resposta clara e completa</p>
-                                </div>
+                            <div class="mb-10">
+                                <label for="resposta" class="form-label"><strong>Resposta</strong></label>
+                                <textarea name="resposta" id="resposta" class="form-control mb-10"
+                                    placeholder="Digite a resposta que o assistente deve fornecer..."
+                                    rows="5" style="min-height: 150px;"></textarea>
+                                <div class="form-text">Forneça uma resposta clara e completa</div>
+                            </div>
 
-                                <div class="alert alert-danger" id="mensagem_erro" style="display: none;">
-                                    <i class="glyphicon glyphicon-exclamation-sign"></i>
-                                    <span id="mensagem"></span>
-                                </div>
+                            <div class="alert alert-danger" id="mensagem_erro" role="alert" style="display: none;">
+                                <i class="fa fa-exclamation-circle me-2"></i>
+                                <span id="mensagem"></span>
+                            </div>
 
-                                <button type="submit" class="btn btn-primary btn-block btn-md">
-                                    <i class="glyphicon glyphicon-floppy-disk"></i> CADASTRAR PERGUNTA
-                                </button>
-                            </form>
-                        </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <i class="fa fa-save me-2"></i> CADASTRAR PERGUNTA
+                            </button>
+                        </form>
                     </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
-            <div class="panel panel-info" style="margin-top:20px; border-color:#006400;">
-                <div class="panel-heading" style="background-color:#006400; color:white;">
-                    <h3 class="panel-title" style="font-weight:bold;">
-                        <i class="glyphicon glyphicon-edit" style="margin-right:8px;"></i> Guia de Formatação das Respostas
-                    </h3>
+            <!-- Guia de Formatação -->
+            <div class="card mb-20">
+                <div class="card-header mb-20" style="background-color: #006400; color: white;">
+                    <h4 class="">
+                        <i class="fa fa-edit me-2"></i> Guia de Formatação das Respostas
+                    </h4>
                 </div>
-                <div class="panel-body" style="padding:20px;">
-                    <p class="lead" style="margin-bottom:20px; font-size:16px; color:#2c6e3e;">
+                <div class="card-body">
+                    <p class="lead mb-10" style="color: #2E8B57;">
                         Utilize estas regras simples para formatar suas respostas de forma organizada e profissional:
                     </p>
 
-                    <div class="formatting-guide">
+                    <div class="row">
                         <!-- Títulos -->
-                        <div class="format-item" style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px dashed #ddd;">
-                            <h4 style="color:#006400; margin-top:0;">
-                                <span class="glyphicon glyphicon-header" style="margin-right:8px;"></span>
-                                Títulos
-                            </h4>
-                            <p>Termine a linha com dois pontos <code class="example-code">:</code></p>
-                            <div class="example-box" style="background:#f8f9fa; padding:10px; border-radius:4px; margin-top:5px;">
-                                <span style="color:#006400;">Exemplo:</span>
-                                <code style="display:block; margin-top:5px; color:#2c6e3e;">Documentos necessários:</code>
+                        <div class="col-md-6 mb-10">
+                            <div class="d-flex align-items-center mb-10">
+                                <h5 class="" style="color: #006400;">Títulos</h5>
+                            </div>
+                            <p class="mb-10">Termine a linha com dois pontos <code>:</code></p>
+                            <div class="bg-light p-3 rounded">
+                                <small class="text-success">Exemplo:</small>
+                                <code class="d-block mt-1 text-dark">Documentos necessários:</code>
                             </div>
                         </div>
 
                         <!-- Listas ordenadas -->
-                        <div class="format-item" style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px dashed #ddd;">
-                            <h4 style="color:#006400; margin-top:0;">
-                                <span class="glyphicon glyphicon-list" style="margin-right:8px;"></span>
-                                Lista Numerada
-                            </h4>
-                            <p>Numere os itens começando com o número seguido de ponto:</p>
-                            <pre style="background:#f8f9fa; padding:10px; border-radius:4px; border-left:3px solid #006400; margin-top:5px;">
-1. Primeiro item
-2. Segundo item
-3. Terceiro item</pre>
+                        <div class="col-md-6 mb-10">
+                            <div class="d-flex align-items-center mb-10">
+                                <h5 class="" style="color: #006400;">Lista Numerada</h5>
+                            </div>
+                            <p class="mb-10">Numere os itens começando com o número seguido de ponto:</p>
+                            <ol class="bg-light p-3 rounded" style="border-left: 3px solid #006400;">
+                                <li>Primeiro item</li>
+                                <li>Segundo item</li>
+                                <li>Terceiro item </li>
+                            </ol>
                         </div>
 
                         <!-- Listas não ordenadas -->
-                        <div class="format-item" style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px dashed #ddd;">
-                            <h4 style="color:#006400; margin-top:0;">
-                                <span class="glyphicon glyphicon-th-list" style="margin-right:8px;"></span>
-                                Lista com Marcadores
-                            </h4>
-                            <p>Use hífen <code class="example-code">-</code> no início de cada linha:</p>
-                            <pre style="background:#f8f9fa; padding:10px; border-radius:4px; border-left:3px solid #006400; margin-top:5px;">
-- Item A
-- Item B
-- Item C</pre>
+                        <div class="col-md-6 mb-10">
+                            <div class="d-flex align-items-center mb-10">
+                                <h5 class="" style="color: #006400;">Lista com Marcadores</h5>
+                            </div>
+                            <p class="mb-10">Use hífen <code>-</code> no início de cada linha:</p>
+                            <ul class="bg-light p-3 rounded" style="border-left: 3px solid #006400; list-style-type: none;">
+                                <li>- Item A</li>
+                                <li>- Item B</li>
+                                <li>- Item C</li>
+                            </ul>
                         </div>
 
                         <!-- Quebras de linha -->
-                        <div class="format-item" style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px dashed #ddd;">
-                            <h4 style="color:#006400; margin-top:0;">
-                                <span class="glyphicon glyphicon-text-height" style="margin-right:8px;"></span>
-                                Parágrafos e Espaçamento
-                            </h4>
-                            <p>Pressione <kbd class="keyboard-key">Enter</kbd> duas vezes para separar parágrafos.</p>
-                            <div class="example-box" style="background:#f8f9fa; padding:10px; border-radius:4px; margin-top:5px;">
-                                <span style="color:#006400;">Resultado:</span>
-                                <p style="margin:5px 0 0 0;">Primeiro parágrafo</p>
-                                <p style="margin:5px 0 0 0;">Segundo parágrafo</p>
+                        <div class="col-md-6 mb-20">
+                            <div class="d-flex align-items-center mb-10">
+                                <h5 class="" style="color: #006400;">Parágrafos e Espaçamento</h5>
+                            </div>
+                            <p class="mb-10">Pressione <kbd class="bg-secondary">Enter</kbd> duas vezes para separar parágrafos.</p>
+                            <div class="bg-light p-3 rounded">
+                                <small class="text-success">Resultado:</small>
+                                <p class="mb-1 mt-2">Primeiro parágrafo</p>
+                                <p class="">Segundo parágrafo</p>
                             </div>
                         </div>
 
                         <!-- Destaques -->
-                        <div class="format-item" style="margin-bottom:15px; padding-bottom:15px; border-bottom:1px dashed #ddd;">
-                            <h4 style="color:#006400; margin-top:0;">
-                                <span class="glyphicon glyphicon-alert" style="margin-right:8px;"></span>
-                                Destaques Importantes
-                            </h4>
-                            <p>Use <code class="example-code">Importante:</code> ou <code class="example-code">Atenção:</code> no início da linha</p>
-                            <div class="alert alert-warning" style="margin-top:10px; padding:10px; background-color:#fff3cd; border-color:#ffeeba;">
-                                ⚠️ <strong>Importante:</strong> Será exibido nesta caixa de alerta amarela
+                        <div class="col-md-6 mb-20">
+                            <div class="d-flex align-items-center mb-10">
+                                <h5 class="" style="color: #006400;">Destaques Importantes</h5>
+                            </div>
+                            <p class="mb-10">Use <code>Importante:</code> ou <code>Atenção:</code> no início da linha</p>
+                            <div class="alert alert-warning mt-2 ">
+                                <i class="fa fa-exclamation-triangle me-2"></i>
+                                <strong>Importante:</strong> Será exibido nesta caixa de alerta amarela
                             </div>
                         </div>
 
                         <!-- Links -->
-                        <div class="format-item">
-                            <h4 style="color:#006400; margin-top:0;">
-                                <span class="glyphicon glyphicon-link" style="margin-right:8px;"></span>
-                                Links Externos
-                            </h4>
-                            <p>Digite o endereço completo começando com <code class="example-code">http://</code> ou <code class="example-code">https://</code></p>
-                            <div class="example-box" style="background:#f8f9fa; padding:10px; border-radius:4px; margin-top:5px;">
-                                <span style="color:#006400;">Exemplo:</span>
-                                <code style="display:block; margin-top:5px; color:#2c6e3e;">https://exemplo.com/edital</code>
-                                <span style="display:block; margin-top:5px; font-size:13px; color:#666;">→ Será convertido automaticamente em link clicável</span>
+                        <div class="col-md-6 mb-20">
+                            <div class="d-flex align-items-center mb-10">
+                                <h5 class="" style="color: #006400;">Links Externos</h5>
+                            </div>
+                            <p class="mb-10">Digite o endereço completo começando com <code>http://</code> ou <code>https://</code></p>
+                            <div class="bg-light p-3 rounded">
+                                <small class="text-success">Exemplo:</small>
+                                <code class="d-block mt-1 text-dark">https://exemplo.com/edital</code>
+                                <small class="d-block mt-1 text-muted">→ Será convertido automaticamente em link clicável</small>
                             </div>
                         </div>
                     </div>
@@ -194,80 +286,83 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
             </div>
 
             <!-- Tabela de Perguntas Cadastradas -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <i class="glyphicon glyphicon-list"></i> Perguntas Cadastradas no Assistente Virtual
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered" id="tabela_dinamica">
-                                    <thead>
-                                        <tr class="active">
-                                            <th class="text-center">Etapa</th>
-                                            <th class="text-center">Pergunta</th>
-                                            <th class="text-center">Resposta</th>
-                                            <th class="text-center">Usuario que Cadastrou</th>
-                                            <th class="text-center">Data de Cadastro</th>
-                                            <th width="120px" class="text-center">Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $lista_perguntas = $conexao->get_perguntas_assistente();
-                                        ?>
+            <div class="card">
+                <div class="card-header mb-20" style="background-color: #006400; color: white;">
+                    <h4 class="">
+                        <i class="fa fa-list me-2"></i> Perguntas Cadastradas no Assistente Virtual
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered" id="tabela_dinamica">
+                            <thead class="">
+                                <tr>
+                                    <th class="text-center">Etapa</th>
+                                    <th class="text-center">Pergunta</th>
+                                    <th class="text-center">Resposta</th>
+                                    <th class="text-center">Usuario que Cadastrou</th>
+                                    <th class="text-center">Data de Cadastro</th>
+                                    <th width="120px" class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $lista_perguntas = $conexao->get_perguntas_assistente();
+                                ?>
 
-                                        <?php foreach ($lista_perguntas as $linha): ?>
-                                            <?php
-                                            // Busca o nome do usuário que cadastrou a pergunta                         
-                                            $usuario_cadastro = $conexao->get_usuario_id($linha['id_usuario_inseriu']);
-                                            ?>
-                                            <tr>
-                                                <td class="text-center">
-                                                    <?= $linha['etapa'] ?? 'TODAS' ?>
-                                                </td>
+                                <?php foreach ($lista_perguntas as $linha): ?>
+                                    <?php
+                                    // Busca o nome do usuário que cadastrou a pergunta                         
+                                    $usuario_cadastro = $conexao->get_usuario_id($linha['id_usuario_inseriu']);
 
-                                                <td class="text-center">
-                                                    <?= $linha['pergunta'] ?>
-                                                </td>
+                                    $etapa = '';
+                                    if ($linha['etapa'] == 0) {
+                                        $etapa = 'TODAS';
+                                    } else {
+                                        $etapa = 'et_' . $linha['etapa'];
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td class="text-center">
+                                            <?= $etapa ?>
+                                        </td>
 
-                                                <td>
-                                                    <?= $linha['resposta'] ?>
-                                                </td>
+                                        <td class="text-center">
+                                            <?= $linha['pergunta'] ?>
+                                        </td>
 
-                                                <td>
-                                                    <?= $usuario_cadastro[0]['posto_grad'] . ' ' . $usuario_cadastro[0]['nome_guerra'] ?>
-                                                </td>
+                                        <td>
+                                            <?= $linha['resposta'] ?>
+                                        </td>
 
-                                                <td>
-                                                    <?= trata_data_hora($linha['data_insercao']) ?>
-                                                </td>
+                                        <td>
+                                            <?= $usuario_cadastro[0]['posto_grad'] . ' ' . $usuario_cadastro[0]['nome_guerra'] ?>
+                                        </td>
 
-                                                <td class="text-center">
-                                                    <div class="btn-group btn-group-sm">
-                                                        <a href="atualizar_assistente_virtual.php?id_pergunta=<?= $linha['id'] ?>"
-                                                            class="mr-10"
-                                                            data-toggle="tooltip"
-                                                            title="Editar">
-                                                            <i class="bi bi-pencil-fill" style="font-size: 20px;"></i>
-                                                        </a>
-                                                        <a onclick="funcao_apagar('<?= $linha['id'] ?>', 'pergunta')"
-                                                            class=""
-                                                            data-toggle="tooltip"
-                                                            title="Excluir">
-                                                            <i class="bi bi-trash text-danger" style="font-size: 20px;"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                        <td>
+                                            <?= trata_data_hora($linha['data_insercao']) ?>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-lg">
+                                                <a href="atualizar_assistente_virtual.php?id_pergunta=<?= $linha['id'] ?>"
+                                                    class="btn btn-outline-primary p-0 mr-10"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Editar">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <a onclick="funcao_apagar('<?= $linha['id'] ?>', 'pergunta')"
+                                                    class="btn btn-outline-danger p-0"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Excluir">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
