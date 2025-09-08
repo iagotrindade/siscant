@@ -410,7 +410,6 @@ $lista_especialidades = $conexao->get_especialidade();
                         <div class="alert alert-info">
                             <legend>Cronograma de Convocação Etapa III <img src="imagens/pdf.png" height="30px"></legend>
                             <div class="card-body">
-
                                 <label class="text-danger">Requisitos/Detalhamento</label>
                                 <div class="alert" style="text-align: left;">
                                     <ul class="text-danger" style="padding: 0; font-weight: 600;">
@@ -423,34 +422,65 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <form action="mpdf/relatorio_convocacao_et_3.php" method="POST">
                                     <input name="etapa" type="hidden" value="<?php echo ($etapa_atual); ?>">
+
                                     <div class="row">
                                         <div class="col-lg-4">
-                                            <input name="tipo_relatorio" type="hidden" value="concorrendo_esp">
-                                            <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
-                                            <input name="etapa" type="hidden" value="<?php echo ($etapa_atual); ?>">
-                                            <input name="orientacao" type="hidden" value="retrato">
-                                            <input name="tipo_especialdiade" type="hidden" value="todas">
-                                            <input name="cabecalho" type="hidden" value="sim">
                                             <div class="form-group">
-                                                <input name="titulo_1" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                                <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
                                             </div>
                                         </div>
 
                                         <div class="col-lg-4">
                                             <div class="form-group">
-                                                <input name="titulo_2" value="CONVOCAÇÃO PARA ETAPA III – CONFERÊNCIA PRESENCIAL DE DDOCUMENTAÇÃO, ENTREVISTA E INSPEÇÃO DE SAÚDE" class="form-control">
+                                                <input name="subtitulo" value="CONVOCAÇÃO PARA ETAPA III – CONFERÊNCIA PRESENCIAL DE DOCUMENTAÇÃO, ENTREVISTA E INSPEÇÃO DE SAÚDE" class="form-control">
                                             </div>
                                         </div>
 
                                         <div class="col-lg-4">
                                             <div class="form-group">
-                                                <input name="cidade_dt" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                                <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label>Capacidade Máxima por Turno</label>
+                                                <input name="capacidade_turno" type="number" value="50" min="1" max="100" class="form-control">
+                                                <small class="text-muted">Máximo de candidatos por turno</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label>Data de Início</label>
+                                                <input name="data_inicio" type="date" class="form-control" value="<?= date('Y-m-d', strtotime('next monday')) ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label>Data Final</label>
+                                                <input name="data_final" type="date" class="form-control" value="<?= date('Y-m-d', strtotime('+2 weeks')) ?>">
+                                                <small class="text-muted">Período para distribuir os agendamentos</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-info">
+                                                <strong>⚠️ Atenção - Nova Funcionalidade</strong>
+                                                <p>O sistema agora distribui automaticamente os candidatos por turnos e datas:</p>
+                                                <ul>
+                                                    <li>Máximo de <span id="capacidade-value">50</span> candidatos por turno</li>
+                                                    <li>Dois turnos por dia (Manhã: 08:00h, Tarde: 13:00h)</li>
+                                                    <li>Sexta-feira apenas turno da manhã</li>
+                                                    <li>Candidatos com múltiplas especialidades no mesmo dia</li>
+                                                </ul>
                                             </div>
                                         </div>
 
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control">De acordo com o Aviso de Convocação Nr XX-SSMR/X, de X de junho de 20XX, CONVOCO os candidatos abaixo relacionados, para comparecimento presencial à Comissão de Seleção Especial para Serviço Técnico Temporário (CSE/SvTT), localizada na Rua Bento Martins Nº 45 – Centro – Porto Alegre-RS, nas DATAS e HORÁRIOS abaixo, munidos da documentação conforme inserida no SISCANT e exames de saúde previstos para a Etapa III do processo seletivo, todas as certidões solicitadas no “Anexo C” deverão estar atualizadas.</textarea>
+                                                <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control">De acordo com o Aviso de Convocação Nr XX-SSMR/X, de X de junho de 20XX, CONVOCO os candidatos abaixo relacionados, para comparecimento presencial à Comissão de Seleção Especial para Serviço Técnico Temporário (CSE/SvTT), localizada na Rua Bento Martins Nº 45 – Centro – Porto Alegre-RS, nas DATAS e HORÁRIOS abaixo, munidos da documentação conforme inserida no SISCANT e exames de saúde previstos para a Etapa III do processo seletivo, todas as certidões solicitadas no "Anexo C" deverão estar atualizadas.</textarea>
                                             </div>
                                         </div>
 
@@ -472,37 +502,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                             </div>
                                         </div>
 
-                                        <?php foreach ($lista_especialidades as $especialidade): ?>
-                                            <?php
-                                            $candidatos = $conexao->get_candidatos_especialidade($especialidade['id']);
-
-                                            foreach ($candidatos as $index => $candidato) {
-                                                if ($candidato['etapa'] < 3) {
-                                                    unset($candidatos[$index]);
-                                                }
-                                            }
-
-                                            $qtdCandidatos = count($candidatos);
-                                            ?>
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label>DATA E HORÁRIO <?= strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . ' (Total de Candidatos: ' . $qtdCandidatos . ')' ?></label>
-                                                    <input type="text" name="hora_especialidade[<?= $especialidade['id'] ?>]" placeholder="13 SET 24 ÀS 0800h" class="form-control" value="13 SET 24 ÀS 0800h"></input>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-
-                                        <script>
-                                            $(document).ready(function() {
-                                                $('.select2').select2({
-                                                    placeholder: "Selecione as especialidades",
-                                                    allowClear: true
-                                                });
-                                            });
-                                        </script>
-
                                         <div class="col-md-12">
-                                            <button type="submit" class="btn btn-primary btn-block">GERAR</button>
+                                            <button type="submit" class="btn btn-primary btn-block">GERAR CRONOGRAMA AUTOMÁTICO</button>
                                         </div>
                                     </div>
                                 </form>
