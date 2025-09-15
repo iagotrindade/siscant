@@ -683,6 +683,59 @@ a.text-info:focus {
   color: #245269;
 }
 
+.btn-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  /* espaço entre ícone e texto */
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  background-size: 200% auto;
+  /* animação gradiente */
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.btn-modern i {
+  font-size: 15px;
+}
+
+/* Efeito hover suave com animação no gradiente */
+.btn-modern:hover {
+  background-position: right center;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+  color: #fff;
+}
+
+/* Efeito quando clica */
+.btn-modern:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Foco acessível */
+.btn-modern:focus {
+  outline: 3px solid rgba(33, 150, 243, 0.4);
+  outline-offset: 2px;
+}
+
+/* Botão de edição */
+.btn-edit {
+  background-color: #1e88e5;
+}
+
+/* Botão de exclusão */
+.btn-delete {
+  background-color: #c62828;
+}
+
 .text-warning {
   color: #8a6d3b;
 }

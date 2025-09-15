@@ -93,7 +93,6 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         border: none;
     }
 
-
     .section-title {
         color: var(--primary-color);
         border-bottom: 2px solid var(--secondary-color);
@@ -302,7 +301,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                     <th class="text-center">Resposta</th>
                                     <th class="text-center">Usuario que Cadastrou</th>
                                     <th class="text-center">Data de Cadastro</th>
-                                    <th width="120px" class="text-center">Ações</th>
+                                    <th width="160px" class="text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -335,27 +334,25 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                             <?= $linha['resposta'] ?>
                                         </td>
 
-                                        <td>
+                                        <td class="text-center">
                                             <?= $usuario_cadastro[0]['posto_grad'] . ' ' . $usuario_cadastro[0]['nome_guerra'] ?>
                                         </td>
 
-                                        <td>
+                                        <td class="text-center">
                                             <?= trata_data_hora($linha['data_insercao']) ?>
                                         </td>
 
                                         <td class="text-center">
-                                            <div class="btn-group btn-group-lg">
+                                            <div class="" role="group" aria-label="Ações">
                                                 <a href="atualizar_assistente_virtual.php?id_pergunta=<?= $linha['id'] ?>"
-                                                    class="btn btn-outline-primary p-0 mr-10"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Editar">
-                                                    <i class="fa fa-edit"></i>
+                                                    class="btn-modern btn-edit">
+                                                    <i class="fa fa-pencil"></i> Editar
                                                 </a>
-                                                <a onclick="funcao_apagar('<?= $linha['id'] ?>', 'pergunta')"
-                                                    class="btn btn-outline-danger p-0"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Excluir">
-                                                    <i class="fa fa-trash"></i>
+
+                                                <a
+                                                    class="btn-modern btn-delete"
+                                                    onclick="funcao_apagar('<?= $linha['id'] ?>', 'pergunta')">
+                                                    <i class="fa fa-trash"></i> Excluir
                                                 </a>
                                             </div>
                                         </td>

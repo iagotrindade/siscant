@@ -221,11 +221,11 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                                                     Etapa: <?= $notificacao['etapa'] == 0 ? 'TODAS' : $notificacao['etapa'] ?>
                                                 </span>
                                             </div>
-
-                                            <button class="btn btn-md alert-danger mb-10"
+                                            <a
+                                                class="btn-modern btn-delete"
                                                 onclick="funcao_apagar('<?= $notificacao['id'] ?>', 'notificacao')">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
+                                                <i class="fa fa-trash"></i> Excluir
+                                            </a>
                                         </div>
 
                                         <p class="card-text"><?= nl2br(htmlspecialchars($notificacao['mensagem'])) ?></p>

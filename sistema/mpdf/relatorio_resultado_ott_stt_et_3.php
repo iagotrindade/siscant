@@ -9,13 +9,18 @@ $mpdf->SetDisplayMode('fullpage');
 $css = file_get_contents("css/estilo.css");
 $mpdf->WriteHTML($css, 1);
 
-$titulo = $_POST['titulo'];
-$subtitulo = $_POST['subtitulo'];
-$paragrafo_um = $_POST['paragrafo_um'];
-$paragrafo_dois = $_POST['paragrafo_dois'];
-$paragrafo_tres = $_POST['paragrafo_tres'];
+$titulo        = htmlspecialchars($_POST['titulo'] ?? '', ENT_QUOTES, 'UTF-8');
+$subtitulo     = htmlspecialchars($_POST['subtitulo'] ?? '', ENT_QUOTES, 'UTF-8');
 
-$data = $_POST['data'];
+$paragrafo_um  = htmlspecialchars($_POST['paragrafo_um'] ?? '', ENT_QUOTES, 'UTF-8');
+$paragrafo_dois = htmlspecialchars($_POST['paragrafo_dois'] ?? '', ENT_QUOTES, 'UTF-8');
+$paragrafo_tres = htmlspecialchars($_POST['paragrafo_tres'] ?? '', ENT_QUOTES, 'UTF-8');
+$paragrafo_quatro = htmlspecialchars($_POST['paragrafo_quatro'] ?? '', ENT_QUOTES, 'UTF-8');
+
+$data_inicial  = $_POST['data_inicial'] ?? '';
+$data_final    = $_POST['data_final'] ?? '';
+
+$data          = htmlspecialchars($_POST['data'] ?? '', ENT_QUOTES, 'UTF-8');
 
 set_time_limit(300);
 
@@ -81,129 +86,47 @@ $mpdf->WriteHTML($html);
 
 $lista_especialidades = $conexao->get_especialidade();
 
-$especialidades = [];
-$todos_candidatos = []; // [id_candidato => ['dados' => [], 'especialidades' => []]]
-$hora_candidato = [];
-
-// 1. Carrega todos os candidatos por especialidade
 foreach ($lista_especialidades as $especialidade) {
-    $id_esp = $especialidade['id'];
-    $candidatos = $conexao->get_candidatos_especialidade($id_esp);
-    $especialidades[$id_esp] = [
-        'nome_especialidade' => $especialidade['ott_stt'] . ' - ' . $especialidade['nome'],
-        'candidatos' => []
-    ];
-
-    foreach ($candidatos as $candidato) {
-        $id = $candidato['id'];
-        $especialidades[$id_esp]['candidatos'][$id] = $candidato;
-
-        // Armazena especialidades do candidato
-        if (!isset($todos_candidatos[$id])) {
-            $todos_candidatos[$id] = [
-                'dados' => $candidato,
-                'especialidades' => []
-            ];
-        }
-
-        $todos_candidatos[$id]['especialidades'][] = $id_esp;
-    }
-}
-
-// 2. Determina menor hora para candidatos com múltiplas especialidades
-foreach ($todos_candidatos as $id => $info) {
-    if (count($info['especialidades']) < 2) continue;
-
-    $hora_menor_valor = PHP_INT_MAX;
-    $hora_menor_texto = '';
-
-    foreach ($info['especialidades'] as $esp_id) {
-        if (isset($hora_especialidade[$esp_id])) {
-            $hora_txt = $hora_especialidade[$esp_id];
-            $hora_valor = extrair_hora_numerica($hora_txt);
-
-            if ($hora_valor < $hora_menor_valor) {
-                $hora_menor_valor = $hora_valor;
-                $hora_menor_texto = $hora_txt;
-            }
-        }
+    $lista_candidatos = $conexao->get_candidatos_especialidade($especialidade['id']);
+    if (count($lista_candidatos) === 0) {
+        continue;
     }
 
-    if ($hora_menor_texto !== '') {
-        $hora_candidato[$id] = $hora_menor_texto;
-    }
-}
-
-// 3. Gera as tabelas
-
-foreach ($especialidades as $esp_id => $dados) {
-    $nome = $dados['nome_especialidade'];
-    $candidatos = $dados['candidatos'];
-
-    // Separa os candidatos
-    $candidatos_multipla = [];
-    $candidatos_exclusivos = [];
-
-    foreach ($candidatos as $id => $candidato) {
-        if ($candidato['etapa'] < 3) continue;
-
-        if (isset($todos_candidatos[$id]) && count($todos_candidatos[$id]['especialidades']) > 1) {
-            $candidatos_multipla[$id] = $candidato;
-        } else {
-            $candidatos_exclusivos[$id] = $candidato;
-        }
-    }
-
-    // 3.1. Tabela com os candidatos exclusivos
-    if (count($candidatos_exclusivos) > 0) {
-        $hora = isset($hora_especialidade[$esp_id]) ? $hora_especialidade[$esp_id] : '';
-
-        $html = "
+    $html = "
         <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
             <tr>
                 <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>"
-            . mb_strtoupper($nome, 'UTF-8') . "<br>"
-            . htmlspecialchars($hora, ENT_QUOTES, 'UTF-8') . "</th>
+        . mb_strtoupper($especialidade['nome'], 'UTF-8') . "<br>" . "</th>
             </tr>
             <tr>
                 <th style='text-align: center; width: 5%;'>Nº</th>
-                <th style='text-align: center; width: 10%;'>CPF</th>
-                <th style='text-align: center; width: 50%;'>NOME</th>
+                <th style='text-align: center; width: 15%;'>CPF</th>
+                <th style='text-align: center; width: 45%;'>NOME</th>
                 <th style='text-align: center; width: 35%;'>RESULTADO</th>
             </tr>";
 
-        $contador = 1;
-        foreach ($candidatos_exclusivos as $candidato) {
-            $cpf = substr($candidato['cpf'], 0, -5) . "*****";
+    $contador = 1;
 
-            if ($candidato['apto_saude'] == '1') {
-                $candidato['apto_saude'] = 'APTO';
-            } elseif ($candidato['apto_saude'] == '0') {
-                $candidato['apto_saude'] = 'INAPTO';
-            } elseif ($candidato['apto_saude'] == '2') {
-                $candidato['apto_saude'] = 'NÃO COMPARECEU';
-            }
-
-            $html .= "
-            <tr>
-                <td style='text-align: center;'>$contador</td>
-                <td style='text-align: center;'>$cpf</td>
-                <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
-                <td style='text-align: center;'>" . strtoupper($candidato['apto_saude']) . "</td>
-            </tr>";
-            $contador++;
+    foreach ($lista_candidatos as $candidato) {
+        if ($etapa < 3) {
+            continue;
         }
 
-        $html .= "</table>";
-        $mpdf->WriteHTML($html);
-    }
+        if (!empty($data_inicial) && !empty($data_final)) {
+            $data_inspecao = $candidato['data_exame_saude'];
 
-    // 3.2. Tabela separada para cada candidato com múltiplas especialidades
-    foreach ($candidatos_multipla as $candidato) {
-        $id = $candidato['id'];
-        $hora = isset($hora_candidato[$id]) ? $hora_candidato[$id] : '';
+            // Normaliza formatos (caso venham diferentes)
+            $data_inspecao_ts = strtotime($data_inspecao);
 
-        $cpf = substr($candidato['cpf'], 0, -5) . "*****";
+            $data_inicial_ts  = strtotime($data_inicial);
+            $data_final_ts    = strtotime($data_final);
+
+            if ($data_inspecao_ts < $data_inicial_ts || $data_inspecao_ts > $data_final_ts) {
+                continue;
+            }
+        }
+
+        $cpf = substr($candidato['cpf'], 0, -5) . "******";
 
         if ($candidato['apto_saude'] == '1') {
             $candidato['apto_saude'] = 'APTO';
@@ -213,31 +136,20 @@ foreach ($especialidades as $esp_id => $dados) {
             $candidato['apto_saude'] = 'NÃO COMPARECEU';
         }
 
-        $html = "
-        <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
+        $html .= "
             <tr>
-                <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>"
-            . mb_strtoupper($nome, 'UTF-8') . "<br>"
-            . htmlspecialchars($hora, ENT_QUOTES, 'UTF-8') . "</th>
-            </tr>
-            <tr>
-                <th style='text-align: center; width: 5%;'>Nº</th>
-                <th style='text-align: center; width: 10%;'>CPF</th>
-                <th style='text-align: center; width: 50%;'>NOME</th>
-                <th style='text-align: center; width: 35%;'>RESULTADO</th>
-            </tr>
-            <tr>
-                <td style='text-align: center;'>1</td>
+                <td style='text-align: center;'>$contador</td>
                 <td style='text-align: center;'>$cpf</td>
                 <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
                 <td style='text-align: center;'>" . strtoupper($candidato['apto_saude']) . "</td>
-            </tr>
-        </table>";
-
-        $mpdf->WriteHTML($html);
+            </tr>";
+        $contador++;
     }
+
+    $html .= "</table>";
+    $mpdf->WriteHTML($html);
 }
 
-$mpdf->Output("Resultado Etapa III.pdf", 'D');
+$mpdf->Output("Resultado Etapa III - Inspeção de Saúde.pdf", 'D');
 ob_end_flush();
 exit();
