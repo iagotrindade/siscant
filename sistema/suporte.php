@@ -4,7 +4,7 @@ include_once 'menu.php';
 if ($_SESSION['selecao_regiao'] == 7) exit();
 
 $conexao = new Conexao();
-$lista_perguntas = $conexao->get_perguntas_assistente();
+$lista_perguntas = $conexao->get_perguntas_assistente($_SESSION['selecao_codigo']);
 
 $selecao = $conexao->get_selecao_id();
 

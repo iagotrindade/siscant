@@ -296,6 +296,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                         <table class="table table-hover table-striped table-bordered" id="tabela_dinamica">
                             <thead class="">
                                 <tr>
+                                    <th class="text-center">Seleção</th>
                                     <th class="text-center">Etapa</th>
                                     <th class="text-center">Pergunta</th>
                                     <th class="text-center">Resposta</th>
@@ -306,7 +307,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                             </thead>
                             <tbody>
                                 <?php
-                                $lista_perguntas = $conexao->get_perguntas_assistente();
+                                $lista_perguntas = $conexao->get_perguntas_assistente($_SESSION['selecao_codigo']);
                                 ?>
 
                                 <?php foreach ($lista_perguntas as $linha): ?>
@@ -322,6 +323,10 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                     }
                                     ?>
                                     <tr>
+                                        <td class="text-center">
+                                            <?= strtoupper($linha['selecao']) ?? '-' ?>
+                                        </td>
+                                        
                                         <td class="text-center">
                                             <?= $etapa ?>
                                         </td>

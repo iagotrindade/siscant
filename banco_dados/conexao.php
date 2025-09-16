@@ -826,8 +826,10 @@ class Conexao
     }
 
     // 15 AGO 25 -> Iago Silva Adicionando função para inserir perguntas no Assistente Virtual
+    // 16 SET 25 -> Iago Silva Inserindo campo "Seleção"
     public function insere_pergunta_resposta($etapa, $pergunta, $resposta, $usuario_id)
     {
+        $selecao = $_SESSION['selecao_codigo'];
         try {
             $dataHora = date('Y-m-d H:i:s');
 
@@ -836,11 +838,12 @@ class Conexao
 
             $stmt = $this->pdo->prepare("
             INSERT INTO perguntas_assistente 
-                (etapa, pergunta, resposta, id_usuario_inseriu, data_insercao) 
+                (selecao, etapa, pergunta, resposta, id_usuario_inseriu, data_insercao) 
             VALUES 
-                (:etapa, :pergunta, :resposta, :id_usuario_inseriu, :data_insercao)
+                (:selecao, :etapa, :pergunta, :resposta, :id_usuario_inseriu, :data_insercao)
         ");
 
+            $stmt->bindValue(':selecao', $selecao);
             $stmt->bindValue(':etapa', $etapa);
             $stmt->bindValue(':pergunta', $pergunta);
             $stmt->bindValue(':resposta', $resposta);
@@ -854,6 +857,7 @@ class Conexao
 
             return [
                 'id' => $this->pdo->lastInsertId(),
+                'selecao' => $selecao,
                 'pergunta' => $pergunta,
                 'resposta' => $resposta,
                 'id_usuario_inseriu' => $usuario_id,
@@ -869,10 +873,13 @@ class Conexao
     //20/08/2025 -> Iago Silva Inserindo função para editar conhecimento do Assistente Virtual
     public function edita_pergunta_resposta($id, $etapa, $pergunta, $resposta, $usuario_id)
     {
+        $selecao = $_SESSION['selecao_codigo'];
+
         try {
             $this->pdo->beginTransaction();
 
             $sql = "UPDATE perguntas_assistente SET 
+                    selecao = :selecao,
                     etapa = :etapa,
                     pergunta = :pergunta,
                     resposta = :resposta, 
@@ -882,6 +889,7 @@ class Conexao
             $query = $this->pdo->prepare($sql);
 
             $query->bindValue(":id_pergunta", $id, PDO::PARAM_INT);
+            $query->bindValue(":selecao", $selecao, PDO::PARAM_STR);
             $query->bindValue(":etapa", $etapa, PDO::PARAM_STR);
             $query->bindValue(":pergunta", $pergunta, PDO::PARAM_STR);
             $query->bindValue(":resposta", $resposta, PDO::PARAM_STR);
@@ -892,6 +900,7 @@ class Conexao
 
                 return [
                     'id' => $id,
+                    'selecao' => $selecao,
                     'etapa' => $etapa,
                     'pergunta' => $pergunta,
                     'resposta' => $resposta,
@@ -923,9 +932,13 @@ class Conexao
 
 
     // 15 AGO 25 -> Iago Silva Adicionando função para buscar as perguntas do Assistente Virtual
-    public function get_perguntas_assistente()
+    public function get_perguntas_assistente($selecao)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM perguntas_assistente");
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM perguntas_assistente WHERE selecao = :selecao
+        ");
+
+        $stmt->bindValue(':selecao', $selecao);
         $stmt->execute();
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -8768,7 +8781,8 @@ order by total_pontos_somados desc");
     // </editor-fold>
 
     // 30/08/2025 -> Iago Silva Criando a função para atualizar o aviso de convocação
-    public function selecao_atualiza_aviso_convocacao($nome_arquivo) {
+    public function selecao_atualiza_aviso_convocacao($nome_arquivo)
+    {
         $datetime = date('Y-m-d H:i:s');
         $usuario = $_SESSION['id_usuario'];
         $id_selecao = $_SESSION['selecao'];
@@ -9498,7 +9512,8 @@ order by total_pontos_somados desc");
 
     // </editor-fold>
     // 31/08/2025 -> Iago Silva Criando a função para liberar o suporte inicial
-    public function libera_suporte_inicial($liberacao) {
+    public function libera_suporte_inicial($liberacao)
+    {
         $datetime = date('Y-m-d H:i:s');
         $usuario = $_SESSION['id_usuario'];
         $id_selecao = $_SESSION['selecao'];
