@@ -58,23 +58,23 @@ $mpdf->WriteHTML($html);
 function formatarDataPortugues($data)
 {
     $meses = [
-        '01' => 'Janeiro',
-        '02' => 'Fevereiro',
-        '03' => 'Março',
-        '04' => 'Abril',
-        '05' => 'Maio',
-        '06' => 'Junho',
-        '07' => 'Julho',
-        '08' => 'Agosto',
-        '09' => 'Setembro',
-        '10' => 'Outubro',
-        '11' => 'Novembro',
-        '12' => 'Dezembro'
+        '01' => 'JAN',
+        '02' => 'FEV',
+        '03' => 'MAR',
+        '04' => 'ABR',
+        '05' => 'MAI',
+        '06' => 'JUN',
+        '07' => 'JUL',
+        '08' => 'AGO',
+        '09' => 'SET',
+        '10' => 'OUT',
+        '11' => 'NOV',
+        '12' => 'DEZ'
     ];
     $dia = date('d', strtotime($data));
     $mes = $meses[date('m', strtotime($data))];
-    $ano = date('Y', strtotime($data));
-    return "{$dia} de {$mes} de {$ano}";
+    $ano = date('y', strtotime($data));
+    return "{$dia} {$mes} {$ano}";
 }
 function gerarDiasUteis($data_inicio, $data_final)
 {
@@ -199,12 +199,11 @@ foreach ($turnos_agendados as $data => $turnos_dia) {
     $data_formatada = formatarDataPortugues($data);
     foreach (['manha', 'tarde'] as $turno) {
         if (empty($turnos_dia[$turno]['especialidades'])) continue;
-        $hora_turno = ($turno === 'manha') ? '08:00h' : '13:00h';
-        $nome_turno = ($turno === 'manha') ? 'MANHÃ' : 'TARDE';
+        $hora_turno = ($turno === 'manha') ? '0800h' : '1300h';
         foreach ($turnos_dia[$turno]['especialidades'] as $esp_id => $candidatos_ids) {
             if (empty($candidatos_ids)) continue;
             $nome_especialidade = $especialidades[$esp_id]['nome_especialidade'];
-            $html = "<table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'> <tr><th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'> " . mb_strtoupper($nome_especialidade, 'UTF-8') . "<br> DATA: {$data_formatada} - TURNO DA {$nome_turno} ({$hora_turno}) </th></tr> <tr> <th style='text-align: center; width: 10%;'>Nº</th> <th style='text-align: center; width: 30%;'>CPF</th> <th style='text-align: center; width: 60%;'>NOME</th> </tr>";
+            $html = "<table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'> <tr><th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'> " . mb_strtoupper($nome_especialidade, 'UTF-8') . "<br> {$data_formatada} ÀS {$hora_turno} </th></tr> <tr> <th style='text-align: center; width: 10%;'>Nº</th> <th style='text-align: center; width: 30%;'>CPF</th> <th style='text-align: center; width: 60%;'>NOME</th> </tr>";
             $contador = 1;
             foreach ($candidatos_ids as $candidato_id) {
                 $candidato = $todos_candidatos[$candidato_id]['dados'];
