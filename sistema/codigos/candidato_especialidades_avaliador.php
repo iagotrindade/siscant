@@ -396,15 +396,8 @@ if ($_SESSION['perfil'] == "avaliador") {
 
 
                 <div class="row"
-                    <?php
-                    //if($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'avaliador') echo " hidden "; 
-                    //if($_SESSION['perfil'] != 'admin') echo " hidden "; 
-                    if ($_SESSION['selecao_regiao'] != 6 && $_SESSION['codigo'] != 'cet') echo " hidden ";
-                    //echo " hidden ";
-                    ?>>
+                    <?php if ($_SESSION['perfil'] == 'admin' && $_SESSION['selecao_regiao'] == 6 || $_SESSION['codigo'] == 'cet'): ?>>
 
-                    <br>
-                    <br>
                     <div class="col-md-12">
                         <div class="alert alert-info">
                             <legend>Adicionar currículo para o candidato na especialidade<u><?php echo mb_strtoupper($valor['ott_stt'], "UTF-8") . " - " . $valor['especialidade'] ?></u></legend>
@@ -492,6 +485,7 @@ if ($_SESSION['perfil'] == "avaliador") {
 
                         </div>
                     </div>
+                    <?php endif; ?>
                 </div>
 
                 <div <?php if ($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "avaliador") echo " hidden " ?> class="alert alert-info">
