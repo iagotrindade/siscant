@@ -9,18 +9,18 @@ $mpdf->SetDisplayMode('fullpage');
 $css = file_get_contents("css/estilo.css");
 $mpdf->WriteHTML($css, 1);
 
-$titulo        = htmlspecialchars($_POST['titulo'] ?? '', ENT_QUOTES, 'UTF-8');
-$subtitulo     = htmlspecialchars($_POST['subtitulo'] ?? '', ENT_QUOTES, 'UTF-8');
+$titulo = htmlspecialchars($_POST['titulo'] ?? '', ENT_QUOTES, 'UTF-8');
+$subtitulo = htmlspecialchars($_POST['subtitulo'] ?? '', ENT_QUOTES, 'UTF-8');
 
 $paragrafo_um  = htmlspecialchars($_POST['paragrafo_um'] ?? '', ENT_QUOTES, 'UTF-8');
 $paragrafo_dois = htmlspecialchars($_POST['paragrafo_dois'] ?? '', ENT_QUOTES, 'UTF-8');
 $paragrafo_tres = htmlspecialchars($_POST['paragrafo_tres'] ?? '', ENT_QUOTES, 'UTF-8');
 $paragrafo_quatro = htmlspecialchars($_POST['paragrafo_quatro'] ?? '', ENT_QUOTES, 'UTF-8');
 
-$data_inicial  = $_POST['data_inicial'] ?? '';
-$data_final    = $_POST['data_final'] ?? '';
+$data_inicial = $_POST['data_inicial'] ?? '';
+$data_final = $_POST['data_final'] ?? '';
 
-$data          = htmlspecialchars($_POST['data'] ?? '', ENT_QUOTES, 'UTF-8');
+$data = htmlspecialchars($_POST['data'] ?? '', ENT_QUOTES, 'UTF-8');
 
 set_time_limit(300);
 
@@ -92,62 +92,68 @@ foreach ($lista_especialidades as $especialidade) {
         continue;
     }
 
-    $html = "
-        <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
-            <tr>
-                <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>"
-        . mb_strtoupper($especialidade['nome'], 'UTF-8') . "<br>" . "</th>
-            </tr>
-            <tr>
-                <th style='text-align: center; width: 5%;'>Nº</th>
-                <th style='text-align: center; width: 15%;'>CPF</th>
-                <th style='text-align: center; width: 45%;'>NOME</th>
-                <th style='text-align: center; width: 35%;'>RESULTADO</th>
-            </tr>";
-
+    $linhasCandidatos = "";
     $contador = 1;
 
     foreach ($lista_candidatos as $candidato) {
-        if ($etapa < 3) {
+        if ($candidato['etapa'] < 3 || $candidato['data_exame_saude'] == null) {
             continue;
         }
 
         if (!empty($data_inicial) && !empty($data_final)) {
             $data_inspecao = $candidato['data_exame_saude'];
 
-            // Normaliza formatos (caso venham diferentes)
-            $data_inspecao_ts = strtotime($data_inspecao);
+            $dataInspecao = DateTime::createFromFormat('Y-m-d', $data_inspecao);
+            $dataInicial  = DateTime::createFromFormat('Y-m-d', $data_inicial);
+            $dataFinal    = DateTime::createFromFormat('Y-m-d', $data_final);
 
-            $data_inicial_ts  = strtotime($data_inicial);
-            $data_final_ts    = strtotime($data_final);
-
-            if ($data_inspecao_ts < $data_inicial_ts || $data_inspecao_ts > $data_final_ts) {
-                continue;
+            if ($dataInspecao && $dataInicial && $dataFinal) {
+                if ($dataInspecao < $dataInicial || $dataInspecao > $dataFinal) {
+                    continue;
+                }
             }
         }
 
-        $cpf = substr($candidato['cpf'], 0, -5) . "******";
+        $cpf = strlen($candidato['cpf']) > 5
+            ? substr($candidato['cpf'], 0, -5) . "******"
+            : "******";
 
-        if ($candidato['apto_saude'] == '1') {
-            $candidato['apto_saude'] = 'APTO';
-        } elseif ($candidato['apto_saude'] == '0') {
-            $candidato['apto_saude'] = 'INAPTO';
-        } elseif ($candidato['apto_saude'] == '2') {
-            $candidato['apto_saude'] = 'NÃO COMPARECEU';
-        }
+        $statusMap = [
+            '1' => 'APTO',
+            '0' => 'INAPTO',
+            '2' => 'NÃO COMPARECEU'
+        ];
+        $aptoSaude = $statusMap[$candidato['apto_saude']] ?? 'DESCONHECIDO';
 
-        $html .= "
+        $linhasCandidatos .= "
             <tr>
                 <td style='text-align: center;'>$contador</td>
                 <td style='text-align: center;'>$cpf</td>
                 <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
-                <td style='text-align: center;'>" . strtoupper($candidato['apto_saude']) . "</td>
+                <td style='text-align: center;'>$aptoSaude</td>
             </tr>";
         $contador++;
     }
 
-    $html .= "</table>";
-    $mpdf->WriteHTML($html);
+    // Só gera tabela se tiver pelo menos uma linha de candidato
+    if (!empty($linhasCandidatos)) {
+        $html = "
+            <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
+                <tr>
+                    <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>"
+            . mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome'], 'UTF-8') . "<br>" . "</th>
+                </tr>
+                <tr>
+                    <th style='text-align: center; width: 5%;'>Nº</th>
+                    <th style='text-align: center; width: 15%;'>CPF</th>
+                    <th style='text-align: center; width: 45%;'>NOME</th>
+                    <th style='text-align: center; width: 35%;'>RESULTADO</th>
+                </tr>
+                $linhasCandidatos
+            </table>";
+
+        $mpdf->WriteHTML($html);
+    }
 }
 
 $mpdf->Output("Resultado Etapa III - Inspeção de Saúde.pdf", 'D');
