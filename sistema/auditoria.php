@@ -27,6 +27,71 @@ if (isset($_GET['codigo'])) {
 
 ?>
 
+<style>
+
+    .card-header {
+        border-radius: 12px 12px 0 0;
+        font-weight: 600;
+    }
+
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #495057;
+        background-color: #f8f9fa;
+        padding: 12px 15px;
+    }
+
+    .table td {
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+
+    .badge {
+        font-size: 0.85em;
+        padding: 6px 10px;
+        border-radius: 6px;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+    }
+
+    .alert {
+        border-radius: 8px;
+        border: none;
+        padding: 15px 20px;
+    }
+
+    code {
+        background-color: #f8f9fa;
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: #e83e8c;
+    }
+</style>
+
 <div class="content-wrapper">
     <div class="page-title">
         <div>
@@ -44,100 +109,116 @@ if (isset($_GET['codigo'])) {
         <div class="col-md-12">
 
             <div class="row">
-                <form name="fomulario" action="auditoria.php" method="get">
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <select onchange="fomulario.submit()" name="limite" class="form-control">
-                                <option <?php if ($limite == 1000) echo "selected" ?> value="1000">Últimos 1000 Registros</option>
-                                <option <?php if ($limite == 5000) echo "selected" ?> value="5000">Últimos 5000 Registros</option>
-                                <option <?php if ($limite == 10000) echo "selected" ?> value="10000">Últimos 10000 Registros</option>
-                            </select>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white p-15 mb-20">
+                            <h4 class="mb-0"><i class="fa fa-filter me-2"></i> Filtros de Pesquisa</h4>
+                        </div>
+                        <div class="card-body">
+                            <form name="formulario" action="auditoria.php" method="get" class="row g-3 align-items-end">
+                                <div class="col-lg-4">
+                                    <select onchange="formulario.submit()" name="limite" class="form-control">
+                                        <option <?php if ($limite == 1000) echo "selected" ?> value="1000">Últimos 1000 Registros</option>
+                                        <option <?php if ($limite == 5000) echo "selected" ?> value="5000">Últimos 5000 Registros</option>
+                                        <option <?php if ($limite == 10000) echo "selected" ?> value="10000">Últimos 10000 Registros</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3">
+                                    <input name="codigo" maxlength="50" placeholder="Digite o código" class="form-control">
+                                </div>
+                                <div class="col-lg-3">
+                                    <input name="cpf" maxlength="50" value="<?php echo $cpf_pesquisa ?>" placeholder="Digite o CPF" class="form-control">
+                                </div>
+                                <div class="col-lg-2">
+                                    <button type="submit" class="btn bg-primary">
+                                        <i class="fa fa-search me-2"></i>PESQUISAR
+                                    </button>
+                                </div>
+                            </form>
+
+                            <?php if ($codigo_pesquisa != null && $cpf_pesquisa != null): ?>
+                                <div class="alert alert-warning mt-3">
+                                    <i class="fa fa-exclamation-triangle me-2"></i>
+                                    <strong>VOCÊ DEVE ESCOLHER NA PESQUISA O CÓDIGO OU O CPF!</strong>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <input name="codigo" maxlength="50" value="<?php echo $codigo_pesquisa ?>" placeholder="Código" class="form-control">
-                    </div>
-                    <div class="col-lg-3">
-                        <input name="cpf" maxlength="50" value="<?php echo $cpf_pesquisa ?>" placeholder="CPF" class="form-control">
-                    </div>
-                    <div class="col-lg-2">
-                        <button type="submit" class="btn btn-primary btn-block">PESQUISAR <i class="fa fa-search"></i></button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="card">
-                <legend>Auditoria do sistema</legend>
-                <div class="card-body">
-                    <?php
-                    if ($codigo_pesquisa != null && $cpf_pesquisa != null)
-                        echo "<b><font color = 'red'>VOCÊ DEVE ESCOLHER NA PESQUISA O CÓDIGO OU O CPF!</font></b><br><br>";
-                    ?>
-                    <table class="table table-hover table-bordered" id="tabela_dinamica">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>ID USR</th>
-                                <th>CPF</th>
-                                <th>Alteração</th>
-                                <th>Data</th>
-                                <th>Sistema</th>
-                                <th>IP</th>
-                                <th>COD</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-
-                            $lista_logs = null;
-
-                            if ($cpf_pesquisa != null && $codigo_pesquisa == null) {
-                                $usuario_pesquisa = $conexao->get_usuario_cpf($cpf_pesquisa);
-
-                                $id_usuario_pesquisa = null;
-                                if (count($usuario_pesquisa) > 0)
-                                    $id_usuario_pesquisa = $usuario_pesquisa[0]['id'];
-
-                                $lista_logs = $conexao->get_logs_avancado($cpf_pesquisa, $id_usuario_pesquisa);
-                            }
-                            if ($codigo_pesquisa != null && $cpf_pesquisa == null) {
-                                $lista_logs = $conexao->get_logs_codigo($codigo_pesquisa, $limite);
-                            }
-
-                            if ($codigo_pesquisa == null && $cpf_pesquisa == null)
-                                $lista_logs = $conexao->get_logs_operadores($limite);
-
-
-
-                            if ($lista_logs != null) {
-                                foreach ($lista_logs as $linha) {
-                                    echo '
-                                <tr>
-                                <td>' . ($linha['id']) . '</td>
-                                <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id_usuario'] . '">' . $linha['id_usuario'] . '</a></td>
-                                <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id_usuario'] . '">' . $linha['cpf'] . '</a></td>
-                                <td>' . $linha['alteracao'] . '</td>
-                                <td>' . trata_data_hora($linha['data']) . '</td>
-                                <td>' . $linha['sistema'] . '</td>
-                                <td>' . $linha['ip'] . '</td>
-                                <td>' . $linha['codigo'] . '</td>
-                                </tr>';
-                                }
-                            }
-                            ?>
-
-                        </tbody>
-                    </table>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <legend>Codigos de operações</legend>
-                        <div align="center">
-
+                        <div class="card-header bg-primary text-white p-15 mb-20">
+                            <h4 class="mb-0"><i class="fa fa-eye me-2"></i> Auditoria do Sistema</h4>
                         </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped" id="tabela_dinamica">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th><i class="fa fa-hashtag me-1"></i> ID</th>
+                                            <th><i class="fa fa-user me-1"></i> ID USR</th>
+                                            <th><i class="fa fa-id-card me-1"></i> CPF</th>
+                                            <th><i class="fa fa-edit me-1"></i> Alteração</th>
+                                            <th><i class="fa fa-calendar me-1"></i> Data</th>
+                                            <th><i class="fa fa-cog me-1"></i> Sistema</th>
+                                            <th><i class="fa fa-sitemap me-1"></i> IP</th>
+                                            <th><i class="fa fa-code me-1"></i> COD</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $lista_logs = null;
+
+                                        if ($cpf_pesquisa != null && $codigo_pesquisa == null) {
+                                            $usuario_pesquisa = $conexao->get_usuario_cpf($cpf_pesquisa);
+                                            $id_usuario_pesquisa = null;
+                                            if (count($usuario_pesquisa) > 0)
+                                                $id_usuario_pesquisa = $usuario_pesquisa[0]['id'];
+                                            $lista_logs = $conexao->get_logs_avancado($cpf_pesquisa, $id_usuario_pesquisa);
+                                        }
+                                        if ($codigo_pesquisa != null && $cpf_pesquisa == null) {
+                                            $lista_logs = $conexao->get_logs_codigo($codigo_pesquisa, $limite);
+                                        }
+                                        if ($codigo_pesquisa == null && $cpf_pesquisa == null) {
+                                            $lista_logs = $conexao->get_logs_operadores($limite);
+                                        }
+
+                                        if ($lista_logs != null) {
+                                            foreach ($lista_logs as $linha) {
+                                                echo '
+                                    <tr>
+                                        <td><span class="badge bg-secondary">' . $linha['id'] . '</span></td>
+                                        <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id_usuario'] . '" class="text-decoration-none text-primary">' . $linha['id_usuario'] . '</a></td>
+                                        <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id_usuario'] . '" class="text-decoration-none text-primary">' . $linha['cpf'] . '</a></td>
+                                        <td><span class="text-truncate d-inline-block" style="max-width: 200px;" title="' . htmlspecialchars($linha['alteracao']) . '">' . $linha['alteracao'] . '</span></td>
+                                        <td><span class="badge bg-info">' . trata_data_hora($linha['data']) . '</span></td>
+                                        <td><span class="badge bg-success">' . $linha['sistema'] . '</span></td>
+                                        <td><code>' . $linha['ip'] . '</code></td>
+                                        <td><span class="badge bg-warning text-dark">' . $linha['codigo'] . '</span></td>
+                                    </tr>';
+                                            }
+                                        } else {
+                                            echo '<tr><td colspan="8" class="text-center py-4 text-muted"><i class="fa fa-inbox me-2"></i>Nenhum registro encontrado</td></tr>';
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white p-15 mb-20">
+                            <h4 class="mb-0"><i class="fa fa-code me-2"></i> Codigos de Operações</h4>
+                        </div>
+
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-hover table-bordered" id="tabela_dinamica2">
@@ -897,8 +978,6 @@ if (isset($_GET['codigo'])) {
                     </div>
                 </div>
             </div>
-
-            <a href="javascript:history.back()"><button class="btn btn-default btn-block">VOLTAR</button></a>
         </div>
     </div>
 </div>

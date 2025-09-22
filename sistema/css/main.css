@@ -14991,6 +14991,22 @@ be a descendant of the grid when it is being dragged.
   margin: 10px !important;
 }
 
+.p-2 {
+  padding: 2px !important;
+}
+
+.p-3 {
+  padding: 3px !important;
+}
+
+.p-5 {
+  padding: 5px !important;
+}
+
+.p-15 {
+  padding: 15px !important;
+}
+
 .p-20 {
   padding: 20px !important;
 }

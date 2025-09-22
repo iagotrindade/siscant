@@ -21,12 +21,6 @@ if($_SESSION['perfil'] != 'admin')
     exit();
 }
 
-if(inscricao())
-{
-    erro("Erro 235235! Inscrição em andamento!"); 
-    exit(); 
-}
-
 $criptografia = $_POST['crip'];
 
 if($criptografia != hash('sha256', $_SESSION['chave']."freitas"))

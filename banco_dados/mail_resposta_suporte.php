@@ -41,7 +41,6 @@ try {
 
     $mail_envia->From = 'siscant@3rm.eb.mil.br'; //Set who the message is to be sent from
     $mail_envia->FromName = utf8_decode('Não responda - Comando 3ª RM'); //Nome do Remetente
-    $mail_envia->Subject = utf8_decode('Recuperação de senha da VPN'); //Assunto da mensagem
 
     // Configurações do remetente e destinatário
     $mail_envia->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente

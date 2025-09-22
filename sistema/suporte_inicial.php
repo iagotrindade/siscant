@@ -376,20 +376,6 @@ include_once './codigos/suporte_inicial_valida.php';
         // Inicialmente esconder a mensagem de erro
         $('#div_mensagem_erro').hide();
     });
-
-    // Funções de validação (mantidas da versão original)
-    function limpa_cpf() {
-        // Implementação original
-    }
-
-    function verifica_cpf() {
-        // Implementação original
-    }
-
-    function suporte_inicial_valida() {
-        // Implementação original
-        return true;
-    }
 </script>
 </body>
 

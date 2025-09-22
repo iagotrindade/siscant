@@ -64,9 +64,14 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
         --primary-color: #006400;
         /* Verde militar */
         --secondary-color: #f8f9fa;
+        --primary-light: #4c8c4a;
         --accent-color: #ffc107;
         --text-dark: #212529;
         --text-light: #f8f9fa;
+        --user-message-bg: #f0f8ff;
+        --user-message-border: #d1e7ff;
+        --bot-message-bg: #f8f9f4;
+        --bot-message-border: #e2e8d8;
     }
 
     /* Estilos do Chat IA */
@@ -138,17 +143,24 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
     }
 
     .user-message {
-        background-color: var(--primary-color);
-        color: white;
+        background-color: var(--user-message-bg);
+        color: var(--text-dark);
         margin-left: auto;
-        border-bottom-right-radius: 4px;
+        border-bottom-right-radius: 6px;
+        flex-direction: row-reverse;
+        border: 1px solid var(--user-message-border);
+        box-shadow: 0 2px 8px rgba(0, 100, 0, 0.08);
+        border-right: 3px solid #4453feff;
     }
 
     .bot-message {
-        background-color: #e9ecef;
+        background-color: var(--bot-message-bg);
         color: var(--text-dark);
         margin-right: auto;
-        border-bottom-left-radius: 4px;
+        border-bottom-left-radius: 6px;
+        border: 1px solid var(--bot-message-border);
+        box-shadow: 0 2px 8px rgba(0, 100, 0, 0.05);
+        border-left: 3px solid var(--primary-light);
     }
 
     .message-time {
