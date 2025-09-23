@@ -16,8 +16,15 @@ $lista_suporte_inicial = $conexao->get_suporte();
 ?>
 <style>
     .card-header {
-        border-bottom: none;
-        border-radius: 8px 8px 0 0 !important;
+        font-size: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 15px 20px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .stat-card {
@@ -586,9 +593,9 @@ $lista_suporte_inicial = $conexao->get_suporte();
             <!-- Card Suporte Candidato - Inscrito -->
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white mb-20">
-                    <h4 class="mb-0 p-15">
+                    <span class="mb-0">
                         <i class="fa fa-comments me-2"></i> Suporte Candidato - Inscrito
-                    </h4>
+                    </span>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive mb-20">
@@ -702,9 +709,9 @@ $lista_suporte_inicial = $conexao->get_suporte();
             <?php if ($libera_suporte_inicial): ?>
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white mb-20">
-                        <h4 class="mb-0 p-15">
+                        <span class="mb-0">
                             <i class="fa fa-user-plus me-2"></i> Suporte Candidato - Não Inscrito
-                        </h4>
+                        </span>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive mb-20">
@@ -839,9 +846,9 @@ $lista_suporte_inicial = $conexao->get_suporte();
 
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white mb-20">
-                        <h4 class="mb-0 p-15">
+                        <span class="mb-0">
                             <i class="fa fa-trophy me-2"></i> Desempenho da Equipe
-                        </h4>
+                        </span>
                     </div>
                     <div class="card-body">
                         <!-- KPIs em Destaque -->
@@ -929,7 +936,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                             ?>
 
                                 <div class="performance-card <?php echo $card_class; ?> p-20">
-                                    <div class="card-header">
+                                    <div class="card-header p-0" style="background-color: transparent; font-size: 1.4rem;">
                                         <span class="mr-10 rank-badge <?php echo $badge_class; ?>">
                                             <?php echo $icon; ?>
                                         </span>
@@ -1031,7 +1038,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                 ?>
 
                                     <div class="performance-card <?php echo $card_class; ?> p-20">
-                                        <div class="card-header">
+                                        <div class="card-header p-0" style="background-color: transparent; font-size: 1.4rem;">
                                             <span class="mr-10 rank-badge <?php echo $badge_class; ?>">
                                                 <?php echo $icon; ?>
                                             </span>

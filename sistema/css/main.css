@@ -11,6 +11,23 @@
 /* Cor predominante #006400 */
 /* Cor predominante secundária #004d00 */
 
+:root {
+  --primary-color: #006400;
+  /* Verde escuro como cor primária */
+  --secondary-color: #228B22;
+  /* Verde floresta como secundária */
+  --accent-color: #8B0000;
+  /* Vermelho escuro como acento */
+  --light-color: #F5F5F5;
+  /* Cinza muito claro */
+  --success-color: #2E8B57;
+  /* Verde mar como cor de sucesso */
+  --text-color: #333333;
+  /* Cor do texto principal */
+  --border-color: #D3D3D3;
+  /* Cor das bordas */
+}
+
 html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;

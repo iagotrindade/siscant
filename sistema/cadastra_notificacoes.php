@@ -115,9 +115,9 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
             <div class="col-xl-6 col-md-7">
                 <div class="card mb-20">
                     <div class="card-header mb-20" style="background-color: #006400; color: white;">
-                        <h4>
+                        <span>
                             <i class="fa fa-bell me-2"></i> Enviar Nova Notificação
-                        </h4>
+                        </span>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="../banco_dados/notificacao_cadastra.php">
@@ -164,9 +164,9 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
             <div class="col-xl-2 col-md-5">
                 <div class="card mb-20">
                     <div class="card-header mb-20" style="background-color: #006400; color: white;">
-                        <h4>
+                        <span>
                             <i class="fa fa-info-circle me-2"></i> Informações
-                        </h4>
+                        </span>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info">
@@ -193,9 +193,9 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center mb-20" style="background-color: #006400; color: white;">
-                        <h4>
+                        <span>
                             <i class="fa fa-bullhorn me-2"></i> Notificações Enviadas
-                        </h4>
+                        </span>
                         <button class="btn btn-sm" id="toggleNotifications" style="background-color:#006400;">
                             <i class="fa fa-chevron-down" style="margin: 0;"></i>
                         </button>
@@ -271,15 +271,15 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
             }
 
             .card-header {
+                font-size: 20px;
                 background-color: var(--primary-color);
                 color: white;
-                border-radius: 10px 10px 0 0 !important;
-                padding: 5px 20px;
+                border-radius: 12px 12px 0 0 !important;
+                padding: 15px 20px;
                 font-weight: 600;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             }
 
             .card-header i {

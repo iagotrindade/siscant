@@ -173,15 +173,13 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
     }
 
     .card-header {
+        font-size: 20px;
         background-color: var(--primary-color);
         color: white;
-        border-radius: 10px 10px 0 0 !important;
+        border-radius: 12px 12px 0 0 !important;
         padding: 15px 20px;
         font-weight: 600;
-        display: flex;
-        justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .card-header i {

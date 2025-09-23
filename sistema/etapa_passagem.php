@@ -71,9 +71,15 @@ $especialidades = $conexao->get_especialidade();
     }
 
     .card-header {
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        font-size: 20px;
+        background-color: var(--primary-color);
         color: white;
-        border-radius: 12px 12px 0 0;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 15px 20px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .card-body {
@@ -222,9 +228,9 @@ $especialidades = $conexao->get_especialidade();
         <div class="col-md-6 mb-20">
             <div class="card fade-in">
                 <div class="card-header">
-                    <h4 class="mb-0 p-15">
+                    <span class="mb-0">
                         <i class="fa fa-terminal"></i> Execução de Script
-                    </h4>
+                    </span>
                 </div>
                 <div class="card-body">
                     <form action="../banco_dados/script_execucao.php" method="post">
@@ -307,9 +313,9 @@ $especialidades = $conexao->get_especialidade();
         <div class="col-md-6 mb-20">
             <div class="card fade-in">
                 <div class="card-header">
-                    <h4 class="mb-0 p-15">
+                    <span class="mb-0">
                         <i class="fa fa-forward"></i> Passagem de Etapa da Seleção
-                    </h4>
+                    </span>
                 </div>
                 <div class="card-body">
                     <form action="../banco_dados/passagem_etapa.php" method="post">
@@ -355,9 +361,9 @@ $especialidades = $conexao->get_especialidade();
         <div class="col-md-12 mb-20">
             <div class="card fade-in">
                 <div class="card-header">
-                    <h4 class="mb-0 p-15">
+                    <span class="mb-0">
                         <i class="fa fa-forward"></i> Passagem de Etapa de Especialidade
-                    </h4>
+                    </span>
                 </div>
                 <div class="card-body">
                     <form action="<?php echo (isset($_SESSION['eipot']) == 1) ? "../banco_dados/passagem_etapa_arma.php" : "../banco_dados/passagem_etapa_especialidade.php"; ?>" method="post">

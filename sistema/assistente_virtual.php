@@ -51,15 +51,15 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     }
 
     .card-header {
+        font-size: 20px;
         background-color: var(--primary-color);
         color: white;
-        border-radius: 10px 10px 0 0 !important;
-        padding: 5px 20px;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 15px 20px;
         font-weight: 600;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .card-header i {
@@ -140,9 +140,9 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
             <?php if ($_SESSION['perfil'] == "admin"): ?>
                 <div class="card mb-20">
                     <div class="card-header mb-20" style="background-color: #006400; color: white;">
-                        <h4 class="">
+                        <span class="">
                             <i class="fa fa-comments me-2"></i> Adicionar Nova Pergunta ao Assistente Virtual
-                        </h4>
+                        </span>
                     </div>
                     <div class="card-body">
                         <form action="../banco_dados/pergunta_cadastra.php" method="post" onsubmit="return validar_formulario()">
@@ -195,9 +195,9 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
             <!-- Guia de Formatação -->
             <div class="card mb-20">
                 <div class="card-header mb-20" style="background-color: #006400; color: white;">
-                    <h4 class="">
+                    <span class="">
                         <i class="fa fa-edit me-2"></i> Guia de Formatação das Respostas
-                    </h4>
+                    </span>
                 </div>
                 <div class="card-body">
                     <p class="lead mb-10" style="color: #2E8B57;">
@@ -287,9 +287,9 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
             <!-- Tabela de Perguntas Cadastradas -->
             <div class="card">
                 <div class="card-header mb-20" style="background-color: #006400; color: white;">
-                    <h4 class="">
+                    <span class="">
                         <i class="fa fa-list me-2"></i> Perguntas Cadastradas no Assistente Virtual
-                    </h4>
+                    </span>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -326,7 +326,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                         <td class="text-center">
                                             <?= strtoupper($linha['selecao']) ?? '-' ?>
                                         </td>
-                                        
+
                                         <td class="text-center">
                                             <?= $etapa ?>
                                         </td>

@@ -28,10 +28,16 @@ if (isset($_GET['codigo'])) {
 ?>
 
 <style>
-
     .card-header {
-        border-radius: 12px 12px 0 0;
+        font-size: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 15px 20px;
         font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .table th {
@@ -112,7 +118,7 @@ if (isset($_GET['codigo'])) {
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header bg-primary text-white p-15 mb-20">
-                            <h4 class="mb-0"><i class="fa fa-filter me-2"></i> Filtros de Pesquisa</h4>
+                            <span class="mb-0"><i class="fa fa-filter me-2"></i> Filtros de Pesquisa</span>
                         </div>
                         <div class="card-body">
                             <form name="formulario" action="auditoria.php" method="get" class="row g-3 align-items-end">
@@ -151,7 +157,7 @@ if (isset($_GET['codigo'])) {
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header bg-primary text-white p-15 mb-20">
-                            <h4 class="mb-0"><i class="fa fa-eye me-2"></i> Auditoria do Sistema</h4>
+                            <span class="mb-0"><i class="fa fa-eye me-2"></i> Auditoria do Sistema</span>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -216,7 +222,7 @@ if (isset($_GET['codigo'])) {
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header bg-primary text-white p-15 mb-20">
-                            <h4 class="mb-0"><i class="fa fa-code me-2"></i> Codigos de Operações</h4>
+                            <span class="mb-0"><i class="fa fa-code me-2"></i> Codigos de Operações</span>
                         </div>
 
                         <div class="panel-body">
