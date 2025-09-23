@@ -32,7 +32,7 @@ if ($resultado)
         "22106",
         "Assistente Virtual",
         "Delete",
-        "Apagou a notificação: {$resultado['titulo']} e mensagem: {$resultado['mensagem']}",
+        "Apagou a notificação: {$resultado_pesquisa['titulo']} e mensagem: {$resultado_pesquisa['mensagem']}",
         "$alteracoes_detalhadas"
     );
 
