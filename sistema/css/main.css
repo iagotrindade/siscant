@@ -700,6 +700,24 @@ a.text-info:focus {
   color: #245269;
 }
 
+/* Botões de ação */
+.action-btn {
+  border-radius: 6px;
+  padding: 2px 6px;
+  transition: all 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.action-btn i {
+  font-size: 2rem;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+  background-color: var(--primary-color);
+  color: white;
+}
+
 .btn-modern {
   display: inline-flex;
   align-items: center;
@@ -741,16 +759,6 @@ a.text-info:focus {
 .btn-modern:focus {
   outline: 3px solid rgba(33, 150, 243, 0.4);
   outline-offset: 2px;
-}
-
-/* Botão de edição */
-.btn-edit {
-  background-color: #1e88e5;
-}
-
-/* Botão de exclusão */
-.btn-delete {
-  background-color: #c62828;
 }
 
 .text-warning {

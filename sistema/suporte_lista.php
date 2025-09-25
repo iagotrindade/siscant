@@ -602,13 +602,13 @@ $lista_suporte_inicial = $conexao->get_suporte();
                         <table class="table table-hover table-striped" id="tabela_suporte_inscrito">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>CPF</th>
-                                    <th>Motivo</th>
-                                    <th>Mensagem</th>
-                                    <th>Data Enviado</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
+                                    <th><i class="fa fa-hashtag me-1"></i> ID</th>
+                                    <th><i class="fa fa-id-card me-1"></i> CPF</th>
+                                    <th><i class="fa fa-question-circle me-1"></i> Motivo</th>
+                                    <th><i class="fa fa-comment me-1"></i> Mensagem</th>
+                                    <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
+                                    <th><i class="fa fa-server me-1"></i> Status</th>
+                                    <th><i class="fa fa-cogs me-1"></i> Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -718,13 +718,13 @@ $lista_suporte_inicial = $conexao->get_suporte();
                             <table class="table table-hover table-striped" id="tabela_suporte_nao_inscrito">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>ID</th>
-                                        <th>CPF</th>
-                                        <th>Motivo</th>
-                                        <th>Mensagem</th>
-                                        <th>Data Enviado</th>
-                                        <th>Status</th>
-                                        <th>Ações</th>
+                                        <th><i class="fa fa-hashtag me-1"></i> ID</th>
+                                        <th><i class="fa fa-id-card me-1"></i> CPF</th>
+                                        <th><i class="fa fa-question-circle me-1"></i> Motivo</th>
+                                        <th><i class="fa fa-comment me-1"></i> Mensagem</th>
+                                        <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
+                                        <th><i class="fa fa-server me-1"></i> Status</th>
+                                        <th><i class="fa fa-cogs me-1"></i> Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>

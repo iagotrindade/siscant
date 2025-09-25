@@ -15,15 +15,6 @@ if($_SESSION['perfil'] != "admin")
     exit();
 }
 
-// Só alguns usuários tem permissões para fazer o download
-if($_SESSION['cpf'] != '92835228004' && $_SESSION['cpf'] != '98106171787' && $_SESSION['cpf'] != '02103952065' 
-    && $_SESSION['cpf'] != '91424542049' && $_SESSION['cpf'] != '07064948737' && $_SESSION['cpf'] != '53083180268'
-    && $_SESSION['cpf'] != '52195430087' && $_SESSION['cpf'] != '29533005890')
-{
-    erro("Erro 3474568568! Sem permissão para download");
-    exit();
-}
-
 include_once '../banco_dados/conexao.php';
 $conexao = new Conexao();
 

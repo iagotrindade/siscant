@@ -119,6 +119,25 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     .table-hover tbody tr:hover {
         background-color: rgba(34, 139, 34, 0.1);
     }
+
+    .badge-etapa {
+        background: var(--primary-color);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .selecao-badge {
+        background: #f8f9fa;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        color: #495057;
+        border: 1px solid #e9ecef;
+        font-size: 1.3rem;
+    }
 </style>
 
 <div class="content-wrapper">
@@ -223,11 +242,11 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <h5 class="" style="color: #006400;">Lista Numerada</h5>
                             </div>
                             <p class="mb-10">Numere os itens começando com o número seguido de ponto:</p>
-                            <ol class="bg-light p-3 rounded" style="border-left: 3px solid #006400;">
-                                <li>Primeiro item</li>
-                                <li>Segundo item</li>
-                                <li>Terceiro item </li>
-                            </ol>
+                            <ul class="bg-light p-3 rounded" style="border-left: 3px solid #006400; list-style-type: none;">
+                                <li>1. Primeiro item</li>
+                                <li>2. Segundo item</li>
+                                <li>3. Terceiro item</li>
+                            </ul>
                         </div>
 
                         <!-- Listas não ordenadas -->
@@ -293,16 +312,16 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-bordered" id="tabela_dinamica">
-                            <thead class="">
+                        <table class="table table-modern" id="tabela_dinamica">
+                            <thead class="table-header-custom">
                                 <tr>
-                                    <th class="text-center">Seleção</th>
-                                    <th class="text-center">Etapa</th>
-                                    <th class="text-center">Pergunta</th>
-                                    <th class="text-center">Resposta</th>
-                                    <th class="text-center">Usuario que Cadastrou</th>
-                                    <th class="text-center">Data de Cadastro</th>
-                                    <th width="160px" class="text-center">Ações</th>
+                                    <th class="text-center"><i class="fa fa-list-alt me-1"></i> Seleção</th>
+                                    <th class="text-center"><i class="fa fa-list-ol me-1"></i> Etapa</th>
+                                    <th class="text-center"><i class="fa fa-question-circle me-1"></i> Pergunta</th>
+                                    <th class="text-center"><i class="fa fa-comment me-1"></i> Resposta</th>
+                                    <th class="text-center"><i class="fa fa-user me-1"></i> Usuário que Cadastrou</th>
+                                    <th class="text-center"><i class="fa fa-calendar me-1"></i> Data de Cadastro</th>
+                                    <th class="text-center"><i class="fa fa-cogs me-1"></i> Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -317,49 +336,52 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
                                     $etapa = '';
                                     if ($linha['etapa'] == 0) {
-                                        $etapa = 'TODAS';
+                                        $etapa = '<span class="badge badge-all">TODAS</span>';
                                     } else {
-                                        $etapa = 'et_' . $linha['etapa'];
+                                        $etapa = '<span class="badge badge-etapa">et_' . $linha['etapa'] . '</span>';
                                     }
                                     ?>
-                                    <tr>
+                                    <tr class="table-row-custom">
                                         <td class="text-center">
-                                            <?= strtoupper($linha['selecao']) ?? '-' ?>
+                                            <span class="selecao-badge"><?= strtoupper($linha['selecao']) ?? '-' ?></span>
                                         </td>
 
                                         <td class="text-center">
                                             <?= $etapa ?>
                                         </td>
 
-                                        <td class="text-center">
-                                            <?= $linha['pergunta'] ?>
-                                        </td>
-
-                                        <td>
-                                            <?= $linha['resposta'] ?>
-                                        </td>
-
-                                        <td class="text-center">
-                                            <?= $usuario_cadastro[0]['posto_grad'] . ' ' . $usuario_cadastro[0]['nome_guerra'] ?>
-                                        </td>
-
-                                        <td class="text-center">
-                                            <?= trata_data_hora($linha['data_insercao']) ?>
-                                        </td>
-
-                                        <td class="text-center">
-                                            <div class="" role="group" aria-label="Ações">
-                                                <a href="atualizar_assistente_virtual.php?id_pergunta=<?= $linha['id'] ?>"
-                                                    class="btn-modern btn-edit">
-                                                    <i class="fa fa-pencil"></i> Editar
-                                                </a>
-
-                                                <a
-                                                    class="btn-modern btn-delete"
-                                                    onclick="funcao_apagar('<?= $linha['id'] ?>', 'pergunta')">
-                                                    <i class="fa fa-trash"></i> Excluir
-                                                </a>
+                                        <td class="pergunta-cell">
+                                            <div class="pergunta-content" title="<?= htmlspecialchars($linha['pergunta']) ?>">
+                                                <?= $linha['pergunta'] ?>
                                             </div>
+                                        </td>
+
+                                        <td class="resposta-cell">
+                                            <div class="resposta-content" title="<?= htmlspecialchars($linha['resposta']) ?>">
+                                                <?= $linha['resposta'] ?>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="usuario-info">
+                                                <?= $usuario_cadastro[0]['posto_grad'] . ' ' . $usuario_cadastro[0]['nome_guerra'] ?>
+                                            </span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="data-info">
+                                                <?= trata_data_hora($linha['data_insercao']) ?>
+                                            </span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <a href="atualizar_assistente_virtual.php?id_pergunta=<?= $linha['id'] ?>" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Editar">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+
+                                            <a onclick="funcao_apagar('<?= $linha['id'] ?>', 'pergunta')" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Excluir">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
