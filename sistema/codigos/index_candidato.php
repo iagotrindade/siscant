@@ -31,28 +31,8 @@ foreach ($docs_obrigatorios_inseridos_candidato as $linha) {
 
 $get_selecao = $conexao->get_selecao_id();
 $liberado_comprovante = $get_selecao[0]['liberacao_comprovante_inscricao'];
-
-if ($liberado_comprovante == 1 && $concorrendo == 1 && !inscricao() && $etapa > 1) {
-
-    $crip_chave = hash('sha256', $_SESSION['id_usuario'] . $_SESSION['chave']);
-
-    echo ' 
-            <div class="card">
-            <legend>Comprovante de Inscrição</legend>
-                <div class="row" >
-                    <div class="col-lg-12">
-                        <div class="alert alert-dismissible alert-success">
-                            <a href="mpdf/comprovante_inscricao.php?crip=' . $crip_chave . '" target="_blank">
-                                <b>SUCESSO!</b> Imprima o seu comprovante de inscrição! Ele comprova que você realizou todas as pendências da inscrição!
-                                <img src="imagens/pdf.png" width="45px">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>';
-}
-
 $visualizacao_avaliacao_curricular = false;
+
 $get_selecao = $conexao->get_selecao_id();
 if ($get_selecao[0]['liberacao_avaliacao_curricular'] == 1)
     $visualizacao_avaliacao_curricular = true;
@@ -74,234 +54,426 @@ foreach ($get_especialidades_candidato as $linha) {
 }
 ?>
 
-<div class="row" <?php if ($concorrendo == 0) echo " hidden " ?>>
-    <div class="col-lg-12">
-        <div <?php if ($liberacao_escolha_cidade == false || $_SESSION['candidato_etapa'] < 4 || !isset($_SESSION['eipot']) != 1) echo "hidden"  ?> class="alert alert-dismissible alert-info">
-            <a href="candidato_escolha_cidade.php">
-                <center><b><img src="imagens/urgente.gif" height="25px"> SELECIONE A GUARNIÇÃO NA QUAL DESEJA SERVIR <img src="imagens/urgente.gif" height="25px"></b></center>
-            </a>
-        </div>
-    </div>
-</div>
-
-<?php if (isset($_SESSION['eipot'])): ?>
-    <div class="row" <?php if ($concorrendo == 0) echo "hidden"; ?>>
+<!-- Escola de Guarnição OTT/STT/MFDV -->
+<?php if ($concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] > 5 && !isset($_SESSION['eipot'])): ?>
+    <div class="row">
         <div class="col-lg-12">
-            <div <?php if ($liberacao_escolha_cidade == false || $_SESSION['candidato_etapa'] < 4) echo "hidden"; ?> class="alert alert-dismissible alert-info">
-                <a href="candidato_eipot_escolha_cidade.php">
-                    <center><b><img src="imagens/urgente.gif" height="25px"> SELECIONE A GUARNIÇÃO NA QUAL DESEJA SERVIR <img src="imagens/urgente.gif" height="25px"></b></center>
-                </a>
+            <div class="card">
+                <div class="card-header bg-warning text-dark mb-20">
+                    <div class="documento-info">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        <span class="fw-semibold">Escolha de Guarnição</span>
+                    </div>
+                </div>
+                <div class="card-body text-center py-4">
+                    <a href="candidato_escolha_cidade.php" class="text-decoration-none">
+                        <div class="documento-info" style="justify-content: center;">
+                            <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="mr-3">
+                            <h4 class="fw-bold text-dark mb-0">
+                                Selecione a Guarnição na qual deseja servir
+                            </h4>
+                            <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="ml-3">
+                        </div>
+                        <p class="text-muted mt-2 mb-0">Clique aqui para fazer sua escolha</p>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 <?php endif; ?>
 
-<div class="card" <?php if ($concorrendo == 1 || $justificativa_concorrendo_processo == null) echo "hidden" ?>>
-    <legend>Você foi eliminado(a) do processo seletivo <img src="imagens/urgente.gif" height="25px"></legend>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="alert alert-dismissible alert-danger">
-                <b>Justificativa:</b> <?php echo $justificativa_concorrendo_processo; ?>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="card" <?php if ($foi_desclassificado_em_especialida === false) echo "hidden" ?>>
-    <legend>Eliminação em especialidade <img src="imagens/urgente.gif" height="25px"></legend>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="alert alert-dismissible alert-danger">
-                <?php
-                foreach ($get_especialidades_candidato as $linha) {
-                    if ($linha['concorrendo'] == 0)
-                        echo "<b>" . strtoupper($linha['ott_stt']) . " " . $linha['especialidade'] . "</b> Justificativa: " . $linha['justificativa'] . "<br>";
-                }
-                ?>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div <?php if ($visualizacao_avaliacao_curricular == false || inscricao()) echo "hidden"  ?> class="alert alert-dismissible alert-warning">
-            <a href="candidato_especialidade_visualiza.php">
-                <center><b>Clique na especialidade desejada e veja a avaliação do seu currículo! <img src="imagens/urgente.gif" height="25px"></b></center>
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div <?php if ($concorrendo != 1 || !inscricao()) echo "hidden"  ?> class="alert alert-dismissible alert-warning">
-            <center><b>O seu comprovante de inscrição será liberado AQUI após o término das inscrições e a validação dos arquivos adicionados!</b></center>
-        </div>
-    </div>
-</div>
-
-<div class="row" <?php if (!inscricao() || !$liberacao_avaliacao_docs_obrigatorios) echo "hidden" ?>>
-    <div class="col-lg-12">
-        <div <?php if (!$possui_docs_obrigatorios_invalidos) echo "hidden"  ?> class="alert alert-dismissible alert-warning">
-            <center><b> O Sr(a) possui documento(s) de Inscrição(s) inválido(s), que poderão ser substituidos até o final do período da inscrição! <a href="../sistema/documentos_obrigatorios_visualiza.php"><u>Clique aqui para substitui-lo(s)</u></a> <img src="imagens/urgente.gif" width="30px"></b></center>
-        </div>
-    </div>
-</div>
-
-
-<div class="card">
-    <legend>Evolução da Inscrição</legend>
-    <div class="row">
-
-        <?php
-
-        ///////////////////// FOTO
-        $imagem_foto = null;
-        if (count($foto_usuario) > 0)
-            $imagem_foto = "camera.png";
-        else
-            $imagem_foto = "camera_red.png";
-
-        ///////////////////// PAGAMENTO
-        $imagem_pagamento = null;
-        if (count($arquivo_pagamento) > 0)
-            $imagem_pagamento = "pagamento.png";
-        else
-            $imagem_pagamento = "pagamento_red.png";
-
-        ///////////////////// DOCS OBRIGATÓRIOS
-        $imagem_doc_obrigatorio = null;
-        if (count($lista_docs_obrigatorios_sobrando) == 0)
-            $imagem_doc_obrigatorio = "doc_obrigario.png";
-        else
-            $imagem_doc_obrigatorio = "doc_obrigario_red.png";
-
-        ///////////////////// INSCRIÇÃO
-        $imagem_inscricao = null;
-        if (count($lista_inscricoes) > 0)
-            $imagem_inscricao = "especialidade.png";
-        else
-            $imagem_inscricao = "especialidade_red.png";
-
-        ?>
-
-        <div class="col-lg-6">
-            <center>
-
-                <a href="foto_upload.php">
-                    <img src="imagens/<?php echo $imagem_foto ?>" width="75px">
-                    <br>Sua foto
-                </a>
-                <?php if ($pagamento_selecao == '1') echo " <br><br> "; ?>
-                <img <?php if ($pagamento_selecao == '0' || $pagamento_selecao == null) echo " hidden "; ?> src="imagens/seta_baixo.png" width="25px">
-                <?php if ($pagamento_selecao == '1') echo " <br><br> "; ?>
-
-
-                <a <?php if ($pagamento_selecao == '0' || $pagamento_selecao == null) echo " hidden "; ?> href="candidato_pagamento_inscricao.php">
-                    <img src="imagens/<?php echo $imagem_pagamento ?>" width="60px">
-                    <br>Requerimento de Isenção OU Pagar GRU no Banco do Brasil
-                </a>
-                <?php if ($pagamento_selecao == '1' || $pagamento_selecao == null) echo " <br><br> "; ?>
-
-                <img src="imagens/seta_baixo.png" width="25px">
-                <br><br>
-
-                <a href="documentos_obrigatorios_visualiza.php">
-                    <img src="imagens/<?php echo $imagem_doc_obrigatorio ?>" width="70px">
-                    <br>Documentos de Inscrição (adicione TODOS documentos previstos)
-                </a>
-                <br><br>
-
-                <img src="imagens/seta_baixo.png" width="25px">
-                <br><br>
-
-                <a <?php if (isset($_SESSION['eipot'])) echo " hidden " ?> href="candidato_especialidade_visualiza.php">
-                    <img src="imagens/<?php echo $imagem_inscricao ?>" width="70px">
-                    <br>Especialidade(s) e Documentos de Currículo (Para pontuação e classificação)
-                </a>
-
-                <a <?php if (!isset($_SESSION['eipot'])) echo " hidden " ?> href="candidato_especialidade_visualiza_eipot.php">
-                    <img src="imagens/<?php echo $imagem_inscricao ?>" width="70px">
-                    <br>Cadastro na Respectiva Arma de Formação e Diploma(s)
-                </a>
-
-                <br><br>
-
-            </center>
-        </div>
-
-        <div class="col-lg-6">
-            <center>
-
-                <div class="bs-component" <?php if (count($foto_usuario) > 0) echo "hidden" ?>>
-                    <a class="alert-link" href="foto_upload.php">
-                        <div class="alert alert-laranja">
-                            <b>FALTANDO a sua foto</b>
+<!-- Escola de Guarnição EIPOT -->
+<?php if (isset($_SESSION['eipot'])): ?>
+    <?php if ($concorrendo != 0): ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php if ($liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] > 4) : ?>
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark mb-20">
+                            <div class="documento-info">
+                                <i class="fa fa-exclamation-triangle mr-10"></i>
+                                <span class="fw-semibold">ESCOLHA DE GUARNIÇÃO</span>
+                            </div>
                         </div>
-                    </a>
-                </div>
-
-                <div class="bs-component"
-                    <?php
-                    //if(!inscricao() || $_SESSION['selecao_codigo'] != 'ott_stt') echo " hidden ";  
-                    if (count($lista_docs_obrigatorios_sobrando) == 0) echo " hidden ";
-                    ?>>
-                    <a class="alert-link" href="documentos_obrigatorios_visualiza.php">
-                        <div class="alert alert-laranja">
-                            <center><b>FALTANDO Documentos de Inscrição!
-                            </center>
+                        <div class="card-body text-center py-4">
+                            <a href="candidato_eipot_escolha_cidade.php" class="text-decoration-none">
+                                <div class="documento-info" style="justify-content: center;">
+                                    <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="mr-3">
+                                    <h4 class="fw-bold text-dark mb-0">
+                                        SELECIONE A GUARNIÇÃO NA QUAL DESEJA SERVIR
+                                    </h4>
+                                    <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="ml-3">
+                                </div>
+                                <p class="text-muted mt-2 mb-0">Clique aqui para fazer sua escolha</p>
+                            </a>
                         </div>
-                    </a>
-                </div>
-
-                <div class="bs-component" <?php if (count($arquivo_pagamento) > 0 || $pagamento_selecao == '0' || $pagamento_selecao == null) echo " hidden " ?>>
-                    <a class="alert-link" href="candidato_pagamento_inscricao.php">
-                        <div class="alert alert-laranja">
-                            <b>FALTANDO Comprovante de pagamento/isenção</b>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="bs-component" <?php if (count($lista_inscricoes) > 0 || isset($_SESSION['eipot'])) echo " hidden " ?>>
-                    <a class="alert-link" href="candidato_especialidade_visualiza.php">
-                        <div class="alert alert-laranja">
-                            <b>FALTANDO Cadastro de Especialidade e Respectivo Currículo</b>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="bs-component" <?php if (count($lista_inscricoes) > 0 ||  !isset($_SESSION['eipot'])) echo " hidden " ?>>
-                    <a class="alert-link" href="candidato_especialidade_visualiza_eipot.php">
-                        <div class="alert alert-laranja">
-                            <b>FALTANDO Cadastro na Arma de Formação e Respectivo Diploma</b>
-                        </div>
-                    </a>
-                </div>
-
-                <!--
-            <div class="bs-component" <?php if (!inscricao() || $_SESSION['selecao_codigo'] != 'mfdv') echo "hidden"  ?>>
-                <a class="alert-link" href="candidato_especialidade_visualiza.php">
-                    <div class="alert alert-laranja">
-                        <b>Não esqueça de adicionar o seu currículo (para pontuação) após ter se cadastrado em uma especialidade </b> 
                     </div>
-                </a>
+                <?php endif; ?>
             </div>
-                -->
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
 
-                <div>
-                    <div class="bs-component">
-                        <div class="alert alert-dismissible alert-info">
-                            <a target="_blank" href="mpdf/relatorio_completo_candidato.php?codigo=<?php
-                                                                                                    echo hash('sha256', $_SESSION['chave']);
-                                                                                                    echo "&id_candidato=" . $_SESSION['id_usuario'];
-                                                                                                    ?>">
-                                <b>Gerar PDF RESUMO do seu cadastro </b>
-                                <img src="imagens/pdf.png" width="45px">
+<!-- Aviso de Liberação do Comprovante de Inscrição -->
+<?php if ($concorrendo == 1 && inscricao()): ?>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header bg-info text-white mb-20">
+                    <div class="documento-info">
+                        <i class="fa fa-info-circle mr-10"></i>
+                        <span class="mb-0">Comprovante de Inscrição</span>
+                    </div>
+                </div>
+                <div class="card-body text-center py-3">
+                    <div class="alert alert-info alert-dismissible border-0 mb-0">
+                        <div class="documento-info justify-content-center">
+                            <i class="fa fa-clock-o mr-3 text-info"></i>
+                            <h5 class="fw-bold text-info mb-0">
+                                O seu comprovante de inscrição será liberado AQUI após o término das inscrições e a validação dos arquivos adicionados!
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Comprovante de Inscrição -->
+<?php if ($liberado_comprovante == 1 && $concorrendo == 1 && !inscricao() && $etapa > 1):
+    $crip_chave = hash('sha256', $_SESSION['id_usuario'] . $_SESSION['chave']);
+?>
+    <div class="card">
+        <div class="card-header bg-success text-white mb-20">
+            <span class="mb-0"><i class="fa fa-check-circle"></i> Comprovante de Inscrição</span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-success alert-dismissible">
+                        <div class="documento-info">
+                            <a href="mpdf/comprovante_inscricao.php?crip=<?php echo $crip_chave; ?>" target="_blank" class="text-decoration-none" style="display: flex; align-items: center;">
+                                <i class="fa fa-file-pdf-o fa-3x text-danger mr-10"></i>
+                                <div>
+
+                                    <h5 class="fw-bold text-success mb-2">
+                                        <i class="fa fa-check"></i> Comprovante de Inscrição Disponível
+                                    </h5>
+                                    <p class="mb-0 text-dark">
+                                        Imprima e/ou Salve o seu comprovante de inscrição clicando aqui!
+                                    </p>
+                                </div>
                             </a>
                         </div>
                     </div>
                 </div>
-            </center>
+            </div>
         </div>
     </div>
+<?php endif; ?>
+
+<!-- Avisso de Desclassificação do Processo ou em Especialidades -->
+<?php if ($concorrendo == 0 && $justificativa_concorrendo_processo): ?>
+    <div class="card">
+        <div class="card-header bg-danger text-white mb-20">
+            <div class="documento-info">
+                <i class="fa fa-exclamation-triangle mr-10"></i>
+                <span class="mb-0">Você foi eliminado(a) do processo seletivo <img src="imagens/urgente.gif" height="25px"></span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-danger alert-dismissible">
+                        <div class="documento-info">
+                            <i class="fa fa-ban mr-10 fa-2x"></i>
+                            <div>
+                                <h5 class="fw-bold mb-2">Justificativa:</h5>
+                                <p class="mb-0"><?php echo $justificativa_concorrendo_processo; ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?php if ($foi_desclassificado_em_especialida === true): ?>
+    <div class="card">
+        <div class="card-header bg-danger text-white mb-20">
+            <div class="documento-info">
+                <i class="fa fa-times-circle mr-10"></i>
+                <span class="mb-0">Eliminação em especialidade <img src="imagens/urgente.gif" height="25px"></span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-danger alert-dismissible">
+                        <div class="documento-info" style="align-items: flex-start;">
+                            <i class="fa fa-ban mr-10 mt-1 fa-2x"></i>
+                            <div>
+                                <h5 class="fw-bold mb-3">Especialidades com eliminação:</h5>
+                                <?php foreach ($get_especialidades_candidato as $linha): ?>
+                                    <?php if ($linha['concorrendo'] == 0): ?>
+                                        <div class="mb-3 p-3 border-start border-4 border-danger bg-light">
+                                            <h6 class="fw-semibold text-danger mb-2">
+                                                <?php echo strtoupper($linha['ott_stt']) . " - " . $linha['especialidade']; ?>
+                                            </h6>
+                                            <p class="mb-0">
+                                                <span class="fw-semibold">Justificativa:</span>
+                                                <?php echo $linha['justificativa']; ?>
+                                            </p>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Avaliação Curricular -->
+<?php if ($visualizacao_avaliacao_curricular == true || !inscricao()) : ?>
+    <div class="card">
+        <div class="card-header bg-warning text-dark mb-20">
+            <div class="documento-info">
+                <i class="fa fa-eye"></i>
+                <span class="mb-0">Avaliação Curricular</span>
+            </div>
+        </div>
+
+        <div class="card-body text-center py-3">
+            <a href="candidato_especialidade_visualiza.php" class="text-decoration-none">
+                <div class="documento-info" style="justify-content: center;">
+                    <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="mr-3">
+                    <h5 class="fw-bold text-dark mb-0">
+                        Clique aqui e veja a avaliação do seu currículo!
+                    </h5>
+                    <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="ml-3">
+                </div>
+                <p class="text-muted mt-2 mb-0">Acesse para visualizar a avaliação detalhada</p>
+            </a>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Documentos Obrigatórios -->
+<?php if ($liberacao_avaliacao_docs_obrigatorios): ?>
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div <?php if (!$possui_docs_obrigatorios_invalidos) echo "hidden"; ?> class="card">
+                <div class="card-header text-dark mb-20">
+                    <div class="documento-info">
+                        <i class="fa fa-exclamation-triangle mr-10"></i>
+                        <span class="mb-0">Documentos Obrigatórios</span>
+                    </div>
+                </div>
+                <div class="card-body text-center py-3">
+                    <div class="alert alert-dismissible border-0 mb-0">
+                        <a href="../sistema/documentos_obrigatorios_visualiza.php" class="text-decoration-none">
+                            <div class="documento-info" style="justify-content: center;">
+                                <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="mr-3">
+                                <h5 class="fw-bold text-dark mb-0">
+                                    O Sr(a) possui documento(s) de Inscrição(s) inválido(s), que poderão ser substituídos até o final do período da inscrição!
+                                </h5>
+                                <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="ml-3">
+                            </div>
+                            <p class="text-muted mt-2 mb-0">
+                                <u>Caso as inscrições estejam encerradas, você deve levar os documentos corrigidos na Etapa III, caso convocado.</u>
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Evolução da Inscrição -->
+<div class="card">
+    <div class="card-header bg-primary text-white mb-20">
+        <span class="mb-0"><i class="fa fa-tasks"></i> Evolução da Inscrição</span>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <?php
+            ///////////////////// FOTO
+            $imagem_foto = null;
+            if (count($foto_usuario) > 0)
+                $imagem_foto = "camera.png";
+            else
+                $imagem_foto = "camera_red.png";
+
+            ///////////////////// PAGAMENTO
+            $imagem_pagamento = null;
+            if (count($arquivo_pagamento) > 0)
+                $imagem_pagamento = "pagamento.png";
+            else
+                $imagem_pagamento = "pagamento_red.png";
+
+            ///////////////////// DOCS OBRIGATÓRIOS
+            $imagem_doc_obrigatorio = null;
+            if (count($lista_docs_obrigatorios_sobrando) == 0)
+                $imagem_doc_obrigatorio = "doc_obrigario.png";
+            else
+                $imagem_doc_obrigatorio = "doc_obrigario_red.png";
+
+            ///////////////////// INSCRIÇÃO
+            $imagem_inscricao = null;
+            if (count($lista_inscricoes) > 0)
+                $imagem_inscricao = "especialidade.png";
+            else
+                $imagem_inscricao = "especialidade_red.png";
+            ?>
+
+            <!-- Coluna da Esquerda - Preservada com imagens -->
+            <div class="col-lg-6">
+                <center>
+                    <!-- Foto -->
+                    <a href="foto_upload.php" class="text-decoration-none">
+                        <img src="imagens/<?php echo $imagem_foto ?>" width="75px" class="mb-2">
+                        <br>
+                        <span class="fw-semibold">Sua foto</span>
+                    </a>
+
+                    <?php if ($pagamento_selecao == '1'): ?>
+                        <br><br>
+                        <img src="imagens/seta_baixo.png" width="25px">
+                        <br><br>
+                    <?php endif; ?>
+
+                    <!-- Pagamento -->
+                    <?php if ($pagamento_selecao == '1'): ?>
+                        <a href="candidato_pagamento_inscricao.php" class="text-decoration-none">
+                            <img src="imagens/<?php echo $imagem_pagamento ?>" width="60px" class="mb-2">
+                            <br>
+                            <span class="fw-semibold">Requerimento de Isenção OU Pagar GRU no Banco do Brasil</span>
+                        </a>
+                    <?php endif; ?>
+
+                    <br><br>
+                    <img src="imagens/seta_baixo.png" width="25px">
+                    <br><br>
+
+                    <!-- Documentos Obrigatórios -->
+                    <a href="documentos_obrigatorios_visualiza.php" class="text-decoration-none">
+                        <img src="imagens/<?php echo $imagem_doc_obrigatorio ?>" width="70px" class="mb-2">
+                        <br>
+                        <span class="fw-semibold">Documentos de Inscrição</span>
+                        <br>
+                        <small class="text-muted">(adicione TODOS documentos previstos)</small>
+                    </a>
+                    <br><br>
+
+                    <img src="imagens/seta_baixo.png" width="25px">
+                    <br><br>
+
+                    <!-- Especialidade/Currículo -->
+                    <?php if (!isset($_SESSION['eipot'])): ?>
+                        <a href="candidato_especialidade_visualiza.php" class="text-decoration-none">
+                            <img src="imagens/<?php echo $imagem_inscricao ?>" width="70px" class="mb-2">
+                            <br>
+                            <span class="fw-semibold">Especialidade(s) e Documentos de Currículo</span>
+                            <br>
+                            <small class="text-muted">(Para pontuação e classificação)</small>
+                        </a>
+                    <?php else: ?>
+                        <a href="candidato_especialidade_visualiza_eipot.php" class="text-decoration-none">
+                            <img src="imagens/<?php echo $imagem_inscricao ?>" width="70px" class="mb-2">
+                            <br>
+                            <span class="fw-semibold">Cadastro na Respectiva Arma de Formação e Diploma(s)</span>
+                        </a>
+                    <?php endif; ?>
+                    <br><br>
+                </center>
+            </div>
+
+            <!-- Coluna da Direita - Modernizada -->
+            <div class="col-lg-6">
+                <!-- Alertas de Pendências -->
+                <?php if (count($foto_usuario) == 0): ?>
+                    <div class="alert alert-warning mb-3">
+                        <div class="documento-info">
+                            <i class="fa fa-exclamation-circle mr-10"></i>
+                            <div>
+                                <a href="foto_upload.php" class="text-decoration-none text-dark">
+                                    <strong>FALTANDO a sua foto</strong>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (count($lista_docs_obrigatorios_sobrando) > 0): ?>
+                    <div class="alert alert-warning mb-3">
+                        <div class="documento-info">
+                            <i class="fa fa-exclamation-circle mr-10"></i>
+                            <div>
+                                <a href="documentos_obrigatorios_visualiza.php" class="text-decoration-none text-dark">
+                                    <strong>FALTANDO Documentos de Inscrição!</strong>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($pagamento_selecao == '1' && count($arquivo_pagamento) == 0): ?>
+                    <div class="alert alert-warning mb-3">
+                        <div class="documento-info">
+                            <i class="fa fa-exclamation-circle mr-10"></i>
+                            <div>
+                                <a href="candidato_pagamento_inscricao.php" class="text-decoration-none text-dark">
+                                    <strong>FALTANDO Comprovante de pagamento/isenção</strong>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (count($lista_inscricoes) == 0): ?>
+                    <div class="alert alert-warning mb-3">
+                        <div class="documento-info">
+                            <i class="fa fa-exclamation-circle mr-10"></i>
+                            <div>
+                                <?php if (!isset($_SESSION['eipot'])): ?>
+                                    <a href="candidato_especialidade_visualiza.php" class="text-decoration-none text-dark">
+                                        <strong>FALTANDO Cadastro de Especialidade e Respectivo Currículo</strong>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="candidato_especialidade_visualiza_eipot.php" class="text-decoration-none text-dark">
+                                        <strong>FALTANDO Cadastro na Arma de Formação e Respectivo Diploma</strong>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <!-- PDF Resumo -->
+                <div class="card-checkbox mt-4">
+                    <a target="_blank" href="mpdf/relatorio_completo_candidato.php?codigo=<?php
+                                                                                            echo hash('sha256', $_SESSION['chave']);
+                                                                                            echo "&id_candidato=" . $_SESSION['id_usuario'];
+                                                                                            ?>" class="text-decoration-none">
+                        <div class="documento-info">
+                            <i class="fa fa-file-pdf-o fa-2x text-danger mr-10"></i>
+                            <div>
+                                <h5 class="fw-semibold mb-1">Gerar PDF Resumo</h5>
+                                <p class="text-muted">Resumo completo do seu cadastro</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
 </div>

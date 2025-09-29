@@ -44,258 +44,428 @@ if (isset($_GET['senha_alterada']) && $_GET['senha_alterada'] == 1) {
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-lg-12">
-            <div class="card card-modern">
-                <div class="card-header-modern">
-                    <i class="fa fa-lock"></i>
-                    Redefinir Senha
+        <div class="col-lg-12 col-xl-8">
+            <div class="card security-card">
+                <div class="card-header mb-20">
+                    <div style="display: flex; align-items: center;">
+                        <div class="mr-10">
+                            <i class="fa fa-shield fa-2x"></i>
+                        </div>
+                        <span class="mb-0">Redefinir Senha</span>
+
+                    </div>
                 </div>
-                <div class="card-body-modern">
-                    <div class="password-reset-container">
-                        <div class="alert alert-info">
-                            <i class="fa fa-info-circle me-2"></i>
-                            <strong>Requisitos da senha:</strong> Mínimo 8 caracteres, incluindo um caractere especial, um número e uma letra maiúscula.
+
+                <div class="card-body">
+                    <div class="security-alert">
+                        <i class="fa fa-info-circle"></i>
+                        <div class="alert-content">
+                            <strong>Requisitos de segurança:</strong> Sua senha deve atender a todos os critérios abaixo
+                        </div>
+                    </div>
+
+                    <form action="../banco_dados/candidato_reseta_senha.php" method="post" onsubmit="return valida_form()" class="security-form">
+                        <div class="form-group-modern">
+                            <label for="senha1" class="">
+                                <i class="fa fa-lock"></i>
+                                Nova Senha
+                            </label>
+                            <div class="input-group-modern">
+                                <input type="password" id="senha1" name="senha1" maxlength="120"
+                                    class="form-control password-field"
+                                    placeholder="Digite sua nova senha"
+                                    onkeyup="validatePasswordStrength(this.value)"
+                                    autocomplete="new-password">
+                                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('senha1')">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+
+                            <div class="password-strength-container">
+                                <div class="strength-meter">
+                                    <div class="strength-segments">
+                                        <div class="segment" data-strength="weak"></div>
+                                        <div class="segment" data-strength="medium"></div>
+                                        <div class="segment" data-strength="strong"></div>
+                                    </div>
+                                </div>
+                                <div class="strength-feedback">
+                                    <span class="strength-text" id="passwordStrengthText">Digite sua senha</span>
+                                    <span class="strength-score" id="passwordStrengthScore"></span>
+                                </div>
+                            </div>
                         </div>
 
-                        <form action="../banco_dados/candidato_reseta_senha.php" method="post" onsubmit="return valida_form()" class="password-reset-form">
-                            <div class="form-group password-input-group">
-                                <label for="senha1" class="form-label">
-                                    <i class="fa fa-key me-1"></i> Nova senha
-                                </label>
-                                <div class="input-with-validation">
-                                    <input type="password" id="senha1" name="senha1" maxlength="120"
-                                        class="form-control password-field"
-                                        placeholder="Digite sua nova senha"
-                                        onkeyup="validatePasswordStrength(this.value)">
-                                    <span class="password-toggle" onclick="togglePasswordVisibility('senha1')">
-                                        <i class="fa fa-eye"></i>
-                                    </span>
-                                </div>
-                                <div class="password-strength-meter mt-2">
-                                    <div class="strength-bar">
-                                        <div class="strength-fill" id="passwordStrength"></div>
+                        <div class="form-group-modern">
+                            <label for="senha2">
+                                <i class="fa fa-lock-check"></i>
+                                Confirmar Senha
+                            </label>
+                            <div class="input-group-modern">
+                                <input type="password" id="senha2" name="senha2" maxlength="120"
+                                    class="form-control password-field"
+                                    placeholder="Confirme sua nova senha"
+                                    onkeyup="checkPasswordMatch()"
+                                    autocomplete="new-password">
+                                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('senha2')">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="match-feedback">
+                                <span class="match-icon" id="matchIcon"></span>
+                                <span class="match-text" id="passwordMatchText"></span>
+                            </div>
+                        </div>
+
+                        <div class="requirements-panel">
+                            <h4 class="">Critérios de Segurança</h4>
+                            <div class="requirements-grid">
+                                <div class="requirement" id="req-length">
+                                    <div class="requirement-icon">
+                                        <i class="fa fa-circle"></i>
                                     </div>
-                                    <small class="strength-text" id="passwordStrengthText">Força da senha</small>
+                                    <span class="requirement-text">Mínimo 8 caracteres</span>
+                                    <div class="requirement-check">
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                </div>
+                                <div class="requirement" id="req-special">
+                                    <div class="requirement-icon">
+                                        <i class="fa fa-circle"></i>
+                                    </div>
+                                    <span class="requirement-text">1 caractere especial</span>
+                                    <div class="requirement-check">
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                </div>
+                                <div class="requirement" id="req-number">
+                                    <div class="requirement-icon">
+                                        <i class="fa fa-circle"></i>
+                                    </div>
+                                    <span class="requirement-text">1 número</span>
+                                    <div class="requirement-check">
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                </div>
+                                <div class="requirement" id="req-uppercase">
+                                    <div class="requirement-icon">
+                                        <i class="fa fa-circle"></i>
+                                    </div>
+                                    <span class="requirement-text">1 letra maiúscula</span>
+                                    <div class="requirement-check">
+                                        <i class="fa fa-check"></i>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="form-group password-input-group">
-                                <label for="senha2" class="form-label">
-                                    <i class="fa fa-key me-1"></i> Confirmar senha
-                                </label>
-                                <div class="input-with-validation">
-                                    <input type="password" id="senha2" name="senha2"
-                                        class="form-control password-field"
-                                        placeholder="Digite novamente a senha"
-                                        onkeyup="checkPasswordMatch()">
-                                    <span class="password-toggle" onclick="togglePasswordVisibility('senha2')">
-                                        <i class="fa fa-eye"></i>
-                                    </span>
-                                </div>
-                                <div class="password-match-feedback mt-2">
-                                    <small id="passwordMatchText"></small>
-                                </div>
-                            </div>
-
-                            <div class="requirements-list">
-                                <small class="text-muted mb-20">A senha deve conter:</small>
-                                <ul class="list-unstyled">
-                                    <li class="requirement-item" id="req-length">
-                                        <i class="fa fa-circle requirement-icon"></i>
-                                        <span>Mínimo 8 caracteres</span>
-                                    </li>
-                                    <li class="requirement-item" id="req-special">
-                                        <i class="fa fa-circle requirement-icon"></i>
-                                        <span>Pelo menos 1 caractere especial</span>
-                                    </li>
-                                    <li class="requirement-item" id="req-number">
-                                        <i class="fa fa-circle requirement-icon"></i>
-                                        <span>Pelo menos 1 número</span>
-                                    </li>
-                                    <li class="requirement-item" id="req-uppercase">
-                                        <i class="fa fa-circle requirement-icon"></i>
-                                        <span>Pelo menos 1 letra maiúscula</span>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div id="mensagem_erro" class="alert alert-danger" style="display: none;">
-                                <i class="fa fa-exclamation-circle me-2"></i>
+                        <div id="mensagem_erro" class="error-alert">
+                            <div class="error-content">
+                                <i class="fa fa-exclamation-triangle"></i>
                                 <span id="mensagem"></span>
                             </div>
+                        </div>
 
-                            <input type="hidden" name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas") ?>">
+                        <input type="hidden" name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas") ?>">
 
-                            <button type="submit" class="btn btn-primary btn-lg btn-block submit-button">
-                                <i class="fa fa-refresh me-2"></i>
-                                ALTERAR SENHA
-                            </button>
-                        </form>
-                    </div>
+                        <button type="submit" class="btn-security-primary">
+                            <i class="fa fa-key"></i>
+                            <span>Atualizar Senha</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
     <style>
-        .card-header-modern {
-            font-size: 16px;
+        .card-header {
+            font-size: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 15px 20px;
             font-weight: 600;
-            color: #006400;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .password-reset-container {
-            padding: 1rem;
-        }
-
-        .password-reset-form {
-            max-width: 100%;
-        }
-
-        .form-label {
-            font-size: 16px;
-            font-weight: 600;
-            color: #006400;
-            margin-bottom: 0.5rem;
-        }
-
-        .password-input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-with-validation {
-            position: relative;
-        }
-
-        .password-field {
-            padding-right: 45px;
-            border-radius: 8px;
-            border: 2px solid #e9ecef;
-            transition: all 0.3s ease;
-        }
-
-        .password-field:focus {
-            border-color: #006400;
-            box-shadow: 0 0 0 0.2rem rgba(0, 100, 0, 0.25);
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #6c757d;
-            transition: color 0.3s ease;
-        }
-
-        .password-toggle:hover {
-            color: #006400;
-        }
-
-        .password-strength-meter {
-            margin-top: 0.5rem;
-        }
-
-        .strength-bar {
-            height: 5px;
-            background-color: #e9ecef;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 0.25rem;
-            margin-top: 1.5rem;
-        }
-
-        .strength-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: 3px;
-            transition: width 0.3s ease, background-color 0.3s ease;
-        }
-
-        .strength-text {
-            font-size: 1.2rem;
-            color: #6c757d;
-        }
-
-        .password-match-feedback small {
-            font-size: 1.2rem;
-        }
-
-        .requirements-list small {
+        .security-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.5rem;
         }
 
-        .requirements-list {
-            background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #006400;
+        .security-body {
+            padding: 2rem;
         }
 
-        .requirement-item {
+        .security-alert {
+            display: flex;
+            align-items: flex-start;
+            align-items: center;
+            background: #e8f5e8;
+            border: 1px solid #c8e6c9;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .security-alert i {
+            color: #006400;
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+            margin-top: 0.125rem;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .form-group-modern {
+            margin-bottom: 2rem;
+        }
+
+
+
+        .input-group-modern {
+            position: relative;
             display: flex;
             align-items: center;
+        }
+
+        .form-control-modern {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .form-control-modern:focus {
+            border-color: #006400;
+            box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.1);
+            outline: none;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .password-toggle-btn:hover {
+            background: #f7fafc;
+            color: #006400;
+        }
+
+        .password-strength-container {
+            margin-top: 1rem;
+        }
+
+        .strength-meter {
             margin-bottom: 0.5rem;
+        }
+
+        .strength-segments {
+            display: flex;
+            gap: 4px;
+            height: 6px;
+        }
+
+        .segment {
+            flex: 1;
+            background: #e2e8f0;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .segment.active.weak {
+            background: #e53e3e;
+        }
+
+        .segment.active.medium {
+            background: #dd6b20;
+        }
+
+        .segment.active.strong {
+            background: #38a169;
+        }
+
+        .strength-feedback {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 1.3rem;
         }
 
+        .strength-text {
+            color: #718096;
+        }
+
+        .strength-score {
+            font-weight: 600;
+        }
+
+        .match-feedback {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .match-icon {
+            margin-right: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .match-valid {
+            color: #38a169;
+        }
+
+        .match-invalid {
+            color: #e53e3e;
+        }
+
+        .requirements-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid #006400;
+        }
+
+        .requirements-title {
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .requirements-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .requirement.valid {
+            background: #f0fff4;
+            border: 1px solid #c6f6d5;
+        }
+
         .requirement-icon {
-            font-size: 0.5rem;
             margin-right: 0.75rem;
-            color: #dc3545;
+            color: #e53e3e;
             transition: color 0.3s ease;
         }
 
-        .requirement-item.valid .requirement-icon {
-            color: #28a745;
+        .requirement.valid .requirement-icon {
+            color: #38a169;
         }
 
-        .submit-button {
-            font-size: 15px;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            background-color: #006400;
+        .requirement-text {
+            flex: 1;
+            font-size: 1.2rem;
+            color: #4a5568;
+        }
+
+        .requirement-check {
+            opacity: 0;
+            color: #38a169;
+            transition: opacity 0.3s ease;
+        }
+
+        .requirement.valid .requirement-check {
+            opacity: 1;
+        }
+
+        .error-alert {
+            display: none;
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .error-alert.show {
+            display: block;
+        }
+
+        .error-content {
+            display: flex;
+            align-items: center;
+            color: #c53030;
+        }
+
+        .error-content i {
+            margin-right: 0.75rem;
+        }
+
+        .btn-security-primary {
+            background: linear-gradient(135deg, #006400 0%, #008000 100%);
+            color: white;
             border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .submit-button:hover {
-            background-color: #006400;
+        .btn-security-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 100, 0, 0.3);
         }
 
-        /* Estados de força da senha */
-        .strength-weak {
-            width: 33%;
-            background-color: #dc3545;
-        }
+        @media (max-width: 768px) {
+            .security-body {
+                padding: 1.5rem;
+            }
 
-        .strength-medium {
-            width: 66%;
-            background-color: #ffc107;
-        }
+            .security-header {
+                padding: 1.5rem;
+            }
 
-        .strength-strong {
-            width: 100%;
-            background-color: #28a745;
-        }
-
-        .text-match {
-            color: #28a745;
-        }
-
-        .text-mismatch {
-            color: #dc3545;
+            .security-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
         }
     </style>
 
     <script>
         function togglePasswordVisibility(fieldId) {
             const field = document.getElementById(fieldId);
-            const toggleIcon = field.nextElementSibling.querySelector('i');
+            const toggleIcon = field.parentElement.querySelector('.password-toggle-btn i');
 
             if (field.type === 'password') {
                 field.type = 'text';
@@ -307,73 +477,80 @@ if (isset($_GET['senha_alterada']) && $_GET['senha_alterada'] == 1) {
         }
 
         function validatePasswordStrength(password) {
-            // Verificar requisitos
-            const hasMinLength = password.length >= 8;
-            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-            const hasNumber = /\d/.test(password);
-            const hasUppercase = /[A-Z]/.test(password);
+            const requirements = {
+                length: password.length >= 8,
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+                number: /\d/.test(password),
+                uppercase: /[A-Z]/.test(password)
+            };
 
-            // Atualizar ícones de requisitos
-            toggleRequirement('req-length', hasMinLength);
-            toggleRequirement('req-special', hasSpecialChar);
-            toggleRequirement('req-number', hasNumber);
-            toggleRequirement('req-uppercase', hasUppercase);
+            // Atualizar requisitos visuais
+            Object.keys(requirements).forEach(req => {
+                const element = document.getElementById(`req-${req}`);
+                if (requirements[req]) {
+                    element.classList.add('valid');
+                } else {
+                    element.classList.remove('valid');
+                }
+            });
 
-            // Calcular força da senha
-            let strength = 0;
-            if (hasMinLength) strength += 25;
-            if (hasSpecialChar) strength += 25;
-            if (hasNumber) strength += 25;
-            if (hasUppercase) strength += 25;
+            // Calcular força
+            const strength = Object.values(requirements).filter(Boolean).length;
+            const strengthPercent = (strength / 4) * 100;
 
-            // Atualizar medidor visual
-            const strengthBar = document.getElementById('passwordStrength');
-            const strengthText = document.getElementById('passwordStrengthText');
-
-            strengthBar.className = 'strength-fill';
-
-            if (strength <= 25) {
-                strengthBar.classList.add('strength-weak');
-                strengthText.textContent = 'Senha fraca';
-                strengthText.style.color = '#dc3545';
-            } else if (strength <= 75) {
-                strengthBar.classList.add('strength-medium');
-                strengthText.textContent = 'Senha média';
-                strengthText.style.color = '#ffc107';
-            } else {
-                strengthBar.classList.add('strength-strong');
-                strengthText.textContent = 'Senha forte';
-                strengthText.style.color = '#28a745';
-            }
+            updateStrengthMeter(strength, strengthPercent);
+            updateStrengthText(strength, password.length);
 
             checkPasswordMatch();
         }
 
-        function toggleRequirement(elementId, isValid) {
-            const element = document.getElementById(elementId);
-            if (isValid) {
-                element.classList.add('valid');
-            } else {
-                element.classList.remove('valid');
-            }
+        function updateStrengthMeter(strength, percent) {
+            const segments = document.querySelectorAll('.segment');
+            segments.forEach((segment, index) => {
+                segment.classList.remove('active', 'weak', 'medium', 'strong');
+                if (index < strength) {
+                    segment.classList.add('active');
+                    if (strength <= 1) segment.classList.add('weak');
+                    else if (strength <= 3) segment.classList.add('medium');
+                    else segment.classList.add('strong');
+                }
+            });
+        }
+
+        function updateStrengthText(strength, length) {
+            const textEl = document.getElementById('passwordStrengthText');
+            const scoreEl = document.getElementById('passwordStrengthScore');
+
+            const texts = ['Muito fraca', 'Fraca', 'Média', 'Forte', 'Muito forte'];
+            const colors = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#25855a'];
+
+            textEl.textContent = length === 0 ? 'Digite sua senha' : texts[strength];
+            textEl.style.color = length === 0 ? '#718096' : colors[strength];
+
+            scoreEl.textContent = length === 0 ? '' : `${strength}/4`;
+            scoreEl.style.color = colors[strength];
         }
 
         function checkPasswordMatch() {
             const password1 = document.getElementById('senha1').value;
             const password2 = document.getElementById('senha2').value;
             const matchText = document.getElementById('passwordMatchText');
+            const matchIcon = document.getElementById('matchIcon');
 
             if (password2.length === 0) {
                 matchText.textContent = '';
+                matchIcon.className = 'match-icon';
                 return;
             }
 
-            if (password1 === password2) {
+            if (password1 === password2 && password1.length > 0) {
                 matchText.textContent = 'Senhas coincidem';
-                matchText.className = 'text-match';
+                matchText.style.color = '#38a169';
+                matchIcon.className = 'match-icon fa fa-check-circle match-valid';
             } else {
                 matchText.textContent = 'Senhas não coincidem';
-                matchText.className = 'text-mismatch';
+                matchText.style.color = '#e53e3e';
+                matchIcon.className = 'match-icon fa fa-times-circle match-invalid';
             }
         }
 
@@ -383,31 +560,41 @@ if (isset($_GET['senha_alterada']) && $_GET['senha_alterada'] == 1) {
             const mensagemErro = document.getElementById('mensagem_erro');
             const mensagem = document.getElementById('mensagem');
 
+            // Reset error
+            mensagemErro.classList.remove('show');
+
             // Verificar se as senhas coincidem
             if (password1 !== password2) {
-                mensagem.textContent = 'As senhas não coincidem!';
-                mensagemErro.classList.remove('d-none');
+                mensagem.textContent = 'As senhas não coincidem. Por favor, verifique e tente novamente.';
+                mensagemErro.classList.add('show');
                 return false;
             }
 
             // Verificar requisitos da senha
-            const hasMinLength = password1.length >= 8;
-            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password1);
-            const hasNumber = /\d/.test(password1);
-            const hasUppercase = /[A-Z]/.test(password1);
+            const requirements = {
+                length: password1.length >= 8,
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password1),
+                number: /\d/.test(password1),
+                uppercase: /[A-Z]/.test(password1)
+            };
 
-            if (!hasMinLength || !hasSpecialChar || !hasNumber || !hasUppercase) {
-                mensagem.textContent = 'A senha não atende a todos os requisitos!';
-                mensagemErro.classList.remove('d-none');
+            const allValid = Object.values(requirements).every(Boolean);
+
+            if (!allValid) {
+                mensagem.textContent = 'A senha não atende a todos os requisitos de segurança.';
+                mensagemErro.classList.add('show');
                 return false;
             }
 
             return true;
         }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            validatePasswordStrength('');
+            checkPasswordMatch();
+        });
     </script>
-
-
-
 </div>
 </div>
 </body>

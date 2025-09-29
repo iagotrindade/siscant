@@ -137,7 +137,7 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
         font-size: 15px;
         margin-bottom: 1rem;
         max-width: 80%;
-        padding: 0.75rem 1rem;
+        padding: 2rem;
         border-radius: 12px;
         position: relative;
     }
@@ -316,6 +316,18 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
 
+    .card-header {
+        font-size: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 15px 20px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .card-header-modern {
         background-color: var(--primary-color);
         color: white;
@@ -351,13 +363,12 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
     .empty-state {
         text-align: center;
         padding: 40px 20px;
-        color: var(--secondary-color);
+        color: var(--primary-color);
     }
 
     .empty-state i {
         font-size: 3rem;
         margin-bottom: 15px;
-        color: #d1d3e2;
     }
 
     .filter-buttons {
@@ -369,7 +380,7 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
     .filter-btn {
         border-radius: 20px;
         padding: 6px 16px;
-        font-size: 0.9rem;
+        font-size: 1.2rem;
     }
 
     .divider {
@@ -424,30 +435,42 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
             <div class="chat-card col-md-12">
                 <div class="chat-header">
                     <h2><i class="bi bi-robot"></i> Assistente Virtual</h2>
-                    <span class="chat-status"><i class="bi bi-check-circle"></i> Online</span>
+
+                    <?php if ($selecao[0]['liberacao_assistente_virtual']) { ?>
+                        <span class="chat-status"><i class="bi bi-check-circle"></i> Online</span>
+                    <?php } else { ?>
+                        <span class="chat-status" style="background-color: #dc3545;"><i class="bi bi-x-circle"></i> Offline</span>
+                    <?php } ?>
                 </div>
 
                 <div class="chat-container" id="chatContainer">
                     <div class="message bot-message">
-                        Olá <strong><?= ucwords(strtolower($_SESSION['nome_completo'])) . "!" ?></strong>! Sou o Assistente Virtual do SiSCanT. Posso te ajudar com informações sobre:<br><br>
-                        <ul>
-                            <li>Processo de Inscrição</li>
-                            <li>Documentos necessários</li>
-                            <li>Etapas do processo seletivo</li>
-                            <li>Acompanhamento de resultados</li>
-                            <li>Assuntos específicos de cada Etapa</li>
-                            <li>Outras dúvidas sobre o Processo Seletivo</li>
-                        </ul>
-                        <br>
-                        Se precisar de ajuda, digite sua dúvida ou clique nas perguntas sugeridas abaixo. Caso eu não consiga lhe ajudar, vou te direcionar para o suporte.
-                        <br>
-                        <br>
-                        Recomendamos sempre que consulte o Aviso de Convocação, disponível logo abaixo e no site da 3ª RM, pois todas as etapas e procedimentos do Processo Seletivo estão descritos de maneira detalhada nele.
-                        <br>
-                        <br>
-                        <a href="<?php echo 'arquivos/avisos_de_convocacao/' . $selecao[0]['aviso_convocacao']; ?>" target='_blank' style='text-decoration:none; display:flex; align-items:center;'>
-                            <img src='imagens/pdf.png' alt='PDF' style='width:25px; height:25px; margin-right:8px;'>Aviso de Convocação (PDF)
-                        </a>
+                        <?php if ($selecao[0]['liberacao_assistente_virtual']) { ?>
+                            Olá <strong><?= ucwords(strtolower($_SESSION['nome_completo'])) . "!" ?></strong> Sou o Assistente Virtual do SiSCanT. Posso te ajudar com informações sobre:<br><br>
+                            <ul>
+                                <li>Processo de Inscrição</li>
+                                <li>Etapas do processo seletivo</li>
+                                <li>Acompanhamento de resultados</li>
+                                <li>Assuntos específicos de cada Etapa</li>
+                                <li>Outras dúvidas sobre o Processo Seletivo</li>
+                            </ul>
+                            Se precisar de ajuda, digite sua dúvida ou clique nas perguntas sugeridas abaixo. Caso eu não consiga lhe ajudar, vou te direcionar para o suporte.
+                            <br>
+                            <br>
+                            Recomendamos sempre que consulte o Aviso de Convocação, disponível logo abaixo e no site da 3ª RM, pois todas as etapas e procedimentos do Processo Seletivo estão descritos de maneira detalhada nele.
+                            <br>
+                            <br>
+                            <a href="<?php echo 'arquivos/avisos_de_convocacao/' . $selecao[0]['aviso_convocacao']; ?>" target='_blank' style='text-decoration:none; display:flex; align-items:center;'>
+                                <img src='imagens/pdf.png' alt='PDF' style='width:25px; height:25px; margin-right:8px;'>Aviso de Convocação (PDF)
+                            </a>
+                        <?php } else { ?>
+                            Olá <strong><?= ucwords(strtolower($_SESSION['nome_completo'])) . "!" ?></strong> Sou o Assistente Virtual do SiSCanT.<br><br>
+
+                            No momento estou <strong>OFFLINE</strong> para manutenção e/ou Atualização da minha Base de Dados e não posso responder suas dúvidas.<br><br>
+
+                            Essa indisponibilidade é temporária e em breve estarei de volta para te ajudar com informações sobre o Processo Seletivo.
+                        <?php } ?>
+
 
                         <span class="message-time"><?= date('H:s') ?></span>
                     </div>
@@ -460,31 +483,34 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                     <div class="typing-dot"></div>
                 </div>
 
-                <div class="chat-input">
-                    <input type="text" id="userInput" placeholder="Digite sua mensagem..." autocomplete="off" minlength="20" required>
-                    <button id="sendButton"><i class="bi bi-send"></i></button>
-                </div>
 
-                <div id="suggestions"></div>
 
-                <div class="suggested-questions">
-                    <h5>Perguntas sugeridas:</h5>
-                    <div class="question-chip" onclick="insertQuestion(this)">Consultar minha situação no Processo Seletivo</div>
-                    <div class="question-chip" onclick="insertQuestion(this)">Quais documentos preciso para me inscrever?</div>
-                    <div class="question-chip" onclick="insertQuestion(this)">Quais são as etapas do processo seletivo?</div>
-                    <div class="question-chip" onclick="insertQuestion(this)">Posso me inscrever em mais de uma especialidade?</div>
-                </div>
+                <?php if ($selecao[0]['liberacao_assistente_virtual']): ?>
+                    <div class="chat-input">
+                        <input type="text" id="userInput" placeholder="Digite sua mensagem..." autocomplete="off" minlength="20" required>
+                        <button id="sendButton"><i class="bi bi-send"></i></button>
+                    </div>
+
+
+                    <div id="suggestions"></div>
+
+                    <div class="suggested-questions">
+                        <h5>Perguntas sugeridas:</h5>
+                        <div class="question-chip" onclick="insertQuestion(this)">Consultar minha situação no Processo Seletivo</div>
+                        <div class="question-chip" onclick="insertQuestion(this)">Quais documentos preciso para me inscrever?</div>
+                        <div class="question-chip" onclick="insertQuestion(this)">Quais são as etapas do processo seletivo?</div>
+                        <div class="question-chip" onclick="insertQuestion(this)">Posso me inscrever em mais de uma especialidade?</div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 mx-auto">
-            <div class="card-modern">
-                <div class="card-header-modern">
-                    <div>
-                        <i class="fa fa-comments me-2"></i> Mensagens com o Suporte
-                    </div>
+            <div class="card">
+                <div class="card-header bg-primary text-white mb-20">
+                    <span class="mb-0"><i class="fa fa-comments"></i> Mensagens com o Suporte</span>
                 </div>
                 <div class="card-body-modern">
                     <div class="filter-buttons">
@@ -500,7 +526,7 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
 
                         <?php if (empty($lista_suporte)): ?>
                             <div class="empty-state">
-                                <i class="far fa-comment-alt"></i>
+                                <i class="fa fa-comments"></i>
                                 <h4>Nenhuma mensagem encontrada</h4>
                                 <p>Você ainda não enviou nenhuma mensagem.</p>
                             </div>
@@ -551,10 +577,8 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                             name="crip">
 
                         <div class="alert alert-info">
-                            <i class="glyphicon glyphicon-info-sign"></i>
-                            Será enviado um e-mail de resposta para:
-                            <strong><?= $mail ?></strong>.
-                            Caso seu e-mail esteja desatualizado, edite seu cadastro.
+                            <i class="fa fa-info-circle"></i>
+                            Sua dúvida será respondida por um membro da Comissão de Seleção e você poderá visualizar a resposta nesta mesma página.
                         </div>
 
                         <div class="chat-input">
@@ -840,7 +864,6 @@ Fique à vontade para detalhar ao máximo sua questão — assim, poderemos ajud
                             botResponse = `Não encontrei uma resposta exata 🤔
 <br/>Mas posso te ajudar com informações sobre<br/>
 - Processo de Inscrição
-- Documentos necessários
 - Etapas do processo seletivo
 - Acompanhamento de Resultados
 - Assuntos específicos de cada Etapa

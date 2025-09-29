@@ -153,9 +153,11 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                                 <div class="form-text text-end"><span id="charCount">0</span>/1000 caracteres</div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fa fa-paper-plane me-2"></i> Enviar Notificação
-                            </button>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fa fa-paper-plane"></i> ENVIAR NOTIFICAÇÃO
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -222,9 +224,9 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                                                 </span>
                                             </div>
                                             <a
-                                                class="btn-modern btn-delete"
+                                                class="btn btn-sm action-btn"
                                                 onclick="funcao_apagar('<?= $notificacao['id'] ?>', 'notificacao')">
-                                                <i class="fa fa-trash"></i> Excluir
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         </div>
 
@@ -291,29 +293,7 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                 margin-bottom: 5px;
                 color: var(--text-color);
             }
-
-            .btn-primary {
-                background-color: var(--primary-color);
-                border: none;
-                padding: 10px 20px;
-                font-weight: 600;
-                transition: all 0.3s ease;
-                width: 100%;
-            }
-
-            .btn-primary:hover {
-                background-color: #004d00;
-                /* Tom mais escuro do verde primário */
-                transform: scale(1.01);
-            }
-
-            .alert {
-                border-radius: 8px;
-                margin-bottom: 15px;
-                border: none;
-            }
-
-
+            
             .section-title {
                 color: var(--primary-color);
                 border-bottom: 2px solid var(--secondary-color);

@@ -72,27 +72,6 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         color: var(--text-color);
     }
 
-    .btn-primary {
-        background-color: var(--primary-color);
-        border: none;
-        padding: 10px 20px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-
-    .btn-primary:hover {
-        background-color: #004d00;
-        /* Tom mais escuro do verde primário */
-        transform: scale(1.01);
-    }
-
-    .alert {
-        border-radius: 8px;
-        margin-bottom: 15px;
-        border: none;
-    }
-
     .section-title {
         color: var(--primary-color);
         border-bottom: 2px solid var(--secondary-color);
@@ -169,7 +148,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
                             <div class="mb-10">
                                 <label for="etapa" class="form-label"><strong>Etapa</strong></label>
-                                <select name="etapa" id="etapa" class="form-control">
+                                <select name="etapa" id="etapa" class="form-control" required>
                                     <option value="" selected>Selecione a Etapa</option>
                                     <option value="0">TODAS</option>
                                     <option value="1">Etapa 1</option>
@@ -186,7 +165,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <label for="pergunta" class="form-label"><strong>Pergunta</strong></label>
                                 <textarea name="pergunta" id="pergunta" class="form-control"
                                     placeholder="Digite a pergunta que os usuários podem fazer..."
-                                    rows="3" style="min-height: 100px;"></textarea>
+                                    rows="3" style="min-height: 100px;" required></textarea>
                                 <div class="form-text">Exemplo: "Como faço para me inscrever no processo?"</div>
                             </div>
 
@@ -194,7 +173,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <label for="resposta" class="form-label"><strong>Resposta</strong></label>
                                 <textarea name="resposta" id="resposta" class="form-control mb-10"
                                     placeholder="Digite a resposta que o assistente deve fornecer..."
-                                    rows="5" style="min-height: 150px;"></textarea>
+                                    rows="5" style="min-height: 150px;" required></textarea>
                                 <div class="form-text">Forneça uma resposta clara e completa</div>
                             </div>
 
@@ -203,9 +182,11 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <span id="mensagem"></span>
                             </div>
 
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">
-                                <i class="fa fa-save me-2"></i> CADASTRAR PERGUNTA
-                            </button>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fa fa-save me-2"></i> CADASTRAR PERGUNTA E RESPOSTA
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

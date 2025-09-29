@@ -1,132 +1,300 @@
 <?php
-    include_once 'menu.php';
-    include_once 'codigos/funcao_apagar.php';
-   
-    $conexao = new Conexao();
+include_once 'menu.php';
+include_once 'codigos/funcao_apagar.php';
 
-    // Obtém o id_selecao da sessão
-    $id_selecao = $_SESSION['selecao'];
-    $id_usuario = $_SESSION['id_usuario'];
-    $rm_candidato = $conexao->get_selecao_rm($id_usuario);
+$conexao = new Conexao();
 
-    $recurso_visualiza = $conexao->get_recurso_visualiza($id_selecao, $rm_candidato);
-    $mostrar_recursos = $recurso_visualiza[0]['mostrar_recurso'];
-    $data_inicio_recurso = $recurso_visualiza[0]['data_inicio_recurso'];
-    $data_fim_recurso = $recurso_visualiza[0]['data_fim_recurso'];
-    $data_inicio_recurso = trata_data($data_inicio_recurso);
-    $data_fim_recurso = trata_data($data_fim_recurso);
-    $data_hoje = date('d-m-Y');
+$selecao = $conexao->get_selecao_id($_SESSION['selecao']);
 
+$data_inicio_recurso = $selecao[0]['data_inicio_recurso'];
+$data_fim_recurso = $selecao[0]['data_fim_recurso'];
+$data_inicio_recurso = trata_data($data_inicio_recurso);
+$data_fim_recurso = trata_data($data_fim_recurso);
+$data_hoje = date('d-m-Y');
 
-    if($mostrar_recursos == "1") $mostrar_recursos = true;
-    if($mostrar_recursos == "0") $mostrar_recursos = false;
-    if($data_hoje > $data_fim_recurso || $data_hoje < $data_inicio_recurso) $mostrar_recursos = false;
-    
+$mostrar_recursos = false;
+
+if (isset($data_inicio_recurso) && isset($data_fim_recurso) && $data_hoje < $data_fim_recurso && $data_hoje > $data_inicio_recurso) {
+  $mostrar_recursos = true;
+}
 ?>
 
-      <div class="content-wrapper">
-        <div class="page-title">
-          <div>
-            <h1>Recurso <i class="fa fa-file-o"></i></h1>
-          </div>
-          <div>
-            <ul class="breadcrumb">
-              <li><i class="fa fa-home fa-lg"></i></li>
-              <li><a href="index.php">Página Inicial</a></li>
-            </ul>
-          </div>
-        </div>
-        <div <?php if ($mostrar_recursos == false) echo " hidden "; ?> class="row">
-            <div  class="col-md-12">
-              <div class="card" >
-                  <legend>Adicionar recurso</legend>
-                  <div class="row">
-                      <div class="col-lg-12" <?php //if (insere_recurso()) echo ""; else echo "hidden"; ?>>
-                          <div class="row">
-                              <div class="col-md-12">
-                                  <form method="post" action="arquivo_upload_recurso_candidato.php" enctype="multipart/form-data">
-                                      <div>
-                                          <div class="form-group"> 
-                                          </div>
-                                          <input type="text" hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave']."freitas") ?>">
-                                          <div class="row">
-                                              <div class="col-md-6">  
-                                                  <label>Adicione seu recurso<font color="red"> *Máximo 5 MegaBytes no formato PDF</font></label>
-                                                  <div class="form-group"> 
-                                                      <br>
-                                                      <input type="file" name="arquivo" />
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-6">
-                                                  <div class="form-group"> 
-                                                      <input type="submit" class="btn btn-primary btn-block" value="Enviar recurso" />
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </form>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-                
-                <div class="col-md-12" <?php// if(insere_recurso()) echo " hidden " ?>>  
-                    <label><font color="red" size="5px">O Período para recurso esta fechado!</font></label>
-                </div>
-          </div>
-        </div>
-        <div class="card">
-                <div class="card-body">
-                  <table class="table table-hover table-bordered" id="tabela_dinamica">
-                    <thead>
-                      <tr>
-                        <th>Data do Recurso</th>
-                        <th>Etapa</th>
-                        <th>Status</th>
-                        <th>Justificativa</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            $lista_recursos = $conexao->get_recursos_candidato($_SESSION['id_usuario']); 
-                            foreach ($lista_recursos as $linha) 
-                            {
-                                $data_de_abertura = null;
-                                if($linha['data_abertura'] != null)
-                                    $data_de_abertura  =  trata_data ($linha['data_abertura']);
+<style>
+  .card-header {
+    font-size: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 15px 20px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-                                $status = "Pendente";
-                                if($linha['status_final'] != null && $linha['status_final'] == 'deferido') $status = 'Deferido';
-                                if($linha['status_final'] != null && $linha['status_final'] == 'deferido_parcialmente') $status = 'Deferido Parcialmente';
-                                if($linha['status_final'] != null && $linha['status_final'] == 'indeferido') $status = 'Indeferido';
+  .badge {
+    background-color: var(--primary-color);
+    font-size: 1em;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
 
-                                $justificativa = $linha['paragrafo1'] . " " . $linha['paragrafo2'];
-                                $analise = $linha['analise'];
-                                
-                                $crip = hash('sha256', $_SESSION['chave']."freitas".$linha['id']);
-                                echo '
-                                <tr>
-                                    <td>'.$data_de_abertura.'</td>
-                                    <td>'.$linha['etapa'].'</td>
-                                    <td>'.$status.'</td>
-                                    <td>'.$justificativa.'</td>';
-                                echo '</tr>';
-                            }
-                        ?>   
-                  </tbody>
-                </table>
-              </div>
-          
-        </div>
-        
+  .badge.bg-danger {
+    background-color: #dc3545;
+  }
+
+  .badge.bg-primary {
+    background-color: var(--primary-color);
+  }
+
+  .text-primary {
+    color: var(--primary-color) !important;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .card-header {
+      font-size: 18px;
+      padding: 12px 15px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .card-header {
+      font-size: 16px;
+      padding: 10px 12px;
+    }
+  } 
+
+  .text-danger {
+    color: #dc3545 !important;
+  }
+
+  .text-info {
+    color: #0dcaf0 !important;
+  }
+
+  .text-warning {
+    color: #ffc107 !important;
+  }
+
+  .text-primary {
+    color: var(--primary-color) !important;
+  }
+
+  /* Cores específicas para os ícones */
+  .text-primary {
+    color: #006400 !important;
+  }
+
+  .text-info {
+    color: #0dcaf0 !important;
+  }
+
+  .text-warning {
+    color: #ffc107 !important;
+  }
+
+  .text-danger {
+    color: #dc3545 !important;
+  }
+
+  /* Layout flex para alinhamento */
+  .d-flex {
+    display: flex !important;
+  }
+
+  .justify-content-between {
+    justify-content: space-between !important;
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .documento-info {
+      flex-direction: column;
+      text-align: center;
+      gap: 8px;
+    }
+  }
+
+  .recurso-card {
+    transition: transform 0.2s ease;
+  }
+
+  .recurso-card:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 576px) {
+    .d-flex {
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .d-flex.justify-content-between {
+      text-align: center;
+    }
+  }
+</style>
+
+<div class="content-wrapper">
+  <div class="page-title">
+    <div>
+      <h1>Recurso <i class="fa fa-file-o"></i></h1>
+    </div>
+    <div>
+      <ul class="breadcrumb">
+        <li><i class="fa fa-home fa-lg"></i></li>
+        <li><a href="index.php">Página Inicial</a></li>
+      </ul>
     </div>
   </div>
+  <!-- Seção de Upload de Recurso -->
+  <?php if ($mostrar_recursos): ?>
+    <div class="card">
+      <div class="card-header mb-20">
+        <span class="card-title mb-0">Adicionar Recurso</span>
+      </div>
+      <div class="card-body">
+        <?php if (insere_recurso()): ?>
+          <form method="post" action="arquivo_upload_recurso_candidato.php" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <input type="hidden" name="crip" value="<?= hash('sha256', $_SESSION['chave'] . "freitas") ?>">
+
+            <div class="row g-3">
+              <div class="col-md-12 mb-20">
+                <label for="arquivo" class="form-label mb-20">
+                  Adicione seu recurso
+                  <small class="text-danger">* Máximo 5MB no formato PDF</small>
+                </label>
+                <input type="file"
+                  class="form-control"
+                  id="arquivo"
+                  name="arquivo"
+                  accept=".pdf"
+                  required>
+                <div class="invalid-feedback">
+                  Por favor, selecione um arquivo PDF de até 5MB.
+                </div>
+              </div>
+              <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                  <i class="fa fa-upload me-2"></i> Enviar Recurso
+                </button>
+              </div>
+            </div>
+          </form>
+        <?php else: ?>
+          <div class="alert alert-warning text-center mb-0">
+            <i class="fa fa-exclamation-triangle me-2"></i>
+            <strong>O período para recursos está fechado!</strong>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+  <?php endif; ?>
+
+
+
+  <!-- Listagem de Recursos -->
+  <div class="card mt-4">
+    <div class="card-header mb-20">
+      <span class="card-title mb-0">Meus Recursos</span>
+    </div>
+    <div class="card-body">
+      <?php
+      $lista_recursos = $conexao->get_recursos_candidato($_SESSION['id_usuario']);
+
+      if (empty($lista_recursos)): ?>
+        <div class="text-center py-4">
+          <i class="fa fa-folder-open fa-3x text-muted mb-3"></i>
+          <p class="text-muted">Nenhum recurso enviado até o momento.</p>
+        </div>
+      <?php else: ?>
+
+        <?php foreach ($lista_recursos as $recurso):
+          $data_abertura = $recurso['data_abertura'] ? trata_data($recurso['data_abertura']) : '--';
+
+          $status_config = [
+            'deferido' => ['label' => 'Deferido', 'class' => 'success', 'icon' => 'fa-check-circle'],
+            'deferido_parcialmente' => ['label' => 'Deferido Parcialmente', 'class' => 'info', 'icon' => 'fa-adjust'],
+            'indeferido' => ['label' => 'Indeferido', 'class' => 'danger', 'icon' => 'fa-times-circle'],
+            'pendente' => ['label' => 'Pendente', 'class' => 'warning', 'icon' => 'fa-clock']
+          ];
+
+          $status_key = $recurso['status_final'] ?? 'pendente';
+          $status = $status_config[$status_key] ?? $status_config['pendente'];
+          $justificativa = trim($recurso['paragrafo1'] . ' ' . $recurso['paragrafo2']);
+        ?>
+          <div class="col-12">
+            <div class="card border-0 shadow-sm recurso-card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <h4 class="card-title text-primary mb-1">Etapa <?= htmlspecialchars($recurso['etapa']) ?></h4>
+                    <p class="text-muted">Data de abertura: <?= $data_abertura ?></p>
+                  </div>
+                  <span class="badge bg-<?= $status['class'] ?>" style="height: 30px;">
+                    <i class="fa <?= $status['icon'] ?> me-1"></i>
+                    <?= $status['label'] ?>
+                  </span>
+                </div>
+
+                <div class="recurso-preview">
+                  <?php if (!empty($justificativa)): ?>
+                    <p class="card-text text-dark">
+                      <?= nl2br(htmlspecialchars($recurso['paragrafo1'])) ?><br>
+                      <?= nl2br(htmlspecialchars($recurso['paragrafo2'])) ?>
+                    </p>
+                  <?php endif; ?>
+                </div>
+
+                <div class="recurso-detalhes collapse">
+                  <?php if (!empty($justificativa)): ?>
+                    <p class="card-text text-dark">
+                      <?= nl2br(htmlspecialchars($justificativa)) ?>
+                    </p>
+                  <?php endif; ?>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+
+      <?php endif; ?>
+    </div>
+  </div>
+
+</div>
+</div>
 </div>
 </div>
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
-<script type="text/javascript">$('#tabela_dinamica').DataTable();</script>
+<script type="text/javascript">
+  $('#tabela_dinamica').DataTable();
+</script>
+
+<script>
+  document.querySelectorAll('.toggle-detalhes').forEach(button => {
+    button.addEventListener('click', function() {
+      const target = this.closest('.card-body').querySelector('.recurso-detalhes');
+      const verMais = this.querySelector('.ver-mais');
+      const verMenos = this.querySelector('.ver-menos');
+
+      if (target.classList.contains('show')) {
+        verMais.style.display = 'inline';
+        verMenos.style.display = 'none';
+      } else {
+        verMais.style.display = 'none';
+        verMenos.style.display = 'inline';
+      }
+    });
+  });
+</script>
 </body>
+
 </html>
 <?php $conexao = null; ?>

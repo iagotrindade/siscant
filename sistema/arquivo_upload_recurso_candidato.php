@@ -73,7 +73,8 @@ try
     $nome_original = $_FILES['arquivo']['name'];    
 
     // Pasta onde o arquivo vai ser salvo
-    $_UP['pasta'] = $_SESSION['pasta_arquivos'];
+    // 27/09/2025 -> Iago Silva - Alterado o caminho da pasta de upload
+    $_UP['pasta'] = 'arquivos_add_p_cand/recursos/';
 
     // Tamanho máximo do arquivo (em Bytes)
     $_UP['tamanho'] = 1024 * 1024 * 5; // 5Mb

@@ -106,6 +106,7 @@ if ($get_selecao == null) {
 }
 
 $aviso_convocacao = $get_selecao[0]['aviso_convocacao'];
+$libera_assistente_virtual = $get_selecao[0]['liberacao_assistente_virtual'];
 $libera_suporte_inicial = $get_selecao[0]['liberacao_suporte_inicial'];
 $liberado_comprovante = $get_selecao[0]['liberacao_comprovante_inscricao'];
 $eliminar_caso_nao_adicione_foto = $get_selecao[0]['eliminar_caso_nao_adicione_foto'];
@@ -530,6 +531,41 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         <!-- Liberações e Configurações -->
         <div class="col-12">
             <h3 class="section-title"><i class="fa fa-unlock-alt"></i> Liberações e Configurações</h3>
+        </div>
+
+        <!-- Status do Assistente Virtual -->
+        <div class="col-xl-6 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-comments-o"></i> Status Assistente Virtual
+                </div>
+                <div class="card-body">
+                    <form action="../banco_dados/liberar_assistente_virtual.php" method="POST">
+                        <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+
+                        <?php if ($libera_assistente_virtual != 1): ?>
+                            <div class="alert alert-info">
+                                <strong><i class="fa fa-exclamation-circle"></i> ATENÇÃO:</strong> Quando liberado, o candidato poderá interagir com o Assistente Virtual.
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="suporteSwitch" name="liberacao" <?php if ($libera_assistente_virtual == 1) echo "checked"; ?>>
+                                <label class="form-check-label" for="suporteSwitch">
+                                    Liberar para os candidatos interagirem com o Assistente Virtual
+                                </label>
+                            </div>
+                        </div>
+
+                        <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fa fa-save"></i> SALVAR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Suporte Inicial -->

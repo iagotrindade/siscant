@@ -58,6 +58,7 @@ if (isset($_GET['codigo'])) {
     }
 
     .badge {
+        background-color: var(--primary-color);
         font-size: 0.85em;
         padding: 6px 10px;
         border-radius: 6px;
@@ -93,7 +94,7 @@ if (isset($_GET['codigo'])) {
         background-color: #f8f9fa;
         padding: 3px 6px;
         border-radius: 4px;
-        font-size: 0.9em;
+        font-size: 1em;
         color: #e83e8c;
     }
 </style>

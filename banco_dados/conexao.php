@@ -9548,6 +9548,43 @@ order by total_pontos_somados desc");
         return true;
     }
 
+    // 27/09/2025 -> Iago Silva Criando a função para liberar o Assistente Virtual
+    public function libera_assistente_virtual($liberacao)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+        $id_selecao = $_SESSION['selecao'];
+
+        try {
+            $sqlInsert = "UPDATE selecao SET liberacao_assistente_virtual=:libera WHERE id= :id";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id", $id_selecao);
+            $query->bindValue(":libera", $liberacao);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'id_selecao' => $id_selecao,
+                        'liberacao_assistente_virtual' => $liberacao,
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
     // <editor-fold defaultstate="collapsed" desc="LIBERA VISUALIZAÇÃO DA AVALIAÇÃO CURRICULAR DO CANDIDATO">
     public function libera_avaliacao_curricular($liberacao)
     {
