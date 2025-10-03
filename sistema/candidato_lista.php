@@ -295,7 +295,7 @@ $lista_candidatos = $conexao->get_todos_candidatos();
                                         <i class="fa fa-group"></i>
                                     </div>
                                     <div class="export-content">
-                                        <h6>Candidatos com Todos Candidatos</h6>
+                                        <h6>Todos Candidatos</h6>
                                         <p>Exportar dados todos os candidatos</p>
                                     </div>
                                 </div>

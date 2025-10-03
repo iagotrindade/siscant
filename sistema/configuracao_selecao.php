@@ -144,7 +144,6 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 <!--31/08/2025 -> Iago Silva Remodelando layout -->
 <style>
     :root {
-        --primary-color: #006400;
         /* Verde escuro como cor primária */
         --secondary-color: #228B22;
         /* Verde floresta como secundária */
@@ -159,6 +158,10 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         --border-color: #D3D3D3;
         /* Cor das bordas */
     }
+
+    .card-header {
+        display: block  ;
+    }
     .card-body {
         padding: 20px;
     }
@@ -168,27 +171,6 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         margin-bottom: 5px;
         color: var(--text-color);
     }
-
-    .btn-primary {
-        background-color: var(--primary-color);
-        border: none;
-        padding: 10px 20px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        background-color: #004d00;
-        /* Tom mais escuro do verde primário */
-        transform: scale(1.02);
-    }
-
-    .alert {
-        border-radius: 8px;
-        margin-bottom: 15px;
-        border: none;
-    }
-
 
     .section-title {
         color: var(--primary-color);

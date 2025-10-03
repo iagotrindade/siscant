@@ -223,7 +223,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
     }
 
     .responses-count {
-        color: #006400;
+        color: #fff;
         font-weight: 600;
     }
 
@@ -370,6 +370,10 @@ $lista_suporte_inicial = $conexao->get_suporte();
         font-size: 1.2rem;
     }
 
+    .bg-primary {
+        background-color: var(--primary-color);
+    }
+
     .bg-gold {
         background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
         color: #000;
@@ -438,6 +442,12 @@ $lista_suporte_inicial = $conexao->get_suporte();
 
     .user-id {
         font-size: 1.1rem;
+    }
+
+    .perform-card-header {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        background-color: var(--primary-color);
     }
 
     .performance-stats {
@@ -637,7 +647,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                 <tr>
                                     <td>' . $linha['id'] . '</td>
                                     <td><a href="usuario_visualiza.php?id_usuario=' . $linha['id_usuario_remetente'] . '" class="text-decoration-none">' . $linha['cpf'] . '</a></td>
-                                    <td><span class="badge bg-secondary">' . $linha['motivo'] . '</span></td>
+                                    <td><span class="badge bg-primary">' . $linha['motivo'] . '</span></td>
                                     <td class="text-truncate" style="max-width: 200px;" title="' . htmlspecialchars($linha['mensagem']) . '">' . $linha['mensagem'] . '</td>
                                     <td>' . trata_data_hora($linha['data_enviado']) . '</td>
                                     <td class="' . $status_class . '">' . $respondido . $dias_resposta . '</td>
@@ -753,7 +763,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                     <tr>
                                         <td>' . $linha['id'] . '</td>
                                         <td>' . $linha['cpf'] . '</td>
-                                        <td><span class="badge bg-secondary">' . $linha['motivo'] . '</span></td>
+                                        <td><span class="badge bg-primary">' . $linha['motivo'] . '</span></td>
                                         <td class="text-truncate" style="max-width: 200px;" title="' . htmlspecialchars($linha['mensagem']) . '">' . $linha['mensagem'] . '</td>
                                         <td>' . trata_data_hora($linha['data_enviado']) . '</td>
                                         <td class="' . $status_class . '">' . $respondido . $dias_resposta . '</td>
@@ -924,7 +934,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                             ?>
 
                                 <div class="performance-card <?php echo $card_class; ?> p-20">
-                                    <div class="card-header p-0" style="background-color: transparent; font-size: 1.4rem;">
+                                    <div class="perform-card-header p-10" style="font-size: 1.4rem;">
                                         <span class="mr-10 rank-badge <?php echo $badge_class; ?>">
                                             <?php echo $icon; ?>
                                         </span>
@@ -1026,7 +1036,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                 ?>
 
                                     <div class="performance-card <?php echo $card_class; ?> p-20">
-                                        <div class="card-header p-0" style="background-color: transparent; font-size: 1.4rem;">
+                                        <div class="perform-card-header p-0" style="font-size: 1.4rem;">
                                             <span class="mr-10 rank-badge <?php echo $badge_class; ?>">
                                                 <?php echo $icon; ?>
                                             </span>
@@ -1089,7 +1099,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                         <!-- Leaderboard -->
                         <div class="leaderboard mb-20">
                             <h5 class="section-title mb-20">
-                                <i class="fa fa-ranking-star me-2"></i>Ranking de Respostas - Candidatos Inscritos
+                                <i class="fa fa-star me-2"></i> Ranking de Respostas - Candidatos Inscritos
                             </h5>
 
                             <div class="leaderboard-list">
@@ -1166,7 +1176,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                         <?php if ($libera_suporte_inicial): ?>
                             <div class="leaderboard mb-20">
                                 <h5 class="section-title mb-20">
-                                    <i class="fa fa-ranking-star me-2"></i>Ranking de Respostas - Não Inscritos
+                                    <i class="fa fa-star me-2"></i> Ranking de Respostas - Não Inscritos
                                 </h5>
 
                                 <div class="leaderboard-list">
