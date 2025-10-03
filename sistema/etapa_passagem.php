@@ -56,32 +56,6 @@ $especialidades = $conexao->get_especialidade();
         --transition: all 0.3s ease;
     }
 
-    .card {
-        border-radius: 12px;
-        box-shadow: var(--card-shadow);
-        border: none;
-        margin-bottom: 20px;
-        transition: var(--transition);
-        background: white;
-    }
-
-    .card:hover {
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
-    }
-
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .card-body {
         padding: 20px;
     }

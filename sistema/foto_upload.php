@@ -13,27 +13,6 @@ require 'menu.php';
     --transition: all 0.3s ease;
   }
 
-  .upload-container {
-    margin: 0 auto;
-  }
-
-  .card {
-    border-radius: 12px;
-    box-shadow: var(--card-shadow);
-    border: none;
-    margin-bottom: 20px;
-    transition: var(--transition);
-    background: white;
-    overflow: hidden;
-  }
-
-  .card-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-    color: white;
-    border-radius: 12px 12px 0 0;
-    padding: 15px 20px;
-  }
-
   .card-body {
     padding: 25px;
   }
@@ -169,69 +148,69 @@ require 'menu.php';
       </ul>
     </div>
   </div>
-  <div class="upload-container">
-    <div class="card fade-in">
-      <div class="card-header">
-        <h4 class="mb-0">
-          <i class="fa fa-camera me-2"></i> Upload de Foto
-        </h4>
-      </div>
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col-md-7">
-            <div class="upload-area" id="uploadArea">
-              <div class="upload-icon">
-                <i class="fa fa-cloud-upload-alt"></i>
-              </div>
-              <h5>Arraste e solte sua foto aqui</h5>
-              <p class="text-muted">ou</p>
-              <label for="fotoInput" class="btn btn-primary">
-                <i class="fa fa-folder-open me-2"></i>Selecionar Arquivo
-              </label>
-              <div id="fileName" class="file-name"></div>
-
-
-
-              <div class="requirements mt-4">
-                <h5><i class="fa fa-info-circle"></i> Requisitos da foto:</h5>
-                <div class="requirement-item">
-                  <span class="requirement-icon"><i class="fa fa-check-circle"></i></span>
-                  <span>Formato: PNG, JPEG ou JPG</span>
-                </div>
-                <div class="requirement-item">
-                  <span class="requirement-icon"><i class="fa fa-check-circle"></i></span>
-                  <span>Tamanho máximo: 2MB</span>
-                </div>
-                <div class="requirement-item">
-                  <span class="requirement-icon"><i class="fa fa-check-circle"></i></span>
-                  <span>Dimensões recomendadas: 3x4</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-5">
-            <div class="photo-container text-center">
-              <h5 class="mb-10">Foto atual do perfil</h5>
-              <img src="<?php echo "fotos/$usuario_foto" ?>"
-                class="photo-preview"
-                alt="Foto do perfil"
-                id="previewFoto">
-              <p class="text-muted mt-2">Pré-visualização</p>
-            </div>
-          </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card fade-in">
+        <div class="card-header">
+          <span class="mb-0">
+            <i class="fa fa-camera me-2"></i> Upload de Foto
+          </span>
         </div>
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-7">
+              <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                  <i class="fa fa-cloud-upload-alt"></i>
+                </div>
+                <h5>Arraste e solte sua foto aqui</h5>
+                <p class="text-muted">ou</p>
+                <label for="fotoInput" class="btn btn-primary">
+                  <i class="fa fa-folder-open me-2"></i>Selecionar Arquivo
+                </label>
+                <div id="fileName" class="file-name"></div>
 
-        <form method="post" action="usuario_upload_foto.php" enctype="multipart/form-data" id="uploadForm">
-          <input type="hidden" name="crip" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema'] . "freitas"); ?>">
-          <input type="file" id="fotoInput" name="foto" class="file-input" accept=".png,.jpg,.jpeg" style="margin-left: -1000px;" />
+                <div class="requirements mt-4">
+                  <h5><i class="fa fa-info-circle"></i> Requisitos da foto:</h5>
+                  <div class="requirement-item">
+                    <span class="requirement-icon"><i class="fa fa-check-circle"></i></span>
+                    <span>Formato: PNG, JPEG ou JPG</span>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-icon"><i class="fa fa-check-circle"></i></span>
+                    <span>Tamanho máximo: 2MB</span>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-icon"><i class="fa fa-check-circle"></i></span>
+                    <span>Dimensões recomendadas: 3x4</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary btn-lg" id="submitButton" disabled>
-              <i class="fa fa-upload me-2"></i> Enviar Foto
-            </button>
+            <div class="col-md-5">
+              <div class="photo-container text-center">
+                <h5 class="mb-10">Foto atual do perfil</h5>
+                <img src="<?php echo "fotos/$usuario_foto" ?>"
+                  class="photo-preview"
+                  alt="Foto do perfil"
+                  id="previewFoto">
+                <p class="text-muted mt-2">Pré-visualização</p>
+              </div>
+            </div>
           </div>
-        </form>
+
+          <form method="post" action="usuario_upload_foto.php" enctype="multipart/form-data" id="uploadForm">
+            <input type="hidden" name="crip" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema'] . "freitas"); ?>">
+            <input type="file" id="fotoInput" name="foto" class="file-input" accept=".png,.jpg,.jpeg" style="margin-left: -1000px;" />
+
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary btn-lg" id="submitButton" disabled>
+                <i class="fa fa-upload me-2"></i> Enviar Foto
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

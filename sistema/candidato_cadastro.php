@@ -13,7 +13,6 @@ $libera_suporte_inicial = $selecao[0]['liberacao_suporte_inicial'];
 <style>
     :root {
         --primary-color: #006400;
-        --primary-light: #228B22;
         --secondary-color: #6c757d;
         --accent-color: #32CD32;
         --light-bg: #f0f8f0;

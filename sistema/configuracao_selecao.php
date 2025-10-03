@@ -159,34 +159,6 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         --border-color: #D3D3D3;
         /* Cor das bordas */
     }
-
-    .card {
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        border: 1px solid var(--border-color);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        align-items: center;
-    }
-
-    .card-header i {
-        margin-right: 8px;
-    }
-
     .card-body {
         padding: 20px;
     }
@@ -551,8 +523,8 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
                         <div class="">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="suporteSwitch" name="liberacao" <?php if ($libera_assistente_virtual == 1) echo "checked"; ?>>
-                                <label class="form-check-label" for="suporteSwitch">
+                                <input class="form-check-input" type="checkbox" id="assistenteSwitch" name="liberacao" <?php if ($libera_assistente_virtual == 1) echo "checked"; ?>>
+                                <label class="form-check-label" for="assistenteSwitch">
                                     Liberar para os candidatos interagirem com o Assistente Virtual
                                 </label>
                             </div>

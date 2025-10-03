@@ -28,6 +28,87 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
 ?>
 
 <style>
+    :root {
+        --primary-color: #006400;
+        /* Verde escuro como cor primária */
+        --secondary-color: #228B22;
+        /* Verde mar como cor de sucesso */
+        --text-color: #333333;
+        /* Cor do texto principal */
+        --border-color: #D3D3D3;
+        /* Cor das bordas */
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: var(--text-color);
+    }
+
+    .section-title {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 10px;
+        margin: 30px 0 20px 0;
+        font-weight: 700;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(34, 139, 34, 0.1);
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 6px;
+        padding: 10px 15px;
+        border: 1px solid #D3D3D3;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #228B22;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #006400;
+        border: none;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background-color: #004d00;
+    }
+
+    .alert-info {
+        background-color: #E8F5E9;
+        border-color: #C8E6C9;
+        color: #2E7D32;
+    }
+
+    .notification-badge {
+        font-size: 1em;
+        padding: 0.5em 0.8em;
+    }
+
     .notification-card {
         border: none;
         border-radius: 8px;
@@ -246,119 +327,6 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                 </div>
             </div>
         </div>
-
-        <style>
-            :root {
-                --primary-color: #006400;
-                /* Verde escuro como cor primária */
-                --secondary-color: #228B22;
-                /* Verde mar como cor de sucesso */
-                --text-color: #333333;
-                /* Cor do texto principal */
-                --border-color: #D3D3D3;
-                /* Cor das bordas */
-            }
-
-            .card {
-                border-radius: 10px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                margin-bottom: 20px;
-                border: 1px solid var(--border-color);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-            }
-
-            .card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            }
-
-            .card-header {
-                font-size: 20px;
-                background-color: var(--primary-color);
-                color: white;
-                border-radius: 12px 12px 0 0 !important;
-                padding: 15px 20px;
-                font-weight: 600;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .card-header i {
-                margin-right: 8px;
-            }
-
-            .form-label {
-                font-weight: 500;
-                margin-bottom: 5px;
-                color: var(--text-color);
-            }
-            
-            .section-title {
-                color: var(--primary-color);
-                border-bottom: 2px solid var(--secondary-color);
-                padding-bottom: 10px;
-                margin: 30px 0 20px 0;
-                font-weight: 700;
-            }
-
-            .form-control {
-                border-radius: 6px;
-                border: 1px solid var(--border-color);
-            }
-
-            .form-control:focus {
-                border-color: var(--secondary-color);
-                box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
-            }
-
-            .form-check-input:checked {
-                background-color: var(--primary-color);
-                border-color: var(--primary-color);
-            }
-
-            .table-hover tbody tr:hover {
-                background-color: rgba(34, 139, 34, 0.1);
-            }
-
-
-            .form-control,
-            .form-select {
-                border-radius: 6px;
-                padding: 10px 15px;
-                border: 1px solid #D3D3D3;
-                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            }
-
-            .form-control:focus,
-            .form-select:focus {
-                border-color: #228B22;
-                outline: 0;
-                box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
-            }
-
-            .btn-primary {
-                background-color: #006400;
-                border: none;
-                padding: 10px 20px;
-                font-weight: 600;
-            }
-
-            .btn-primary:hover {
-                background-color: #004d00;
-            }
-
-            .alert-info {
-                background-color: #E8F5E9;
-                border-color: #C8E6C9;
-                color: #2E7D32;
-            }
-
-            .notification-badge {
-                font-size: 1em;
-                padding: 0.5em 0.8em;
-            }
-        </style>
 
         <script>
             // Contador de caracteres

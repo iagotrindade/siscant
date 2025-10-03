@@ -74,18 +74,6 @@ if ($perfil == "ouvidor") {
     padding: 25px;
   }
 
-  .card-header {
-    font-size: 20px;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 12px 12px 0 0 !important;
-    padding: 15px 20px;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   /* Estados dos cards */
   .dashboard-card {
     position: relative;
@@ -180,7 +168,7 @@ if ($perfil == "ouvidor") {
 
 
   <div class="row">
-    <div class="col-12">
+    <div class="col-md-12">
       <!-- Candidatos e Especialidades -->
       <div class="card mb-4" <?php if ($perfil == "documentos") echo "hidden"; ?>>
         <div class="card-header bg-primary text-white">

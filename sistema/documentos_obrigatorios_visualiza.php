@@ -13,18 +13,6 @@ $filtro_lista_docs_obrigatorios_sobrando = retorna_docs_obrigatorios_sobrando_ca
 $quantidade_docs_faltantes = count($filtro_lista_docs_obrigatorios_sobrando);
 ?>
 <style>
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .table th {
         border-top: none;
         font-weight: 600;
@@ -78,7 +66,7 @@ $quantidade_docs_faltantes = count($filtro_lista_docs_obrigatorios_sobrando);
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <!-- Alertas de Status -->
             <?php if (!inscricao()): ?>
                 <div class="alert alert-danger text-center mb-4">

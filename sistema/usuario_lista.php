@@ -12,18 +12,6 @@ $lista_usuarios_perfil_om = $conexao->get_usuarios_perfil_om();
 ?>
 
 <style>
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .table th {
         border-top: none;
         font-weight: 600;

@@ -44,18 +44,18 @@ if (!empty($define_especialidades_nao_concorrendo)) {
         "Especialidade(s) em que NÃO está concorrendo:\n" .
         trim($define_especialidades_nao_concorrendo) . ".
         Acompanhe os prazos previstos para Recurso no Aviso de Convocação disponível abaixo e nas Publicações de Resultado de cada Etapa no site da 3 Região Militar.
-        </br>
+      
         Importante: As datas estabelecidas no Anexo 'A' do Aviso de Convocação podem ser alteradas. As datas atualizadas para Interposiçao de Recurso sempre constarão nas publicações de Resultado de cada Etapa";
 }
 
 // Monta o texto final da situação
-$situacao = "Situação no Processo Seletivo: - Seu número de Inscrição no Processo Seletivo é <strong>" . $_SESSION['id_usuario'] . "</strong> - Você " . $define_concorrendo . ".\n" . $define_especialidades_concorrendo . "\n" . $define_especialidades_nao_concorrendo . " Mais informações podem ser encontradas na Página Inicial do SiSCanT bem como nas publicações disponíveis no site da 3ª Região Militar.</br> 
+$situacao = "Situação no Processo Seletivo: - Seu número de Inscrição no Processo Seletivo é <strong>" . $_SESSION['id_usuario'] . "</strong> - Você " . $define_concorrendo . ".\n" . $define_especialidades_concorrendo . "\n" . $define_especialidades_nao_concorrendo . " Mais informações podem ser encontradas na Página Inicial do SiSCanT bem como nas publicações disponíveis no site da 3ª Região Militar.
 <a href='arquivos/avisos_de_convocacao/" . $selecao[0]['aviso_convocacao'] . "' target='_blank' style='text-decoration:none; display:flex; align-items:center;'>
     <img src='imagens/pdf.png' alt='PDF' style='width:25px; height:25px; margin-right:8px;'> Aviso de Convocação (PDF)
 </a>
-<br>
+
 https://www.3rm.eb.mil.br - Site da 3ª Região Militar
-<br>
+
 https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
 
 ?>
@@ -316,18 +316,6 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
 
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .card-header-modern {
         background-color: var(--primary-color);
         color: white;
@@ -484,7 +472,6 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                 </div>
 
 
-
                 <?php if ($selecao[0]['liberacao_assistente_virtual']): ?>
                     <div class="chat-input">
                         <input type="text" id="userInput" placeholder="Digite sua mensagem..." autocomplete="off" minlength="20" required>
@@ -497,10 +484,15 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                     <div class="suggested-questions">
                         <h5>Perguntas sugeridas:</h5>
                         <div class="question-chip" onclick="insertQuestion(this)">Consultar minha situação no Processo Seletivo</div>
-                        <div class="question-chip" onclick="insertQuestion(this)">Quais documentos preciso para me inscrever?</div>
-                        <div class="question-chip" onclick="insertQuestion(this)">Quais são as etapas do processo seletivo?</div>
-                        <div class="question-chip" onclick="insertQuestion(this)">Posso me inscrever em mais de uma especialidade?</div>
                     </div>
+
+                    <?php foreach ($lista_perguntas as $pergunta): ?>
+                        <?php if ($pergunta['etapa'] == 0 || $pergunta['etapa'] == $selecao[0]['etapa']): ?>
+                            <div class="question-chip" onclick="insertQuestion(this)">
+                                <?= htmlspecialchars($pergunta['pergunta']) ?>
+                            </div>
+                        <?php endif;?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -680,7 +672,7 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                 suggestionsContainer.innerHTML = '';
                 if (!query) return;
 
-                const LIMIAR = 40;
+                const LIMIAR = 30;
                 const matches = perguntasRespostas
                     .filter(item => calcularSimilaridade(query, item.pergunta) >= LIMIAR)
                     .sort((a, b) => calcularSimilaridade(query, b.pergunta) - calcularSimilaridade(query, a.pergunta))
@@ -968,12 +960,14 @@ Tente reformular sua pergunta, ou consulte o Aviso de Convocação disponível l
                     return `<a href="${clean}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">👉 Acessar</a>`;
                 });
 
-                // Quebras de linha -> <br> (com cuidados)
+                // Quebras de linha -> <br><br> (com cuidados)
                 txt = txt.replace(/(?<!<\/div>|<\/ul>|<\/ol>|<\/h4>)\n/g, (m, offset, full) => {
                     if (/class="alert-content">[^<]*$/.test(full.slice(0, offset))) return '';
-                    return '<br>';
+                    return '<br><br>';
                 });
-                txt = txt.replace(/(<br>\s*){2,}/g, '<br>');
+
+                // Normalizar para no máximo 2 <br>
+                txt = txt.replace(/(<br>\s*){3,}/g, '<br><br>');
 
                 // Destaque de palavras-chave
                 const keywords = ["documentos", "documento", "prazo", "prazos", "resultado", "resultados",

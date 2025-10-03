@@ -26,18 +26,6 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 ?>
 
 <style>
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .form-control:focus {
         border-color: #006400;
         box-shadow: 0 0 0 0.2rem rgba(0, 100, 0, 0.15);
@@ -153,7 +141,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </div>
 
     <div class="row" <?php if ($_SESSION['perfil'] != "admin") echo "hidden"; ?>>
-        <div class="col-12">
+        <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white mb-20">
                     <span class="mb-0"><i class="fa fa-graduation-cap me-2"></i> Cadastrar Nova Especialidade</span>
@@ -240,7 +228,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-success text-white mb-20">
                     <span class="mb-0"><i class="fa fa-list me-2"></i> Especialidades Cadastradas</span>

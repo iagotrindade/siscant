@@ -13,7 +13,336 @@ if ($_SESSION['perfil'] == "avaliador") {
     $lista_especialidade_avaliador = $conexao->get_especialidades_usuario_avaliador($_SESSION['id_usuario']);
 }
 ?>
+<style>
+    .dashboard-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        margin-bottom: 1.5rem;
+    }
 
+    .dashboard-header {
+        background: linear-gradient(135deg, #006400 0%, #008000 100%);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1.25rem 1.5rem;
+        border: none;
+    }
+
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #495057;
+        background-color: #f8f9fa;
+        padding: 12px 15px;
+        font-size: 1.3rem;
+    }
+
+    .table td {
+        padding: 12px 15px;
+        vertical-align: middle;
+        font-size: 1.4rem;
+    }
+
+    .table td a:hover {
+        background-color: #006400;
+        color: white;
+    }
+
+    .table td i {
+        font-size: 2rem;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 100, 0, 0.03);
+    }
+
+    .badge-category {
+        background-color: var(--primary-color);
+        font-size: 1.4rem;
+        padding: 0.35em 0.65em;
+    }
+
+    .badge-vagas {
+        display: inline-flex;
+        align-items: center;
+        font-size: 1.4rem;
+        padding: 0.4em 0.8em;
+    }
+
+    .badge-available {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .badge-filled {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-partial {
+        background-color: #fd7e14;
+        color: white;
+    }
+
+    .badge-empty {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .progress-container {
+        position: relative;
+        margin-top: 20px;
+    }
+
+    .progress-text {
+        position: absolute;
+        top: -20px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .progress {
+        height: 10px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        border-radius: 4px;
+        transition: width 0.6s ease;
+        background-color: var(--primary-color);
+    }
+
+    .especialidades-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .btn {
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 100, 0, 0.04);
+        transform: translateY(-1px);
+        transition: all 0.2s ease;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-header {
+            padding: 1rem;
+        }
+
+        .table-responsive {
+            font-size: 0.875rem;
+        }
+
+        .especialidades-list {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    .classification-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .classification-header {
+        background: linear-gradient(135deg, #006400 0%, #008000 100%);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1.25rem 1.5rem;
+        border: none;
+    }
+
+    .classification-table th {
+        border-top: none;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: #6c757d;
+        background-color: #f8f9fa;
+        vertical-align: middle;
+    }
+
+    .multiple-especialidade {
+        background-color: #fff3cd !important;
+        border-left: 4px solid #ffc107;
+    }
+
+    .position-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #006400, #008000);
+        color: white;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .candidate-photo {
+        border: 2px solid #e9ecef;
+    }
+
+    .candidate-name {
+        font-size: 0.95rem;
+        color: #2d3748;
+    }
+
+    .cpf-code {
+        background: #f8f9fa;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        color: #495057;
+    }
+
+    .score-badge {
+        display: inline-block;
+        background: #006400;
+        color: white;
+        padding: 0.35rem 0.65rem;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        min-width: 60px;
+    }
+
+    .note-badge {
+        display: inline-block;
+        background: #e9ecef;
+        color: #495057;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        min-width: 40px;
+    }
+
+    .military-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: #6c757d;
+        color: white;
+        border-radius: 50%;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .days-badge {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .etapa-badge {
+        display: inline-block;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: white;
+    }
+
+    .etapa-1 {
+        background: #dc3545;
+    }
+
+    .etapa-2 {
+        background: #fd7e14;
+    }
+
+    .etapa-3 {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .etapa-4 {
+        background: #20c997;
+    }
+
+    .etapa-5 {
+        background: #0d6efd;
+    }
+
+    .city-badge {
+        background: #f8f9fa;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: #495057;
+    }
+
+    .autodeclaracao-badge {
+        background: #fff3cd;
+        color: #856404;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: capitalize;
+    }
+
+    .view-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+
+    .military-codes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .military-code-item {
+        font-size: 0.85rem;
+        color: #495057;
+    }
+
+    .military-code-separator {
+        color: #6c757d;
+        font-weight: 300;
+    }
+
+    @media (max-width: 768px) {
+        .classification-table {
+            font-size: 0.8rem;
+        }
+
+        .military-codes {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+
+        .military-code-separator {
+            display: none;
+        }
+    }
+</style>
 <div class="content-wrapper">
     <div class="page-title">
         <div>
@@ -29,236 +358,313 @@ if ($_SESSION['perfil'] == "avaliador") {
     </div>
     <div class="row">
         <div class="col-md-12">
-
-            <div class="card">
-                <legend>Especialidade X Candidatos</legend>
+            <!-- Card de Especialidades e Candidatos -->
+            <div class="card dashboard-card">
+                <div class="card-header dashboard-header mb-20">
+                    <span class="card-title mb-0">
+                        <i class="fa fa-bar-chart"></i>
+                        Especialidades X Candidatos
+                    </span>
+                </div>
                 <div class="card-body">
-                    <table class="table table-hover table-bordered" id="tabela_dinamica">
-                        <thead>
-                            <tr>
-                                <th>Categoria</th>
-                                <th>Nome da Especialidade</th>
-                                <th>Total inscritos</th>
-                                <th>Total Ampla</th>
-                                <th>Total Cotas</th>
-                                <th>Classificados</th>
-                                <th>Vagas disponibilizadas</th>
-                                <th>Vagas restantes</th>
-                                <th>Ver</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <?php
-
-                            $lista_especialidade = $conexao->get_especialidade();
-
-                            if ($avaliador) {
-                                foreach ($lista_especialidade_avaliador as $linha_avaliador) {
-
-                                    $quantidade_candidatos = 0;
-                                    $get_quantidade = $conexao->get_quantidade_candidatos_especialidade($linha_avaliador['id_especialidade']);
-                                    if (count($get_quantidade) > 0)
-                                        $quantidade_candidatos = $get_quantidade[0]['quantidade_candidatos'];
-
-                                    echo '
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped" id="tabela_dinamica">
+                            <thead class="table-light">
                                 <tr>
-                                    <td width="90px">' . strtoupper($linha_avaliador['ott_stt']) . '</td>
-                                    <td>' . $linha_avaliador['nome'] . '</td>
-                                    <td width="150px">' . $quantidade_candidatos . '</td>
-                                    <td width="50px"><center><a href="relatorio_especialidade_candidato.php?id_especialidade=' . $linha_avaliador['id_especialidade'] . '"><img title="Visualizar" class="img-circle" src="imagens/lupa.png" width="40px"></a></center></td>
-                                </tr>';
-                                }
-                            } else {
-                                foreach ($lista_especialidade as $linha) {
+                                    <th width="100px"><i class="fa fa-tag"></i> Categoria</th>
+                                    <th><i class="fa fa-book"></i> Nome da Especialidade</th>
+                                    <th width="120px"><i class="fa fa-users"></i> Total Inscritos</th>
+                                    <th width="100px"><i class="fa fa-percent"></i> Ampla</th>
+                                    <th width="100px"><i class="fa fa-percent"></i> Cotas</th>
+                                    <th width="120px"><i class="fa fa-percent"></i> Classificados</th>
+                                    <th width="140px"><i class="fa fa-map-marker"></i> Vagas Disponíveis</th>
+                                    <th width="140px"><i class="fa fa-map-marker"></i> Vagas Restantes</th>
+                                    <th width="80px" class="text-center"><i class="fa fa-cogs"></i> Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $lista_especialidade = $conexao->get_especialidade();
 
-                                    $lista_vagas_disponibilizadas = $conexao->get_cidades_especialidade($linha['id']);
-                                    $lista_vagas_restantes = $conexao->get_vagas_especialidade($linha['id']);
-                                    $lista_quantidade_cadastrados = $conexao->get_candidatos_especialidade_desclassificados_nao_med_obr($linha['id']);
+                                if ($avaliador) {
+                                    foreach ($lista_especialidade_avaliador as $linha_avaliador) {
+                                        $quantidade_candidatos = 0;
+                                        $get_quantidade = $conexao->get_quantidade_candidatos_especialidade($linha_avaliador['id_especialidade']);
+                                        if (count($get_quantidade) > 0)
+                                            $quantidade_candidatos = $get_quantidade[0]['quantidade_candidatos'];
+                                ?>
+                                        <tr>
+                                            <td>
+                                                <span class="badge badge-category"><?= strtoupper($linha_avaliador['ott_stt']) ?></span>
+                                            </td>
+                                            <td class="fw-semibold"><?= htmlspecialchars($linha_avaliador['nome']) ?></td>
+                                            <td>
+                                                <span class="fw-semibold"><?= $quantidade_candidatos ?></span>
+                                            </td>
+                                            <td colspan="5" class="text-muted text-center">Visão limitada para avaliador</td>
+                                            <td class="text-center">
+                                                <a href="relatorio_especialidade_candidato.php?id_especialidade=<?= $linha_avaliador['id_especialidade'] ?>"
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Visualizar detalhes">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    }
+                                } else {
+                                    foreach ($lista_especialidade as $linha) {
+                                        $lista_vagas_disponibilizadas = $conexao->get_cidades_especialidade($linha['id']);
+                                        $lista_vagas_restantes = $conexao->get_vagas_especialidade($linha['id']);
+                                        $lista_quantidade_cadastrados = $conexao->get_candidatos_especialidade_desclassificados_nao_med_obr($linha['id']);
 
-                                    $quantidade_cadastrados = count($lista_quantidade_cadastrados);
-                                    $qtdAmpla = 0;
-                                    $qtdCotas = 0;
+                                        $quantidade_cadastrados = count($lista_quantidade_cadastrados);
+                                        $qtdAmpla = 0;
+                                        $qtdCotas = 0;
 
-                                    foreach ($lista_quantidade_cadastrados as $candidato) {
-                                        if ($candidato['vaga_reservada']) {
-                                            $qtdCotas++;
-                                        } else {
-                                            $qtdAmpla++;
+                                        foreach ($lista_quantidade_cadastrados as $candidato) {
+                                            if ($candidato['vaga_reservada']) {
+                                                $qtdCotas++;
+                                            } else {
+                                                $qtdAmpla++;
+                                            }
                                         }
+
+                                        $vagas_disponibilizadas = 0;
+                                        $vagas_restantes = 0;
+                                        foreach ($lista_vagas_disponibilizadas as $linha5) {
+                                            $vagas_disponibilizadas += (int)$linha5['numero_vagas'];
+                                        }
+                                        foreach ($lista_vagas_restantes as $linha8) {
+                                            $vagas_restantes += (int)$linha8['vagas'];
+                                        }
+
+                                        // Status das vagas
+                                        $status_vagas = 'available';
+                                        $status_text = 'Disponível';
+                                        if ($vagas_disponibilizadas > 0 && $vagas_restantes == 0) {
+                                            $status_vagas = 'filled';
+                                            $status_text = 'Preenchida';
+                                        } elseif ($vagas_disponibilizadas > 0 && $vagas_restantes > 0) {
+                                            $status_vagas = 'partial';
+                                            $status_text = 'Parcial';
+                                        } elseif ($vagas_disponibilizadas > 0 && $vagas_restantes == $vagas_disponibilizadas) {
+                                            $status_vagas = 'empty';
+                                            $status_text = 'Vazia';
+                                        }
+
+                                        $quantidade_candidatos = 0;
+                                        $get_quantidade = $conexao->get_quantidade_candidatos_especialidade($linha['id']);
+                                        if (count($get_quantidade) > 0)
+                                            $quantidade_candidatos = $get_quantidade[0]['quantidade_candidatos'];
+                                    ?>
+                                        <tr>
+                                            <td>
+                                                <span class="badge badge-category"><?= strtoupper($linha['ott_stt']) ?></span>
+                                            </td>
+                                            <td class="fw-semibold"><?= htmlspecialchars($linha['nome']) ?></td>
+                                            <td>
+                                                <span class="fw-semibold"><?= $quantidade_cadastrados ?></span>
+                                            </td>
+                                            <td>
+                                                <span class="fw-semibold"><?= $qtdAmpla ?></span>
+                                            </td>
+                                            <td>
+                                                <span class="fw-semibold"><?= $qtdCotas ?></span>
+                                            </td>
+                                            <td>
+                                                <span class="fw-semibold"><?= $quantidade_candidatos ?></span>
+                                            </td>
+                                            <td>
+                                                <span class="fw-semibold"><?= $vagas_disponibilizadas ?></span>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-vagas badge-<?= $status_vagas ?>">
+                                                    <?= $vagas_restantes . ' ' . $status_text ?>
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="relatorio_especialidade_candidato.php?id_especialidade=<?= $linha['id'] ?>"
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Visualizar detalhes">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                <?php
                                     }
-
-                                    $vagas_disponibilizadas = 0;
-                                    $vagas_restantes = 0;
-                                    foreach ($lista_vagas_disponibilizadas as $linha5) {
-                                        $vagas_disponibilizadas = $vagas_disponibilizadas + (int)$linha5['numero_vagas'];
-                                    }
-                                    foreach ($lista_vagas_restantes as $linha8) {
-                                        $vagas_restantes = $vagas_restantes + (int)$linha8['vagas'];
-                                    }
-
-                                    $cor_vagas_restantes = null;
-                                    if ($vagas_disponibilizadas > 0 && $vagas_restantes == 0) $cor_vagas_restantes = " adf54d ";
-                                    if ($vagas_disponibilizadas > 0 && $vagas_restantes > 0) $cor_vagas_restantes = " fefe85 ";
-                                    if ($vagas_disponibilizadas > 0 && $vagas_restantes == $vagas_disponibilizadas) $cor_vagas_restantes = " fd8a8a ";
-
-
-                                    $quantidade_candidatos = 0;
-                                    $get_quantidade = $conexao->get_quantidade_candidatos_especialidade($linha['id']);
-                                    if (count($get_quantidade) > 0)
-                                        $quantidade_candidatos = $get_quantidade[0]['quantidade_candidatos'];
-                                    echo '
-                                <tr>
-                                    <td width="90px">' . strtoupper($linha['ott_stt']) . '</td>
-                                    <td>' . $linha['nome'] . '</td>
-                                    <td>' . $quantidade_cadastrados . '</td>
-                                    <td>' . $qtdAmpla . '</td>
-                                    <td>' . $qtdCotas . '</td>
-                                    <td width="150px">' . $quantidade_candidatos . '</td>
-                                    <td width="150px">' . $vagas_disponibilizadas . '</td>
-                                    <td bgcolor="' . $cor_vagas_restantes . '" width="150px">' . $vagas_restantes . '</td>
-                                    <td width="50px"><center><a href="relatorio_especialidade_candidato.php?id_especialidade=' . $linha['id'] . '"><img title="Visualizar" class="img-circle" src="imagens/lupa.png" width="40px"></a></center></td>
-                                </tr>';
                                 }
-                            }
-                            ?>
-
-                        </tbody>
-                    </table>
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <div class="card" <?php if ($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "consulta") echo "hidden" ?>>
-                <legend>Avaliação de currículos</legend>
+            <!-- Card de Avaliação de Currículos -->
+            <div class="card dashboard-card mt-4 <?= ($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "consulta") ? 'd-none' : '' ?>">
+                <div class="card-header dashboard-header mb-20">
+                    <span class="card-title mb-0">
+                        <i class="fa fa-graduation-cap"></i>
+                        Avaliação de Currículos
+                    </span>
+                </div>
                 <div class="card-body">
-                    <table class="table table-hover table-bordered" id="tabela_dinamica2">
-                        <thead>
-                            <tr>
-                                <th>Especialidade</th>
-                                <th>Avaliado</th>
-                                <th>Não_Avaliado</th>
-                                <th>Total</th>
-                                <th>Porcentagem</th>
-                                <th>Ver</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <?php
-
-                            $relacao_docs_nao_avaliados = $conexao->get_lista_docs_avaliados_por_especialidade();
-
-                            foreach ($relacao_docs_nao_avaliados as $linha) {
-                                $nome = "";
-                                if ($linha['nome_tab1'] != null) $nome = $linha['nome_tab1'];
-                                else $nome = $linha['nome_tab2'];
-                                $id = 0;
-                                if ($linha['id_tab1'] != null) $id = $linha['id_tab1'];
-                                else $id = $linha['id_tab2'];
-
-                                $total = (int)$linha['quantidade_avaliado'] + (int)$linha['quantidade_nao_avaliado'];
-
-                                $porcentagem = null;
-
-                                if ((int)$linha['quantidade_avaliado'] != 0 && $total != 0)
-                                    $porcentagem = ((int)$linha['quantidade_avaliado'] / $total) * 100;
-
-                                $cor = null;
-
-                                if ($porcentagem < 100)
-                                    $cor = '#fefe85';
-
-                                if ($porcentagem < 60)
-                                    $cor = '#ffa74f';
-
-                                if ($porcentagem < 30)
-                                    $cor = '#fd8a8a';
-
-                                if ($porcentagem == 100)
-                                    $cor = '#adf54d';
-
-                                echo '
-                            <tr>
-                            <td>' . $nome . '</td>
-                            <td>' . (int)$linha['quantidade_avaliado'] . '</td>
-                            <td>' . (int)$linha['quantidade_nao_avaliado'] . '</td>
-                            <td>' . $total . '</td>
-                            <td bgcolor="' . $cor . '">' . round($porcentagem, 2) . ' %</td>
-                            <td width="40px"><a href="relatorio_especialidade_candidato.php?id_especialidade=' . $id . '"><img title="Visualizar" class="img-circle" src="imagens/lupa.png" width="40px"></a></td>
-                            </tr>';
-                            }
-                            ?>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-
-            <div class="card" <?php if (($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "consulta") || $_SESSION['selecao_codigo'] == 'mfdv') echo "hidden" ?>>
-                <legend>Candidatos com mais de uma especialidade (Concorrendo ou Não na especialdiade)</legend>
-                <div class="card-body">
-                    <table class="table table-hover table-bordered" id="tabela_dinamica4">
-                        <thead>
-                            <tr>
-                                <th>Qtd</th>
-                                <th>Nome</th>
-                                <th>CPF</th>
-                                <th>Especialidades Cadastradas</th>
-                                <th>Ver</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <?php
-
-                            $relacao_docs_nao_avaliados = $conexao->get_candidatos_mais_uma_especialidade();
-
-                            foreach ($relacao_docs_nao_avaliados as $linha) {
-                                $foto = "user.jpg";
-
-                                $get_foto = $conexao->get_foto_usuario($linha['id']);
-                                if (count($get_foto) > 0)
-                                    $foto = $get_foto[0]['nome'];
-
-                                $especialidades_cadastradas = "";
-
-                                $especialidades_do_candidato = $conexao->get_especialidade_candidato($linha['id']);
-
-                                $tem_ott = false;
-                                $tem_stt = false;
-
-                                foreach ($especialidades_do_candidato as $esp) {
-                                    if ($esp['ott_stt'] == 'ott') $tem_ott = true;
-                                    if ($esp['ott_stt'] == 'stt') $tem_stt = true;
-                                    $especialidades_cadastradas = $especialidades_cadastradas . strtoupper($esp['ott_stt']) . " - " .  $esp['especialidade'] . " | ";
-                                }
-
-                                if ($tem_ott && $tem_stt) {
-
-                                    echo '
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped" id="tabela_dinamica2">
+                            <thead class="table-light">
                                 <tr>
-                                <td>' . $linha['quantidade_especialidades'] . '</td>
-                                <td>' . $linha['nome_completo'] . '</td>
-                                <td>' . $linha['cpf'] . '</td>
-                                <td>' . $especialidades_cadastradas . '</td>
-                                <td width="40px"><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '"><img title="Visualizar" class="img-circle" src="fotos/' . $foto . '" width="40px"></a></td>
-                                </tr>';
-                                }
-                            }
-                            ?>
+                                    <th><i class="fa fa-graduation-cap"></i> Especialidade</th>
+                                    <th width="120px"><i class="fa fa-check"></i> Avaliados</th>
+                                    <th width="140px"><i class="fa fa-times"></i> Não Avaliados</th>
+                                    <th width="100px"><i class="fa fa-list"></i> Total</th>
+                                    <th width="140px"><i class="fa fa-line-chart"></i> Progresso</th>
+                                    <th width="80px" class="text-center"><i class="fa fa-cogs"></i> Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $relacao_docs_nao_avaliados = $conexao->get_lista_docs_avaliados_por_especialidade();
 
-                        </tbody>
-                    </table>
+                                foreach ($relacao_docs_nao_avaliados as $linha) {
+                                    $nome = $linha['nome_tab1'] ?? $linha['nome_tab2'];
+                                    $id = $linha['id_tab1'] ?? $linha['id_tab2'];
+
+                                    $total = (int)$linha['quantidade_avaliado'] + (int)$linha['quantidade_nao_avaliado'];
+                                    $porcentagem = $total > 0 ? ((int)$linha['quantidade_avaliado'] / $total) * 100 : 0;
+
+                                    // Status do progresso
+                                    $progress_class = 'danger';
+                                    if ($porcentagem >= 100) $progress_class = 'success';
+                                    elseif ($porcentagem >= 60) $progress_class = 'warning';
+                                    elseif ($porcentagem >= 30) $progress_class = 'info';
+                                ?>
+                                    <tr>
+                                        <td class="fw-semibold"><?= htmlspecialchars($nome) ?></td>
+                                        <td>
+                                            <span class="fw-semibold"><?= (int)$linha['quantidade_avaliado'] ?></span>
+                                        </td>
+                                        <td>
+                                            <span class="fw-semibold"><?= (int)$linha['quantidade_nao_avaliado'] ?></span>
+                                        </td>
+                                        <td>
+                                            <span class="fw-semibold"><?= $total ?></span>
+                                        </td>
+                                        <td>
+                                            <div class="progress-container">
+                                                <div class="progress-text"><?= round($porcentagem, 1) ?>%</div>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-primary"
+                                                        role="progressbar"
+                                                        style="width: <?= $porcentagem ?>%"
+                                                        aria-valuenow="<?= $porcentagem ?>"
+                                                        aria-valuemin="0"
+                                                        aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="relatorio_especialidade_candidato.php?id_especialidade=<?= $id ?>"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="tooltip"
+                                                title="Visualizar avaliações">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
+            <!-- Card de Candidatos com Múltiplas Especialidades -->
+            <div class="card dashboard-card mt-4 <?= (($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "consulta") || $_SESSION['selecao_codigo'] == 'mfdv') ? 'd-none' : '' ?>">
+                <div class="card-header dashboard-header mb-20">
+                    <span class="card-title mb-0">
+                        <i class="fa fa-users me-2"></i>
+                        Candidatos com Múltiplas Especialidades
+                    </span>
+                    <small class="">Candidatos concorrendo em OTT e STT simultaneamente</small>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped" id="tabela_dinamica4">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="80px"><i class="fa fa-list"></i> Qtd</th>
+                                    <th><i class="fa fa-user"></i> Nome</th>
+                                    <th width="140px"><i class="fa fa-id-card"></i> CPF</th>
+                                    <th><i class="fa fa-tags"></i> Especialidades Cadastradas</th>
+                                    <th width="80px" class="text-center"><i class="fa fa-cogs"></i> Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $relacao_docs_nao_avaliados = $conexao->get_candidatos_mais_uma_especialidade();
 
+                                foreach ($relacao_docs_nao_avaliados as $linha) {
+                                    $foto = "user.jpg";
+                                    $get_foto = $conexao->get_foto_usuario($linha['id']);
+                                    if (count($get_foto) > 0)
+                                        $foto = $get_foto[0]['nome'];
 
-            <a href="javascript:history.back()"><button class="btn btn-default btn-block">VOLTAR</button></a>
+                                    $especialidades_cadastradas = "";
+                                    $especialidades_do_candidato = $conexao->get_especialidade_candidato($linha['id']);
+
+                                    $tem_ott = false;
+                                    $tem_stt = false;
+
+                                    foreach ($especialidades_do_candidato as $esp) {
+                                        if ($esp['ott_stt'] == 'ott') $tem_ott = true;
+                                        if ($esp['ott_stt'] == 'stt') $tem_stt = true;
+                                        $especialidades_cadastradas .= '<span class="badge text-dark me-1 mb-1" style="background-color: var(--primary-color);">' . strtoupper($esp['ott_stt']) . ' - ' . htmlspecialchars($esp['especialidade']) . '</span>';
+                                    }
+
+                                    if ($tem_ott && $tem_stt) {
+                                ?>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-semibold"><?= $linha['quantidade_especialidades'] ?></span>
+                                            </td>
+                                            <td class="fw-semibold"><?= htmlspecialchars($linha['nome_completo']) ?></td>
+                                            <td>
+                                                <?= $linha['cpf'] ?>
+                                            </td>
+                                            <td>
+                                                <div class="especialidades-list">
+                                                    <?= $especialidades_cadastradas ?>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="usuario_visualiza.php?id_usuario=<?= $linha['id'] ?>"
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Visualizar candidato">
+                                                    <img src="fotos/<?= $foto ?>"
+                                                        class="rounded-circle"
+                                                        width="32"
+                                                        height="32"
+                                                        alt="Foto">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
 </div>
 </div>
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>

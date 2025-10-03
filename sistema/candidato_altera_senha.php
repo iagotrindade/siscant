@@ -179,18 +179,6 @@ if (isset($_GET['senha_alterada']) && $_GET['senha_alterada'] == 1) {
     </div>
 
     <style>
-        .card-header {
-            font-size: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 12px 12px 0 0 !important;
-            padding: 15px 20px;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
         .security-icon {
             width: 60px;
             height: 60px;

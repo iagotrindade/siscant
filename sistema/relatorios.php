@@ -28,19 +28,6 @@ $lista_especialidades = $conexao->get_especialidade();
         --border-color: #D3D3D3;
     }
 
-    .card {
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        border: 1px solid var(--border-color);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    }
-
     .form-control,
     .form-select {
         border-radius: 6px;

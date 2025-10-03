@@ -20,18 +20,6 @@ if (isset($data_inicio_recurso) && isset($data_fim_recurso) && $data_hoje < $dat
 ?>
 
 <style>
-  .card-header {
-    font-size: 20px;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 12px 12px 0 0 !important;
-    padding: 15px 20px;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   .badge {
     background-color: var(--primary-color);
     font-size: 1em;

@@ -12,18 +12,6 @@ $lista_candidatos = $conexao->get_candidatos_desclassificados();
 
 ?>
 <style>
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .table th {
         border-top: none;
         font-weight: 600;
@@ -181,7 +169,7 @@ $lista_candidatos = $conexao->get_candidatos_desclassificados();
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-danger text-white mb-20">
                     <span class="mb-0"><i class="fa fa-user-times me-2"></i> Candidatos Desclassificados</span>

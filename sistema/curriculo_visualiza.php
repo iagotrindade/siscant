@@ -4,18 +4,6 @@ include_once 'codigos/funcao_apagar.php';
 ?>
 
 <style>
-  .card-header {
-    font-size: 20px;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 12px 12px 0 0 !important;
-    padding: 15px 20px;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   .form-control:focus,
   .form-select:focus {
     border-color: #006400;
@@ -152,76 +140,78 @@ include_once 'codigos/funcao_apagar.php';
       </ul>
     </div>
   </div>
-  <div class="row" <?php if ($_SESSION['perfil'] != "admin") echo "hidden"; ?>>
-    <div class="col-12">
-      <div class="card mb-4">
-        <div class="card-header bg-primary text-white mb-20">
-          <span class="mb-0"><i class="fa fa-graduation-cap"></i> Cadastrar Opção de Currículo</span>
-        </div>
-        <div class="card-body">
-          <form action="../banco_dados/curriculo_cadastra.php" method="post">
-            <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
+  <?php if ($_SESSION['perfil'] == "admin") : ?>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white mb-20">
+            <span class="mb-0"><i class="fa fa-graduation-cap"></i> Cadastrar Opção de Currículo</span>
+          </div>
+          <div class="card-body">
+            <form action="../banco_dados/curriculo_cadastra.php" method="post">
+              <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
 
-            <div class="row g-3">
-              <div class="col-lg-12 mb-20">
-                <label class="form-label fw-bold">Nome do currículo:</label>
-                <input type="text" name="nome_curriculo" class="form-control form-control-lg"
-                  maxlength="400" placeholder="Digite o nome da opção de currículo" required>
-              </div>
+              <div class="row g-3">
+                <div class="col-lg-12 mb-20">
+                  <label class="form-label fw-bold">Nome do currículo:</label>
+                  <input type="text" name="nome_curriculo" class="form-control form-control-lg"
+                    maxlength="400" placeholder="Digite o nome da opção de currículo" required>
+                </div>
 
-              <div class="col-lg-3 mb-20">
-                <label class="form-label fw-bold">Pontuação:</label>
-                <div>
-                  <input type="text" name="pontuacao" class="form-control" maxlength="200"
-                    placeholder="0.00" required>
+                <div class="col-lg-3 mb-20">
+                  <label class="form-label fw-bold">Pontuação:</label>
+                  <div>
+                    <input type="text" name="pontuacao" class="form-control" maxlength="200"
+                      placeholder="0.00" required>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 mb-20">
+                  <label class="form-label fw-bold">Quantidade máxima de uploads:</label>
+                  <input type="number" name="quantidade_maxima" class="form-control"
+                    min="1" max="99" placeholder="Ex: 5" required>
+                </div>
+
+                <div class="col-lg-3 mb-20">
+                  <label class="form-label fw-bold">Pode ser multiplicado?</label><br>
+                  <select name="multiplicador" class="form-control" id="ott_stt">
+                    <option value="">Não multiplicar</option>
+                    <?php
+                    for ($i = 2; $i <= 1000; $i++) {
+                      echo '<option value="' . $i . '">' . $i . ' vezes</option>';
+                    }
+                    ?>
+                  </select>
+                </div>
+
+                <div class="col-lg-3 mb-20">
+                  <div class="form-check card-checkbox h-100">
+                    <input class="form-check-input" type="checkbox" name="carga_horaria_obrigatoria"
+                      id="carga_horaria_obrigatoria">
+                    <label class="form-check-label" for="carga_horaria_obrigatoria">
+                      <i class="fa fa-clock-o me-2"></i>
+                      <span>Experiência profissional<br><small class="text-muted">(Carga horária obrigatória)</small></span>
+                    </label>
+                  </div>
                 </div>
               </div>
 
-              <div class="col-lg-3 mb-20">
-                <label class="form-label fw-bold">Quantidade máxima de uploads:</label>
-                <input type="number" name="quantidade_maxima" class="form-control"
-                  min="1" max="99" placeholder="Ex: 5" required>
-              </div>
-
-              <div class="col-lg-3 mb-20">
-                <label class="form-label fw-bold">Pode ser multiplicado?</label><br>
-                <select name="multiplicador" class="form-control" id="ott_stt">
-                  <option value="">Não multiplicar</option>
-                  <?php
-                  for ($i = 2; $i <= 1000; $i++) {
-                    echo '<option value="' . $i . '">' . $i . ' vezes</option>';
-                  }
-                  ?>
-                </select>
-              </div>
-
-              <div class="col-lg-3 mb-20">
-                <div class="form-check card-checkbox h-100">
-                  <input class="form-check-input" type="checkbox" name="carga_horaria_obrigatoria"
-                    id="carga_horaria_obrigatoria">
-                  <label class="form-check-label" for="carga_horaria_obrigatoria">
-                    <i class="fa fa-clock-o me-2"></i>
-                    <span>Experiência profissional<br><small class="text-muted">(Carga horária obrigatória)</small></span>
-                  </label>
+              <div class="row mt-4">
+                <div class="col-12 text-center">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fa fa-save me-2"></i> CADASTRAR OPÇÃO DE CURRÍCULO
+                  </button>
                 </div>
               </div>
-            </div>
-
-            <div class="row mt-4">
-              <div class="col-12 text-center">
-                <button type="submit" class="btn btn-primary btn-lg">
-                  <i class="fa fa-save me-2"></i> CADASTRAR OPÇÃO DE CURRÍCULO
-                </button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <?php endif; ?>
 
   <div class="row">
-    <div class="col-12">
+    <div class="col-md-12">
       <div class="card">
         <div class="card-header bg-success text-white mb-20">
           <span class="mb-0"><i class="fa fa-list me-2"></i> Opções de Currículo Cadastradas</span>
@@ -259,31 +249,31 @@ include_once 'codigos/funcao_apagar.php';
                   }
 
                   echo '
-                                <tr class="table-row-custom">
-                                    <td><span class="badge bg-dark">' . $linha['id'] . '</span></td>
-                                    <td>
-                                        <div class="curriculo-info">
-                                            <i class="fa fa-file-alt text-primary me-2"></i>
-                                            <span class="fw-semibold">' . $linha['nome'] . '</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge">' . $pontuacao . '</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-primary">' . $linha['quantidade_maxima_uploads'] . '</span>
-                                    </td>
-                                    <td class="text-center">' . $multiplicacao . '</td>
-                                    <td class="text-center">' . $carga . '</td>
-                                    <td class="text-center">
-                                        <a onclick="funcao_apagar(\'' . $linha['id'] . '\', \'curriculo\')" 
-                                           class="btn btn-sm action-btn"
-                                           data-bs-toggle="tooltip" 
-                                           title="Excluir opção de currículo">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>';
+                                  <tr class="table-row-custom">
+                                      <td><span class="badge bg-dark">' . $linha['id'] . '</span></td>
+                                      <td>
+                                          <div class="curriculo-info">
+                                              <i class="fa fa-file-alt text-primary me-2"></i>
+                                              <span class="fw-semibold">' . $linha['nome'] . '</span>
+                                          </div>
+                                      </td>
+                                      <td class="text-center">
+                                          <span class="badge">' . $pontuacao . '</span>
+                                      </td>
+                                      <td class="text-center">
+                                          <span class="badge bg-primary">' . $linha['quantidade_maxima_uploads'] . '</span>
+                                      </td>
+                                      <td class="text-center">' . $multiplicacao . '</td>
+                                      <td class="text-center">' . $carga . '</td>
+                                      <td class="text-center">
+                                          <a onclick="funcao_apagar(\'' . $linha['id'] . '\', \'curriculo\')" 
+                                            class="btn btn-sm action-btn"
+                                            data-bs-toggle="tooltip" 
+                                            title="Excluir opção de currículo">
+                                              <i class="fa fa-trash"></i>
+                                          </a>
+                                      </td>
+                                  </tr>';
                 }
                 ?>
               </tbody>

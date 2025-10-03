@@ -15,18 +15,6 @@ $lista_suporte_inicial = $conexao->get_suporte();
 
 ?>
 <style>
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .stat-card {
         transition: transform 0.2s ease;
     }
@@ -589,7 +577,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <!-- Card Suporte Candidato - Inscrito -->
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white mb-20">

@@ -3,18 +3,6 @@ require 'menu.php';
 ?>
 
 <style>
-    .card-header {
-        font-size: 20px;
-        background-color: var(--primary-color);
-        color: white;
-        border-radius: 12px 12px 0 0 !important;
-        padding: 15px 20px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
     .fw-semibold {
         font-weight: 600;
     }
@@ -295,26 +283,24 @@ require 'menu.php';
                     </div>
                 </div>
             </div>
-
-            <!-- 18/06/2025 - Iago Silva Inlcuido perfil chc e cr na verificação-->
-            <div class="row <?php if ($perfil == 'jise' || $perfil == 'chc' || $perfil == 'cr') echo ('hidden') ?>">
-                <div class="col-md-12">
-                    <?php
-                    if (isset($_SESSION['eipot']) && $perfil == 'admin' || $perfil == 'consulta')
-                        include_once 'codigos/index_usuario_eipot.php';
-                    else if ($perfil == 'candidato' || $candidato == 1)
-                        include_once 'codigos/index_candidato.php';
-                    else if ($perfil == 'om')
-                        include_once 'codigos/index_om.php';
-                    else
-                        include_once 'codigos/index_usuario.php';
-                    ?>
-                </div>
-            </div>
-
         </div>
     </div>
-</div>
+
+    <!-- 18/06/2025 - Iago Silva Inlcuido perfil chc e cr na verificação-->
+    <div class="row <?php if ($perfil == 'jise' || $perfil == 'chc' || $perfil == 'cr') echo ('hidden') ?>">
+        <div class="col-md-12">
+            <?php
+            if (isset($_SESSION['eipot']) && $perfil == 'admin' || $perfil == 'consulta')
+                include_once 'codigos/index_usuario_eipot.php';
+            else if ($perfil == 'candidato' || $candidato == 1)
+                include_once 'codigos/index_candidato.php';
+            else if ($perfil == 'om')
+                include_once 'codigos/index_om.php';
+            else
+                include_once 'codigos/index_usuario.php';
+            ?>
+        </div>
+    </div>
 </div>
 </body>
 

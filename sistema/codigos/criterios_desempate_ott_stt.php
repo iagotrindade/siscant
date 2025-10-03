@@ -153,164 +153,395 @@
 
     ?>
 
-    <div class="card">
-        <legend>Classificação dos candidatos - Ampla concorrência</legend>
-        <div style="background: yellow"> <b>Linha com fundo amarelo</b>: Candidato acima da etapa 2 concorrendo em mais de uma especialidade</div>
-        <br>
-        <div class="">
-            <div class="alert alert-dismissible alert-success" style="text-align: justify">
-                <font color="black"><b>Códigos da coluna Militar: </b></font>
-                <u><b> 1 </b>- Oficial da Ativa </u> - | -
-                <u><b> 2 </b>- Oficial R2 </u> - | -
-                <u><b> 3 </b>- Aspitante R2 </u> - | -
-                <u><b> 4 </b>- Praça Ativa </u> - | -
-                <u><b> 5 </b>- Reservista de 1ª categoria </u> - | -
-                <u><b> 6 </b>- Reservista de 2ª categoria </u> - | -
-                <u><b> 7 </b>- Civil </u>
+    <!-- Card de Classificação - Ampla Concorrência -->
+    <div class="card classification-card">
+        <div class="card-header dashboard-header mb-20">
+            <span class="card-title mb-0">
+                <i class="fa fa-trophy"></i>
+                Classificação dos Candidatos - Ampla Concorrência
+            </span>
+        </div>
+
+        <div class="card-body">
+            <!-- Alertas Informativos -->
+            <div class="alert alert-warning alert-dismissible">
+                <div class="d-flex align-items-center">
+                    <i class="fa fa-exclamation-triangle mr-10 fa-lg"></i>
+                    <div>
+                        <strong>Linha com destaque amarelo:</strong> Candidato concorrendo em mais de uma especialidade
+                    </div>
+                </div>
             </div>
-            <!-- 21/05/2025 Adicionando o campo etapa do candidato e alterando a etapa para etapa na especialidade -->
-            <table class="table table-hover table-bordered" id="tabela_dinamica2">
-                <thead>
-                    <tr>
-                        <th>Lugar</th>
-                        <th>Nome</th>
-                        <th>CPF</th>
-                        <th>Pontuação</th>
-                        <th>Militar</th>
-                        <th>Dias SV Mil</th>
-                        <th>Dias Idade</th>
-                        <th>E-Mail</th>
-                        <th>Etapa na Especialidade</th>
-                        <th>Etapa Geral</th>
-                        <th>Cidade Escolheu</th>
-                        <th>Ver</th>
-                    </tr>
-                </thead>
-                <tbody>
 
-                    <?php
+            <div class="alert alert-info mb-4">
+                <div class="d-flex align-items-start">
+                    <i class="fa fa-info-circle mr-10 mt-10"></i>
+                    <div>
+                        <strong class="d-block mb-2">Códigos da Coluna Militar:</strong>
+                        <div class="military-codes-grid">
+                            <span class="military-code-item">
+                                <span class="military-code-badge">1</span>
+                                <span class="military-code-text">Oficial da Ativa</span>
+                            </span>
 
-                    $lugar = 1;
-                    foreach ($vetor_ordenado_candidatos as $linha) {
+                            <span class="military-code-separator">|</span>
 
-                        $cor_linha = "";
-                        if ($linha['etapa'] > 2) {
+                            <span class="military-code-item">
+                                <span class="military-code-badge">2</span>
+                                <span class="military-code-text">Oficial R2</span>
+                            </span>
+
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">3</span>
+                                <span class="military-code-text">Aspirante R2</span>
+                            </span>
+
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">4</span>
+                                <span class="military-code-text">Praça Ativa</span>
+                            </span>
+
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">5</span>
+                                <span class="military-code-text">Reservista 1ª Cat</span>
+                            </span>
+
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">6</span>
+                                <span class="military-code-text">Reservista 2ª Cat</span>
+                            </span>
+
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">7</span>
+                                <span class="military-code-text">Civil</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Classificação -->
+            <div class="table-responsive">
+                <table class="table table-hover table-striped classification-table" id="tabela_dinamica_ampla">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center"><i class="fa fa-trophy"></i> Posição</th>
+                            <th><i class="fa fa-user"></i> Candidato</th>
+                            <th><i class="fa fa-id-card"></i> CPF</th>
+                            <th><i class="fa fa-envelope"></i> E-Mail</th>
+                            <th class="text-center"><i class="fa fa-trophy"></i> Pontuação</th>
+                            <th class="text-center"><i class="fa fa-clock-o"></i> Categoria</th>
+                            <th class="text-center"><i class="fa fa-clock-o"></i> Dias SV</th>
+                            <th class="text-center"><i class="fa fa-clock-o"></i> Dias Idade</th>
+                            <th class="text-center"><i class="fa fa-list"></i> Etapa Especialidade</th>
+                            <th><i class="fa fa-map-marker"></i> Cidade Escolhida</th>
+                            <th class="text-center"><i class="fa fa-cogs"></i> Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $lugar = 1;
+                        foreach ($vetor_ordenado_candidatos as $linha):
+                            // Mostrar apenas candidatos da ampla concorrência
+                            if ($linha['vaga_reservada'] == 1) continue;
+
+                            // Verificar se é candidato com múltiplas especialidades
+                            $is_multiple_especialidades = false;
+
                             $resultado = $conexao->get_candidatos_mais_uma_especialidade_id_usuario($linha['id']);
-                            if (count($resultado) > 0)
-                                $cor_linha = ' bgcolor = "yellow" ';
-                        }
+                            $is_multiple_especialidades = count($resultado) > 0;
 
-                        /*
-                            $foto = "user.jpg";
-                            $get_foto = $conexao->get_foto_usuario($linha['id']);  
-                            if(count($get_foto) > 0)
-                                $foto = $get_foto[0]['nome'];
-                            */
-                        echo '
-                            <tr ' . $cor_linha . '>
-                                <td>' . $lugar . 'º</td>
-                                <td>' . $linha['nome'] . '</td>
-                                <td>' . $linha['cpf'] . '</td>
-                                <td>' . $linha['pontos'] . '</td>
-                                <td>' . $linha['militar'] . '</td>
-                                <td>' . $linha['tempo_sv_pub'] . '</td>
-                                <td>' . $linha['tempo_idade'] . '</td>
-                                <td>' . $linha['mail'] . '</td>
-                                <td>et_' . $linha['etapa'] . '</td>
-                                <td>et_' . $linha['etapa_candidato'] . '</td>
-                                <td>' . $linha['cidade_escolheu_servir'] . '</td>
-                                <td width="40px" align="center"><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">ver</a></td>
-                            </tr>';
-                        //<img class="img-circle" src="fotos/'.$foto.'" width="40px">
-                        $lugar++;
-                    }
-                    ?>
+                        ?>
+                            <tr class="<?= $is_multiple_especialidades ? 'multiple-especialidade' : '' ?>">
+                                <!-- Posição -->
+                                <td class="text-center">
+                                    <div class="position-badge">
+                                        <span class="position-number"><?= $lugar ?>º</span>
+                                    </div>
+                                </td>
 
-                </tbody>
-            </table>
+                                <!-- Nome -->
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="fw-semibold candidate-name"><?= htmlspecialchars($linha['nome']) ?></div>
+                                    </div>
+                                </td>
+
+                                <!-- CPF -->
+                                <td>
+                                    <?= $linha['cpf'] ?>
+                                </td>
+
+                                <!-- E-mail -->
+                                <td class="text-center">
+                                    <?= htmlspecialchars($linha['mail']) ?>
+                                </td>
+
+                                <!-- Pontuação -->
+                                <td class="text-center">
+                                    <?= $linha['pontos'] ?>
+                                </td>
+
+                                <!-- Categoria Militar -->
+                                <td class="text-center">
+                                    <span class="military-badge" data-code="<?= $linha['militar'] ?>">
+                                        <?= $linha['militar'] ?>
+                                    </span>
+                                </td>
+
+                                <!-- Dias Serviço Público -->
+                                <td class="text-center">
+                                    <span class="days-badge" data-bs-toggle="tooltip" title="Tempo de serviço público em dias">
+                                        <?= $linha['tempo_sv_pub'] ?>
+                                    </span>
+                                </td>
+
+                                <!-- Dias Idade -->
+                                <td class="text-center">
+                                    <span class="days-badge" data-bs-toggle="tooltip" title="Idade em dias">
+                                        <?= $linha['tempo_idade'] ?>
+                                    </span>
+                                </td>
+
+                                <!-- Etapas -->
+                                <td class="text-center">
+                                    <span class="etapa-badge etapa-<?= $linha['etapa'] ?>">
+                                        et_<?= $linha['etapa'] ?>
+                                    </span>
+                                </td>
+
+                                <!-- Cidade -->
+                                <td>
+                                    <span class="city-badge"><?= $linha['cidade_escolheu_servir'] ?: '-' ?></span>
+                                </td>
+
+                                <!-- Ações -->
+                                <td class="text-center">
+                                    <a href="usuario_visualiza.php?id_usuario=<?= $linha['id'] ?>"
+                                        class="btn btn-sm btn-outline-primary view-btn"
+                                        data-bs-toggle="tooltip"
+                                        title="Visualizar candidato">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php
+                            $lugar++;
+                        endforeach;
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <legend>Classificação dos candidatos - Cotas</legend>
-        <div style="background: yellow"> <b>Linha com fundo amarelo</b>: Candidato acima da etapa 2 concorrendo em mais de uma especialidade</div>
-        <br>
-        <div class="">
-            <div class="alert alert-dismissible alert-success" style="text-align: justify">
-                <font color="black"><b>Códigos da coluna Militar: </b></font>
-                <u><b> 1 </b>- Oficial da Ativa </u> - | -
-                <u><b> 2 </b>- Oficial R2 </u> - | -
-                <u><b> 3 </b>- Aspitante R2 </u> - | -
-                <u><b> 4 </b>- Praça Ativa </u> - | -
-                <u><b> 5 </b>- Reservista de 1ª categoria </u> - | -
-                <u><b> 6 </b>- Reservista de 2ª categoria </u> - | -
-                <u><b> 7 </b>- Civil </u>
+    <!-- Card de Classificação - Cotas -->
+    <div class="card classification-card mt-4">
+        <div class="card-header dashboard-header mb-20">
+            <span class="card-title mb-0">
+                <i class="fa fa-trophy"></i>
+                Classificação dos Candidatos - Cotas
+            </span>
+        </div>
+
+        <div class="card-body">
+            <!-- Alertas Informativos -->
+            <div class="alert alert-warning alert-dismissible">
+                <div class="d-flex align-items-center">
+                    <i class="fa fa-exclamation-triangle mr-10 fa-lg"></i>
+                    <div>
+                        <strong>Linha com destaque amarelo:</strong> Candidato concorrendo em mais de uma especialidade
+                    </div>
+                </div>
             </div>
-            <!-- 21/05/2025 Adicionando o campo etapa do candidato e alterando a etapa para etapa na especialidade -->
-            <table class="table table-hover table-bordered" id="tabela_dinamica5">
-                <thead>
-                    <tr>
-                        <th>Lugar</th>
-                        <th>Nome</th>
-                        <th>CPF</th>
-                        <th>Pontuação</th>
-                        <th>Militar</th>
-                        <th>Dias SV Mil</th>
-                        <th>Dias Idade</th>
-                        <th>E-Mail</th>
-                        <th>Autodeclaracao</th>
-                        <th>Etapa na Especialidade</th>
-                        <th>Etapa Geral</th>
-                        <th>Cidade Escolheu</th>
-                        <th>Ver</th>
-                    </tr>
-                </thead>
-                <tbody>
 
-                    <?php
+            <div class="alert alert-info mb-4">
+                <div class="d-flex align-items-start">
+                    <i class="fa fa-info-circle mr-10 mt-10"></i>
+                    <div>
+                        <strong class="d-block mb-2">Códigos da Coluna Militar:</strong>
+                        <div class="military-codes-grid">
+                            <span class="military-code-item">
+                                <span class="military-code-badge">1</span>
+                                <span class="military-code-text">Oficial da Ativa</span>
+                            </span>
 
-                    $lugar = 1;
-                    foreach ($vetor_ordenado_candidatos as $linha) {
-                        if ($linha['vaga_reservada'] == 0) continue; // Pula os candidatos que não estão concorrendo em cotas
+                            <span class="military-code-separator">|</span>
 
-                        $cor_linha = "";
-                        if ($linha['etapa'] > 2) {
-                            $resultado = $conexao->get_candidatos_mais_uma_especialidade_id_usuario($linha['id']);
-                            if (count($resultado) > 0)
-                                $cor_linha = ' bgcolor = "yellow" ';
-                        }
+                            <span class="military-code-item">
+                                <span class="military-code-badge">2</span>
+                                <span class="military-code-text">Oficial R2</span>
+                            </span>
 
-                        $vaga_reservada = $linha['vaga_reservada'] == 1 ? 'Sim' : 'Não';
+                            <span class="military-code-separator">|</span>
 
-                        /*
-                            $foto = "user.jpg";
-                            $get_foto = $conexao->get_foto_usuario($linha['id']);  
-                            if(count($get_foto) > 0)
-                                $foto = $get_foto[0]['nome'];
-                            */
-                        echo '
-                            <tr ' . $cor_linha . '>
-                                <td>' . $lugar . 'º</td>
-                                <td>' . $linha['nome'] . '</td>
-                                <td>' . $linha['cpf'] . '</td>
-                                <td>' . $linha['pontos'] . '</td>
-                                <td>' . $linha['militar'] . '</td>
-                                <td>' . $linha['tempo_sv_pub'] . '</td>
-                                <td>' . $linha['tempo_idade'] . '</td>
-                                <td>' . $linha['mail'] . '</td>
-                                <td>' . ucfirst($linha['autodeclaracao']) . '</td>
-                                <td>et_' . $linha['etapa'] . '</td>
-                                <td>et_' . $linha['etapa_candidato'] . '</td>
-                                <td>' . $linha['cidade_escolheu_servir'] . '</td>
-                                <td width="40px" align="center"><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">ver</a></td>
-                            </tr>';
-                        //<img class="img-circle" src="fotos/'.$foto.'" width="40px">
-                        $lugar++;
-                    }
-                    ?>
+                            <span class="military-code-item">
+                                <span class="military-code-badge">3</span>
+                                <span class="military-code-text">Aspirante R2</span>
+                            </span>
 
-                </tbody>
-            </table>
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">4</span>
+                                <span class="military-code-text">Praça Ativa</span>
+                            </span>
+
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">5</span>
+                                <span class="military-code-text">Reservista 1ª Cat</span>
+                            </span>
+
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">6</span>
+                                <span class="military-code-text">Reservista 2ª Cat</span>
+                            </span>
+
+                            <span class="military-code-separator">|</span>
+
+                            <span class="military-code-item">
+                                <span class="military-code-badge">7</span>
+                                <span class="military-code-text">Civil</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Classificação -->
+            <div class="table-responsive">
+                <table class="table table-hover table-striped classification-table" id="tabela_dinamica_cotas">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center"><i class="fa fa-trophy"></i> Posição</th>
+                            <th><i class="fa fa-user"></i> Candidato</th>
+                            <th><i class="fa fa-id-card"></i> CPF</th>
+                            <th><i class="fa fa-envelope"></i> E-Mail</th>
+                            <th><i class="fa fa-commenting"></i> Autodeclaração</th>
+                            <th class="text-center"><i class="fa fa-trophy"></i> Pontuação</th>
+                            <th class="text-center"><i class="fa fa-clock-o"></i> Categoria</th>
+                            <th class="text-center"><i class="fa fa-clock-o"></i> Dias SV</th>
+                            <th class="text-center"><i class="fa fa-clock-o"></i> Dias Idade</th>
+                            <th class="text-center"><i class="fa fa-list"></i> Etapa Especialidade</th>
+                            <th><i class="fa fa-map-marker"></i> Cidade Escolhida</th>
+                            <th class="text-center"><i class="fa fa-cogs"></i> Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $lugar = 1;
+                        foreach ($vetor_ordenado_candidatos as $linha):
+                            // Mostrar apenas candidatos de cotas
+                            if ($linha['vaga_reservada'] == 0) continue;
+
+                            // Verificar se é candidato com múltiplas especialidades
+                            $is_multiple_especialidades = false;
+                            if ($linha['etapa'] > 2) {
+                                $resultado = $conexao->get_candidatos_mais_uma_especialidade_id_usuario($linha['id']);
+                                $is_multiple_especialidades = count($resultado) > 0;
+                            }
+                        ?>
+                            <tr class="<?= $is_multiple_especialidades ? 'multiple-especialidade' : '' ?>">
+                                <!-- Posição -->
+                                <td class="text-center">
+                                    <div class="position-badge">
+                                        <span class="position-number"><?= $lugar ?>º</span>
+                                    </div>
+                                </td>
+
+                                <!-- Nome -->
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="fw-semibold candidate-name"><?= htmlspecialchars($linha['nome']) ?></div>
+                                    </div>
+                                </td>
+
+                                <!-- CPF -->
+                                <td>
+                                    <?= $linha['cpf'] ?>
+                                </td>
+
+                                <!-- E-Mail -->
+                                <td>
+                                    <?= htmlspecialchars($linha['mail']) ?>
+                                </td>
+
+                                <!-- Autodeclaração -->
+                                <td class="text-center">
+                                    <span class="autodeclaracao-badge">
+                                        <?= ucfirst($linha['autodeclaracao']) ?>
+                                    </span>
+                                </td>
+
+                                <!-- Pontuação -->
+                                <td class="text-center">
+                                    <span class="score-badge"><?= $linha['pontos'] ?></span>
+                                </td>
+
+                                <!-- Categoria Militar -->
+                                <td class="text-center">
+                                    <span class="military-badge" data-code="<?= $linha['militar'] ?>">
+                                        <?= $linha['militar'] ?>
+                                    </span>
+                                </td>
+
+                                <!-- Dias Serviço Público -->
+                                <td class="text-center">
+                                    <span class="days-badge" data-bs-toggle="tooltip" title="Tempo de serviço público em dias">
+                                        <?= $linha['tempo_sv_pub'] ?>
+                                    </span>
+                                </td>
+
+                                <!-- Dias Idade -->
+                                <td class="text-center">
+                                    <span class="days-badge" data-bs-toggle="tooltip" title="Idade em dias">
+                                        <?= $linha['tempo_idade'] ?>
+                                    </span>
+                                </td>
+
+                                <!-- Etapas -->
+                                <td class="text-center">
+                                    <span class="etapa-badge etapa-<?= $linha['etapa'] ?>">
+                                        et_<?= $linha['etapa'] ?>
+                                    </span>
+                                </td>
+
+                                <!-- Cidade -->
+                                <td>
+                                    <span class="city-badge"><?= $linha['cidade_escolheu_servir'] ?: '-' ?></span>
+                                </td>
+
+                                <!-- Ações -->
+                                <td class="text-center">
+                                    <a href="usuario_visualiza.php?id_usuario=<?= $linha['id'] ?>"
+                                        class="btn btn-sm btn-outline-primary view-btn"
+                                        data-bs-toggle="tooltip"
+                                        title="Visualizar candidato">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php
+                            $lugar++;
+                        endforeach;
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

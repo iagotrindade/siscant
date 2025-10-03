@@ -4,18 +4,6 @@ include_once 'codigos/funcao_apagar.php';
 ?>
 
 <style>
-  .card-header {
-    font-size: 20px;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 12px 12px 0 0 !important;
-    padding: 15px 20px;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   .form-control:focus {
     border-color: #006400;
     box-shadow: 0 0 0 0.2rem rgba(0, 100, 0, 0.15);
