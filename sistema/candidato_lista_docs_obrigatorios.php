@@ -7,8 +7,6 @@ if ($candidato == 1 || $perfil == 'candidato' || $_SESSION['candidato'] == 1 || 
     exit();
 }
 
-
-
 $id_especialidade_selecionada = null;
 if (isset($_GET['id_especialidade']))
     $id_especialidade_selecionada = $_GET['id_especialidade'];
@@ -18,6 +16,76 @@ if ($id_especialidade_selecionada != null)
 else
     $lista_candidatos = $conexao->get_candidatos_concorrendo();
 ?>
+
+<style>
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #495057;
+        background-color: #f8f9fa;
+        padding: 12px 15px;
+        font-size: 1.3rem;
+    }
+
+    .table td {
+        padding: 12px 15px;
+        vertical-align: middle;
+        font-size: 1.4rem;
+    }
+
+    .table td a:hover {
+        background-color: #006400;
+        color: white;
+    }
+
+    .table td i {
+        font-size: 2rem;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 100, 0, 0.03);
+    }
+
+    .summary-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        height: 100%;
+    }
+
+    .summary-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        color: white;
+        font-size: 2rem;
+    }
+
+    .summary-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .summary-label {
+        font-size: 1.2rem;
+        color: #6c757d;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+    }
+
+    .summary-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2d3748;
+    }
+</style>
 
 <div class="content-wrapper">
     <div class="page-title">
@@ -35,187 +103,281 @@ else
 
     <div class="row">
         <div class="col-md-12">
-            <form name="fomulario" action="candidato_lista_docs_obrigatorios.php" method="get">
-                <div class="card">
-                    <div class="card-body">
-                        <label>Selecione a especialidade desejada </label>
+            <!-- Filtro de Especialidade -->
+            <div class="card filter-card mb-4">
+                <div class="card-header filter-header mb-20">
+                    <span class="card-title mb-0">
+                        <i class="fa fa-filter me-2"></i>
+                        Filtro de Especialidade
+                    </span>
+                </div>
+                <div class="card-body">
+                    <form name="fomulario" action="candidato_lista_docs_obrigatorios.php" method="get">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-graduation-cap me-1"></i>
+                                    Selecione a especialidade desejada
+                                </label>
+                                <select onchange="fomulario.submit()" name="id_especialidade" class="form-control form-control-lg">
+                                    <option value="">Selecione a especialidade</option>
+                                    <?php
+                                    if ($avaliador) {
+                                        foreach ($lista_especialidade_avaliador as $value) {
+                                            $selected = $id_especialidade_selecionada == $value['id_especialidade'] ? 'selected' : '';
+                                            $label = mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . htmlspecialchars($value['nome']);
+                                            echo '<option ' . $selected . ' value="' . $value['id_especialidade'] . '">' . $label . '</option>';
+                                        }
+                                    } else {
+                                        $resultado = $conexao->get_especialidade();
+                                        foreach ($resultado as $value) {
+                                            $selected = $id_especialidade_selecionada == $value['id'] ? 'selected' : '';
+                                            $label = mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . htmlspecialchars($value['nome']);
+                                            echo '<option ' . $selected . ' value="' . $value['id'] . '">' . $label . '</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-                        <select onchange="fomulario.submit()" name="id_especialidade" class="form-control">
-                            <option value="">Selecione a especialidade</option>
-                            <?php
-
-                            if ($avaliador) {
-                                foreach ($lista_especialidade_avaliador as $value) {
-                                    if ($id_especialidade_selecionada == $value['id_especialidade'])
-                                        echo '<option selected value="' . $value['id_especialidade'] . '">' . mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . $value['nome'] . '</option>';
-                                    else
-                                        echo '<option value="' . $value['id_especialidade'] . '">' . mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . $value['nome'] . '</option>';
-                                }
-                            } else {
-                                $resultado = $conexao->get_especialidade();
-                                foreach ($resultado as $value) {
-                                    if ($id_especialidade_selecionada == $value['id'])
-                                        echo '<option selected value="' . $value['id'] . '">' . mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . $value['nome'] . '</option>';
-                                    else
-                                        echo '<option value="' . $value['id'] . '">' . mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . $value['nome'] . '</option>';
-                                }
-                            }
-                            ?>
-                        </select>
-
+            <!-- Tabela de Avaliação -->
+            <div class="card dashboard-card mb-4">
+                <div class="card-header dashboard-header mb-20">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="card-title mb-0">
+                            <i class="fa fa-file-text me-2"></i>
+                            Avaliação dos Documentos Obrigatórios
+                        </span>
                     </div>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <legend>Avaliação dos documentos obrigatórios</legend>
                 <div class="card-body">
-                    <table class="table table-hover table-bordered" id="tabela_dinamica">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>CPF</th>
-                                <th>Nome</th>
-                                <th>Arq Pag</th>
-                                <th>Etapa</th>
-                                <th>Docs Faltando</th>
-                                <th>Docs Adicionados</th>
-                                <th>Docs Válidos</th>
-                                <th>% avaliado</th>
-                                <th>Ver</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <?php
-                            $total_docs_adicionados = 0;
-                            $total_docs_avaliados = 0;
-                            foreach ($lista_candidatos as $linha) {
-                                $arquivo_pagamento = $resultado = $conexao->get_arquivo_pagamento($linha['id']);
-                                $add_arqu_pag = "_Não";
-                                if (count($arquivo_pagamento) > 0) $add_arqu_pag = "_Sim";
-                                /*
-                            $get_pagamento_candidato = $conexao->get_arquivo_pagamento($linha['id']); 
-                            
-                            $pagou = "";
-                            if(count($get_pagamento_candidato) > 0)
-                                $pagou = "Sim";
-                            else 
-                                $pagou = "Não";
-                             */
-
-                                // DOCs Faltando
-                                $quantidade_docs_faltando = 0;
-                                $lista_docs_obrigatorios_faltando = $conexao->get_documentos_obrigatorios_sobrando_candidato($linha['id']);
-
-                                $lista_docs_obrigatorios_sobrando = retorna_docs_obrigatorios_sobrando_candidato($linha, $lista_docs_obrigatorios_faltando);
-                                $quantidade_docs_faltando = count($lista_docs_obrigatorios_sobrando);
-
-                                // Especialidades
-                                //$lista_especialidades_candidato = $conexao->get_especialidade_candidato($linha['id']);
-                                //$quantidade_especialidades_candidato = count($lista_especialidades_candidato);
-
-                                $lista_docs_obrigatorios = $conexao->get_docs_obrigatorios_inseridos_candidato($linha['id']);
-                                $quantidade_docs_adicionados = count($lista_docs_obrigatorios);
-
-                                $quantidade_docs_avaliados = 0;
-                                $quantidade_docs_validos = 0;
-
-                                foreach ($lista_docs_obrigatorios as &$doc) {
-                                    if ($doc['valido'] != null)
-                                        $quantidade_docs_avaliados++;
-
-                                    if ($doc['valido'] == '1')
-                                        $quantidade_docs_validos++;
-                                }
-
-                                $total_docs_adicionados = $total_docs_adicionados + (int)$quantidade_docs_adicionados;
-                                $total_docs_avaliados = $total_docs_avaliados + $quantidade_docs_avaliados;
-
-                                $porcentagem = null;
-
-                                if ($quantidade_docs_avaliados != 0 && $quantidade_docs_adicionados != 0)
-                                    $porcentagem = ($quantidade_docs_avaliados / $quantidade_docs_adicionados) * 100;
-
-                                $cor = null;
-
-                                if ($porcentagem < 100)
-                                    $cor = '#fefe85';
-
-                                if ($porcentagem < 60)
-                                    $cor = '#ffa74f';
-
-                                if ($porcentagem < 30)
-                                    $cor = '#fd8a8a';
-
-                                if ($porcentagem == 100)
-                                    $cor = '#adf54d';
-
-                                /*
-                            $foto = "user.jpg";
-                            
-                            $get_foto = $conexao->get_foto_usuario($linha['id']);  
-                            if(count($get_foto) > 0)
-                                $foto = $get_foto[0]['nome'];
-                            */
-
-                                $codigo_final = substr((string)$linha['id'], -1);
-
-                                $cor_docs_validos = "";
-
-                                if ($quantidade_docs_validos != $quantidade_docs_adicionados && $porcentagem == 100)
-                                    $cor_docs_validos = '#fd8a8a';
-
-                                echo '
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped" id="tabela_dinamica">
+                            <thead class="table-light">
                                 <tr>
-                                    <td>' . $linha['id'] . '-' . $codigo_final . '</td>
-                                    <td>' . $linha['cpf'] . '</td>
-                                    <td>' . $linha['nome_completo'] . '</td>
-                                    <td>' . $add_arqu_pag . '</td>                                    
-                                    <td>_' . $linha['etapa'] . '</td>                                  
-                                    <td>' . $quantidade_docs_faltando . '</td>                                    
-                                    <td>' . $quantidade_docs_adicionados . '</td>
-                                    <td bgcolor="' . $cor_docs_validos . '">' . $quantidade_docs_validos . '</td>
-                                    <td bgcolor="' . $cor . '">' . round($porcentagem, 2) . ' %</td>
-                                    <td width="40px"><a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '">Ver</a></td>
-                                </tr>';
-                            }
-                            // <td width="40px"><a href="usuario_visualiza.php?id_usuario='.$linha['id'].'"><img title="Visualizar" class="img-circle" src="fotos/'.$foto.'" width="40px"></a></td>
-                            ?>
+                                    <th class="text-center"><i class="fa fa-hashtag"></i> Código</th>
+                                    <th><i class="fa fa-id-card"></i> CPF</th>
+                                    <th><i class="fa fa-user"></i> Candidato</th>
+                                    <th class="text-center"><i class="fa fa-list"></i> Etapa</th>
+                                    <th class="text-center"><i class="fa fa-dollar"></i> Pagamento</th>
+                                    <th class="text-center"><i class="fa fa-file-text"></i> Docs Faltando</th>
+                                    <th class="text-center"><i class="fa fa-file-text"></i> Docs Adicionados</th>
+                                    <th class="text-center"><i class="fa fa-file-text"></i> Docs Válidos</th>
+                                    <th class="text-center"><i class="fa fa-percent"></i> Progresso</th>
+                                    <th class="text-center"><i class="fa fa-cogs"></i> Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $total_docs_adicionados = 0;
+                                $total_docs_avaliados = 0;
 
-                        </tbody>
-                    </table>
+                                foreach ($lista_candidatos as $linha):
+                                    // Arquivo de pagamento
+                                    $arquivo_pagamento = $conexao->get_arquivo_pagamento($linha['id']);
+                                    $add_arqu_pag = count($arquivo_pagamento) > 0 ? '_Sim' : '_Não';
+                                    $pagamento_class = $add_arqu_pag == '_Sim' ? 'success' : 'danger';
+
+                                    // Documentos faltando
+                                    $lista_docs_obrigatorios_faltando = $conexao->get_documentos_obrigatorios_sobrando_candidato($linha['id']);
+                                    $lista_docs_obrigatorios_sobrando = retorna_docs_obrigatorios_sobrando_candidato($linha, $lista_docs_obrigatorios_faltando);
+                                    $quantidade_docs_faltando = count($lista_docs_obrigatorios_sobrando);
+
+                                    // Documentos adicionados e avaliados
+                                    $lista_docs_obrigatorios = $conexao->get_docs_obrigatorios_inseridos_candidato($linha['id']);
+                                    $quantidade_docs_adicionados = count($lista_docs_obrigatorios);
+                                    $quantidade_docs_avaliados = 0;
+                                    $quantidade_docs_validos = 0;
+
+                                    foreach ($lista_docs_obrigatorios as &$doc) {
+                                        if ($doc['valido'] != null) $quantidade_docs_avaliados++;
+                                        if ($doc['valido'] == '1') $quantidade_docs_validos++;
+                                    }
+
+                                    $total_docs_adicionados += (int)$quantidade_docs_adicionados;
+                                    $total_docs_avaliados += $quantidade_docs_avaliados;
+
+                                    // Cálculo de porcentagem
+                                    $porcentagem = 0;
+                                    if ($quantidade_docs_avaliados != 0 && $quantidade_docs_adicionados != 0) {
+                                        $porcentagem = ($quantidade_docs_avaliados / $quantidade_docs_adicionados) * 100;
+                                    }
+
+                                    // Status do progresso
+                                    $progress_class = 'secondary';
+                                    if ($porcentagem >= 100) $progress_class = 'primary';
+                                    elseif ($porcentagem >= 60) $progress_class = 'warning';
+                                    elseif ($porcentagem >= 30) $progress_class = 'info';
+                                    elseif ($porcentagem > 0) $progress_class = 'danger';
+
+                                    // Status dos documentos válidos
+                                    $docs_validos_class = 'success';
+                                    $docs_validos_icon = 'fa-check';
+                                    if ($quantidade_docs_validos != $quantidade_docs_adicionados && $porcentagem == 100) {
+                                        $docs_validos_class = 'danger';
+                                        $docs_validos_icon = 'fa-exclamation-triangle';
+                                    } elseif ($quantidade_docs_validos == 0 && $quantidade_docs_adicionados > 0) {
+                                        $docs_validos_class = 'danger';
+                                        $docs_validos_icon = 'fa-times';
+                                    }
+
+                                    // Código final
+                                    $codigo_final = substr((string)$linha['id'], -1);
+                                ?>
+                                    <tr>
+                                        <!-- Código -->
+                                        <td class="text-center">
+                                            <?= $linha['id'] ?>-<?= $codigo_final ?>
+                                        </td>
+
+                                        <!-- CPF -->
+                                        <td>
+                                            <?= $linha['cpf'] ?>
+                                        </td>
+
+                                        <!-- Nome -->
+                                        <td>
+                                            <div class="candidate-info">
+                                                <div class="fw-semibold candidate-name"><?= htmlspecialchars($linha['nome_completo']) ?></div>
+                                                <?php if ($quantidade_docs_faltando > 0): ?>
+                                                    <small class="text-warning">
+                                                        <?= $quantidade_docs_faltando ?> documento(s) pendente(s)
+                                                    </small>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+
+                                        <!-- Etapa -->
+                                        <td class="text-center">
+                                            et_<?= $linha['etapa'] ?>
+                                        </td>
+
+                                        <!-- Pagamento -->
+                                        <td class="text-center">
+                                            <?= $add_arqu_pag == '_Sim' ? 'Sim' : 'Não' ?>
+                                        </td>
+
+                                        <!-- Docs Faltando -->
+                                        <td class="text-center">
+                                            <?= $quantidade_docs_faltando ?>
+                                        </td>
+
+                                        <!-- Docs Adicionados -->
+                                        <td class="text-center">
+                                            <?= $quantidade_docs_adicionados ?>
+                                        </td>
+
+                                        <!-- Docs Válidos -->
+                                        <td class="text-center">
+                                            <?= $quantidade_docs_validos ?>/<?= $quantidade_docs_adicionados ?>
+                                        </td>
+
+                                        <!-- Progresso -->
+                                        <td>
+                                            <div class="progress-container">
+                                                <div class="progress-text"><?= round($porcentagem, 1) ?>%</div>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-<?= $progress_class ?>"
+                                                        role="progressbar"
+                                                        style="width: <?= $porcentagem ?>%"
+                                                        aria-valuenow="<?= $porcentagem ?>"
+                                                        aria-valuemin="0"
+                                                        aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- Ações -->
+                                        <td class="text-center">
+                                            <a href="usuario_visualiza.php?id_usuario=<?= $linha['id'] ?>"
+                                                class="btn btn-sm btn-outline-primary view-btn"
+                                                data-bs-toggle="tooltip"
+                                                title="Visualizar candidato">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="row">
-                    <font size="5px">
-                        <div class="col-md-4">
-                            Total de docs adicionados: <?php echo $total_docs_adicionados ?>
+
+            <!-- Resumo Geral -->
+            <div class="card summary-card">
+                <div class="card-header summary-header mb-20">
+                    <span class="card-title mb-0">
+                        <i class="fa fa-bar-chart"></i>
+                        Resumo Geral da Avaliação
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="summary-item">
+                                <div class="summary-icon bg-primary">
+                                    <i class="fa fa-upload"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <span class="summary-label">Total de Docs Adicionados</span>
+                                    <span class="summary-value"><?= $total_docs_adicionados ?></span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            Total de docs avaliados: <?php echo $total_docs_avaliados ?>
+
+                        <div class="col-md-3">
+                            <div class="summary-item">
+                                <div class="summary-icon bg-primary">
+                                    <i class="fa fa-check-circle"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <span class="summary-label">Total de Docs Avaliados</span>
+                                    <span class="summary-value"><?= $total_docs_avaliados ?></span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            Total:
-                            <?php
-                            if ($total_docs_avaliados != 0 && $total_docs_adicionados != 0) {
-                                $porcentagem = ($total_docs_avaliados / $total_docs_adicionados) * 100;
-                                $porcentagem = number_format($porcentagem, 2, ',', '');
-                                echo $porcentagem . "%";
-                            }
-                            ?>
+
+                        <div class="col-md-3">
+                            <div class="summary-item">
+                                <div class="summary-icon bg-primary">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <span class="summary-label">Docs Pendentes</span>
+                                    <span class="summary-value"><?= $total_docs_adicionados - $total_docs_avaliados ?></span>
+                                </div>
+                            </div>
                         </div>
-                    </font>
+
+                        <div class="col-md-3">
+                            <div class="summary-item">
+                                <div class="summary-icon bg-primary">
+                                    <i class="fa fa-line-chart"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <span class="summary-label">Progresso Total</span>
+                                    <span class="summary-value">
+                                        <?php
+                                        if ($total_docs_avaliados != 0 && $total_docs_adicionados != 0) {
+                                            $porcentagem_total = ($total_docs_avaliados / $total_docs_adicionados) * 100;
+                                            echo number_format($porcentagem_total, 1) . '%';
+                                        } else {
+                                            echo '0%';
+                                        }
+                                        ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-
-            <a href="javascript:history.back()"><button class="btn btn-default btn-block">VOLTAR</button></a>
         </div>
     </div>
 </div>

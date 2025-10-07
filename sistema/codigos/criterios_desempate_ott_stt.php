@@ -177,7 +177,7 @@
                 <div class="d-flex align-items-start">
                     <i class="fa fa-info-circle mr-10 mt-10"></i>
                     <div>
-                        <strong class="d-block mb-2">Códigos da Coluna Militar:</strong>
+                        <strong class="d-block mb-2">Códigos da Coluna Categoria:</strong>
                         <div class="military-codes-grid">
                             <span class="military-code-item">
                                 <span class="military-code-badge">1</span>
@@ -240,7 +240,7 @@
                             <th><i class="fa fa-id-card"></i> CPF</th>
                             <th><i class="fa fa-envelope"></i> E-Mail</th>
                             <th class="text-center"><i class="fa fa-trophy"></i> Pontuação</th>
-                            <th class="text-center"><i class="fa fa-clock-o"></i> Categoria</th>
+                            <th class="text-center"><i class="fa fa-shield"></i> Categoria</th>
                             <th class="text-center"><i class="fa fa-clock-o"></i> Dias SV</th>
                             <th class="text-center"><i class="fa fa-clock-o"></i> Dias Idade</th>
                             <th class="text-center"><i class="fa fa-list"></i> Etapa Especialidade</th>
@@ -252,8 +252,6 @@
                         <?php
                         $lugar = 1;
                         foreach ($vetor_ordenado_candidatos as $linha):
-                            // Mostrar apenas candidatos da ampla concorrência
-                            if ($linha['vaga_reservada'] == 1) continue;
 
                             // Verificar se é candidato com múltiplas especialidades
                             $is_multiple_especialidades = false;
@@ -369,7 +367,7 @@
                 <div class="d-flex align-items-start">
                     <i class="fa fa-info-circle mr-10 mt-10"></i>
                     <div>
-                        <strong class="d-block mb-2">Códigos da Coluna Militar:</strong>
+                        <strong class="d-block mb-2">Códigos da Coluna Categoria:</strong>
                         <div class="military-codes-grid">
                             <span class="military-code-item">
                                 <span class="military-code-badge">1</span>
@@ -433,7 +431,7 @@
                             <th><i class="fa fa-envelope"></i> E-Mail</th>
                             <th><i class="fa fa-commenting"></i> Autodeclaração</th>
                             <th class="text-center"><i class="fa fa-trophy"></i> Pontuação</th>
-                            <th class="text-center"><i class="fa fa-clock-o"></i> Categoria</th>
+                            <th class="text-center"><i class="fa fa-shield"></i> Categoria</th>
                             <th class="text-center"><i class="fa fa-clock-o"></i> Dias SV</th>
                             <th class="text-center"><i class="fa fa-clock-o"></i> Dias Idade</th>
                             <th class="text-center"><i class="fa fa-list"></i> Etapa Especialidade</th>

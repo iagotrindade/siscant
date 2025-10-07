@@ -459,7 +459,6 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
                             Essa indisponibilidade é temporária e em breve estarei de volta para te ajudar com informações sobre o Processo Seletivo.
                         <?php } ?>
 
-
                         <span class="message-time"><?= date('H:s') ?></span>
                     </div>
                 </div>
@@ -488,9 +487,7 @@ https://siscant.3rm.eb.mil.br/sistema/index.php - Página Inicial do SiSCanT";
 
                     <?php foreach ($lista_perguntas as $pergunta): ?>
                         <?php if ($pergunta['etapa'] == 0 || $pergunta['etapa'] == $selecao[0]['etapa']): ?>
-                            <div class="question-chip" onclick="insertQuestion(this)">
-                                <?= htmlspecialchars($pergunta['pergunta']) ?>
-                            </div>
+                            <div class="question-chip" onclick="insertQuestion(this)"><?= $pergunta['pergunta'] ?></div>
                         <?php endif;?>
                     <?php endforeach; ?>
                 <?php endif; ?>

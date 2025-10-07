@@ -166,7 +166,7 @@
             <div class="d-flex align-items-start">
                 <i class="fa fa-info-circle mr-10 mt-10"></i>
                 <div>
-                    <strong class="d-block mb-2">Códigos da Coluna Militar:</strong>
+                    <strong class="d-block mb-2">Códigos da Coluna Categoria:</strong>
                     <div class="military-codes-grid">
                         <span class="military-code-item">
                             <span class="military-code-badge">1</span>
@@ -499,7 +499,7 @@
             <div class="d-flex align-items-start">
                 <i class="fa fa-info-circle mr-10 mt-10"></i>
                 <div>
-                    <strong class="d-block mb-2">Códigos da Coluna Militar:</strong>
+                    <strong class="d-block mb-2">Códigos da Coluna Categoria:</strong>
                     <div class="military-codes-grid">
                         <span class="military-code-item">
                             <span class="military-code-badge">1</span>
