@@ -81,6 +81,9 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
         <li <?php if (!isset($_SESSION['eipot']) || $perfil == "chc" || $perfil == "cr") echo "hidden" ?> class="treeview"><a href="eipot_etapa_III.php"><i class="fa fa-address-book"></i><?php if ($_SESSION['perfil'] == "jise") echo ('JISE');
                                                                                                                                                                                             else echo ('Dados Cadastro IS - SIPMED') ?></a>
+
+        <li <?php if (isset($_SESSION['eipot']) || $perfil == "chc" || $perfil == "cr") echo "hidden" ?> class="treeview"><a href="relatorio_etapa_III.php"><i class="fa fa-address-book"></i><?php if ($_SESSION['perfil'] == "jise") echo ('JISE');
+                                                                                                                                                                                            else echo ('Dados Cadastro IS - SIPMED') ?></a>
         <li <?php if (!isset($_SESSION['eipot']) || $perfil != 'admin' && $perfil != 'consulta' && $perfil != 'chc' && $perfil != 'cr') echo "hidden" ?> class="treeview"><a href="eipot_etapa_v.php"><i class="fa fa-check-circle"></i><?php if ($_SESSION['perfil'] == "chc" || $_SESSION['perfil'] == "cr") echo ('Heteroidentificação');
                                                                                                                                                                                                                                         else echo ('Heteroidentificação') ?></a>
         <li <?php if (!isset($_SESSION['eipot']) || $perfil != "admin") echo " hidden " ?> class="treeview"><a href="candidato_lista_escolha_guarnicao_eipot.php"><i class="fa fa-map-pin"></i><span>Escolha de Guarnição </span></a></li>
@@ -102,13 +105,13 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </ul>
 </li>
 
-<li <?php if ($perfil == "ouvidor" || $perfil == "om" || isset($_SESSION['eipot'])) echo " hidden " ?>><a href="relatorios_lista.php"><i class="fa fa-file-text-o"></i><span>Relatórios</span></a></li>
+<li <?php if ($perfil == "ouvidor" || $perfil == "om" || $perfil == "jise" || isset($_SESSION['eipot'])) echo " hidden " ?>><a href="relatorios_lista.php"><i class="fa fa-file-text-o"></i><span>Relatórios</span></a></li>
 
 <!-- <li <?php if ($perfil != "avaliador" && $perfil != "admin") echo "hidden" ?>><a href="candidato_lista_avaliador.php"><i class="fa fa-check-square-o"></i><span>Avaliação</span></a></li>                         
 -->
-<?php if($resultado_selecao[0]['rm'] == 3) : ?>
+<?php if ($resultado_selecao[0]['rm'] == 3) : ?>
     <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="assistente_virtual.php"><i class="fa bi bi-robot"></i><span>Assistente Virtual</span></a></li>
-<?php endif;?>
+<?php endif; ?>
 <!-- Adicionando o item de Aviso aos Candidatos no Menu -->
 <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="cadastra_notificacoes.php"><i class="fa fa-bullhorn"></i><span>Notificações</span></a></li>
 
