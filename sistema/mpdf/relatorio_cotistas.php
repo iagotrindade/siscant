@@ -83,7 +83,7 @@ foreach ($lista_especialidades as $especialidade) {
     ];
 
     foreach ($candidatos as $candidato) {
-        if ($candidato['etapa'] != 2 || !$candidato['vaga_reservada']) {
+        if (!$candidato['vaga_reservada']) {
             continue;
         }
 

@@ -219,7 +219,6 @@ foreach ($notificacoes as $notificacao) {
     <script src="js/jquery-ui.min.js"></script>
     <link href="js/jquery-ui.min.css" rel="stylesheet">
 
-
     <!-- MÁSCARA -->
     <script src="js/jquery.maskedinput.js"></script>
     <script src="js/maskMoney.js"></script>
@@ -277,7 +276,7 @@ foreach ($notificacoes as $notificacao) {
                         <li>
                             <a href="notificacoes.php" title="Notificações">
                                 <i class="fa fa-2x fa-bell"></i>
-                                <?php if ($novas_notificacoes) echo "<span class='badge badge-success' style='margin-left: -10px; background-color:red;'>".$novas_notificacoes_count."</span>"; ?>
+                                <?php if ($novas_notificacoes) echo "<span class='badge badge-success' style='margin-left: -10px; background-color:red;'>" . $novas_notificacoes_count . "</span>"; ?>
                             </a>
                         </li>
 
@@ -320,20 +319,21 @@ foreach ($notificacoes as $notificacao) {
                 </div>
                 <!-- Sidebar Menu-->
                 <ul class="sidebar-menu">
-
-                    <li <?php if ($perfil != "admin" && $perfil != "consulta") echo "hidden" ?>>
-                        <form action="pesquisa_cpf.php" method="POST">
-                            <div class="input-group" style="margin-left: 14px;margin-right: 8px;">
-                                <input type="text" name="pesquisa" class="form-control" maxlength="25" placeholder="Parte do CPF/Nome">
-                                <input type="text" name="criptografia" hidden value="<?php echo hash('sha256', $_SESSION['chave'] . "pesquisa")  ?>">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-pesquisa">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </form>
-                    </li>
+                    <?php if ($perfil == "admin" || $perfil == "consulta") : ?>
+                        <li>
+                            <form action="pesquisa_cpf.php" method="POST">
+                                <div class="input-group" style="margin-left: 14px;margin-right: 8px;">
+                                    <input type="text" name="pesquisa" class="form-control" maxlength="25" placeholder="Parte do CPF/Nome" style="height: 40px;;">
+                                    <input type="text" name="criptografia" hidden value="<?php echo hash('sha256', $_SESSION['chave'] . "pesquisa")  ?>">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-pesquisa">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </form>
+                        </li>
+                    <?php endif; ?>
 
                     <li class="treeview"><a href="index.php"><i class="fa fa-home"></i><span>Página Inicial</span><i class=""></i></a></li>
                     <li class="treeview"><a href="foto_upload.php"><i class="fa fa-picture-o"></i><span>Minha Foto</span><i class=""></i></a></li>
