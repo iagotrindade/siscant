@@ -25,6 +25,15 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
+                                    <div class="form-group"> <label>Cidade ISGRec</label>
+                                        <select name="cidade_isgrec" class="form-control">
+                                            <option value="">Selecione a Cidade</option>
+                                            <option value="Porto Alegre">Porto Alegre</option>
+                                            <option value="Santa Maria">Santa Maria</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
                                     <div class="form-group"> <label>Data de abertura</label>
                                         <input name="data_abertura" maxlength="25" class="form-control">
                                     </div>
@@ -108,91 +117,91 @@
                             </form>
                         </div>
                     </div>
-</div>
-                    <div class="col-lg-12">
-                        <br>
-                        <?php
+                </div>
+                <div class="col-lg-12">
+                    <br>
+                    <?php
 
-                        $lista_recursos = $conexao->get_recursos_candidato($id_usuario);
-                        foreach ($lista_recursos as $linha) {
-                            $crip = hash('sha256', $linha['id']);
+                    $lista_recursos = $conexao->get_recursos_candidato($id_usuario);
+                    foreach ($lista_recursos as $linha) {
+                        $crip = hash('sha256', $linha['id']);
 
-                            $foto = "<a href='usuario_visualiza.php?id_usuario=" . $linha['_usuario_ultima_atualizacao'] . "'><img class='img-circle' src='fotos/user.jpg' width='40px'></a>";
-                            $get_foto = $conexao->get_foto_usuario($linha['_usuario_ultima_atualizacao']);
+                        $foto = "<a href='usuario_visualiza.php?id_usuario=" . $linha['_usuario_ultima_atualizacao'] . "'><img class='img-circle' src='fotos/user.jpg' width='40px'></a>";
+                        $get_foto = $conexao->get_foto_usuario($linha['_usuario_ultima_atualizacao']);
+                        if (count($get_foto) > 0) {
+                            $foto = $get_foto[0]['nome'];
+                            $foto = "<a href='usuario_visualiza.php?id_usuario=" . $linha['_usuario_ultima_atualizacao'] . "'><img class='img-circle' src='fotos/$foto' width='40px'></a>";
+                        }
+
+                        $etapa = $linha['obs_etapa'] ?? $linha['etapa'];
+
+
+
+                        $ultima_atualizacao = $linha['_data_ultima_atualizacao'];
+                        if ($ultima_atualizacao != null) $ultima_atualizacao = trata_data_hora($ultima_atualizacao);
+
+                        $usuario_ultima_at = null;
+                        $usuario_ultima_atualizacao = $conexao->get_usuario_id($linha['_usuario_ultima_atualizacao']);
+                        if (count($usuario_ultima_atualizacao) == 1)
+                            $usuario_ultima_at =  $usuario_ultima_atualizacao[0]['posto_grad'] . ' ' . $usuario_ultima_atualizacao[0]['nome_guerra'];
+
+                        $usuario_realizou_analise = null;
+                        $foto_analise = null;
+                        $get_usuario_realizou_analise = $conexao->get_usuario_id($linha['id_usuario_analise']);
+
+                        if (count($get_usuario_realizou_analise) == 1) {
+                            $usuario_realizou_analise =  $get_usuario_realizou_analise[0]['posto_grad'] . ' ' . $get_usuario_realizou_analise[0]['nome_guerra'];
+
+                            $foto_analise = "<a href='usuario_visualiza.php?id_usuario=" . $linha['id_usuario_analise'] . "'><img class='img-circle' src='fotos/user.jpg' width='40px'></a>";
+                            $get_foto = $conexao->get_foto_usuario($linha['id_usuario_analise']);
                             if (count($get_foto) > 0) {
-                                $foto = $get_foto[0]['nome'];
-                                $foto = "<a href='usuario_visualiza.php?id_usuario=" . $linha['_usuario_ultima_atualizacao'] . "'><img class='img-circle' src='fotos/$foto' width='40px'></a>";
+                                $foto_analise = $get_foto[0]['nome'];
+                                $foto_analise = "<a href='usuario_visualiza.php?id_usuario=" . $linha['id_usuario_analise'] . "'><img class='img-circle' src='fotos/$foto_analise' width='40px'></a>";
                             }
+                        }
 
-                            $etapa = $linha['obs_etapa'] ?? $linha['etapa'];
+                        $data_de_abertura = null;
+                        if ($linha['data_abertura'] != null)
+                            $data_de_abertura  =  trata_data($linha['data_abertura']);
+
+                        $para_avaliador = null;
+                        if ($linha['para_avaliador'] != null && $linha['para_avaliador'] == '1')
+                            $para_avaliador = 'Sim';
+                        if ($linha['para_avaliador'] != null && $linha['para_avaliador'] == '0')
+                            $para_avaliador = 'Não';
+
+                        $status = null;
+                        if ($linha['status_final'] != null && $linha['status_final'] == 'deferido') $status = 'Deferido';
+                        if ($linha['status_final'] != null && $linha['status_final'] == 'deferido_parcialmente') $status = 'Deferido Parcialmente';
+                        if ($linha['status_final'] != null && $linha['status_final'] == 'indeferido') $status = 'Indeferido';
+
+                        $data_analise = null;
+                        if ($linha['data_analise'] != null) $data_analise = trata_data_hora($linha['data_analise']);
+
+                        // Arquivo que o candidato adicionou
+                        $arquivo_add_candidato_recurso = null;
+
+                        if ($_SESSION['perfil'] == 'jise' && $linha['obs_etapa'] != '3 - IS')
+                            continue;
+
+                        if ($linha['arq_nome_arquivo'] != null)
+                            $crip = hash('sha256', "freitas" . $linha['id']);
+                        $imagem = 'imagem.png';
+
+                        if ($linha['arq_extensao'] == 'pdf') $imagem = 'pdf.png';
+                        if ($linha['arq_extensao'] == 'odt') $imagem = 'odt.jpg';
+                        if ($linha['arq_extensao'] == 'doc' || $linha['arq_extensao'] == 'docx') $imagem = 'word.png';
+                        if ($linha['arq_extensao'] == 'xls' || $linha['arq_extensao'] == 'xlsx' || $linha['arq_extensao'] == 'ods') $imagem = 'ods.png';
 
 
+                        $arquivo_add_candidato_recurso = '<a href="arquivos_add_p_cand/recursos/' . $linha['arq_nome_arquivo'] . '" target="_blank">Recurso do Candidato -> <img src="imagens/pdf.png" height="70px"></a>';
 
-                            $ultima_atualizacao = $linha['_data_ultima_atualizacao'];
-                            if ($ultima_atualizacao != null) $ultima_atualizacao = trata_data_hora($ultima_atualizacao);
-
-                            $usuario_ultima_at = null;
-                            $usuario_ultima_atualizacao = $conexao->get_usuario_id($linha['_usuario_ultima_atualizacao']);
-                            if (count($usuario_ultima_atualizacao) == 1)
-                                $usuario_ultima_at =  $usuario_ultima_atualizacao[0]['posto_grad'] . ' ' . $usuario_ultima_atualizacao[0]['nome_guerra'];
-
-                            $usuario_realizou_analise = null;
-                            $foto_analise = null;
-                            $get_usuario_realizou_analise = $conexao->get_usuario_id($linha['id_usuario_analise']);
-
-                            if (count($get_usuario_realizou_analise) == 1) {
-                                $usuario_realizou_analise =  $get_usuario_realizou_analise[0]['posto_grad'] . ' ' . $get_usuario_realizou_analise[0]['nome_guerra'];
-
-                                $foto_analise = "<a href='usuario_visualiza.php?id_usuario=" . $linha['id_usuario_analise'] . "'><img class='img-circle' src='fotos/user.jpg' width='40px'></a>";
-                                $get_foto = $conexao->get_foto_usuario($linha['id_usuario_analise']);
-                                if (count($get_foto) > 0) {
-                                    $foto_analise = $get_foto[0]['nome'];
-                                    $foto_analise = "<a href='usuario_visualiza.php?id_usuario=" . $linha['id_usuario_analise'] . "'><img class='img-circle' src='fotos/$foto_analise' width='40px'></a>";
-                                }
-                            }
-
-                            $data_de_abertura = null;
-                            if ($linha['data_abertura'] != null)
-                                $data_de_abertura  =  trata_data($linha['data_abertura']);
-
-                            $para_avaliador = null;
-                            if ($linha['para_avaliador'] != null && $linha['para_avaliador'] == '1')
-                                $para_avaliador = 'Sim';
-                            if ($linha['para_avaliador'] != null && $linha['para_avaliador'] == '0')
-                                $para_avaliador = 'Não';
-
-                            $status = null;
-                            if ($linha['status_final'] != null && $linha['status_final'] == 'deferido') $status = 'Deferido';
-                            if ($linha['status_final'] != null && $linha['status_final'] == 'deferido_parcialmente') $status = 'Deferido Parcialmente';
-                            if ($linha['status_final'] != null && $linha['status_final'] == 'indeferido') $status = 'Indeferido';
-
-                            $data_analise = null;
-                            if ($linha['data_analise'] != null) $data_analise = trata_data_hora($linha['data_analise']);
-
-                            // Arquivo que o candidato adicionou
-                            $arquivo_add_candidato_recurso = null;
-
-                            if ($_SESSION['perfil'] == 'jise' && $linha['obs_etapa'] != '3 - IS')
-                                continue;
-
-                            if ($linha['arq_nome_arquivo'] != null)
-                                $crip = hash('sha256', "freitas" . $linha['id']);
-                                $imagem = 'imagem.png';
-
-                                if ($linha['arq_extensao'] == 'pdf') $imagem = 'pdf.png';
-                                if ($linha['arq_extensao'] == 'odt') $imagem = 'odt.jpg';
-                                if ($linha['arq_extensao'] == 'doc' || $linha['arq_extensao'] == 'docx') $imagem = 'word.png';
-                                if ($linha['arq_extensao'] == 'xls' || $linha['arq_extensao'] == 'xlsx' || $linha['arq_extensao'] == 'ods') $imagem = 'ods.png';
-
-                            
-                                $arquivo_add_candidato_recurso = '<a href="arquivos_add_p_cand/recursos/' . $linha['arq_nome_arquivo'] . '" target="_blank">Recurso do Candidato -> <img src="imagens/pdf.png" height="70px"></a>';
-
-                            if (!isset($_SESSION["eipot"])) {
-                                $avaliador = '<b>Para avaliador analisar? </b><font color="#000">' . $para_avaliador . '</font><br>';
-                            } else {
-                                $avaliador = '';
-                            }
-                            echo '
+                        if (!isset($_SESSION["eipot"])) {
+                            $avaliador = '<b>Para avaliador analisar? </b><font color="#000">' . $para_avaliador . '</font><br>';
+                        } else {
+                            $avaliador = '';
+                        }
+                        echo '
 <div class="alert alert-info">
     <div class="row">
     <div class="col-md-12">
@@ -230,39 +239,39 @@
 <div class="col-md-12">
 <legend> Geração de Ofício Resposta</legend>
 </div>';
-                            if ($linha['arq_nome_arquivo'] != null && !isset($_SESSION["eipot"])) {
-                                echo ' 
+                        if ($linha['arq_nome_arquivo'] != null && !isset($_SESSION["eipot"])) {
+                            echo ' 
                         <div class="col-md-3">    
                             <label>Enviar para um especialista</label>
                             <select name="especialidade_recurso" class="form-control">
                                 <option value="">Não enviar para especialista</option>
                             ';
-                                foreach ($lista_especialidades as $especialidade) {
-                                    if ($linha['id_especialidade'] == $especialidade['id_especialidade'])
-                                        echo '<option selected value="' . $especialidade['id_especialidade'] . '">' . $especialidade['especialidade'] . '</option>';
-                                    else
-                                        echo '<option  value="' . $especialidade['id_especialidade'] . '">' . $especialidade['especialidade'] . '</option>';
-                                }
-
-                                echo '</select>
-                             <br>
-                        </div>';
+                            foreach ($lista_especialidades as $especialidade) {
+                                if ($linha['id_especialidade'] == $especialidade['id_especialidade'])
+                                    echo '<option selected value="' . $especialidade['id_especialidade'] . '">' . $especialidade['especialidade'] . '</option>';
+                                else
+                                    echo '<option  value="' . $especialidade['id_especialidade'] . '">' . $especialidade['especialidade'] . '</option>';
                             }
 
-                            echo '<div class="col-md-3">    
+                            echo '</select>
+                             <br>
+                        </div>';
+                        }
+
+                        echo '<div class="col-md-3">    
                 <label>Status </label>
                     <select name="status_final" class="form-control">
                         <option value="">Selecione a opção</option>
                         <option ';
-                            if ($linha['status_final'] == "deferido") echo " selected";
-                            echo ' value="deferido">Deferido</option>
+                        if ($linha['status_final'] == "deferido") echo " selected";
+                        echo ' value="deferido">Deferido</option>
                         <option ';
-                            if ($linha['status_final'] == "deferido_parcialmente") echo " selected";
-                            if ($linha['obs_etapa'] == '3 - IS') echo " hidden";
-                            echo '  value="deferido_parcialmente">Deferido Parcialmente</option> 
+                        if ($linha['status_final'] == "deferido_parcialmente") echo " selected";
+                        if ($linha['obs_etapa'] == '3 - IS') echo " hidden";
+                        echo '  value="deferido_parcialmente">Deferido Parcialmente</option> 
                         <option ';
-                            if ($linha['status_final'] == "indeferido") echo " selected";
-                            echo '  value="indeferido">Indeferido</option>
+                        if ($linha['status_final'] == "indeferido") echo " selected";
+                        echo '  value="indeferido">Indeferido</option>
                     </select>
             </div>
             <div class="col-md-3">    
@@ -304,15 +313,15 @@
         </div>
     </div>
 </div>';
-                        }
+                    }
 
-                        ?>
-
-                    </div>
+                    ?>
 
                 </div>
+
             </div>
         </div>
     </div>
+</div>
 </div>
 </div>

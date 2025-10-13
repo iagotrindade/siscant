@@ -7860,6 +7860,7 @@ order by total_pontos_somados desc");
         $id_candidato,
         $id_especialidade,
         $etapa,
+        $cidade_isgrec,
         $obs_etapa,
         $data_abertura,
         $avaliador,
@@ -7878,8 +7879,8 @@ order by total_pontos_somados desc");
 
         try {
             $sqlInsert = "INSERT INTO recurso
-        (id_candidato, id_especialidade, etapa, obs_etapa, data_abertura, para_avaliador, status, analise, data_analise, id_usuario_analise, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao, arq_nome_original, arq_nome_arquivo, arq_extensao, arq_tamanho) 
-        VALUES (:id_candidato, :id_especialidade, :etapa, :obs_etapa, :data_abertura, :avaliador, :status, :analise, :data_analise, :id_usuario_analise, :zero, :datetime, :id_usuario, :arq_nome_original, :arq_nome_arquivo, :arq_extensao, :arq_tamanho)";
+        (id_candidato, id_especialidade, etapa, cidade_isgrec, obs_etapa, data_abertura, para_avaliador, status, analise, data_analise, id_usuario_analise, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao, arq_nome_original, arq_nome_arquivo, arq_extensao, arq_tamanho) 
+        VALUES (:id_candidato, :id_especialidade, :etapa, :cidade_isgrec, :obs_etapa, :data_abertura, :avaliador, :status, :analise, :data_analise, :id_usuario_analise, :zero, :datetime, :id_usuario, :arq_nome_original, :arq_nome_arquivo, :arq_extensao, :arq_tamanho)";
 
 
             $this->pdo->beginTransaction();
@@ -7888,6 +7889,7 @@ order by total_pontos_somados desc");
             $query->bindValue(":id_candidato", $id_candidato);
             $query->bindValue(":id_especialidade", $id_especialidade);
             $query->bindValue(":etapa", $etapa);
+            $query->bindValue(":cidade_isgrec", $cidade_isgrec);
             $query->bindValue(":obs_etapa", $obs_etapa);
             $query->bindValue(":data_abertura", $data_abertura);
             $query->bindValue(":avaliador", $avaliador);
@@ -7910,6 +7912,7 @@ order by total_pontos_somados desc");
                         'id_candidato' => $id_candidato,
                         'id_especialidade' => $id_especialidade,
                         'etapa' => $etapa,
+                        'cidade_isgrec' => $cidade_isgrec,
                         'obs_etapa' => $obs_etapa,
                         'data_abertura' => $data_abertura,
                         'avaliador' => $avaliador,

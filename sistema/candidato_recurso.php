@@ -42,6 +42,7 @@ if (isset($data_inicio_recurso) && isset($data_fim_recurso) && $data_hoje < $dat
   .text-center {
     text-align: center;
   }
+
   /* Responsividade */
   @media (max-width: 768px) {
     .card-header {
@@ -55,7 +56,7 @@ if (isset($data_inicio_recurso) && isset($data_fim_recurso) && $data_hoje < $dat
       font-size: 16px;
       padding: 10px 12px;
     }
-  } 
+  }
 
   .text-danger {
     color: #dc3545 !important;
@@ -141,55 +142,54 @@ if (isset($data_inicio_recurso) && isset($data_fim_recurso) && $data_hoje < $dat
     </div>
   </div>
   <!-- Seção de Upload de Recurso -->
-  <?php if ($mostrar_recursos): ?>
-    <div class="card">
-      <div class="card-header mb-20">
-        <span class="card-title mb-0">Adicionar Recurso</span>
-      </div>
-      <div class="card-body">
-        <?php if (insere_recurso()): ?>
-          <form method="post" action="arquivo_upload_recurso_candidato.php" enctype="multipart/form-data" class="needs-validation" novalidate>
-            <input type="hidden" name="crip" value="<?= hash('sha256', $_SESSION['chave'] . "freitas") ?>">
 
-            <div class="row g-3">
-              <div class="col-md-12 mb-20">
-                <label for="arquivo" class="form-label mb-20">
-                  Adicione seu recurso
-                  <small class="text-danger">* Máximo 5MB no formato PDF</small>
-                </label>
-                <input type="file"
-                  class="form-control"
-                  id="arquivo"
-                  name="arquivo"
-                  accept=".pdf"
-                  required>
-                <div class="invalid-feedback">
-                  Por favor, selecione um arquivo PDF de até 5MB.
-                </div>
-              </div>
-              <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">
-                  <i class="fa fa-upload me-2"></i> Enviar Recurso
-                </button>
+  <div class="card">
+    <div class="card-header mb-20">
+      <span class="card-title mb-0"><i class="fa fa-file-text"></i> Adicionar Recurso</span>
+    </div>
+    <div class="card-body">
+      <?php if (insere_recurso()): ?>
+        <form method="post" action="arquivo_upload_recurso_candidato.php" enctype="multipart/form-data" class="needs-validation" novalidate>
+          <input type="hidden" name="crip" value="<?= hash('sha256', $_SESSION['chave'] . "freitas") ?>">
+
+          <div class="row g-3">
+            <div class="col-md-12 mb-20">
+              <label for="arquivo" class="form-label mb-20">
+                Adicione seu recurso
+                <small class="text-danger">* Máximo 5MB no formato PDF</small>
+              </label>
+              <input type="file"
+                class="form-control"
+                id="arquivo"
+                name="arquivo"
+                accept=".pdf"
+                required>
+              <div class="invalid-feedback">
+                Por favor, selecione um arquivo PDF de até 5MB.
               </div>
             </div>
-          </form>
-        <?php else: ?>
-          <div class="alert alert-warning text-center mb-0">
-            <i class="fa fa-exclamation-triangle me-2"></i>
-            <strong>O período para recursos está fechado!</strong>
+            <div class="col-md-4 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="fa fa-upload me-2"></i> Enviar Recurso
+              </button>
+            </div>
           </div>
-        <?php endif; ?>
-      </div>
+        </form>
+      <?php else: ?>
+        <div class="alert alert-warning text-center mb-0">
+          <i class="fa fa-exclamation-triangle me-2"></i>
+          <strong>O período para recursos está fechado!</strong>
+        </div>
+      <?php endif; ?>
     </div>
-  <?php endif; ?>
+  </div>
 
 
 
   <!-- Listagem de Recursos -->
   <div class="card mt-4">
     <div class="card-header mb-20">
-      <span class="card-title mb-0">Meus Recursos</span>
+      <span class="card-title mb-0"><i class="fa fa-file-text"></i> Meus Recursos</span>
     </div>
     <div class="card-body">
       <?php

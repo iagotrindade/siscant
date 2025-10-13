@@ -34,7 +34,6 @@ if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: Arial, sans-serif;
     }
 
     .reset-card {
@@ -42,7 +41,7 @@ if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
       border-radius: 12px;
       padding: 2rem;
       width: 100%;
-      max-width: 420px;
+      max-width: 400px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       z-index: 1;
     }
@@ -63,7 +62,6 @@ if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
 
     a {
       color: #006400;
-      text-decoration: none;
     }
 
     a:hover {
@@ -134,10 +132,10 @@ if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
           <i class="fa fa-sign-in fa-lg fa-fw"></i> ENVIAR
         </button>
       <?php else: ?>
-        <a href="<?=$_SESSION['nome_arquivo']?>" class="btn btn-primary w-100">
+        <a href="<?= $_SESSION['nome_arquivo'] ?>" class="btn btn-primary w-100">
           <i class="fa fa-sign-in fa-lg fa-fw"></i> ENTRAR
         </a>
-      <?php endif; ?> 
+      <?php endif; ?>
     </form>
 
     <hr>
