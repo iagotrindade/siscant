@@ -79,7 +79,7 @@ $quantidade_docs_faltantes = count($filtro_lista_docs_obrigatorios_sobrando);
             <div class="card <?= !inscricao() ? 'd-none' : '' ?> shadow-sm mb-4">
                 <div class="card-header bg-primary text-white mb-20">
                     <span class="card-title mb-0">
-                        <i class="fa fa-file-upload me-2"></i>
+                        <i class="fa fa-upload me-2"></i>
                         Documentos de Inscrição
                     </span>
                 </div>

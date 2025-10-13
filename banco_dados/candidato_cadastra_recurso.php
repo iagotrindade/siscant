@@ -45,6 +45,12 @@ if ($data_abertura != null && !valida_data($_POST['data_abertura'])) {
 
 $cpf_candidato = $_POST['c_p_f_candidato'];
 $id_candidato = $_POST['id_candidato'];
+$cidade_isgrec = $_POST['cidade_isgrec'];
+
+if($obs_etapa == '3 - IS' && !$cidade_isgrec) {
+    erro("Erro 875435745! Você selecionou que o recurso é de Inspeção de Saúde. Selecione a cidade da ISGREC!");
+    exit();
+}
 
 session_start();
 
@@ -209,6 +215,7 @@ $resultado = $conexao->cadastra_recurso(
     $id_candidato,
     $id_especialidade,
     $etapa,
+    $cidade_isgrec,
     $obs_etapa,
     $data_abertura,
     $avaliador,

@@ -24,6 +24,15 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-lg-2" id="cidade_isgrec">
+                                    <div class="form-group"> <label>Cidade ISGRec</label>
+                                        <select name="cidade_isgrec" class="form-control">
+                                            <option value="">Selecione a Cidade</option>
+                                            <option value="Porto Alegre">Porto Alegre</option>
+                                            <option value="Santa Maria">Santa Maria</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-lg-2">
                                     <div class="form-group"> <label>Data de abertura</label>
                                         <input name="data_abertura" maxlength="25" class="form-control">
@@ -49,7 +58,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-lg-4">
+                                <div class="col-lg-2">
                                     <label>Especialidade</label>
                                     <select name="especialidade" class="form-control">
                                         <option value="">Selecione a especialidade</option>
@@ -112,7 +121,6 @@
                 <div>
                     <br>
                     <?php
-
                     $lista_recursos = $conexao->get_recursos_candidato($id_usuario);
                     foreach ($lista_recursos as $linha) {
                         $crip = hash('sha256', $linha['id']);
@@ -125,8 +133,6 @@
                         }
 
                         $etapa = $linha['obs_etapa'] ?? $linha['etapa'];
-
-
 
                         $ultima_atualizacao = $linha['_data_ultima_atualizacao'];
                         if ($ultima_atualizacao != null) $ultima_atualizacao = trata_data_hora($ultima_atualizacao);
@@ -187,7 +193,6 @@
                         if ($linha['arq_extensao'] == 'doc' || $linha['arq_extensao'] == 'docx') $imagem = 'word.png';
                         if ($linha['arq_extensao'] == 'xls' || $linha['arq_extensao'] == 'xlsx' || $linha['arq_extensao'] == 'ods') $imagem = 'ods.png';
 
-
                         $arquivo_add_candidato_recurso = '<a href="arquivos_add_p_cand/recursos/' . $linha['arq_nome_arquivo'] . '" target="_blank">Recurso do Candidato -> <img src="imagens/pdf.png" height="70px"></a>';
 
                         if (!isset($_SESSION["eipot"])) {
@@ -195,125 +200,130 @@
                         } else {
                             $avaliador = '';
                         }
-                        // 26/06/2025 -> Iago Silva Alterado o input de obs_etapa para hidden
-                        echo '
-<div class="alert alert-info">
-    <div class="row">
-    <div class="col-md-12">
-    <legend > Recurso Nº ' . $linha['id'] . '</legend>
-    <legend >' . $arquivo_add_candidato_recurso . '</legend>
-</div>
-        <div class="col-md-2">
-            <b>Etapa: </b><font color="#000">' . $etapa . '</font><br>
-        </div>
-        <div class="col-md-2">
-            <b>Data de abertura: </b><font color="#000">' . $data_de_abertura . '</font><br>
-        </div>
-        <div class="col-md-2">
-           ' . $avaliador . '
-        </div>
-        <div class="col-md-2">
-            <b>Status: </b><font color="#000">' . $status . '</font><br>
-        </div>
-        <div class="col-md-4">
-            <b>Especialidade: </b><font color="#000">' . $linha['nome_especialidade'] . '</font><br>
-        </div>
-        <div class="col-md-12">
-        <br>
-            <b>Análise: </b><font color="#000">' . $linha['analise'] . '</font><br>
-                <br>
-        </div>
-                                            
 
-        <form action="../banco_dados/candidato_atualiza_oficio_recurso.php" method="post" >
-        <input name="id_recurso" value=' . $linha['id'] . ' hidden>
-        <input type="hidden" name="obs_etapa" value=' . $linha['obs_etapa'] . ' hidden>
-        <input name="id_candidato" value=' . $linha['id_candidato'] . ' hidden>
-        <input name="cpf_candidato" value=' . $cpf . ' hidden>
-
-<div class="col-md-12">
-<legend> Geração de Ofício Resposta</legend>
-</div>';
-                        if ($linha['arq_nome_arquivo'] != null && !isset($_SESSION["eipot"])) {
-                            echo ' 
-                        <div class="col-md-3">    
-                            <label>Enviar para um especialista</label>
-                            <select name="especialidade_recurso" class="form-control">
-                                <option value="">Não enviar para especialista</option>
-                            ';
-                            foreach ($lista_especialidades as $especialidade) {
-                                if ($linha['id_especialidade'] == $especialidade['id_especialidade'])
-                                    echo '<option selected value="' . $especialidade['id_especialidade'] . '">' . $especialidade['especialidade'] . '</option>';
-                                else
-                                    echo '<option  value="' . $especialidade['id_especialidade'] . '">' . $especialidade['especialidade'] . '</option>';
-                            }
-
-                            echo '</select>
-                             <br>
-                        </div>';
-                        }
-
-                        echo '<div class="col-md-3">    
-                <label>Status </label>
-                    <select name="status_final" class="form-control">
-                        <option value="">Selecione a opção</option>
-                        <option ';
-                        if ($linha['status_final'] == "deferido") echo " selected";
-                        echo ' value="deferido">Deferido</option>
-                        <option ';
-                        if ($linha['status_final'] == "deferido_parcialmente") echo " selected";
-                        if ($linha['obs_etapa'] == '3 - IS') echo " hidden";
-                        echo '  value="deferido_parcialmente">Deferido Parcialmente</option> 
-                        <option ';
-                        if ($linha['status_final'] == "indeferido") echo " selected";
-                        echo '  value="indeferido">Indeferido</option>
-                    </select>
-            </div>
-            <div class="col-md-3">    
-                <label>Cidade e Data</label>
-                <input name="cidade_dt" value="' . $linha['cidade_data'] . '" class="form-control" >
-                <br>
-            </div>
-             <div class="col-md-3 ' . (($linha['obs_etapa'] == '3 - IS' && $_SESSION['perfil'] != 'admin') ? ' hidden' : '') . '">      
-                <label>Presidente da Comissão </label>
-                <input name="presidente" value="' . $linha['presidente'] . '" class="form-control" >
-                <br>
-            </div>
-            <div class="col-md-12">
-                <label>Parágrafo 1</label>
-                <textarea style="width:100%;"  rows="2" name="paragrafo1">' . $linha['paragrafo1'] . '</textarea>
-            </div>
-            <div class="col-md-12">
-                <label>Parágrafo 2</label>
-                <textarea style="width:100%;" rows="2" name="paragrafo2">' . $linha['paragrafo2'] . '</textarea>
-            </div>
-            
-            <div class="col-md-12">
-            <br>
-            <button  type="submit"  class="btn btn-primary btn-block">Salvar</button>
-            </div>
-        </form>
-        <div class="col-md-12"><br></div>
-        <div class="col-md-5">
-            <i>Última atualização em ' . $ultima_atualizacao . ' - <a href="usuario_visualiza.php?id_usuario=' . $linha['_usuario_ultima_atualizacao'] . '"> ' . $usuario_ultima_at . '</a> ' . $foto . '</i>
-        </div>                        
-        <div class="col-md-5">
-            <i>Análise realizada em ' . $data_analise . ' - <a href="usuario_visualiza.php?id_usuario=' . $linha['id_usuario_analise'] . '"> ' . $usuario_realizou_analise . '</a> ' . $foto_analise . '<br></i>
-        </div>
-        <div class="col-md-2">
-        
-            <a href="mpdf/oficio_resposta_recurso.php?id_recurso=' . $linha['id'] . '&crip=' . $crip . '" target="_blank"><img title="Gerar Ofício" src="imagens/pdf.png" width="50px"></a>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a onclick="funcao_apagar(\'' . $linha['id'] . '\', \'candidato_recurso\',\'' . $id_usuario . '\')"><img title="Apagar" src="imagens/apagar.png" width="30px"></a>
-        </div>
-    </div>
-</div>';
-                    }
-
+                        // Início da saída HTML usando sintaxe alternativa do foreach
                     ?>
+                        <div class="alert alert-info">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <legend>Recurso Nº <?= $linha['id'] ?></legend>
+                                    <legend><?= $arquivo_add_candidato_recurso ?></legend>
+                                </div>
+                                <div class="col-md-2">
+                                    <b>Etapa: </b>
+                                    <font color="#000"><?= $etapa ?></font><br>
+                                </div>
 
+                                <?php if($linha['cidade_isgrec']) :?>
+                                    <div class="col-md-2">
+                                    <b>Cidada ISGRec: </b>
+                                    <font color="#000"><?= $linha['cidade_isgrec'] ?></font><br>
+                                </div>
+                                <?php endif; ?>
+
+                                <div class="col-md-2">
+                                    <b>Data de abertura: </b>
+                                    <font color="#000"><?= $data_de_abertura ?></font><br>
+                                </div>
+                                <div class="col-md-2">
+                                    <?= $avaliador ?>
+                                </div>
+                                <div class="col-md-2">
+                                    <b>Status: </b>
+                                    <font color="#000"><?= $status ?></font><br>
+                                </div>
+                                <div class="col-md-2">
+                                    <b>Especialidade: </b>
+                                    <font color="#000"><?= $linha['nome_especialidade'] ?></font><br>
+                                </div>
+                                <div class="col-md-12">
+                                    <br>
+                                    <b>Análise: </b>
+                                    <font color="#000"><?= $linha['analise'] ?></font><br>
+                                    <br>
+                                </div>
+
+                                <form action="../banco_dados/candidato_atualiza_oficio_recurso.php" method="post">
+                                    <input name="id_recurso" value="<?= $linha['id'] ?>" hidden>
+                                    <input type="hidden" name="obs_etapa" value="<?= $linha['obs_etapa'] ?>" hidden>
+                                    <input name="id_candidato" value="<?= $linha['id_candidato'] ?>" hidden>
+                                    <input name="cpf_candidato" value="<?= $cpf ?>" hidden>
+
+                                    <div class="col-md-12">
+                                        <legend>Geração de Ofício Resposta</legend>
+                                    </div>
+
+                                    <?php if ($linha['arq_nome_arquivo'] != null && !isset($_SESSION["eipot"])): ?>
+                                        <div class="col-md-3">
+                                            <label>Enviar para um especialista</label>
+                                            <select name="especialidade_recurso" class="form-control">
+                                                <option value="">Não enviar para especialista</option>
+                                                <?php foreach ($lista_especialidades as $especialidade): ?>
+                                                    <option value="<?= $especialidade['id_especialidade'] ?>" <?= ($linha['id_especialidade'] == $especialidade['id_especialidade']) ? 'selected' : '' ?>>
+                                                        <?= $especialidade['especialidade'] ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <br>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="col-md-3">
+                                        <label>Status</label>
+                                        <select name="status_final" class="form-control">
+                                            <option value="">Selecione a opção</option>
+                                            <option value="deferido" <?= ($linha['status_final'] == "deferido") ? 'selected' : '' ?>>Deferido</option>
+                                            <option value="deferido_parcialmente" <?= ($linha['status_final'] == "deferido_parcialmente") ? 'selected' : '' ?> <?= ($linha['obs_etapa'] == '3 - IS') ? 'hidden' : '' ?>>Deferido Parcialmente</option>
+                                            <option value="indeferido" <?= ($linha['status_final'] == "indeferido") ? 'selected' : '' ?>>Indeferido</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Cidade e Data</label>
+                                        <input name="cidade_dt" value="<?= $linha['cidade_data'] ?>" class="form-control">
+                                        <br>
+                                    </div>
+
+                                    <div class="col-md-3 <?= (($linha['obs_etapa'] == '3 - IS' && $_SESSION['perfil'] != 'admin') ? 'hidden' : '') ?>">
+                                        <label>Presidente da Comissão</label>
+                                        <input name="presidente" value="<?= $linha['presidente'] ?>" class="form-control">
+                                        <br>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label>Parágrafo 1</label>
+                                        <textarea style="width:100%;" rows="2" name="paragrafo1"><?= $linha['paragrafo1'] ?></textarea>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label>Parágrafo 2</label>
+                                        <textarea style="width:100%;" rows="2" name="paragrafo2"><?= $linha['paragrafo2'] ?></textarea>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <br>
+                                        <button type="submit" class="btn btn-primary btn-block">Salvar</button>
+                                    </div>
+                                </form>
+
+                                <div class="col-md-12"><br></div>
+                                <div class="col-md-5">
+                                    <i>Última atualização em <?= $ultima_atualizacao ?> - <a href="usuario_visualiza.php?id_usuario=<?= $linha['_usuario_ultima_atualizacao'] ?>"><?= $usuario_ultima_at ?></a> <?= $foto ?></i>
+                                </div>
+                                <div class="col-md-5">
+                                    <i>Análise realizada em <?= $data_analise ?> - <a href="usuario_visualiza.php?id_usuario=<?= $linha['id_usuario_analise'] ?>"><?= $usuario_realizou_analise ?></a> <?= $foto_analise ?><br></i>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="mpdf/oficio_resposta_recurso.php?id_recurso=<?= $linha['id'] ?>&crip=<?= $crip ?>" target="_blank"><img title="Gerar Ofício" src="imagens/pdf.png" width="50px"></a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a onclick="funcao_apagar('<?= $linha['id'] ?>', 'candidato_recurso','<?= $id_usuario ?>')"><img title="Apagar" src="imagens/apagar.png" width="30px"></a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php
+                    }
+                    ?>
                 </div>
-
             </div>
         </div>
     </div>

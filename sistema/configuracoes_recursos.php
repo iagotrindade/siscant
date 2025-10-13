@@ -38,35 +38,80 @@ $mostrar_recurso  = $get_recurso_rm[0]['mostrar_recurso'] ?? '';
         </div>
     </div>
 
-    <form name="form_etapa_presencial" action="../banco_dados/candidato_visualiza_recurso.php" method="post">
-        <div class="card">
-            <h3>Recursos Digitais</h3> <br><!-- Título do formulário -->
-
-            <input type="hidden" class="form-check-input" name="rm" value=<?php echo $rm_usuario ?>>
-
-            <div class="form-check"> <!--09ABRIL25 SILVA -->
-                <input type="checkbox" class="form-check-input" name="mostrar_recurso" value="1" id="check-recurso" <?php if (isset($get_recurso_rm[0]['mostrar_recurso']) && $get_recurso_rm[0]['mostrar_recurso'] == "1") echo "checked"; ?>>
-                <label class="form-check-label" for="check-recurso">Ativar para o candidato fazer upload do Recurso digitalmente</label>
+    <form name="form_etapa_presencial" action="../banco_dados/candidato_visualiza_recurso.php" method="post" class="modern-form">
+        <div class="card settings-card">
+            <div class="card-header settings-header mb-20">
+                <span class="card-title mb-0">
+                    <i class="fa fa-file-text me-2"></i>
+                    Configuração de Recursos Digitais
+                </span>
             </div>
-            <br>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div id="div_nome" class="form-group">
-                        <label>Data de início</label>
-                        <input value=<?php if (isset($data_inicio_recurso)) echo $data_inicio_recurso; ?> name="data_inicio_recurso" maxlength="120" class="form-control">
+
+            <div class="card-body">
+                <input type="hidden" name="rm" value="<?= $rm_usuario ?>">
+
+                <!-- Switch de Ativação -->
+                <div class="form-group-switch mb-20">
+                    <div class="form-check form-switch">
+                        <input type="checkbox"
+                            class="form-check-input"
+                            name="mostrar_recurso"
+                            value="1"
+                            id="check-recurso"
+                            <?= (isset($get_recurso_rm[0]['mostrar_recurso']) && $get_recurso_rm[0]['mostrar_recurso'] == "1") ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="check-recurso">
+                            <span class="switch-label">Ativar upload de recursos digitais</span>
+                            <small class="form-text text-muted">
+                                Permite que os candidatos façam upload de recursos digitalmente
+                            </small>
+                        </label>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div id="div_ramal" class="form-group">
-                        <label>Data de fim</label>
-                        <input value=<?php if (isset($data_fim_recurso)) echo $data_fim_recurso; ?> maxlength="20" name="data_fim_recurso" class="form-control">
+
+                <!-- Período do Recurso -->
+                <div class="period-section">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label for="data_inicio_recurso" class="form-label">
+                                    Data de Início
+                                </label>
+                                <input type="text"
+                                    id="data_inicio_recurso"
+                                    name="data_inicio_recurso"
+                                    maxlength="120"
+                                    class="form-control date-input"
+                                    value="<?= isset($data_inicio_recurso) ? $data_inicio_recurso : '' ?>"
+                                    placeholder="DD/MM/AAAA">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group-modern">
+                                <label for="data_fim_recurso" class="form-label">
+                                    Data de Término
+                                </label>
+                                <input type="text"
+                                    id="data_fim_recurso"
+                                    name="data_fim_recurso"
+                                    maxlength="20"
+                                    class="form-control date-input"
+                                    value="<?= isset($data_fim_recurso) ? $data_fim_recurso : '' ?>"
+                                    placeholder="DD/MM/AAAA">
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Botão de Atualização -->
+                <div class="form-actions mt-20">
+                    <button type="submit" class="btn btn-primary btn-lg w-100 action-button">
+                        <i class="fa fa-refresh me-2"></i>
+                        ATUALIZAR CONFIGURAÇÕES
+                    </button>
+                </div>
             </div>
-            <div style="clear: both;"></div>
-            <button type="submit" class="btn btn-primary btn-block">ATUALIZAR</button>
         </div>
-        <br>
     </form>
 </div>
 </body>

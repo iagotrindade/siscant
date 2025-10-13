@@ -512,7 +512,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                 include_once 'codigos/candidato_recurso.php';
             }
 
-            if ($_SESSION['perfil'] == 'avaliador' || $_SESSION['perfil'] == 'admin') {
+            if ($_SESSION['perfil'] == 'avaliador') {
                 include_once 'codigos/avaliador_recurso_candidato.php';
             }
 
