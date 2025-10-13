@@ -301,11 +301,6 @@ require 'menu.php';
             ?>
         </div>
     </div>
-
-    <a href="https://seusite.com/ajuda" target="_blank" class="botao-ajuda" title="Precisa de Ajuda?">
-        <i class="fa fa-question"></i>
-    </a>
-
 </div>
 </body>
 

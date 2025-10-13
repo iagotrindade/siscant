@@ -389,26 +389,80 @@ $conexao = new Conexao();
                 <div class="list-group">
                     <a href="#" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">Manual do Candidato</h5>
-                            <small class="text-muted">PDF - 2.4MB</small>
+                            <h5 class="mb-1">Manual do Administrador</h5>
+                            <small class="text-muted">DOCUMENTO PDF</small>
                         </div>
-                        <p class="mb-1">Guia completo com todas as etapas do processo seletivo</p>
-                        <small class="text-muted">Atualizado em 15/03/2024</small>
+                        <p class="mb-1">Guia completo com todas as operações que o Administrador pode/deve realizar</p>
+                        <small class="text-muted">Atualizado em 09/10/2025</small>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Manual do Avaliador de Currículo</h5>
+                            <small class="text-muted">DOCUMENTO PDF</small>
+                        </div>
+                        <p class="mb-1">Guia completo com instruções a respeito da Avaliação Curricular</p>
+                        <small class="text-muted">Atualizado em 09/10/2025</small>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Manual da JISE</h5>
+                            <small class="text-muted">DOCUMENTO PDF</small>
+                        </div>
+                        <p class="mb-1">Guia completo com instruções a respeito do Julgamento de Recursos da Inspeção de Saúde</p>
+                        <small class="text-muted">Atualizado em 09/10/2025</small>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Manual da Comissão de Heteroidentificação</h5>
+                            <small class="text-muted">DOCUMENTO PDF</small>
+                        </div>
+                        <p class="mb-1">Guia completo com com instruções a respeito da Heteroidentificação</p>
+                        <small class="text-muted">Atualizado em 09/10/2025</small>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Manual do Operador de OM</h5>
+                            <small class="text-muted">DOCUMENTO PDF</small>
+                        </div>
+                        <p class="mb-1">Guia completo com instruções sobre os procedimentos que operador de OM deve realizar</p>
+                        <small class="text-muted">Atualizado em 09/10/2025</small>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Manual do Ouvidor</h5>
+                            <small class="text-muted">DOCUMENTO PDF</small>
+                        </div>
+                        <p class="mb-1">Guia completo para com os procedimentos de resposta do Fale Conosco</p>
+                        <small class="text-muted">Atualizado em 09/10/2025</small>
+                    </a>
+
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Manual do Candidato</h5>
+                            <small class="text-muted">DOCUMENTO PDF</small>
+                        </div>
+                        <p class="mb-1">Guia completo com todas as operações que o candidato pode/deve realizar</p>
+                        <small class="text-muted">Atualizado em 09/10/2025</small>
                     </a>
 
                     <a href="#" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">Termos de Uso</h5>
-                            <small class="text-muted">PDF - 1.1MB</small>
+                            <small class="text-muted">DOCUMENTO PDF</small>
                         </div>
                         <p class="mb-1">Normas e condições de uso do sistema</p>
-                        <small class="text-muted">Versão 3.1</small>
+                        <small class="text-muted">Atualizado em 09/10/2025</small>
                     </a>
 
                     <a href="#" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">Política de Privacidade</h5>
-                            <small class="text-muted">PDF - 0.8MB</small>
+                            <small class="text-muted">DOCUMENTO PDF</small>
                         </div>
                         <p class="mb-1">Como seus dados são coletados e protegidos</p>
                         <small class="text-muted">Atualizado em 10/01/2024</small>
