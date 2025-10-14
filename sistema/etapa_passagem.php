@@ -158,6 +158,10 @@ $especialidades = $conexao->get_especialidade();
             $('#div_inscricao').show();
         else
             $('#div_inscricao').hide();
+        if ($('#script').val() == 'aptos_jise')
+            $('#div_aptos_jise').show();
+        else
+            $('#div_aptos_jise').hide();
 
         if ($('#script').val() == 'pagamento')
             $('#div_pagamento').show();
@@ -199,7 +203,7 @@ $especialidades = $conexao->get_especialidade();
 
     <div class="row">
         <!-- Execução de Script -->
-        <div class="col-md-6 mb-20">
+        <div class="col-md-6">
             <div class="card fade-in">
                 <div class="card-header">
                     <span class="mb-0">
@@ -215,10 +219,13 @@ $especialidades = $conexao->get_especialidade();
                             <select id="script" name="script" class="form-control" onchange="script_selecionado()" style="width: 100%;">
                                 <option value="">Selecione o script a ser executado</option>
                                 <option value="inscricao">1 - Desclassificação dos candidatos com pendências na inscrição</option>
+                                <option value="aptos_jise">2 - Passar para Etapa IV todos candidatos APTOS em JISE</option>
+                                <option value="inaptos_jise">3 - Eliminar os candidatos que foram INAPTOS ou NÃO compareceram a IS</option>
+                                
                                 <?php
                                 if ($pagamento_obrigatorio == '1') {
-                                    echo '<option value="pagamento">2 - Desclassificação dos candidatos que não realizaram o pagamento da GRU</option>';
-                                    echo '<option value="isentos">3 - Desclassificação dos candidatos que foram considerados NÃO ISENTOS e não realizaram pagamento</option>';
+                                    echo '<option value="pagamento">4 - Desclassificação dos candidatos que não realizaram o pagamento da GRU</option>';
+                                    echo '<option value="isentos">5 - Desclassificação dos candidatos que foram considerados NÃO ISENTOS e não realizaram pagamento</option>';
                                 }
                                 ?>
                                 <option value="ctrl_z">Ctrl + Z | Classifica todos os desclassificados</option>
@@ -242,6 +249,15 @@ $especialidades = $conexao->get_especialidade();
                                 <div class="alert alert-warning mt-3">
                                     <i class="fa fa-exclamation-triangle mr-10"></i>
                                     <strong>ATENÇÃO:</strong> Este script só poderá ser executado após a finalização da data de inscrição.
+                                </div>
+                            </div>
+
+                            <div id="div_aptos_jise" class="info-details" style="display: none;">
+                                <h5 class="text-success"><i class="fa fa-info-circle mr-10"></i>Detalhamento:</h5>
+                                <p class="mb-5">Este script irá passar para Etapa IV os candidatos que constam no SiSCanT como aptos em JISE e que estão CONCORRENDO!</p>
+                                <div class="alert alert-warning mt-3">
+                                    <i class="fa fa-exclamation-triangle mr-10"></i>
+                                    <strong>ATENÇÃO:</strong> Este script só poderá ser executado após passar o SiSCanT para Etapa IV.
                                 </div>
                             </div>
 
@@ -284,7 +300,7 @@ $especialidades = $conexao->get_especialidade();
         </div>
 
         <!-- Passagem de Etapa da Seleção -->
-        <div class="col-md-6 mb-20">
+        <div class="col-md-6">
             <div class="card fade-in">
                 <div class="card-header">
                     <span class="mb-0">
@@ -332,7 +348,7 @@ $especialidades = $conexao->get_especialidade();
         </div>
 
         <!-- Passagem de Etapa de Especialidade -->
-        <div class="col-md-12 mb-20">
+        <div class="col-md-12">
             <div class="card fade-in">
                 <div class="card-header">
                     <span class="mb-0">

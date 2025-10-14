@@ -91,7 +91,7 @@ foreach ($get_especialidades_candidato as $linha) {
                     <div class="card">
                         <div class="card-header bg-warning text-dark mb-20">
                             <div class="documento-info">
-                                <i class="fa fa-exclamation-triangle mr-10"></i>
+                                <i class="fa fa-exclamation-triangle"></i>
                                 <span class="fw-semibold">ESCOLHA DE GUARNIÇÃO</span>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ foreach ($get_especialidades_candidato as $linha) {
             <div class="card">
                 <div class="card-header bg-info text-white mb-20">
                     <div class="documento-info">
-                        <i class="fa fa-info-circle mr-10"></i>
+                        <i class="fa fa-info-circle"></i>
                         <span class="mb-0">Comprovante de Inscrição</span>
                     </div>
                 </div>
@@ -178,7 +178,7 @@ foreach ($get_especialidades_candidato as $linha) {
     <div class="card">
         <div class="card-header bg-danger text-white mb-20">
             <div class="documento-info">
-                <i class="fa fa-exclamation-triangle mr-10"></i>
+                <i class="fa fa-exclamation-triangle"></i>
                 <span class="mb-0">Você foi eliminado(a) do processo seletivo <img src="imagens/urgente.gif" height="25px"></span>
             </div>
         </div>
@@ -187,7 +187,7 @@ foreach ($get_especialidades_candidato as $linha) {
                 <div class="col-lg-12">
                     <div class="alert alert-danger alert-dismissible">
                         <div class="documento-info">
-                            <i class="fa fa-ban mr-10 fa-2x"></i>
+                            <i class="fa fa-ban fa-2x"></i>
                             <div>
                                 <h5 class="fw-bold mb-2">Justificativa:</h5>
                                 <p class="mb-0"><?php echo $justificativa_concorrendo_processo; ?></p>
@@ -204,7 +204,7 @@ foreach ($get_especialidades_candidato as $linha) {
     <div class="card">
         <div class="card-header bg-danger text-white mb-20">
             <div class="documento-info">
-                <i class="fa fa-times-circle mr-10"></i>
+                <i class="fa fa-times-circle"></i>
                 <span class="mb-0">Eliminação em especialidade <img src="imagens/urgente.gif" height="25px"></span>
             </div>
         </div>
@@ -213,7 +213,7 @@ foreach ($get_especialidades_candidato as $linha) {
                 <div class="col-lg-12">
                     <div class="alert alert-danger alert-dismissible">
                         <div class="documento-info" style="align-items: flex-start;">
-                            <i class="fa fa-ban mr-10 mt-1 fa-2x"></i>
+                            <i class="fa fa-ban mt-1 fa-2x"></i>
                             <div>
                                 <h5 class="fw-bold mb-3">Especialidades com eliminação:</h5>
                                 <?php foreach ($get_especialidades_candidato as $linha): ?>
@@ -270,7 +270,7 @@ foreach ($get_especialidades_candidato as $linha) {
             <div <?php if (!$possui_docs_obrigatorios_invalidos) echo "hidden"; ?> class="card">
                 <div class="card-header text-dark mb-20">
                     <div class="documento-info">
-                        <i class="fa fa-exclamation-triangle mr-10"></i>
+                        <i class="fa fa-exclamation-triangle"></i>
                         <span class="mb-0">Documentos Obrigatórios</span>
                     </div>
                 </div>

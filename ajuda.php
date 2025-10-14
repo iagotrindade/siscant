@@ -226,7 +226,7 @@ $conexao = new Conexao();
         <!-- Área de conteúdo -->
         <div class="content-area">
             <div class="header">
-                <h1>Central de Ajuda</h1>
+                <h1>Central de Ajuda - EM CONSTRUÇÃO!</h1>
             </div>
 
             <!-- Card de Perguntas Frequentes -->

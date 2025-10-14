@@ -2663,18 +2663,23 @@ class Conexao
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get ATA DIA EXAME MÉDICO">
-    public function get_ata_dia_exame_medico($data_ata)
+    public function get_ata_dia_exame_medico($data_inicial, $data_final)
     {
-        $stmt = $this->pdo->prepare("select * from usuario 
-                                    where perfil = 'candidato' and candidato = 1 
-                                    and concorrendo = 1 and apagado = 0 
-                                    and (data_exame_saude = :data_ata or data_exame_saude_recurso = :data_ata)
-                                    and medico_obrigatorio is null
-                                    and id_selecao = :selecao order by nome_completo");
+        $stmt = $this->pdo->prepare("SELECT * FROM usuario 
+                                WHERE perfil = 'candidato' AND candidato = 1 
+                                AND concorrendo = 1 AND apagado = 0 
+                                AND (
+                                    (data_exame_saude BETWEEN :data_inicial AND :data_final) OR 
+                                    (data_exame_saude_recurso BETWEEN :data_inicial AND :data_final)
+                                )
+                                AND medico_obrigatorio IS NULL
+                                AND id_selecao = :selecao 
+                                ORDER BY nome_completo");
 
         $stmt->bindValue(':selecao', $_SESSION['selecao']);
-        $stmt->bindValue(':data_ata', "$data_ata", PDO::PARAM_STR);
-        $run = $stmt->execute();
+        $stmt->bindValue(':data_inicial', $data_inicial, PDO::PARAM_STR);
+        $stmt->bindValue(':data_final', $data_final, PDO::PARAM_STR);
+        $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }

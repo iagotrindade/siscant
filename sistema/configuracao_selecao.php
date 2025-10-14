@@ -248,7 +248,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         <!-- Agrupamento por categorias -->
 
         <!-- Documentos e Arquivos -->
-        <div class="col-12 ">
+        <div class="col-md-12 ">
             <h3 class="section-title mt-0"><i class="fa fa-files-o"></i> Documentos e Arquivos</h3>
         </div>
 
@@ -318,7 +318,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         </div>
 
         <!-- Agenda e Prazos -->
-        <div class="col-12">
+        <div class="col-md-12">
             <h3 class="section-title"><i class="fa fa-calendar"></i> Agenda e Prazos</h3>
         </div>
 
@@ -483,7 +483,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         </div>
 
         <!-- Liberações e Configurações -->
-        <div class="col-12">
+        <div class="col-md-12">
             <h3 class="section-title"><i class="fa fa-unlock-alt"></i> Liberações e Configurações</h3>
         </div>
 
@@ -657,7 +657,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         </div>
 
         <!-- Regras e Validações -->
-        <div class="col-12">
+        <div class="col-md-12">
             <h3 class="section-title"><i class="fa fa-legal"></i> Regras e Validações</h3>
         </div>
 
@@ -829,11 +829,11 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         </div>
 
         <!-- Exame Médico -->
-        <div class="col-12">
+        <div class="col-md-12">
             <h3 class="section-title"><i class="fa fa-stethoscope"></i> Exame Médico</h3>
         </div>
 
-        <div class="col-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <i class="fa fa-plus-circle"></i> Cadastrar Nova JISE

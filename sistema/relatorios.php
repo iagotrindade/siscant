@@ -1195,12 +1195,20 @@ $lista_especialidades = $conexao->get_especialidade();
                     <div class="card-body">
                         <form action="mpdf/relatorio_inspecao_saude.php" method="POST">
                             <div class="row">
-                                <div class="col-lg-4 mb-3">
+                                <div class="col-lg-2 mb-3">
                                     <div class="form-group">
-                                        <label class="form-label">Data da Inspeção de Saúde</label>
-                                        <input name="data_inspecao" maxlength="100" class="form-control" placeholder="Data da Inspeção de Saúde">
+                                        <label class="form-label">Data Inicial Inspeção de Saúde</label>
+                                        <input name="data_inicial_inspecao" maxlength="100" class="form-control" placeholder="Data da Inspeção de Saúde">
                                     </div>
                                 </div>
+
+                                <div class="col-lg-2 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Data Final Inspeção de Saúde</label>
+                                        <input name="data_final_inspecao" maxlength="100" class="form-control" placeholder="Data da Inspeção de Saúde">
+                                    </div>
+                                </div>
+
                                 <div class="col-lg-4 mb-3">
                                     <div class="form-group">
                                         <label class="form-label">Orientação</label>

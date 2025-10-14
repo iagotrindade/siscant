@@ -181,7 +181,7 @@ include_once './codigos/verifica_cadastro_especialidade_candidato.php';
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <!-- Alertas de Status -->
             <?php if (!inscricao()): ?>
                 <div class="alert alert-danger text-center mb-4">
