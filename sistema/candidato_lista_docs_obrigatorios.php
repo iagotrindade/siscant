@@ -366,7 +366,7 @@ else
                                         <?php
                                         if ($total_docs_avaliados != 0 && $total_docs_adicionados != 0) {
                                             $porcentagem_total = ($total_docs_avaliados / $total_docs_adicionados) * 100;
-                                            echo number_format($porcentagem_total, 1) . '%';
+                                            echo number_format($porcentagem_total, 2) . '%';
                                         } else {
                                             echo '0%';
                                         }

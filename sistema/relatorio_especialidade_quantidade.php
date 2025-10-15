@@ -589,7 +589,6 @@ if ($_SESSION['perfil'] == "avaliador") {
                         <i class="fa fa-users me-2"></i>
                         Candidatos com Múltiplas Especialidades
                     </span>
-                    <small class="">Candidatos concorrendo em OTT e STT simultaneamente</small>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -642,13 +641,12 @@ if ($_SESSION['perfil'] == "avaliador") {
                                             </td>
                                             <td class="text-center">
                                                 <a href="usuario_visualiza.php?id_usuario=<?= $linha['id'] ?>"
-                                                    class="btn btn-sm btn-outline-primary"
                                                     data-bs-toggle="tooltip"
                                                     title="Visualizar candidato">
                                                     <img src="fotos/<?= $foto ?>"
-                                                        class="rounded-circle"
-                                                        width="32"
-                                                        height="32"
+                                                        class="img-circle rounded-circle"
+                                                        width="45"
+                                                        height="45"
                                                         alt="Foto">
                                                 </a>
                                             </td>

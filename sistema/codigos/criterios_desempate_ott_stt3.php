@@ -231,7 +231,7 @@
                             <!-- Posição -->
                             <td class="text-center">
                                 <div class="position-badge <?= $is_desclassificado ? 'bg-secondary' : '' ?>">
-                                    <span class="position-number"><?= $lugar ?>º</span>
+                                    <span class="position-number"><?= $lugar ?></span>
                                 </div>
                             </td>
 

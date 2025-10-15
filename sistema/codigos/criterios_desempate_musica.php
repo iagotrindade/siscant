@@ -262,7 +262,7 @@
                                 <!-- Posição -->
                                 <td class="text-center">
                                     <div class="position-badge">
-                                        <span class="position-number"><?= $lugar ?>º</span>
+                                        <span class="position-number"><?= $lugar ?></span>
                                     </div>
                                 </td>
 
@@ -451,7 +451,7 @@
                                 <!-- Posição -->
                                 <td class="text-center">
                                     <div class="position-badge">
-                                        <span class="position-number"><?= $lugar ?>º</span>
+                                        <span class="position-number"><?= $lugar ?></span>
                                     </div>
                                 </td>
 

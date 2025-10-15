@@ -77,14 +77,14 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                         <table class="table table-hover table-striped" id="tabela_dinamica">
                             <thead class="table-light">
                                 <tr>
-                                    <th>CPF</th>
-                                    <th>Candidato</th>
-                                    <th class="text-center">Etapa</th>
+                                    <th><i class="fa fa-id-card"></i> CPF</th>
+                                    <th><i class="fa fa-user"></i> Candidato</th>
+                                    <th class="text-center"><i class="fa fa-list"></i> Etapa</th>
                                     <th>Especialidade</th>
-                                    <th class="text-center">IS - JISE</th>
-                                    <th class="text-center">ISGRec - JISR</th>
-                                    <th class="text-center">Recurso Etapa 3</th>
-                                    <th class="text-center">Ações</th>
+                                    <th class="text-center"><i class="fa fa-graduation-cap"></i> IS - JISE</th>
+                                    <th class="text-center"><i class="fa fa-stethoscope"></i> ISGRec - JISR</th>
+                                    <th class="text-center"><i class="fa fa-file-text"></i> Recurso Etapa 3</th>
+                                    <th class="text-center"><i class="fa fa-cogs"></i> Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -177,7 +177,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                             <!-- Etapa -->
                                             <td class="text-center">
                                                 <span class="etapa-badge etapa-<?= $linha['etapa'] ?>">
-                                                    <?= $linha['etapa'] ?>
+                                                    _<?= $linha['etapa'] ?>
                                                 </span>
                                             </td>
 

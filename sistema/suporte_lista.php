@@ -370,10 +370,6 @@ $lista_suporte_inicial = $conexao->get_suporte();
         font-size: 1.2rem;
     }
 
-    .bg-primary {
-        background-color: var(--primary-color);
-    }
-
     .bg-gold {
         background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
         color: #000;
@@ -907,7 +903,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                 }
 
                                 $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $max_respostas) * 100 : 0;
+                                $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
 
                                 // Determinar a cor do card baseado no rank
                                 $card_class = '';
@@ -928,7 +924,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                     $icon = '🥉';
                                 } else {
                                     $card_class = 'performance-card-normal';
-                                    $badge_class = 'bg-secondary';
+                                    $badge_class = 'bg-primary';
                                     $icon = '#' . $rank;
                                 }
                             ?>
@@ -983,7 +979,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                     <div class="card-footer">
                                         <small class="text-muted">
                                             <i class="fa fa-tachometer-alt me-1"></i>
-                                            <?php echo round($percentual); ?>% do recorde
+                                            <?php echo round($percentual); ?>% do total
                                         </small>
                                     </div>
                                 </div>
@@ -1009,7 +1005,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                     }
 
                                     $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                    $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $max_respostas) * 100 : 0;
+                                    $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
 
                                     // Determinar a cor do card baseado no rank
                                     $card_class = '';
@@ -1085,7 +1081,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                         <div class="card-footer">
                                             <small class="text-muted">
                                                 <i class="fa fa-tachometer-alt me-1"></i>
-                                                <?php echo round($percentual); ?>% do recorde
+                                                <?php echo round($percentual); ?>% do total
                                             </small>
                                         </div>
                                     </div>
@@ -1115,7 +1111,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                     }
 
                                     $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                    $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $max_respostas) * 100 : 0;
+                                    $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
 
                                     // Determinar a cor do rank
                                     $rank_class = '';
@@ -1192,7 +1188,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                         }
 
                                         $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                        $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $max_respostas) * 100 : 0;
+                                        $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
 
                                         // Determinar a cor do rank
                                         $rank_class = '';

@@ -151,7 +151,7 @@
             <u><b> 6 </b>- Reservista de 2ª categoria </u> - | -
             <u><b> 7 </b>- Civil  </u>
         </div> 
-            <table class="table table-hover table-bordered" id="tabela_dinamica2">
+            <table class="table table-hover table-bordered tabela_dinamica">
                 <thead>
                     <tr>
                       <th>Lugar</th>
@@ -194,7 +194,7 @@
                         
                         echo '
                         <tr>
-                            <td>'.$lugar.'º</td>
+                            <td>'.$lugar.'</td>
                             <td><a href="usuario_visualiza.php?id_usuario='.$linha['id'].'">'.$linha['nome'].'</a></td>
                             <td><a href="usuario_visualiza.php?id_usuario='.$linha['id'].'">'.$linha['cpf'].'</a></td>
                             <td>'.$data_inicio_adiamento.'</td>

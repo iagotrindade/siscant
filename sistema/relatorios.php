@@ -623,6 +623,26 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
                             </div>
 
+                            <?php foreach ($lista_especialidades as $especialidade): ?>
+                                <?php
+                                $candidatos = $conexao->get_candidatos_especialidade($especialidade['id']);
+
+                                foreach ($candidatos as $index => $candidato) {
+                                    if ($candidato['etapa'] < 3) {
+                                        unset($candidatos[$index]);
+                                    }
+                                }
+
+                                $qtdCandidatos = count($candidatos);
+                                ?>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Total de Convocados AMPLA CONCORRÊNCIA <?= strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . ' (Total de Candidatos na Etapa III: ' . $qtdCandidatos . ')' ?></label>
+                                        <input type="text" name="hora_especialidade[<?= $especialidade['id'] ?>]" placeholder="<?=$qtdCandidatos?>" class="form-control" value="<?=$qtdCandidatos?>"></input>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary w-100">
                                     <i class="fa fa-file-export me-2"></i> GERAR CRONOGRAMA AUTOMÁTICO

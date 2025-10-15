@@ -159,7 +159,7 @@
         <legend>Classificação dos candidatos 2</legend>
         <div class="card-body">
             
-            <table class="table table-hover table-bordered" id="tabela_dinamica3">
+            <table class="table table-hover table-bordered tabela_dinamica">
                 <thead>
                     <tr>
                       <th>Lugar</th>
@@ -232,7 +232,7 @@
                         
                         echo '
                         <tr>
-                            <td>'.$lugar.'º</td>
+                            <td>'.$lugar.'</td>
                             <td width="40px" align="center"><a href="usuario_visualiza.php?id_usuario='.$linha['id'].'">'.$linha['nome'].'</a></td>
                             <td>'.$linha['pontos'].'</td>
                             <td>'.$linha['voluntario_sv_militar'].'</td>

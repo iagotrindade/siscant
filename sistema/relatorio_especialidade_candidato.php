@@ -540,14 +540,7 @@ $especialidade_medico = false;
         // Seleciona todas as tabelas com a classe .tabela_dinamica
         $('.tabela_dinamica').each(function() {
             $(this).DataTable({
-                "order": [
-                    [0, "asc"]
-                ],
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                },
-                "responsive": true,
-                "pageLength": 25
+                ordering: true
             });
         });
 

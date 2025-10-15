@@ -248,7 +248,11 @@ if ($script == 'inaptos_jise') {
             continue;
         }
 
-        (int)$candidato['apto_saude'] == 0 ? $justificativa = 'Candidato INAPTO na Inspeção de Saúde' : 'Candidato NÃO COMPARECEU a Inspeção de Saúde';
+        if ($candidato['apto_saude'] == 0) {
+            $justificativa = 'Candidato INAPTO na Inspeção de Saúde';
+        } elseif ($candidato['apto_saude'] == 2) {
+            $justificativa = 'Candidato NÃO COMPARECEU a Inspeção de Saúde';
+        }
 
         // carrega as especialidades UMA vez
         $candidato['especialidades'] = $conexao->get_especialidade_candidato($candidato['id']);
@@ -266,7 +270,7 @@ if ($script == 'inaptos_jise') {
         // Processa cada especialidade do candidato
         foreach ($candidato['especialidades'] as $especialidade) {
             // valida que temos o id do relacionamento candidato_x_especialidade
-            if ($especialidade['etapa' != 3]) {
+            if ($especialidade['etapa' != 3] || $especialidade['concorrendo'] == 0) {
                 continue;
             }
 
@@ -287,6 +291,7 @@ if ($script == 'inaptos_jise') {
             );
 
             $alteracoes_detalhadas = print_r($resultado_concorrendo, true);
+
             if ($resultado_concorrendo) {
                 // log com concatenação correta
                 $conexao->insere_log(

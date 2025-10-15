@@ -221,7 +221,7 @@
 
         <!-- Tabela de Classificação -->
         <div class="table-responsive">
-            <table class="table table-hover table-striped classification-table" id="tabela_dinamica2">
+            <table class="table table-hover table-striped classification-table tabela_dinamica">
                 <thead class="table-light">
                     <tr>
                         <th width="80px" class="text-center"><i class="fa fa-trophy"></i> Posição</th>
@@ -252,7 +252,7 @@
                             <!-- Posição -->
                             <td class="text-center">
                                 <div class="position-badge">
-                                    <span class="position-number"><?= $lugar ?>º</span>
+                                    <span class="position-number"><?= $lugar ?></span>
                                 </div>
                             </td>
 
@@ -554,7 +554,7 @@
 
         <!-- Tabela de Classificação -->
         <div class="table-responsive">
-            <table class="table table-hover table-striped classification-table" id="tabela_dinamica2">
+            <table class="table table-hover table-striped classification-table tabela_dinamica">
                 <thead class="table-light">
                     <tr>
                         <th width="80px" class="text-center"><i class="fa fa-trophy"></i> Posição</th>
@@ -590,7 +590,7 @@
                             <!-- Posição -->
                             <td class="text-center">
                                 <div class="position-badge">
-                                    <span class="position-number"><?= $lugar ?>º</span>
+                                    <span class="position-number"><?= $lugar ?></span>
                                 </div>
                             </td>
 
