@@ -68,7 +68,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="card-title mb-0">
                             <i class="fa fa-users me-2"></i>
-                            Candidatos <?= $_SESSION['selecao_nome'] ?> - Inspeção de Saúde
+                            Candidatos Etapa III - Inspeção de Saúde
                         </span>
                     </div>
                 </div>

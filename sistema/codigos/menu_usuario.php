@@ -59,7 +59,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </ul>
 </li>
 
-<li <?php if ($perfil == "ouvidor" || $perfil == "avaliador" || $perfil == "documentos" || $perfil == "om") echo "hidden"; ?> class="treeview">
+<li <?php if ($perfil == "ouvidor" || $perfil == "avaliador" || $perfil == "documentos" || $perfil == "om" || $_SESSION['selecao_codigo'] == 'ott_stt') echo "hidden"; ?> class="treeview">
     <a href="#"><i class="fa fa-search"></i><span><?php if ($_SESSION['perfil'] == "jise") echo ('Resultado IS');
                                                     else echo ('Pesquisa'); ?></span><i class="fa fa-angle-right"></i></a>
     <ul class="treeview-menu">

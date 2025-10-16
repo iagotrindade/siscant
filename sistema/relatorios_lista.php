@@ -193,7 +193,7 @@ if ($perfil == "ouvidor") {
               <a href="relatorio_especialidade_candidato.php" class="card-link">
                 <div class="dashboard-card card-hover">
                   <div class="card-icon bg-primary">
-                    <i class="fa fa-users"></i>
+                    <i class="fa fa-graduation-cap"></i>
                   </div>
                   <div class="card-content">
                     <h5>Candidato X Especialidade</h5>
@@ -222,8 +222,64 @@ if ($perfil == "ouvidor") {
                     <i class="fa fa-stethoscope"></i>
                   </div>
                   <div class="card-content">
-                    <h5>Status Inspeção de Saúde</h5>
+                    <h5>Inspeção de Saúde</h5>
                     <p>Status atual das Inspeções de Saúde</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="col-xl-4 col-md-6" <?php if ($perfil == "avaliador") echo "hidden"; ?>>
+              <a href="candidato_lista.php" class="card-link">
+                <div class="dashboard-card card-hover">
+                  <div class="card-icon bg-primary">
+                    <i class="fa fa-users"></i>
+                  </div>
+                  <div class="card-content">
+                    <h5>Candidatos Participando</h5>
+                    <p>Candidatos que estão concorrendo na Seleção</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="col-xl-4 col-md-6" <?php if ($perfil == "avaliador") echo "hidden"; ?>>
+              <a href="candidato_lista_desclassificados.php" class="card-link">
+                <div class="dashboard-card card-hover">
+                  <div class="card-icon bg-primary">
+                    <i class="fa fa-users"></i>
+                  </div>
+                  <div class="card-content">
+                    <h5>Candidatos Desclassificados</h5>
+                    <p>Candidatos que NÃO estão concorrendo na Seleção</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="col-xl-4 col-md-6" <?php if ($perfil == "avaliador") echo "hidden"; ?>>
+              <a href="relatorio_cotistas.php" class="card-link">
+                <div class="dashboard-card card-hover">
+                  <div class="card-icon bg-primary">
+                    <i class="fa fa-users"></i>
+                  </div>
+                  <div class="card-content">
+                    <h5>Cotistas da Seleção</h5>
+                    <p>Informações sobre os Cotistas</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="col-xl-4 col-md-6" <?php if ($perfil == "avaliador") echo "hidden"; ?>>
+              <a href="usuario_lista.php" class="card-link">
+                <div class="dashboard-card card-hover">
+                  <div class="card-icon bg-primary">
+                    <i class="fa fa-users"></i>
+                  </div>
+                  <div class="card-content">
+                    <h5>Usuários</h5>
+                    <p>Informações dos usuários cadastrados na Seleção</p>
                   </div>
                 </div>
               </a>

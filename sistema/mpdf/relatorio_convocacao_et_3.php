@@ -19,6 +19,9 @@ $etapa = $_POST['etapa'];
 $capacidade_turno = isset($_POST['capacidade_turno']) ? (int)$_POST['capacidade_turno'] : 50;
 $data_inicio = isset($_POST['data_inicio']) ? $_POST['data_inicio'] : date('Y-m-d', strtotime('next monday'));
 $data_final = isset($_POST['data_final']) ? $_POST['data_final'] : date('Y-m-d', strtotime('+2 weeks'));
+
+$qtd_especialidade = $_POST['qtd_especialidade'];
+
 session_start();
 if (!isset($_SESSION['perfil'])) {
     erro_relatorio("Erro 823494! A sua sessão expirou! Faça o login no sistema para gerar o relatório");
@@ -194,6 +197,42 @@ foreach ($especialidades as $esp_id => $dados_esp) {
         }
     }
 }
+
+$html = "
+   <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
+    <tr>
+        <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>Quantidade de Candidatos Ampla Concorrência Convocados</th>
+    </tr>
+    <tr>
+        <th style='text-align: center; width: 10%;'>Nº</th>
+        <th style='text-align: center; width: 20%;'>Especialidade</th>
+        <th style='text-align: center; width: 50%;'>Quantidade</th>
+    </tr>
+    ";
+
+foreach ($especialidades as $esp_id) {
+    $contador = 1;
+
+    if (isset($qtd_especialidade[$esp_id])) {
+        $qtd_txt = $qtd_especialidade[$esp_id];
+
+        foreach ($candidatos as $index => $candidato) {
+            // O CPF já foi mascarado no primeiro loop
+            $cpf = substr($candidato['cpf'], 0, -5) . "*****";
+            $html .= "
+        <tr>
+            <td style='text-align: center;'>$contador</td>
+            <td style='text-align: center;'>$cpf</td>
+            <td style='text-align: center;'>" . $qtd_txt . "</td>
+        </tr>";
+            $contador++;
+        }
+
+        $html .= "</table>";
+        $mpdf->WriteHTML($html);
+    }
+}
+
 // GERAR TABELAS POR ESPECIALIDADE E TURNO 
 foreach ($turnos_agendados as $data => $turnos_dia) {
     $data_formatada = formatarDataPortugues($data);

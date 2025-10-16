@@ -171,7 +171,7 @@ $lista_especialidades = $conexao->get_especialidade();
         </div>
     </div>
 
-    <!-- Publicações Etapa III -->
+    <!-- Publicações Etapa I -->
     <div class="card">
         <div class="section-header" data-bs-toggle="collapse" href="#et_1" role="button" aria-expanded="false" aria-controls="et_1">
             <h4 class="mb-0">
@@ -638,7 +638,7 @@ $lista_especialidades = $conexao->get_especialidade();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>Total de Convocados AMPLA CONCORRÊNCIA <?= strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . ' (Total de Candidatos na Etapa III: ' . $qtdCandidatos . ')' ?></label>
-                                        <input type="text" name="hora_especialidade[<?= $especialidade['id'] ?>]" placeholder="<?=$qtdCandidatos?>" class="form-control" value="<?=$qtdCandidatos?>"></input>
+                                        <input type="text" name="qtd_especialidade[<?= $especialidade['id'] ?>]" placeholder="<?=$qtdCandidatos?>" class="form-control" value="<?=$qtdCandidatos?>"></input>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
