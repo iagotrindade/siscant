@@ -55,7 +55,38 @@ $cabecalhos = [
     '4' => "MINISTÉRIO DA DEFESA<br>EXÉRCITO BRASILEIRO<br>COMANDO DA 4ª REGIÃO MILITAR<br>(4⁰ Distrito Militar/1891)<br>REGIÃO DAS MINAS DO OURO<br>",
 ];
 
-$html = " <p class='center' style='font-size: 10px; text-align: center; margin-bottom: 5px;'> <img src='../imagens/brasao.png' width='70px'><br> {$cabecalhos['' .$rm_usuario . '']} </p> <table border='0' style='width:100%; margin-top: 5px;'> <tr><th align='center'><strong>$titulo</strong></th></tr> </table> <table border='0' style='width:100%; margin-top: 5px;'> <tr><th align='center'><strong>$subtitulo</strong></th></tr> </table> <table border='0' style='width:100%; margin-top: 5px;'> <tr><th align='right'><strong>$data</strong></th></tr> </table> <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_um</p> <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_dois</p> <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_tres</p> <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_quatro</p>";
+$html = " <p class='center' style='font-size: 10px; text-align: center; margin-bottom: 5px;'> <img src='../imagens/brasao.png' width='70px'><br> {$cabecalhos['' .$rm_usuario . '']} </p>
+<table border='0' style='width:100%; margin-top: 5px;'>
+    <tr>
+        <th align='center'>
+            <strong>$titulo</strong>
+        </th>
+    </tr>
+</table>
+<table border='0' style='width:100%; margin-top: 5px;'>
+    <tr>
+        <th align='center'>
+            <strong>$subtitulo</strong>
+        </th>
+    </tr>
+</table>
+
+<table border='0' style='width:100%; margin-top: 5px;'>
+    <tr>
+        <th align='right'>
+            <strong>$data</strong>
+        </th>
+    </tr> 
+</table> 
+
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_um</p>
+
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_dois</p>
+
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_tres</p>
+
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_quatro</p>";
+
 $mpdf->WriteHTML($html);
 // FUNÇÕES AUXILIARES PARA DISTRIBUIÇÃO POR TURNOS
 function formatarDataPortugues($data)
@@ -198,40 +229,42 @@ foreach ($especialidades as $esp_id => $dados_esp) {
     }
 }
 
-$html = "
+// GETA A TABELA COM O TOTAL POR ESPECIALIDADES DE CONVOCADOS NO CRITÉRIO AMPLA CONCORRÊNCIA
+$html = "<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'><strong>1. AMPLA CONCORRÊNCIA POR ESPECIALIDADE</strong></p>
+
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>Além das quantidades de candidatos de ampla concorrência abaixo informadas, serão convocados todos os candidatos cotistas independente de sua classificação.</p>";
+
+$html .= "
    <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
     <tr>
-        <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>Quantidade de Candidatos Ampla Concorrência Convocados</th>
+        <th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>QUANTIDADE DE CANDIDATOS CONVOCADOS NO CRITÉRIO AMPLA CONCORRÊNCIA</th>
     </tr>
     <tr>
         <th style='text-align: center; width: 10%;'>Nº</th>
-        <th style='text-align: center; width: 20%;'>Especialidade</th>
-        <th style='text-align: center; width: 50%;'>Quantidade</th>
+        <th style='text-align: center; width: 20%;'>ESPECIALIDADE</th>
+        <th style='text-align: center; width: 50%;'>QUANTIDADE</th>
     </tr>
     ";
 
-foreach ($especialidades as $esp_id) {
-    $contador = 1;
+$contador = 1;
 
-    if (isset($qtd_especialidade[$esp_id])) {
-        $qtd_txt = $qtd_especialidade[$esp_id];
+foreach ($lista_especialidades as $especialidade) {
+    if (isset($qtd_especialidade[$especialidade['id']])) {
+        $qtd_txt = $qtd_especialidade[$especialidade['id']];
 
-        foreach ($candidatos as $index => $candidato) {
-            // O CPF já foi mascarado no primeiro loop
-            $cpf = substr($candidato['cpf'], 0, -5) . "*****";
-            $html .= "
-        <tr>
-            <td style='text-align: center;'>$contador</td>
-            <td style='text-align: center;'>$cpf</td>
-            <td style='text-align: center;'>" . $qtd_txt . "</td>
-        </tr>";
-            $contador++;
-        }
-
-        $html .= "</table>";
-        $mpdf->WriteHTML($html);
+        $html .= "
+            <tr>
+                <td style='text-align: center;'>$contador</td>
+                <td style='text-align: center;'>" . strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . "</td>
+                <td style='text-align: center;'>" . $qtd_txt . "</td>
+            </tr>";
     }
+    $contador++; 
 }
+$html .= "</table>";
+$mpdf->WriteHTML($html);
+
+$html = "<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'><strong>2. CONVOCAÇÃO ETAPA III</strong></p>";
 
 // GERAR TABELAS POR ESPECIALIDADE E TURNO 
 foreach ($turnos_agendados as $data => $turnos_dia) {
@@ -242,12 +275,12 @@ foreach ($turnos_agendados as $data => $turnos_dia) {
         foreach ($turnos_dia[$turno]['especialidades'] as $esp_id => $candidatos_ids) {
             if (empty($candidatos_ids)) continue;
             $nome_especialidade = $especialidades[$esp_id]['nome_especialidade'];
-            $html = "<table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'> <tr><th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'> " . mb_strtoupper($nome_especialidade, 'UTF-8') . "<br> {$data_formatada} ÀS {$hora_turno} </th></tr> <tr> <th style='text-align: center; width: 10%;'>Nº</th> <th style='text-align: center; width: 30%;'>CPF</th> <th style='text-align: center; width: 60%;'>NOME</th> </tr>";
+            $html .= "<table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'> <tr><th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'> " . mb_strtoupper($nome_especialidade, 'UTF-8') . "<br> {$data_formatada} ÀS {$hora_turno} </th></tr> <tr> <th style='text-align: center; width: 10%;'>Nº</th> <th style='text-align: center; width: 20%;'>CPF</th> <th style='text-align: center; width: 60%;'>NOME</th><th style='text-align: center; width: 10%;'>AUTODECLARAÇÃO</th> </tr>";
             $contador = 1;
             foreach ($candidatos_ids as $candidato_id) {
                 $candidato = $todos_candidatos[$candidato_id]['dados'];
                 $cpf = substr($candidato['cpf'], 0, -5) . "*****";
-                $html .= "<tr> <td style='text-align: center;'>{$contador}</td> <td style='text-align: center;'>{$cpf}</td> <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td> </tr>";
+                $html .= "<tr> <td style='text-align: center;'>{$contador}</td> <td style='text-align: center;'>{$cpf}</td> <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td> <td style='text-align: center;'>" . strtoupper($candidato['autodeclaracao']) . "</td> </tr>";
                 $contador++;
             }
             $html .= "</table>";
@@ -255,11 +288,7 @@ foreach ($turnos_agendados as $data => $turnos_dia) {
         }
     }
 }
-// ADICIONAR INFORMAÇÃO SOBRE A DISTRIBUIÇÃO 
-if ($distribuicao['sobrecarregado']) {
-    $html = "<p style='font-size: 10px; color: #666; text-align: center; margin-top: 20px;'> * Distribuição realizada entre {$data_inicio} e {$data_final} ({$total_dias_uteis} dias úteis) </p>";
-    $mpdf->WriteHTML($html);
-}
+
 // =========================== // SEGUNDA PARTE - LISTA DE PRESENÇA POR ESPECIALIDADE // =========================== 
 $mpdf->AddPage();
 $html = " <p class='center' style='font-size: 10px; text-align: center; margin-bottom: 5px;'> <img src='../imagens/brasao.png' width='70px'><br> {$_SESSION['cabecalho_relatorio']} </p> <table border='0' style='width:100%; margin-top: 5px;'> <tr><th align='center'><strong>PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20__/20__</strong></th></tr> </table> <table border='0' style='width:100%; margin-top: 5px;'> <tr><th align='center'><strong>LISTA DE PRESENÇA ETAPA III – CONFERÊNCIA PRESENCIAL DE DOCUMENTAÇÃO, ENTREVISTA E INSPEÇÃO DE SAÚDE</strong></th></tr> </table>";

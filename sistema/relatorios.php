@@ -637,7 +637,7 @@ $lista_especialidades = $conexao->get_especialidade();
                                 ?>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label>Total de Convocados AMPLA CONCORRÊNCIA <?= strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . ' (Total de Candidatos na Etapa III: ' . $qtdCandidatos . ')' ?></label>
+                                        <label>Total de Convocados AMPLA CONCORRÊNCIA <?= strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?></label>
                                         <input type="text" name="qtd_especialidade[<?= $especialidade['id'] ?>]" placeholder="<?=$qtdCandidatos?>" class="form-control" value="<?=$qtdCandidatos?>"></input>
                                     </div>
                                 </div>
