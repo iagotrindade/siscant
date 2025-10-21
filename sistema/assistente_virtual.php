@@ -300,7 +300,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                     ?>
                                     <tr class="table-row-custom">
                                         <td class="text-center">
-                                            <span class="selecao-badge"><?= strtoupper($linha['selecao']) ?? '-' ?></span>
+                                            <span class="selecao-badge"><?= mb_strtoupper($linha['selecao']) ?? '-' ?></span>
                                         </td>
 
                                         <td class="text-center">

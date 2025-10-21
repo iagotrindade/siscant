@@ -36,7 +36,7 @@ $get_prioridade = $conexao->get_prioridade_especialidade_candidato($id_candidato
 <div class="content-wrapper">
   <div class="page-title">
     <div>
-      <h1>Especialidade <?php echo strtoupper($ott_stt) . " - " . $nome_especialidade ?> <i class="fa fa-files-o"></i></h1>
+      <h1>Especialidade <?php echo mb_strtoupper($ott_stt) . " - " . $nome_especialidade ?> <i class="fa fa-files-o"></i></h1>
     </div>
     <div>
       <ul class="breadcrumb">

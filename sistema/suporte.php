@@ -21,7 +21,7 @@ $especialidades = $conexao->get_especialidade_candidato($_SESSION['id_usuario'])
 
 // Processa cada especialidade
 foreach ($especialidades as $especialidade) {
-    $linha = '- ' . strtoupper($especialidade['ott_stt']) . ' ' .
+    $linha = '- ' . mb_strtoupper($especialidade['ott_stt']) . ' ' .
         $especialidade['especialidade'] . ' na ETAPA ' . $especialidade['etapa'];
 
     if ($especialidade['concorrendo'] == 1) {

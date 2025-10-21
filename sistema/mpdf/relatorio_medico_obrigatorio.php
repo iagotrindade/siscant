@@ -67,7 +67,7 @@ $tempo_sv_mil = $candidato_relatorio[0]['tempo_sv_mil'];
 $tempo_sv_mil_anos = $candidato_relatorio[0]['tempo_sv_mil_anos'];
 $tempo_sv_mil_meses = $candidato_relatorio[0]['tempo_sv_mil_meses'];
 $tempo_sv_mil_dias = $candidato_relatorio[0]['tempo_sv_mil_dias'];
-$certificado = strtoupper($candidato_relatorio[0]['certificado']);
+$certificado = mb_strtoupper($candidato_relatorio[0]['certificado']);
 $num_ducumento = $candidato_relatorio[0]['num_ducumento'];
 $data_expedicao = $candidato_relatorio[0]['data_expedicao'];
 $civil_militar = $candidato_relatorio[0]['civil_militar'];
@@ -119,7 +119,7 @@ $apto_saude = $candidato_relatorio[0]['apto_saude'];
 if($apto_saude === '0') $apto_saude = "Não";
 if($apto_saude === '1') $apto_saude = "Sim";
 
-$grupo_saude = strtoupper($candidato_relatorio[0]['grupo_saude']);
+$grupo_saude = mb_strtoupper($candidato_relatorio[0]['grupo_saude']);
 $data_exame_saude = $candidato_relatorio[0]['data_exame_saude'];
 if($data_exame_saude != null) $data_exame_saude = trata_data ($data_exame_saude);
 

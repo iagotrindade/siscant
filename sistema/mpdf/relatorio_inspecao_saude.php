@@ -67,7 +67,7 @@ $selecao = $resultado = $conexao->get_selecao_id();
 
 $ano_selecao = (int)$selecao[0]['ano'];
 $ano_selecao_mais_um = $ano_selecao + 1;
-$codigo = strtoupper($selecao[0]['codigo']);
+$codigo = mb_strtoupper($selecao[0]['codigo']);
 if ($codigo == "OTT_STT") $codigo = "OTT/STT";
 
 $eas_ebst = "";
@@ -207,7 +207,7 @@ foreach ($lista_candidatos_ as &$candidato) {
                 " . $apto . "
             </td>
              <td>
-                " . strtoupper($grupo_saude) . "
+                " . mb_strtoupper($grupo_saude) . "
             </td>
             <td>
                 " . $cid_saude . "

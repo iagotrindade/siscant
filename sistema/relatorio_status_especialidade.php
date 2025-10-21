@@ -286,7 +286,7 @@ if ($select_candidatos == "desclassificados") $candidatos_desclassificados = tru
                                                     <div class="especialidade-info">
                                                         <a href="relatorio_especialidade_candidato.php?id_especialidade=<?= $id_especialidade ?>"
                                                             class="text-decoration-none">
-                                                            <span class="badge bg-primary me-1" style="color: #fff;"><?= strtoupper($ott_stt) ?></span>
+                                                            <span class="badge bg-primary me-1" style="color: #fff;"><?= mb_strtoupper($ott_stt) ?></span>
                                                             <span class="fw-semibold"><?= htmlspecialchars($nome_especialidade) ?></span>
                                                         </a>
                                                         <?= $especialidade_status ?>

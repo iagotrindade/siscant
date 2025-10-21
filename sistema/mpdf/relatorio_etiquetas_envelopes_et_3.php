@@ -166,7 +166,7 @@ foreach ($especialidades as $esp_id => $dados) {
         return "
         <td style='width:65mm; height:15mm; border:1px solid #000; text-align:center; vertical-align:middle; background-color:#fff;'>
             <div style='font-weight: bold; font-size: 11px;'>" . mb_strtoupper($nome, 'UTF-8') . "</div>
-            <div style='font-size: 11px; font-weight: bold;'>" . strtoupper($candidato['nome_completo']) . "</div>
+            <div style='font-size: 11px; font-weight: bold;'>" . mb_strtoupper($candidato['nome_completo']) . "</div>
             <div style='font-size: 11px; font-weight: bold;'>" . mascara($cpf, '###.###.###-##') . "</div>
         </td>";
     };

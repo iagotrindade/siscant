@@ -39,7 +39,7 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta') {
                                 <tr>
                                 <td>' . ($linha['id']) . '</td>
                                 <td>' . $linha['cpf'] . '</td>
-                                <td>' . strtoupper($linha['operacao']) . '</td>
+                                <td>' . mb_strtoupper($linha['operacao']) . '</td>
                                 <td>tb_' . $linha['tabela'] . '</td>
                                 <td>' . $linha['alteracao'] . '</td>
                                 <td>' . trata_data_hora($linha['data']) . '</td>

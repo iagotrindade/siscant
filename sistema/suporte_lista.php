@@ -614,7 +614,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
 
                                 foreach ($lista_suporte as $linha) {
                                     $dias_resposta = "";
-                                    $usuario_respondeu = "_" . strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                    $usuario_respondeu = "_" . mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
                                     $respondido = "_Não";
                                     $status_class = "status-pendente";
 
@@ -730,7 +730,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
 
                                     foreach ($lista_suporte_inicial as $linha) {
                                         $dias_resposta = "";
-                                        $usuario_respondeu = "_" . strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                        $usuario_respondeu = "_" . mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
                                         $respondido = "_Não";
                                         $status_class = "status-pendente";
 
@@ -902,7 +902,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                     $foto = $get_foto[0]['nome'];
                                 }
 
-                                $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
                                 $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
 
                                 // Determinar a cor do card baseado no rank
@@ -1004,7 +1004,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                         $foto = $get_foto[0]['nome'];
                                     }
 
-                                    $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                    $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
                                     $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
 
                                     // Determinar a cor do card baseado no rank
@@ -1110,7 +1110,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                         $foto = $get_foto[0]['nome'];
                                     }
 
-                                    $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                    $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
                                     $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
 
                                     // Determinar a cor do rank
@@ -1187,7 +1187,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                             $foto = $get_foto[0]['nome'];
                                         }
 
-                                        $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                        $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
                                         $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
 
                                         // Determinar a cor do rank

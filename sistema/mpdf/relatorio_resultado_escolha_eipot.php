@@ -296,7 +296,7 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
         $html .= "<tr>
         <td style='text-align: center; font-size:12px;'>{$candidato['nota_final']}</td>
         <td style='text-align: center; font-size:12px;'>{$cpf}</td>
-        <td style='text-align: center; font-size:12px;'>" . strtoupper($candidato['nome_completo']) . "</td>
+        <td style='text-align: center; font-size:12px;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
         <td style='text-align: center; font-size:12px;'>" . $candidato['criterio_classificacao'] . "</td>";
 
         // Apenas na primeira linha, adiciona a coluna OBS com rowspan
@@ -428,7 +428,7 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
         <tr>
             <td style='text-align: center; font-size:12px;'>{$candidato['nota_final']}</td>
             <td style='font-size: 12px; text-align: center;'>$cpf</td>
-            <td style='font-size: 12px; text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
+            <td style='font-size: 12px; text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
             <td style='font-size: 12px; text-align: center;'>$obsCotista</td>
         </tr>";
     }

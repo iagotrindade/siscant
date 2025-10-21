@@ -107,7 +107,7 @@ if (count($get_selecao) > 0)
     <div class="page-title">
         <div>
             <!-- 22/06/2025 -> Iago Silva Alterado o ícone -->
-            <h1>Especialidade <?php echo strtoupper($ott_stt) . " - " . $nome_especialidade ?> <i class="fa fa-graduation-cap"></i></h1>
+            <h1>Especialidade <?php echo mb_strtoupper($ott_stt) . " - " . $nome_especialidade ?> <i class="fa fa-graduation-cap"></i></h1>
         </div>
         <div>
             <ul class="breadcrumb">

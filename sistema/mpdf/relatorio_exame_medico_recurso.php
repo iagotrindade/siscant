@@ -68,7 +68,7 @@ $tempo_sv_mil = $candidato_relatorio[0]['tempo_sv_mil'];
 $tempo_sv_mil_anos = $candidato_relatorio[0]['tempo_sv_mil_anos'];
 $tempo_sv_mil_meses = $candidato_relatorio[0]['tempo_sv_mil_meses'];
 $tempo_sv_mil_dias = $candidato_relatorio[0]['tempo_sv_mil_dias'];
-$certificado = strtoupper($candidato_relatorio[0]['certificado']);
+$certificado = mb_strtoupper($candidato_relatorio[0]['certificado']);
 $num_ducumento = $candidato_relatorio[0]['num_ducumento'];
 $data_expedicao = $candidato_relatorio[0]['data_expedicao'];
 $civil_militar = $candidato_relatorio[0]['civil_militar'];
@@ -120,7 +120,7 @@ $apto_saude = $candidato_relatorio[0]['apto_saude_recurso'];
 if($apto_saude === '0') $apto_saude = "INAPTO";
 if($apto_saude === '1') $apto_saude = "APTO";
 
-$grupo_saude = strtoupper($candidato_relatorio[0]['grupo_saude_recurso']);
+$grupo_saude = mb_strtoupper($candidato_relatorio[0]['grupo_saude_recurso']);
 $data_exame_saude = $candidato_relatorio[0]['data_exame_saude_recurso'];
 if($data_exame_saude != null) $data_exame_saude = trata_data ($data_exame_saude);
 
@@ -231,7 +231,7 @@ $selecao = $resultado = $conexao->get_selecao_id();
 
 $ano_selecao = (int)$selecao[0]['ano'];
 $ano_selecao_mais_um = $ano_selecao+1;
-$codigo = strtoupper($selecao[0]['codigo']);
+$codigo = mb_strtoupper($selecao[0]['codigo']);
 
 $eas_ebst = "";
 

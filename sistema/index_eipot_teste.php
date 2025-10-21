@@ -35,7 +35,7 @@ require 'menu.php';
                                     echo $saudacao . " $perfil " . $_SESSION['nome_completo']. "!";
 
                                 if($perfil != 'candidato')
-                                    echo $saudacao . " ".$posto_grad . " ". strtoupper($nome_guerra) . " - Perfil: " . strtoupper ($perfil);
+                                    echo $saudacao . " ".$posto_grad . " ". mb_strtoupper($nome_guerra) . " - Perfil: " . mb_strtoupper ($perfil);
                         ?>
                         
                         <?php

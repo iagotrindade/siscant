@@ -352,6 +352,163 @@ $lista_especialidades = $conexao->get_especialidade();
 
         <div class="collapse" id="et_2">
             <div class="card-body">
+                <!-- Convocação Etapa II - Entrevista e Teste Prático -->
+                <?php if ($_SESSION['selecao_codigo'] == 'cet') ?>
+                <div class="alert alert-info">
+                    <legend class="mb-3">
+                        Convocação Etapa II - Entrevista e Teste Prático
+                        <img src="imagens/pdf.png" height="30px">
+                    </legend>
+
+                    <div class="alert alert-danger mb-3">
+                        <h6 class="text-info mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                        <ul class="requisitos-list text-info">
+                            <li>A publicação irá considerar somente os candidatos que estão CONCORRENDO</li>
+                            <li>Passar o SISCANT para Etapa II</li>
+                            <li>Finalizar as avaliações Curriculares</li>
+                            <li>Gerar a publicação após a Avaliação Curricular</li>
+                        </ul>
+                    </div>
+
+                    <form action="mpdf/relatorio_convocacao_cet_et_2.php" method="POST">
+                        <input name="tipo_relatorio" type="hidden" value="classificacao">
+                        <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                        <input name="etapa" type="hidden" value="<?php echo ($etapa_atual); ?>">
+                        <input name="orientacao" type="hidden" value="retrato">
+                        <input name="tipo_especialdiade" type="hidden" value="todas">
+                        <input name="cabecalho" type="hidden" value="sim">
+
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="subtitulo" value="CONVOCAÇÃO ETAPA II - ENTREVISTA E TESTE PRÁTICO" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" style="height: 80px;">O Comandante da Xª Região Militar convoca os candidatos classificados para a realização da Entrevista e Teste Prático, nas especialidades para CABO ESPECIALISTA, conforme anexo "A" (Calendário Geral de Atividades), do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_dois" placeholder="1º Parágrafo do relatório" class="form-control" style="height: 80px;">A presente relação NÃO esta em ordem de Classificação.</textarea>
+                                </div>
+                            </div>
+
+                            <?php foreach ($lista_especialidades as $especialidade): ?>
+                                <?php
+                                $pula = true;
+
+                                $candidatos = $conexao->get_candidatos_especialidade($especialidade['id']);
+                                foreach ($candidatos as $candidato) {
+                                    if ($candidato['etapa'] == 2) {
+                                        $pula = false;
+                                    } else {
+                                        $pula = true;
+                                    }
+                                }
+                                if ($pula) {
+                                    continue;
+                                }
+                                ?>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Local de Realização do Teste Prático <?= mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?></label>
+                                        <textarea type="text" name="agenda_especialidade[<?= $especialidade['id'] ?>]" class="form-control" style="height: 80px;">Os candidatos classificados para o CET/20XX na especialidade <?= mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?>, abaixo discriminados, deverão apresentar-se no 19° Batalhão de Infantaria Motorizado (19º BI Mtz), localizado na Av. Theodomiro Porto da Fonseca, 894-946 - Centro, São Leopoldo - RS, 93020-654, às 0800h do dia 20 AGO 25.</textarea>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-file-export me-2"></i> GERAR
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="alert alert-info">
+                    <legend class="mb-3">
+                        Lista de Presença Etapa II - Entrevista e Teste Prático
+                        <img src="imagens/pdf.png" height="30px">
+                    </legend>
+
+                    <form action="mpdf/relatorio_lista_presenca_cet_et_2.php" method="POST">
+                        <input name="tipo_relatorio" type="hidden" value="classificacao">
+                        <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                        <input name="etapa" type="hidden" value="<?php echo ($etapa_atual); ?>">
+                        <input name="orientacao" type="hidden" value="retrato">
+                        <input name="tipo_especialdiade" type="hidden" value="todas">
+                        <input name="cabecalho" type="hidden" value="sim">
+
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="subtitulo" value="LISTA DE PRESENÇA ETAPA II - ENTREVISTA E TESTE PRÁTICO" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+                            </div>
+
+                            <?php foreach ($lista_especialidades as $especialidade): ?>
+                                <?php
+                                $pula = true;
+
+                                $candidatos = $conexao->get_candidatos_especialidade($especialidade['id']);
+                                foreach ($candidatos as $candidato) {
+                                    if ($candidato['etapa'] == 2) {
+                                        $pula = false;
+                                    } else {
+                                        $pula = true;
+                                    }
+                                }
+                                if ($pula) {
+                                    continue;
+                                }
+                                ?>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Local de Realização do Teste Prático <?= mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?></label>
+                                        <textarea type="text" name="agenda_especialidade[<?= $especialidade['id'] ?>]" class="form-control" style="height: 80px;">Os candidatos classificados para o CET/20XX na especialidade <?= mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?>, abaixo discriminados, deverão apresentar-se no 19° Batalhão de Infantaria Motorizado (19º BI Mtz), localizado na Av. Theodomiro Porto da Fonseca, 894-946 - Centro, São Leopoldo - RS, 93020-654, às 0800h do dia 20 AGO 25.</textarea>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-file-export me-2"></i> GERAR
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <?php ?>
+
                 <!-- Resultado Inicial/Final Etapa II - Avaliação Curricular -->
                 <div class="alert alert-info">
                     <legend class="mb-3">
@@ -637,8 +794,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 ?>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label>Total de Convocados AMPLA CONCORRÊNCIA <?= strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?></label>
-                                        <input type="text" name="qtd_especialidade[<?= $especialidade['id'] ?>]" placeholder="<?=$qtdCandidatos?>" class="form-control" value="<?=$qtdCandidatos?>"></input>
+                                        <label>Total de Convocados AMPLA CONCORRÊNCIA <?= mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?></label>
+                                        <input type="text" name="qtd_especialidade[<?= $especialidade['id'] ?>]" placeholder="<?= $qtdCandidatos ?>" class="form-control" value="<?= $qtdCandidatos ?>"></input>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -797,7 +954,16 @@ $lista_especialidades = $conexao->get_especialidade();
                         <img src="imagens/pdf.png" height="30px">
                     </legend>
 
-                    <form action="mpdf/relatorio_analise_recursos_ott_stt.php" method="POST">
+                    <div class="alert alert-danger mb-3">
+                        <h6 class="text-info mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                        <ul class="requisitos-list text-info">
+                            <li>Cadastrar e julgar todos os recursos da Etapa III no SISCANT</li>
+                            <li>Serão considerados apenas recursos cadastrados com a Etapa III</li>
+                        </ul>
+                    </div>
+
+                    <form action="mpdf/relatorio_recursos_ott_stt_et_3.php" method="POST">
+                        <input type="hidden" name="etapa" value="3">
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
@@ -807,7 +973,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
-                                    <input name="subtitulo" value="RESULTADO DA ANÁLISE DE RECURSOS ETAPA I" class="form-control">
+                                    <input name="subtitulo" value="RESULTADO DA ANÁLISE DE RECURSOS ETAPA III E CONVOCAÇÃO PARA ISGREC" class="form-control">
                                 </div>
                             </div>
 
@@ -819,13 +985,103 @@ $lista_especialidades = $conexao->get_especialidade();
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o parecer da análise de recursos referente à Etapa I, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação Nr X-SSMR/X, de X de junho de 20XX.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o parecer da análise de recursos referente à Etapa III e convoca para Inspeção de Saúde em Grau de Recurso (ISGR), conforme anexo “A” (Calendário Geral de Atividades) do AVISO DE CONVOCAÇÃO PARA SELEÇÃO Nr X – SSMR/X, DE X DE JUNHO DE 20XX.</textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
                                     <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="2">A presente relação NÃO está em ordem de classificação.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Inicial do Recurso</label>
+                                    <input name="data_inicial" type="date" class="form-control" style="height: 40px;">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Final do Recurso</label>
+                                    <input name="data_final" type="date" class="form-control" style="height: 40px;">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group"> <label>1ª OM</label>
+                                    <select name="primeira_om" class="form-control">
+                                        <option value="">Selecione a opção</option>
+                                        <?php
+                                        $oms = $conexao->get_oms($rm_usuario);
+                                        foreach ($oms as $value) {
+                                            if ($om_1_fase == $value['id'])
+                                                echo '<option selected value="' . $value['id'] . '">' . $value['nome'] . '</option>';
+                                            else
+                                                echo '<option value="' . $value['id'] . '">' . $value['nome'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Inicial da Inspeção - Primeiro Local</label>
+                                    <input name="data_inicial_primeiro_local" type="text" class="form-control" style="height: 40px;" value="27/10/2025">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Final da Inspeção - Primeiro Local </label>
+                                    <input name="data_final_primeiro_local" type="text" class="form-control" style="height: 40px;" value="29/10/2025">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Horário de Início - Primeiro Local </label>
+                                    <input name="horario_primeiro_local" type="text" class="form-control" style="height: 40px;" value="0800h">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group"> <label>2ª OM</label>
+                                    <select name="segunda_om" class="form-control">
+                                        <option value="">Selecione a opção</option>
+                                        <?php
+                                        $oms = $conexao->get_oms($rm_usuario);
+                                        foreach ($oms as $value) {
+                                            if ($om_1_fase == $value['id'])
+                                                echo '<option selected value="' . $value['id'] . '">' . $value['nome'] . '</option>';
+                                            else
+                                                echo '<option value="' . $value['id'] . '">' . $value['nome'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Inicial da Inspeção - Segundo Local</label>
+                                    <input name="data_inicial_segundo_local" type="text" class="form-control" style="height: 40px;" value="27/10/2025">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Final da Inspeção - Segundo Local </label>
+                                    <input name="data_final_segundo_local" type="text" class="form-control" style="height: 40px;" value="29/10/2025">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Horário de Início - Segundo Local </label>
+                                    <input name="horario_segundo_local" type="text" class="form-control" style="height: 40px;" value="0800h">
                                 </div>
                             </div>
 

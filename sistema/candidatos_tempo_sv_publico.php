@@ -223,7 +223,7 @@
                                     $nome_especialidade = $resultado_verificacao[0]['especialidade'];
                                     $ott_stt            = $resultado_verificacao[0]['ott_stt'];
                                     
-                                    $especialidades_do_candidato = $especialidades_do_candidato . strtoupper($ott_stt) . " " . $nome_especialidade . " | ";
+                                    $especialidades_do_candidato = $especialidades_do_candidato . mb_strtoupper($ott_stt) . " " . $nome_especialidade . " | ";
                                 }
                             }
                             

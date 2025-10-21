@@ -54,7 +54,7 @@ $lista_suporte = $conexao->get_lista_suporte_candidato($rm_usuario);
                             foreach ($lista_suporte as $linha) {
                                 $dias_resposta = "";
 
-                                $usuario_respondeu = "_" . strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                $usuario_respondeu = "_" . mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
 
                                 $respondido = "_Não";
                                 if ($linha['respondida'] == 1) {
@@ -147,7 +147,7 @@ $lista_suporte = $conexao->get_lista_suporte_candidato($rm_usuario);
                                         if (count($get_foto) > 0)
                                             $foto = $get_foto[0]['nome'];
 
-                                        $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                        $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
 
                                         echo "<tr>
                                             <td>" . $nome_usuario . "</td>

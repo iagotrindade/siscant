@@ -20,7 +20,7 @@ include_once '../banco_dados/conexao.php';
 $conexao = new Conexao();
 
 $selecao = $conexao->get_selecao_id();
-$nome_selecao = strtoupper($selecao[0]['codigo']) . " - " . $selecao[0]['nome'] . " de " . $selecao[0]['ano'];
+$nome_selecao = mb_strtoupper($selecao[0]['codigo']) . " - " . $selecao[0]['nome'] . " de " . $selecao[0]['ano'];
 
 $lista_candidatos = $conexao->get_candidatos_desc_class();
 

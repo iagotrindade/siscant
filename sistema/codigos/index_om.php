@@ -124,7 +124,7 @@ if ($incorporados == "medicos") {
                             <td class="fw-semibold">' . $linha['nome_completo'] . '</td>
                             <td>
                                 <div class="documento-info">
-                                    <span class="badge bg-primary">' . strtoupper($linha['ott_stt']) . '</span>
+                                    <span class="badge bg-primary">' . mb_strtoupper($linha['ott_stt']) . '</span>
                                     <span>' . $linha['nome_especialidade'] . '</span>
                                     ' . $medico_obrigatorio . '
                                 </div>

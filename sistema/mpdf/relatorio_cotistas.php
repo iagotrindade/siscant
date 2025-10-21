@@ -127,7 +127,7 @@ foreach ($especialidades as $esp_id => $dados) {
 
     // Ordenando os arrays de candidatos e suas notas simultaneamente (decrescente)
     usort($dados, function ($a, $b) {
-        return strcmp(strtoupper($a['nome_completo']), strtoupper($b['nome_completo']));
+        return strcmp(mb_strtoupper($a['nome_completo']), strtoupper($b['nome_completo']));
     });
 
     // Gerando o HTML para a tabela após a ordenação
@@ -138,8 +138,8 @@ foreach ($especialidades as $esp_id => $dados) {
         <tr>
             <td style='text-align: center;'>$contador</td>
             <td style='text-align: center;'>$cpf</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['autodeclaracao']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['autodeclaracao']) . "</td>
         </tr>";
         $contador++;
     }

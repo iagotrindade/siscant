@@ -47,7 +47,7 @@ foreach($lista_especialidades as $especialidade_id)
     $nome_espe = $especialidade[0]['nome'];
     $ott_stt = $especialidade[0]['ott_stt'];
 
-    $ott_stt = strtoupper($ott_stt);
+    $ott_stt = mb_strtoupper($ott_stt);
 
     $html[$contador] = "";
     

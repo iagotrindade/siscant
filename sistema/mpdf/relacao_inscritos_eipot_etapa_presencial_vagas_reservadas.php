@@ -199,7 +199,7 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
     $contador = 1;
 
     usort($candidatos, function($a, $b) {
-        return strcmp(strtoupper($a['nome_completo']), strtoupper($b['nome_completo']));
+        return strcmp(mb_strtoupper($a['nome_completo']), mb_strtoupper($b['nome_completo']));
     });
 
     foreach ($candidatos as $candidato) {
@@ -208,7 +208,7 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
         <tr>
             <td style='text-align: center;'>$contador</td>
             <td style='text-align: center;'>$cpf</td>
-            <td style='text-align: left;'>" . strtoupper($candidato['nome_completo']) . "</td>
+            <td style='text-align: left;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
         </tr>";
         $contador++;
     }

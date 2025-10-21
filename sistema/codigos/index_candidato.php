@@ -220,7 +220,7 @@ foreach ($get_especialidades_candidato as $linha) {
                                     <?php if ($linha['concorrendo'] == 0): ?>
                                         <div class="mb-3 p-3 border-start border-4 border-danger bg-light">
                                             <h6 class="fw-semibold text-danger mb-2">
-                                                <?php echo strtoupper($linha['ott_stt']) . " - " . $linha['especialidade']; ?>
+                                                <?php echo mb_strtoupper($linha['ott_stt']) . " - " . $linha['especialidade']; ?>
                                             </h6>
                                             <p class="mb-0">
                                                 <span class="fw-semibold">Justificativa:</span>

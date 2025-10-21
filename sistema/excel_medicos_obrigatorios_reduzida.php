@@ -197,7 +197,7 @@ foreach($lista_candidatos as $linha)
         
         if($especialidade['concorrendo'] == '1') $concorrendo_especialidade = "Concorrendo";
         {
-            $especialidades = $especialidades . $contador_especialidade . "ª_ESP_" .  strtoupper($especialidade['ott_stt']) . " - " . $especialidade['especialidade'] . " | ";
+            $especialidades = $especialidades . $contador_especialidade . "ª_ESP_" .  mb_strtoupper($especialidade['ott_stt']) . " - " . $especialidade['especialidade'] . " | ";
         
             
             $id_especialidade_candidato = $conexao->get_id_candidato_x_especialidade($linha['id'], $especialidade['id_especialidade']);
@@ -304,7 +304,7 @@ foreach($lista_candidatos as $linha)
             
             if($especialidade['concorrendo'] == '1') $concorrendo_especialidade = "Concorrendo";
             {
-                $especialidades = $especialidades .  strtoupper($especialidade['ott_stt']) . " - " . $especialidade['especialidade'] . " | ";
+                $especialidades = $especialidades .  mb_strtoupper($especialidade['ott_stt']) . " - " . $especialidade['especialidade'] . " | ";
 
                 $id_especialidade_candidato = $conexao->get_id_candidato_x_especialidade($linha['id'], $especialidade['id_especialidade']);
 

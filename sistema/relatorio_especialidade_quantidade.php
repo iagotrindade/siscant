@@ -395,7 +395,7 @@ if ($_SESSION['perfil'] == "avaliador") {
                                 ?>
                                         <tr>
                                             <td>
-                                                <span class="badge badge-category"><?= strtoupper($linha_avaliador['ott_stt']) ?></span>
+                                                <span class="badge badge-category"><?= mb_strtoupper($linha_avaliador['ott_stt']) ?></span>
                                             </td>
                                             <td class="fw-semibold"><?= htmlspecialchars($linha_avaliador['nome']) ?></td>
                                             <td>
@@ -461,7 +461,7 @@ if ($_SESSION['perfil'] == "avaliador") {
                                     ?>
                                         <tr>
                                             <td>
-                                                <span class="badge badge-category"><?= strtoupper($linha['ott_stt']) ?></span>
+                                                <span class="badge badge-category"><?= mb_strtoupper($linha['ott_stt']) ?></span>
                                             </td>
                                             <td class="fw-semibold"><?= htmlspecialchars($linha['nome']) ?></td>
                                             <td>
@@ -621,7 +621,7 @@ if ($_SESSION['perfil'] == "avaliador") {
                                     foreach ($especialidades_do_candidato as $esp) {
                                         if ($esp['ott_stt'] == 'ott') $tem_ott = true;
                                         if ($esp['ott_stt'] == 'stt') $tem_stt = true;
-                                        $especialidades_cadastradas .= '<span class="badge text-dark me-1 mb-1" style="background-color: var(--primary-color);">' . strtoupper($esp['ott_stt']) . ' - ' . htmlspecialchars($esp['especialidade']) . '</span>';
+                                        $especialidades_cadastradas .= '<span class="badge text-dark me-1 mb-1" style="background-color: var(--primary-color);">' . mb_strtoupper($esp['ott_stt']) . ' - ' . htmlspecialchars($esp['especialidade']) . '</span>';
                                     }
 
                                     if ($tem_ott && $tem_stt) {

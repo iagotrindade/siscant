@@ -53,7 +53,7 @@
                             
                             $dias_resposta = "";
                             
-                            $usuario_respondeu = "_".strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                            $usuario_respondeu = "_".mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
                             
                             $respondido = "_Não";
                             if($linha['resposta'] != null)
@@ -149,7 +149,7 @@
                                     if(count($get_foto) > 0)
                                         $foto = $get_foto[0]['nome'];
 
-                                    $nome_usuario = strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                    $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
 
                                     echo"<tr>
                                             <td>". $nome_usuario . "</td>

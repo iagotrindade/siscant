@@ -210,8 +210,6 @@ if ($perfil != 'admin' && $perfil != 'consulta') {
                 <div style="background-color: #CCC; height: 1px;" class="mb-20 mt-40"></div>
             </div>
 
-            
-
             <div style="float: left; width: 100%;">
                 <div class="form-group">
                     <label for="titulo_um">SELEÇÃO COMPLEMENTAR - CAVALARIA:</label>

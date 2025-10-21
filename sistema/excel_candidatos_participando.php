@@ -19,7 +19,7 @@ include_once '../banco_dados/conexao.php';
 $conexao = new Conexao();
 
 $selecao = $conexao->get_selecao_id();
-$nome_selecao = strtoupper($selecao[0]['codigo']) . " - " . $selecao[0]['nome'] . " de " . $selecao[0]['ano'];
+$nome_selecao = mb_strtoupper($selecao[0]['codigo']) . " - " . $selecao[0]['nome'] . " de " . $selecao[0]['ano'];
 
 $lista_candidatos = $conexao->get_candidatos_desc_class();
 
@@ -214,7 +214,7 @@ foreach($lista_candidatos as $linha)
         
         if($especialidade['concorrendo'] == '1') $concorrendo_especialidade = "Concorrendo";
         {
-            $especialidades = $especialidades . $contador_especialidade . "ª_ESP_" .  strtoupper($especialidade['ott_stt']) . " - " . $especialidade['especialidade'] . " | ";
+            $especialidades = $especialidades . $contador_especialidade . "ª_ESP_" .  mb_strtoupper($especialidade['ott_stt']) . " - " . $especialidade['especialidade'] . " | ";
         
             
             $id_especialidade_candidato = $conexao->get_id_candidato_x_especialidade($linha['id'], $especialidade['id_especialidade']);

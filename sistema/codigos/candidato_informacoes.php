@@ -34,7 +34,7 @@ $especialidade_cadastradas_candidato = $conexao->get_especialidade_candidato($id
 
 $lista_esp_cadastrada = "";
 foreach ($especialidade_cadastradas_candidato as &$esp_cadastrada) {
-    $lista_esp_cadastrada = $lista_esp_cadastrada . " | " . strtoupper($esp_cadastrada['ott_stt']) . ' ' . $esp_cadastrada['especialidade'] . "  - Reg Conselho: " . $esp_cadastrada['registro_conselho'];
+    $lista_esp_cadastrada = $lista_esp_cadastrada . " | " . mb_strtoupper($esp_cadastrada['ott_stt']) . ' ' . $esp_cadastrada['especialidade'] . "  - Reg Conselho: " . $esp_cadastrada['registro_conselho'];
 }
 
 $pagamento_obrigatorio = null;

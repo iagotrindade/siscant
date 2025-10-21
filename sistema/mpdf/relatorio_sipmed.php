@@ -225,18 +225,18 @@ foreach ($inscritos_por_arma as $arma => $candidatos) {
 
         $html .= "
         <tr style='font-size: 8px;'>
-            <td style='text-align: center;'>" . strtoupper($candidato['cpf']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['identidade']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['data_nascimento']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['naturalidade']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['sexo']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['mae']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['pai']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['rua_num_complemento']." - ".$candidato['bairro']." - ".$candidato['cidade_endereco']."/".$candidato['uf']." CEP: ".$candidato['cep']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['tel_celular']) . "</td>
-            <td style='text-align: center;'>" . strtoupper($candidato['mail']) . "</td>
-            <td style='text-align: center;'>" . strtoupper('Civil') . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['cpf']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['identidade']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['data_nascimento']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['naturalidade']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['sexo']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['mae']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['pai']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['rua_num_complemento']." - ".$candidato['bairro']." - ".$candidato['cidade_endereco']."/".$candidato['uf']." CEP: ".$candidato['cep']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['tel_celular']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper($candidato['mail']) . "</td>
+            <td style='text-align: center;'>" . mb_strtoupper('Civil') . "</td>
         </tr>";
         $contador++;
     }

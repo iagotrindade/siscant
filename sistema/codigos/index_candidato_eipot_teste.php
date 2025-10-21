@@ -106,7 +106,7 @@
                         foreach ($get_especialidades_candidato as $linha) 
                         {
                             if($linha['concorrendo'] == 0)
-                                echo "<b>" . strtoupper($linha['ott_stt']) . " " . $linha['especialidade'] . "</b> Justificativa: " . $linha['justificativa'] . "<br>";
+                                echo "<b>" . mb_strtoupper($linha['ott_stt']) . " " . $linha['especialidade'] . "</b> Justificativa: " . $linha['justificativa'] . "<br>";
                         }
                     ?>
                 </div>

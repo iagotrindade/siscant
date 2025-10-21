@@ -255,7 +255,7 @@ foreach ($lista_especialidades as $especialidade) {
         $html .= "
             <tr>
                 <td style='text-align: center;'>$contador</td>
-                <td style='text-align: center;'>" . strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . "</td>
+                <td style='text-align: center;'>" . mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . "</td>
                 <td style='text-align: center;'>" . $qtd_txt . "</td>
             </tr>";
     }
@@ -280,7 +280,7 @@ foreach ($turnos_agendados as $data => $turnos_dia) {
             foreach ($candidatos_ids as $candidato_id) {
                 $candidato = $todos_candidatos[$candidato_id]['dados'];
                 $cpf = substr($candidato['cpf'], 0, -5) . "*****";
-                $html .= "<tr> <td style='text-align: center;'>{$contador}</td> <td style='text-align: center;'>{$cpf}</td> <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td> <td style='text-align: center;'>" . strtoupper($candidato['autodeclaracao']) . "</td> </tr>";
+                $html .= "<tr> <td style='text-align: center;'>{$contador}</td> <td style='text-align: center;'>{$cpf}</td> <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td> <td style='text-align: center;'>" . mb_strtoupper($candidato['autodeclaracao']) . "</td> </tr>";
                 $contador++;
             }
             $html .= "</table>";
@@ -300,7 +300,7 @@ foreach ($especialidades as $esp_id => $dados) {
         $contador = 1;
         foreach ($dados['candidatos'] as $candidato) {
             $cpf = substr($candidato['cpf'], 0, -5) . "*****";
-            $html .= " <tr> <td style='text-align: center;'>$contador</td> <td style='text-align: center;'>$cpf</td> <td style='text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td> <td></td> </tr>";
+            $html .= " <tr> <td style='text-align: center;'>$contador</td> <td style='text-align: center;'>$cpf</td> <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td> <td></td> </tr>";
             $contador++;
         }
         $html .= "</table>";

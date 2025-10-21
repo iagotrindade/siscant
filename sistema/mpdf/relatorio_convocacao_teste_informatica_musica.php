@@ -157,7 +157,7 @@ foreach ($especialidadeInformatica as $especialidade => $candidatos) {
             <tr>
             <td style='font-size: 12px; text-align: center;'>$contador</td>
                 <td style='font-size: 12px; text-align: center;'>$cpf</td>
-                <td style='font-size: 12px; text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
+                <td style='font-size: 12px; text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
             </tr>";
         $contador++;
 
@@ -196,7 +196,7 @@ foreach ($especialidadesMusica as $especialidade => $candidatos) {
             <tr>
             <td style='font-size: 12px; text-align: center;'>$contador</td>
                 <td style='font-size: 12px; text-align: center;'>$cpf</td>
-                <td style='font-size: 12px; text-align: center;'>" . strtoupper($candidato['nome_completo']) . "</td>
+                <td style='font-size: 12px; text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
             </tr>";
         $contador++;
 

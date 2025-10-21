@@ -34,9 +34,9 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                                     <?php
                                     foreach ($especialidade_cadastradas_candidato as $esp_cadastrada_pelo_cand) {
                                         if ($especialidade_incorporacao == $esp_cadastrada_pelo_cand['id_especialidade'])
-                                            echo "<option selected value='" . $esp_cadastrada_pelo_cand['id_especialidade'] . "'>" . strtoupper($esp_cadastrada_pelo_cand['ott_stt']) . ' - ' . $esp_cadastrada_pelo_cand['especialidade'] . "</option>";
+                                            echo "<option selected value='" . $esp_cadastrada_pelo_cand['id_especialidade'] . "'>" . mb_strtoupper($esp_cadastrada_pelo_cand['ott_stt']) . ' - ' . $esp_cadastrada_pelo_cand['especialidade'] . "</option>";
                                         else
-                                            echo "<option value='" . $esp_cadastrada_pelo_cand['id_especialidade'] . "'>" . strtoupper($esp_cadastrada_pelo_cand['ott_stt']) . ' - ' . $esp_cadastrada_pelo_cand['especialidade'] . "</option>";
+                                            echo "<option value='" . $esp_cadastrada_pelo_cand['id_especialidade'] . "'>" . mb_strtoupper($esp_cadastrada_pelo_cand['ott_stt']) . ' - ' . $esp_cadastrada_pelo_cand['especialidade'] . "</option>";
                                     }
                                     ?>
 

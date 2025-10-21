@@ -724,7 +724,7 @@ Chart.plugins.register({
     new Chart(document.getElementById("total_ott_stt_mfdv"), {
     type: 'pie',
     data: {
-      labels: [<?php echo strtoupper($label_total_inscritos); ?>],
+      labels: [<?php echo mb_strtoupper($label_total_inscritos); ?>],
       datasets: [{
         label: "Tempo com o processo",
         backgroundColor: ["#3cba9f", "#fff232","#007CB7","#FF6F61"],
@@ -760,7 +760,7 @@ Chart.plugins.register({
     new Chart(document.getElementById("concorrendo_ott_stt_mfdv"), {
     type: 'pie',
     data: {
-      labels: [<?php echo strtoupper($label_total_inscritos_concorrendo); ?>],
+      labels: [<?php echo mb_strtoupper($label_total_inscritos_concorrendo); ?>],
       datasets: [{
         label: "Tempo com o processo",
         backgroundColor: ["#3cba9f", "#fff232","#007CB7","#FF6F61"],

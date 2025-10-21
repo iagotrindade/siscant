@@ -32,7 +32,7 @@ include_once '../banco_dados/conexao.php';
 $conexao = new Conexao();
 
 $selecao = $conexao->get_selecao_id();
-$nome_selecao = strtoupper($selecao[0]['codigo']) . " - " . $selecao[0]['nome'] . " de " . $selecao[0]['ano'];
+$nome_selecao = mb_strtoupper($selecao[0]['codigo']) . " - " . $selecao[0]['nome'] . " de " . $selecao[0]['ano'];
 
 $lista_candidatos = null; 
 if($ano_distribuicao_medico_obrigatorio == null) $lista_candidatos = $conexao->get_candidatos_desc_class_distribuicao();
@@ -121,7 +121,7 @@ foreach($lista_candidatos as $linha)
     }
     */
     
-    if($linha['nome_especialidade_distribuicao'] != null) $especialidade = strtoupper ($linha['ott_stt']) . " - " . $linha['nome_especialidade_distribuicao'];
+    if($linha['nome_especialidade_distribuicao'] != null) $especialidade = mb_strtoupper ($linha['ott_stt']) . " - " . $linha['nome_especialidade_distribuicao'];
     
     if($linha['nome_cidade_inst_ensino'] != null) $nome_cidade_inst_ensino = $linha['nome_cidade_inst_ensino'] ;
     

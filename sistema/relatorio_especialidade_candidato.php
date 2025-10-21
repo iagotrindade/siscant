@@ -420,7 +420,7 @@ $especialidade_medico = false;
                                             <span class="badge-table bg-info badge bg-<?= $apto_class ?>"><?= $apto_text ?></span>
                                         </td>
                                         <td>
-                                            <span class="badge-table bg-info badge"><?= strtoupper($linha['grupo_saude']) ?></span>
+                                            <span class="badge-table bg-info badge"><?= mb_strtoupper($linha['grupo_saude']) ?></span>
                                         </td>
                                         <td>
                                             <span><?= $data_ex_saude ?: '-' ?></span>

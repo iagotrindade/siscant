@@ -114,7 +114,7 @@
                             if(count($especialidades) > 0) $lista_especialidades = "";
                             foreach ($especialidades as $especialidade) 
                             {
-                                $lista_especialidades = $lista_especialidades . " _" .  strtoupper($especialidade['ott_stt']). " " . $especialidade['especialidade'];
+                                $lista_especialidades = $lista_especialidades . " _" .  mb_strtoupper($especialidade['ott_stt']). " " . $especialidade['especialidade'];
                             }
                             
                             $trans_fisemi = null;
@@ -192,8 +192,8 @@
                             if($linha['data_exame_saude_recurso'] != null) $data_jise = trata_data($linha['data_exame_saude_recurso']);
                             
                             $grupo_jise = "";
-                            if($linha['grupo_saude'] != null) $grupo_jise = strtoupper ($linha['grupo_saude']);
-                            if($linha['grupo_saude_recurso'] != null) $grupo_jise = strtoupper ($linha['grupo_saude_recurso']);
+                            if($linha['grupo_saude'] != null) $grupo_jise = mb_strtoupper ($linha['grupo_saude']);
+                            if($linha['grupo_saude_recurso'] != null) $grupo_jise = mb_strtoupper ($linha['grupo_saude_recurso']);
                             
                             $voluntario_12 = "12_RM_X";
                             if($linha['voluntario_12rm'] != null) $voluntario_12 = $linha['voluntario_12rm'];
@@ -260,7 +260,7 @@
                             if(count($especialidades) > 0) $lista_especialidades = "";
                             foreach ($especialidades as $especialidade) 
                             {
-                                $lista_especialidades = $lista_especialidades . " " .  strtoupper($especialidade['ott_stt']). " " . $especialidade['especialidade'];
+                                $lista_especialidades = $lista_especialidades . " " .  mb_strtoupper($especialidade['ott_stt']). " " . $especialidade['especialidade'];
                             }
                             
                             $incorporado = null;

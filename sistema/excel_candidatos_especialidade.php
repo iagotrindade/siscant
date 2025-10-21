@@ -45,7 +45,7 @@ $especialidade = $conexao->get_especialidade_id($id_especialidade);
 $nome_espe = $especialidade[0]['nome'];
 $ott_stt = $especialidade[0]['ott_stt'];
 
-$ott_stt = strtoupper($ott_stt);
+$ott_stt = mb_strtoupper($ott_stt);
 
 $datetime = $datetime = date('Y-m-d H:i:s');
 $datetime = trata_data_hora($datetime);

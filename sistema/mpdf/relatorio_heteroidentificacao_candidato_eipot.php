@@ -177,7 +177,7 @@ foreach ($pareceresFase as $index => $parecer) {
     </p>
 
     <p style='margin: 5px 0; font-size: 10px;'>
-        <b>Parecer:</b> " . strtoupper($parecer['parecer']) . "
+        <b>Parecer:</b> " . mb_strtoupper($parecer['parecer']) . "
     </p>
 
     <hr style='border: 0; border-top: 1px solid #ccc; margin: 10px 0;'>
