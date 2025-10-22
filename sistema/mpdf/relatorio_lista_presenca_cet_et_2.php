@@ -13,7 +13,6 @@ $mpdf->WriteHTML($css, 1);
 
 $titulo = $_POST['titulo'];
 $subtitulo = $_POST['subtitulo'];
-$data = $_POST['data'];
 $paragrafo_um = $_POST['paragrafo_um'];
 $paragrafo_dois = $_POST['paragrafo_dois'];
 $agenda_especialidade = $_POST['agenda_especialidade'];
@@ -65,14 +64,6 @@ $html = " <p class='center' style='font-size: 10px; text-align: center; margin-b
     </tr>
 </table>
 
-<table border='0' style='width:100%; margin-top: 5px;'>
-    <tr>
-        <th align='right'>
-            <strong>$data</strong>
-        </th>
-    </tr> 
-</table> 
-
 <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_um</p>
 
 <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>$paragrafo_dois</p>";
@@ -81,8 +72,6 @@ $mpdf->WriteHTML($html);
 
 // CARREGAR TODOS OS CANDIDATOS E ESPECIALIDADES 
 $lista_especialidades = $conexao->get_especialidade();
-
-$contadorParagrafo = 1;
 
 foreach ($lista_especialidades as $especialidade) {
     $candidatos = $conexao->get_candidatos_especialidade($especialidade['id']);
@@ -102,13 +91,11 @@ foreach ($lista_especialidades as $especialidade) {
 
     $agenda = $agenda_especialidade[$especialidade['id']];
 
-
     $html = "
-    <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>" . $contadorParagrafo . '. ' . $agenda . "</p>
 
     <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
         <tr>
-            <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>" . mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . "</th>
+            <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>" . mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . " <br> " . $agenda . " </th>
         </tr>
         
         <tr>
@@ -137,8 +124,6 @@ foreach ($lista_especialidades as $especialidade) {
             </tr>";
         $contador++;
     }
-
-    $contadorParagrafo++;
 
     $html .= "</table>";
     $mpdf->WriteHTML($html);

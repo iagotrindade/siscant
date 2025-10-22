@@ -42,7 +42,7 @@ $mail_envia->Port = 587; // Porta
 $mail_envia->SMTPAuth = true; // Autenticação
 // $mail_envia->Username = 'usuario@3rm.eb.mil.br'; // Usuário do servidor SMTP
 $mail_envia->Username = 'siscant@3rm.eb.mil.br'; // Seu usuário SMTP
-$mail_envia->Password = '12345678'; // Sua senha SMTP
+$mail_envia->Password = 'EMHFXQMNPYQMAWYD'; // Sua senha SMTP
 $mail_envia->SMTPSecure = 'tls';  //'tls' Define o tipo de criptografia para TLS
 #Define o remetente
 $mail_envia->From = "siscant@3rm.eb.mil.br"; // Endereço de quem enviou o e-mail
@@ -59,23 +59,43 @@ $mail_envia->IsHTML(true); // Define que o e-mail será enviado como HTML
 $mail_envia->CharSet = 'utf-8'; // Charset da mensagem (opcional)
 
 
-$mail_envia->Subject = "Serviço Técnico Temporário - Resposta Suporte"; // Assunto da mensagem
-$mensagem =
-    "
-<b>" .  mb_strtoupper($resultado_selecao[0]['nome'], 'UTF-8') . " - " . $resultado_selecao[0]['ano'] . "</b><br><br>
-    
-" . $nome_completo_requerente . ", esta é a resposta da sua solicitação de suporte!<br><br>
+$mail_envia->Subject = "SiSCanT - Suporte ao Candidato"; // Assunto da mensagem
 
-<i>Data de envio: " . trata_data($data_enviado_requerente) . " <br>
-Suporte Solicitado: " . $mensagem_requerente . " </i><br><br>
+// Conteúdo do e-mail
+$mail_envia->Body = utf8_decode('        
+        <!doctype html>
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+            </head>
+            <body style="background-color: #bdc3c7; font-family:Arial, Helvetica, sans-serif;">
+                <div>
+                    <div style="width: 600px; background-color: white; padding: 20px; border-radius: 5px;">
+                        Prezado ' . $nome_completo_requerente . '.<br>
+                        Sua dúvida encaminhada através do SiSCanT foi respondida.
+                            <i>    
+                                <p style="width: 97%; background-color: green; font-size: 20px; color: white; padding: 10px; border-radius: 10px; text-align:justify;">
+                                
+                                    <b>Data de envio:</b> ' . trata_data($data_enviado_requerente) . ' <br>
+                                    <b>Mensagem enviada:</b> ' . $mensagem_requerente . '<br><br>
 
-<b>Data Resposta: </b> " .  trata_data($datetime) . "<br>
-<b>Resposta: </b> " . $resposta . "<br></b>
+                                    <b>Data Resposta: </b> ' .  trata_data($datetime) . '<br>
+                                    <b>Resposta: </b> ' . $resposta . '<br></b></b>
+                                </p>
+                            </i>
+                        Não responda a este email pois sua mensagem não será visualizada. A comunicação deve ser feita através do SiSCanT.
+                        
+                        <center>
+                            <br><br><br>
+                            <p>Sistema de Seleção de Candidatos Temporários (SiSCanT)</p>
+                        </center>
+                    </div>
+                </div>
+            </body>
+        </html>
+    ');
 
-<br><i> Não responda este E-Mail!<br>
-A comunicação deve ser realizada pelo sistema SiSCanT </i>";
 
-$mail_envia->Body = $mensagem;
 #Envio da Mensagem
 $enviado = $mail_envia->Send();
 #Limpa os destinatários e os anexos

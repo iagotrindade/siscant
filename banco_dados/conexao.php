@@ -3479,6 +3479,20 @@ order by total_pontos_somados desc");
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function get_suporte_candidato_nao_inscrito($cpf)
+    {
+        $stmt = $this->pdo->prepare(
+            "
+                        select * from suporte
+                        where cpf = :cpf and apagado = 0"
+        );
+        $stmt->bindValue(':cpf', $cpf);
+        $run = $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Lista de Suporte">

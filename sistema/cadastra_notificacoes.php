@@ -229,9 +229,9 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                             <div class="mb-10">
                                 <label for="notificationMessage" class="form-label">Mensagem</label>
                                 <textarea class="form-control" id="notificationMessage" name="mensagem" rows="5"
-                                    placeholder="Digite a mensagem para os candidatos..." maxlength="1000" required
+                                    placeholder="Digite a mensagem para os candidatos..." maxlength="2000" required
                                     style="border-radius: 6px; padding: 10px 15px; border: 1px solid #D3D3D3;"></textarea>
-                                <div class="form-text text-end"><span id="charCount">0</span>/1000 caracteres</div>
+                                <div class="form-text text-end"><span id="charCount">0</span>/2000 caracteres</div>
                             </div>
 
                             <div class="text-center">

@@ -205,7 +205,7 @@ $conexao = new Conexao();
                             <span class="notification-date"><?= trata_data_hora($notificacao['data_envio']) ?></span>
                         </div>
                         <div class="notification-body">
-                            <p class="notification-content"><?= $notificacao['mensagem'] ?></p>
+                            <p class="notification-content"><?= nl2br(htmlspecialchars($notificacao['mensagem'])) ?></p>
                         </div>
                     </div>
                 <?php endforeach; ?>

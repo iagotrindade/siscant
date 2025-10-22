@@ -381,7 +381,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
-                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                    <input name="titulo" value="PROCESSO SELETIVO SERVIÇO MILITAR ESPECIALISTA TEMPORÁRIO 20XX/20XX" class="form-control">
                                 </div>
                             </div>
 
@@ -399,13 +399,13 @@ $lista_especialidades = $conexao->get_especialidade();
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" style="height: 80px;">O Comandante da Xª Região Militar convoca os candidatos classificados para a realização da Entrevista e Teste Prático, nas especialidades para CABO ESPECIALISTA, conforme anexo "A" (Calendário Geral de Atividades), do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" style="height: 80px;">O Comandante da Xª Região Militar convoca os candidatos classificados para a realização da Entrevista e Teste Prático, nas especialidades para CABO ESPECIALISTA TEMPORÁRIO, conforme anexo "A" (Calendário Geral de Atividades), do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_dois" placeholder="1º Parágrafo do relatório" class="form-control" style="height: 80px;">A presente relação NÃO esta em ordem de Classificação.</textarea>
+                                    <textarea name="paragrafo_dois" placeholder="1º Parágrafo do relatório" class="form-control" style="height: 80px;">A presente relação NÃO está em ordem de Classificação.</textarea>
                                 </div>
                             </div>
 
@@ -458,19 +458,13 @@ $lista_especialidades = $conexao->get_especialidade();
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
-                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                    <input name="titulo" value="PROCESSO SELETIVO SERVIÇO MILITAR ESPECIALISTA TEMPORÁRIO 20XX/20XX" class="form-control">
                                 </div>
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
                                     <input name="subtitulo" value="LISTA DE PRESENÇA ETAPA II - ENTREVISTA E TESTE PRÁTICO" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="col-lg-4 mb-3">
-                                <div class="form-group">
-                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
                                 </div>
                             </div>
 
@@ -492,8 +486,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 ?>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label>Local de Realização do Teste Prático <?= mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?></label>
-                                        <textarea type="text" name="agenda_especialidade[<?= $especialidade['id'] ?>]" class="form-control" style="height: 80px;">Os candidatos classificados para o CET/20XX na especialidade <?= mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?>, abaixo discriminados, deverão apresentar-se no 19° Batalhão de Infantaria Motorizado (19º BI Mtz), localizado na Av. Theodomiro Porto da Fonseca, 894-946 - Centro, São Leopoldo - RS, 93020-654, às 0800h do dia 20 AGO 25.</textarea>
+                                        <label><?= mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . '' ?></label>
+                                        <input type="text" name="agenda_especialidade[<?= $especialidade['id'] ?>]" class="form-control" value="XX OUT 25, ÀS XX:XXh"></input>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

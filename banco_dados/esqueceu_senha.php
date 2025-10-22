@@ -31,7 +31,8 @@ $codigo_criptografar = $rand . time() . $string;
 $nova_senha = substr(md5($codigo_criptografar), 0, 6);
 $nova_senha_crip =  hash('sha256', $nova_senha);
 
-
+// Resolvido o problema do email do SiSCanT gerando uma senha de APP no clinet de email
+//$nova_senha_crip = 'e6faaeeed6eeb9dd2bb3265ec1ab0a15f1f963eb25103d0f607bf67aa1ac5a0c'; //VAI DIRETO PRA 123@siscant
 
 
 $get_usuario = $conexao->get_usuario_cpf($cpf_usuario);
@@ -116,7 +117,7 @@ if ($resultado) {
     if ($mail_usuario != null)
         //    $enviar->enviarEmailComSwaks($mail_usuario, $assunto, $mensagem, $smtpServer);
         include_once './sendmail.php';
-    header("Location: ../esqueceu_senha.php?senha_alterada=1");
+    header("Location: ../esqueceu_senha.php?senha_alterada=1&email=".$mail_usuario."");
     //   include_once './sendmail.php';
 
     /*

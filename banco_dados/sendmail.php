@@ -19,35 +19,6 @@ include_once '../envia_carta/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
-
-/*
-function sendmail($mail, $cpf_usuario) {
-
-    // Valor randomico de 5 digitos para ser enviado por email
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < 5; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-
-    session_start();
-    $_SESSION['code'] = password_hash($randomString, PASSWORD_DEFAULT);
-
-    //Create a new PHPMailer instance
-    $mail = new PHPMailer();
-    //Tell PHPMailer to use SMTP
-    $mail->isSMTP();
-    //Custom connection options
-    //Note that these settings are INSECURE
-    $mail->SMTPOptions = array(
-        'ssl' => array(
-            'verify_peer' => true,
-            'verify_peer_name' => true,
-            'allow_self_signed' => false
-        )
-    );
-    */
 $randomString = 'r@nd0m$tring';
 
 //Create a new PHPMailer instance
@@ -69,26 +40,53 @@ try {
     $mail->Host = 'smtp.webmail.eb.mil.br'; // Servidor SMTP
     $mail->SMTPAuth = true;
     $mail->Username = 'siscant@3rm.eb.mil.br'; // Seu usuário SMTP
-    $mail->Password = '12345678'; // Sua senha SMTP
+    $mail->Password = 'EMHFXQMNPYQMAWYD'; // Sua senha SMTP
     $mail->SMTPSecure = 'tls';  //'tls' Define o tipo de criptografia para TLS
     $mail->Port = 587; // Porta TCP para TLS
 
     $mail->From = 'siscant@3rm.eb.mil.br'; //Set who the message is to be sent from
     $mail->FromName = utf8_decode('Não responda - Comando 3ª RM'); //Nome do Remetente
-    $mail->Subject = utf8_decode('Recuperação de senha da VPN'); //Assunto da mensagem
+    $mail->Subject = 'SiSCanT - Solicitacao de Reset de Senha';                       // Assunto do e-mail
 
     // Configurações do remetente e destinatário
     $mail->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente
     //$mail->addAddress('siscant@3rm.eb.mil.br'); // Adiciona um destinatário
 
-    $mail->AddAddress($mail_usuario, $cpf_candidato);
+    $mail->AddAddress($mail_usuario, $nome_completo);
+
+    // Definir como HTML
+    $mail->isHTML(true);
 
     // Conteúdo do e-mail
-    $mail->isHTML(true);                                        // Definir como HTML
-    $mail->Subject = 'Solicitacao de Reset de Senha';                       // Assunto do e-mail
-    $mail->Body = '<b>Sua nova senha do Siscant: </b>' . $nova_senha . '<br><br>Entre com seu CPF e sua nova senha. Em seguida escolha uma senha de 
-      sua preferência!<br>Este é um email automático, não responda.'; // Corpo da mensagem em HTML
-    $mail->AltBody = 'Este é o corpo alternativo em texto simples para clientes de e-mail sem suporte HTML.';
+    $mail->Body = utf8_decode('        
+        <!doctype html>
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+            </head>
+            <body style="background-color: #bdc3c7; font-family:Arial, Helvetica, sans-serif;">
+                <div>
+                    <div style="width: 600px; background-color: white; padding: 20px; border-radius: 5px;">
+                        Prezado ' . $nome_completo . '.<br>
+                        Sua nova senha temporária é: <br>
+                        <center><p style="width: 15%; background-color: green; font-size: 20px; color: white; padding: 10px; border-radius: 10px; text-align: center;">
+                            <b>' . $nova_senha . '</b>
+                        </p>
+                        </center>
+                            Caso você não tenha feito esta solicitação recomendamos que avise a Comissão de Seleção e ignore este email.
+                        <center>
+
+                        </center>
+                            Não responda a este email pois sua mensagem não será visualizada. A comunicação deve ser feita através do SiSCanT.
+                        <center>
+                        <br><br><br>
+                            <p>Sistema de Seleção de Candidatos Temporários (SiSCanT)</p>
+                        </center>
+                    </div>
+                </div>
+            </body>
+        </html>
+    ');
 
     $mail->SMTPDebug = 0;
     $enviado = $mail->send();
@@ -105,7 +103,7 @@ try {
         echo 'Falha ao enviar mensagem: ' . $mail->ErrorInfo;
     }
 } catch (Exception $e) {
-    echo "Erro ao enviar mensagem: {$mail->ErrorInfo}";
+    echo "Erro ao enaviar mensagem: {$mail->ErrorInfo}";
 }
 
 
@@ -197,7 +195,7 @@ try {
        echo "ERRO!";
         exit;
        saveLog('sendmail error: ' . $mail->ErrorInfo);
-        return ['status' => 'danger', 'msg' => 'Erro ao enviar email. Favor, informe nossa central de serviços.<br>' . $mail->ErrorInfo];
+        return ['status' => 'danger', 'msg' => 'Erro ao aa email. Favor, informe nossa central de serviços.<br>' . $mail->ErrorInfo];
     }
 
  

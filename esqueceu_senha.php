@@ -109,7 +109,7 @@ if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
 
     <?php if ($sucesso === 'sucesso'): ?>
       <div class="alert alert-success text-center p-2 mt-3">
-        Sua nova senha é 123@siscant!
+        Enviamos sua nova senha para o e-mail <?=$_GET['email']?>
       </div>
     <?php elseif ($sucesso === 'erro'): ?>
       <div class="alert alert-danger text-center p-2 mt-3">
