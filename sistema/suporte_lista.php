@@ -1149,7 +1149,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                                     <div class="progress-bar" style="width: <?php echo $percentual; ?>%"></div>
                                                 </div>
                                                 <div class="stats-numbers">
-                                                    <span class="responses-count"><?php echo $linha['quantidade']; ?> respostas</span>
+                                                    <span class="responses-count" style="color: #006400;"><?php echo $linha['quantidade']; ?> respostas</span>
                                                     <span class="percentage"><?php echo round($percentual); ?>%</span>
                                                 </div>
                                             </div>
@@ -1226,7 +1226,7 @@ $lista_suporte_inicial = $conexao->get_suporte();
                                                         <div class="progress-bar" style="width: <?php echo $percentual; ?>%"></div>
                                                     </div>
                                                     <div class="stats-numbers">
-                                                        <span class="responses-count"><?php echo $linha['quantidade']; ?> respostas</span>
+                                                        <span class="responses-count" style="color: #006400;"><?php echo $linha['quantidade']; ?> respostas</span>
                                                         <span class="percentage"><?php echo round($percentual); ?>%</span>
                                                     </div>
                                                 </div>
