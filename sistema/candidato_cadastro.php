@@ -13,7 +13,10 @@ $libera_suporte_inicial = $selecao[0]['liberacao_suporte_inicial'];
 <style>
     :root {
         --primary-color: #006400;
-        --secondary-color: #6c757d;
+        /* Verde escuro como cor primária */
+        --primary-light: #228B22;
+        /* Verde floresta mais claro */
+        --secondary-color: #228B22;
         --accent-color: #32CD32;
         --light-bg: #f0f8f0;
         --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -77,7 +80,6 @@ $libera_suporte_inicial = $selecao[0]['liberacao_suporte_inicial'];
     .form-section {
         padding: 25px;
         border-radius: 0 0 10px 10px;
-        background-color: #f6f6f6;
     }
 
     .form-label {
@@ -408,7 +410,7 @@ $libera_suporte_inicial = $selecao[0]['liberacao_suporte_inicial'];
                                 <div id="div_vaga_reservada" class="form-check mt-4 conditional-section">
                                     <input class="form-check-input" type="checkbox" id="check_vaga_reservada" name="vaga_reservada">
                                     <label class="form-check-label" for="check_vaga_reservada">
-                                        Quero concorrer às vagas reservadas para Negros (Lei Nr12.990, de 9 de Junho de 2014)
+                                        Quero concorrer às vagas reservadas para Negros (Lei Nr 15.142, de 3 de Junho de 2025)
                                     </label>
                                 </div>
                             </div>
