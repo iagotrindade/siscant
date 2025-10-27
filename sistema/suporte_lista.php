@@ -1,6 +1,8 @@
 <?php
-/*ASP SILVA 06 JUN 25*/
+set_time_limit(300); // 5 minutos
+
 include_once 'menu.php';
+
 
 if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != "ouvidor" && $_SESSION['perfil'] != "consulta") {
     erro("Erro 7755! Página não encontrada!");
@@ -13,6 +15,9 @@ $lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
 
 $lista_suporte_inicial = $conexao->get_suporte();
 
+include '../sistema/captura_emails.php';
+
+$lista_emails = $conexao->get_lista_emails();
 ?>
 <style>
     .stat-card {
@@ -816,6 +821,122 @@ $lista_suporte_inicial = $conexao->get_suporte();
                 </div>
             <?php endif; ?>
 
+            <div class="card mb-4">
+                    <div class="card-header bg-primary text-white mb-20">
+                        <span class="mb-0">
+                            <i class="fa fa-envelope"></i> E-mails
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive mb-20">
+                            <table class="table table-hover table-striped" id="tabela_emails">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th><i class="fa fa-hashtag me-1"></i> ID</th>
+                                        <th><i class="fa fa-user me-1"></i> Remetente</th>
+                                        <th><i class="fa fa-id-card me-1"></i> Email</th>
+                                        <th><i class="fa fa-question-circle me-1"></i> Assunto</th>
+                                        <th><i class="fa fa-comment me-1"></i> Mensagem</th>
+                                        <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
+                                        <th><i class="fa fa-server me-1"></i> Status</th>
+                                        <th><i class="fa fa-cogs me-1"></i> Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    $respondidos_ni = 0;
+                                    $nao_respondidos_ni = 0;
+                                    $somatorio_dias_resposta_ni = 0;
+                                    $maior_tempo_ni = 0;
+
+                                    foreach ($lista_emails as $linha) {
+                                        $dias_resposta = "";
+                                        $usuario_respondeu = "_" . mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                        $respondido = "_Não";
+                                        $status_class = "status-pendente";
+
+                                        if ($linha['resposta'] != null) {
+                                            $respondido = "_Sim";
+                                            $respondidos_ni++;
+                                            $status_class = "status-respondido";
+
+                                            $dias_resposta = 0;
+                                            $data_enviado = new DateTime($linha['data_criacao']);
+                                            $data_respondido = new DateTime($linha['data_resposta']);
+                                            $intervalo = $data_enviado->diff($data_respondido);
+                                            $tempo_total = $intervalo->d + $intervalo->h / 24;
+                                            $tempo_total = $tempo_total + $intervalo->i / 1440;
+                                            $tempo_total = $tempo_total + $intervalo->s / 86400;
+
+                                            if ($intervalo->m > 0) $tempo_total = $tempo_total + (30 * $intervalo->m);
+                                            if ($tempo_total > $maior_tempo_ni) $maior_tempo_ni = $tempo_total;
+                                            $somatorio_dias_resposta_ni = $somatorio_dias_resposta_ni + $tempo_total;
+                                            $dias_resposta = ", em " . round($tempo_total, 2) . " dias por $usuario_respondeu ";
+                                        } else {
+                                            $nao_respondidos_ni++;
+                                        }
+
+                                        echo '
+                                    <tr>
+                                        <td>' . $linha['id'] . '</td>
+                                        <td>' . $linha['email_remetente'] . '</td>
+                                        <td>' . $linha['remetente'] . '</td>
+                                        <td><span class="badge bg-primary text-truncate" style="max-width: 200px;">' . $linha['assunto'] . '</span></td>
+                                        <td class="text-truncate" style="max-width: 200px;" title="' . htmlspecialchars($linha['mensagem']) . '">' . $linha['mensagem'] . '</td>
+                                        <td>' . trata_data_hora($linha['data_criacao' ?? date('Y-m-d H:i:s')]) . '</td>
+                                        <td class="' . $status_class . '">' . $respondido . $dias_resposta . '</td>
+                                        <td>
+                                            <a href="email_visualiza.php?criptografia=' . hash('sha256', $linha['id']) . '&id_email=' . $linha['id'] . '" class="btn btn-sm btn-primary" title="Visualizar">
+                                                <i class="fa fa-search"></i>
+                                            </a>
+                                        </td>
+                                    </tr>';
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Estatísticas -->
+                        <div class="row mt-4">
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="stat-card bg-success text-white p-2 rounded text-center">
+                                    <h5 class="mb-1">Respondidos</h5>
+                                    <h4 class="mb-0"><?php echo $respondidos_ni ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="stat-card bg-danger text-white p-2 rounded text-center">
+                                    <h5 class="mb-1">Não Respondidos</h5>
+                                    <h4 class="mb-0">
+                                        <?php
+                                        if ($respondidos_ni > 0 || $nao_respondidos_ni > 0)
+                                            $porcentagem_ni = round(($nao_respondidos_ni / ($nao_respondidos_ni + $respondidos_ni)) * 100, 2);
+
+                                        if ($nao_respondidos_ni > 0)
+                                            echo $nao_respondidos_ni . " <small>($porcentagem_ni%)</small>";
+                                        else echo '0';
+                                        ?>
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="stat-card bg-info text-white p-2 rounded text-center">
+                                    <h5 class="mb-1">Média de Resp</h5>
+                                    <h4 class="mb-0"><?php if ($respondidos_ni > 0 && $somatorio_dias_resposta_ni > 0) echo round($somatorio_dias_resposta_ni / $respondidos_ni, 2) . " dias";
+                                                        else echo "0"; ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="stat-card bg-warning text-dark p-2 rounded text-center">
+                                    <h5 class="mb-1">Maior Tempo</h5>
+                                    <h4 class="mb-0"><?php echo round($maior_tempo_ni, 2) . " dias"; ?></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             <!-- Card Quantidade de respostas por usuário (Admin apenas) -->
             <?php if ($_SESSION['perfil'] == 'admin'): ?>
                 <?php
@@ -1303,6 +1424,12 @@ $lista_suporte_inicial = $conexao->get_suporte();
     });
 
     $('#tabela_suporte_nao_inscrito').DataTable({
+        "order": [
+            [0, "desc"]
+        ]
+    });
+
+    $('#tabela_emails').DataTable({
         "order": [
             [0, "desc"]
         ]

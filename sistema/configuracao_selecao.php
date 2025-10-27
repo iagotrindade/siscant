@@ -106,6 +106,12 @@ if ($get_selecao == null) {
 }
 
 $aviso_convocacao = $get_selecao[0]['aviso_convocacao'];
+$smtp = $get_selecao[0]['mail_smtp'];
+$imap = $get_selecao[0]['mail_imap'];
+$porta_smtp = $get_selecao[0]['porta_smtp'];
+$porta_imap = $get_selecao[0]['porta_imap'];
+$email = $get_selecao[0]['usuario_email'];
+$senha_email = $get_selecao[0]['senha_email'];
 $libera_assistente_virtual = $get_selecao[0]['liberacao_assistente_virtual'];
 $libera_suporte_inicial = $get_selecao[0]['liberacao_suporte_inicial'];
 $liberado_comprovante = $get_selecao[0]['liberacao_comprovante_inscricao'];
@@ -160,8 +166,9 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
     }
 
     .card-header {
-        display: block  ;
+        display: block;
     }
+
     .card-body {
         padding: 20px;
     }
@@ -276,6 +283,65 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         <div class="mb-10">
                             <label for="avisoFile" class="form-label">Aviso de Convocação Assinado</label>
                             <input type="file" class="form-control" id="avisoFile" name="arquivo">
+                        </div>
+
+                        <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fa fa-refresh"></i> ATUALIZAR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configurações de E-mail -->
+        <div class="col-md-12">
+            <h3 class="section-title"><i class="fa fa-envelope"></i> Configurações de E-mail</h3>
+        </div>
+
+        <!-- Agenda da Inscrição -->
+        <div class="col-xl-6 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-envelope"></i> Dados de Conexão SMTP e IMAP
+                </div>
+
+                <div class="card-body">
+                    <form action="../banco_dados/conexao_email_atualiza.php" method="post">
+                        <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                        <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-10">
+                                <label for="smtp" class="form-label">Servidor SMTP</label>
+                                <input type="text" class="form-control" id="smtp" name="smtp" value="<?php if ($smtp != null) echo $smtp; ?>">
+                            </div>
+
+                            <div class="col-md-6 mb-10">
+                                <label for="porta_smtp" class="form-label">Porta SMTP</label>
+                                <input type="text" class="form-control" id="porta_smtp" name="porta_smtp" value="<?php if ($porta_smtp != null) echo $porta_smtp; ?>">
+                            </div>
+
+                            <div class="col-md-6 mb-10">
+                                <label for="imap" class="form-label">Servidor IMAP</label>
+                                <input type="text" class="form-control" id="imap" name="imap" value="<?php if ($imap != null) echo $imap; ?>">
+                            </div>
+
+                            <div class="col-md-6 mb-10">
+                                <label for="porta_imap" class="form-label">Porta IMAP</label>
+                                <input type="text" class="form-control" id="porta_imap" name="porta_imap" value="<?php if ($porta_imap != null) echo $porta_imap; ?>">
+                            </div>
+
+                             <div class="col-md-6 mb-10">
+                                <label for="usuario_email" class="form-label">E-mail</label>
+                                <input type="text" class="form-control" id="usuario_email" name="usuario_email" value="<?php if ($email != null) echo $email; ?>">
+                            </div>
+
+                            <div class="col-md-6 mb-10">
+                                <label for="senha_email" class="form-label">Senha de APP (Gerada no Client de E-mail)</label>
+                                <input type="text" class="form-control" id="senha_email" name="senha_email" value="<?php if ($senha_email != null) echo $senha_email; ?>">
+                            </div>
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>

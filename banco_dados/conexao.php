@@ -452,6 +452,49 @@ class Conexao
 
         return false;
     }
+
+    public function insere_resposta_email($id_email, $resposta)
+    {
+        $id_usuario = $_SESSION['id_usuario']; // Corrigido nome da variável
+        $datetime = date('Y-m-d H:i:s');
+
+        try {
+            $sql = "
+            UPDATE emails 
+            SET 
+                id_usuario_respondeu = :id_usuario,
+                resposta = :resposta,
+                data_resposta = :datetime
+            WHERE id = :id_email
+        ";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sql);
+
+            $query->bindValue(":id_email", $id_email, PDO::PARAM_INT);
+            $query->bindValue(":resposta", $resposta);
+            $query->bindValue(":datetime", $datetime);
+            $query->bindValue(":id_usuario", $id_usuario, PDO::PARAM_INT);
+
+            if ($query->execute()) {
+                $this->pdo->commit();
+
+                return [
+                    'id_email' => $id_email,
+                    'resposta' => $resposta,
+                    'id_usuario_respondeu' => $id_usuario,
+                    'data_resposta' => $datetime,
+                ];
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Candidato altera senha">
@@ -1102,6 +1145,40 @@ class Conexao
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function get_email_id($id)
+    {
+        $stmt = $this->pdo->prepare("
+    SELECT 
+        e.id,
+        e.remetente,
+        e.email_remetente,
+        e.assunto,
+        e.mensagem,
+        e.resposta,
+        e.data_criacao,
+        e.data_resposta,
+        e.id_usuario_respondeu,
+        JSON_OBJECTAGG(a.id, a.nome_arquivo) AS arquivos
+    FROM emails e
+    LEFT JOIN arquivo_email a ON e.id = a.id_email
+    WHERE e.id = :id
+    GROUP BY e.id
+    ");
+
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Converter JSON string para array (se necessário)
+        if ($result && $result['arquivos']) {
+            $result['arquivos'] = json_decode($result['arquivos'], true);
+        }
+
+        return $result;
+    }
+
+
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Suporte">
@@ -1117,6 +1194,26 @@ class Conexao
         $run = $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
+    }
+
+    public function get_lista_emails()
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+            SELECT emails.*, u.posto_grad, u.nome_guerra
+            FROM emails
+            LEFT JOIN usuario u ON u.id = emails.id_usuario_respondeu
+            ORDER BY emails.data_criacao DESC
+        ");
+
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result ?: [];
+        } catch (Exception $e) {
+            // Em produção, você pode logar o erro
+            error_log('Erro get_lista_emails: ' . $e->getMessage());
+            return [];
+        }
     }
     // </editor-fold>
 
@@ -3488,6 +3585,19 @@ order by total_pontos_somados desc");
                         where cpf = :cpf and apagado = 0"
         );
         $stmt->bindValue(':cpf', $cpf);
+        $run = $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function get_emails_candidato($email)
+    {
+        $stmt = $this->pdo->prepare(
+            "
+                        select * from emails
+                        where email_remetente = :email"
+        );
+        $stmt->bindValue(':email', $email);
         $run = $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
@@ -6540,6 +6650,88 @@ order by total_pontos_somados desc");
         }
         return false;
     }
+
+    public function insere_email($remetente, $email_remetente, $assunto, $mensagem, $data_envio, $origem = 'webmail', $id_mensagem = null)
+    {
+        try {
+            $sqlInsert = "
+            INSERT INTO emails 
+            (remetente, email_remetente, assunto, mensagem, origem, id_mensagem, data_criacao)
+            VALUES 
+            (:remetente, :email_remetente, :assunto, :mensagem, :origem, :id_mensagem, :data_criacao)
+        ";
+
+            $this->pdo->beginTransaction();
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":remetente", $remetente);
+            $query->bindValue(":email_remetente", $email_remetente);
+            $query->bindValue(":assunto", $assunto);
+            $query->bindValue(":mensagem", $mensagem);
+            $query->bindValue(":origem", $origem);
+            $query->bindValue(":id_mensagem", $id_mensagem);
+            $query->bindValue(":data_criacao", $data_envio);
+
+            if ($query->execute()) {
+                $data = [
+                    'id_adicionado' => $this->pdo->lastInsertId(),
+                    'remetente' => $remetente,
+                    'email_remetente' => $email_remetente,
+                    'assunto' => $assunto,
+                    'mensagem' => $mensagem,
+                    'origem' => $origem,
+                    'id_mensagem' => $id_mensagem,
+                    'data_criacao' => $data_envio,
+                ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    public function insere_email_arquivo($id_email, $nome_arquivo)
+    {
+        $datetime = date('Y-m-d H:i:s');
+
+        try {
+            $sqlInsert = "
+            INSERT INTO arquivo_email 
+            (id_email, nome_arquivo, data_criacao)
+            VALUES 
+            (:id_email, :nome_arquivo, :data_criacao)
+        ";
+
+            $this->pdo->beginTransaction();
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_email", $id_email);
+            $query->bindValue(":nome_arquivo", $nome_arquivo);
+            $query->bindValue(":data_criacao", $datetime);
+
+            if ($query->execute()) {
+                $data = [
+                    'id_adicionado' => $this->pdo->lastInsertId(),
+                    'id_email' => $id_email,
+                    'nome_arquivo' => $nome_arquivo,
+                    'data_criacao' => $datetime,
+                ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Insere Especialidade para Candidato">
@@ -8840,6 +9032,51 @@ order by total_pontos_somados desc");
             return false;
         }
         return false;
+    }
+
+    public function selecao_atualiza_dados_email($smpt, $imap, $porta_smtp, $porta_imap, $usuario_email, $senha_email, $id_selecao)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+
+        try {
+            $sqlInsert = "UPDATE selecao SET mail_smtp=:smpt, mail_imap=:imap, porta_smtp=:porta_smtp, porta_imap=:porta_imap, usuario_email=:usuario_email, senha_email=:senha_email WHERE id= :id";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id", $id_selecao);
+            $query->bindValue(":smpt", $smpt);
+            $query->bindValue(":imap", $imap);
+            $query->bindValue(":porta_smtp", $porta_smtp);
+            $query->bindValue(":porta_imap", $porta_imap);
+            $query->bindValue(":usuario_email", $usuario_email);
+            $query->bindValue(":senha_email", $senha_email);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'id_selecao' => $id_selecao,
+                        'smpt' => $smpt,
+                        'imap' => $imap,
+                        'porta_smtp' => $porta_smtp,
+                        'porta_imap' => $porta_imap,
+                        'usuario_email' => $usuario_email,
+                        'senha_email' => $senha_email,
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     public function selecao_atualiza_data_inscricao($data_inicio, $data_fim)

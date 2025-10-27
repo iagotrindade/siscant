@@ -116,9 +116,8 @@ if ($resultado) {
 
     if ($mail_usuario != null)
         //    $enviar->enviarEmailComSwaks($mail_usuario, $assunto, $mensagem, $smtpServer);
-        include_once './sendmail.php';
+        include_once './mail_resetar_senha.php';
     header("Location: ../esqueceu_senha.php?senha_alterada=1&email=".$mail_usuario."");
-    //   include_once './sendmail.php';
 
     /*
     $conexao = null;
