@@ -221,11 +221,12 @@ $especialidades = $conexao->get_especialidade();
                                 <option value="inscricao">1 - Desclassificação dos candidatos com pendências na inscrição</option>
                                 <option value="aptos_jise">2 - Passar para Etapa IV todos candidatos APTOS em JISE</option>
                                 <option value="inaptos_jise">3 - Eliminar os candidatos que foram INAPTOS ou NÃO compareceram a IS</option>
-                                
+                                <option value="aptos_jisr">4 - Retornar ao Processo os candidatos que foram APTOS na JISR</option>
+
                                 <?php
                                 if ($pagamento_obrigatorio == '1') {
-                                    echo '<option value="pagamento">4 - Desclassificação dos candidatos que não realizaram o pagamento da GRU</option>';
-                                    echo '<option value="isentos">5 - Desclassificação dos candidatos que foram considerados NÃO ISENTOS e não realizaram pagamento</option>';
+                                    echo '<option value="pagamento">5 - Desclassificação dos candidatos que não realizaram o pagamento da GRU</option>';
+                                    echo '<option value="isentos">6 - Desclassificação dos candidatos que foram considerados NÃO ISENTOS e não realizaram pagamento</option>';
                                 }
                                 ?>
                                 <option value="ctrl_z">Ctrl + Z | Classifica todos os desclassificados</option>
@@ -360,7 +361,7 @@ $especialidades = $conexao->get_especialidade();
                         <input type="hidden" name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
 
                         <div class="row">
-                            <div class="col-md-6 mb-10">
+                            <div class="col-md-4 mb-10">
                                 <label class="form-label">Selecione a Especialidade</label>
                                 <select name="id_especialidade" class="form-control">
                                     <option value="">Selecione a Especialidade</option>
@@ -398,6 +399,14 @@ $especialidades = $conexao->get_especialidade();
                                     <option <?php if ($etapa == 8) echo "selected" ?> value="8">Etapa VIII</option>
                                     <option <?php if ($etapa == 9) echo "selected" ?> value="9">Etapa IX</option>
                                     <option <?php if ($etapa == 10) echo "selected" ?> value="10">Etapa X</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">Considerar TODOS os COTISTAS</label>
+                                <select name="cotistas" class="form-control">
+                                    <option value="1">SIM</option>
+                                    <option value="0" selected>NÃO</option>
                                 </select>
                             </div>
                         </div>

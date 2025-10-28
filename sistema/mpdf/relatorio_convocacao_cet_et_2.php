@@ -86,62 +86,67 @@ $contadorParagrafo = 1;
 
 foreach ($lista_especialidades as $especialidade) {
     $candidatos = $conexao->get_candidatos_especialidade($especialidade['id']);
-    $pula = true;
+
+    // Verifica se existe pelo menos um candidato com etapa == 2
+    $tem_candidato_etapa2 = false;
     foreach ($candidatos as $candidato) {
         if ($candidato['etapa'] == 2) {
-            $pula = false;
-        } else {
-            $pula = true;
+            $tem_candidato_etapa2 = true;
+            break;
         }
     }
-    if ($pula) {
-        continue;
+
+    if (!$tem_candidato_etapa2) {
+        continue; // Pula especialidades sem candidatos da etapa 2
     }
 
     $contador = 1;
-
-    $agenda = $agenda_especialidade[$especialidade['id']];
-
+    $agenda = $agenda_especialidade[$especialidade['id']] ?? '';
 
     $html = "
-    <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>" . $contadorParagrafo . '. ' . $agenda . "</p>
+        <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
+            {$contadorParagrafo}. {$agenda}
+        </p>
 
-    <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
-        <tr>
-            <th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>" . mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . "</th>
-        </tr>
-        
-        <tr>
-            <th style='text-align: center; width: 10%;'>Nº</th>
-            <th style='text-align: center; width: 20%;'>CPF</th>
-            <th style='text-align: center; width: 50%;'>NOME</th>
-        </tr>
-        ";
-
-
+        <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
+            <tr>
+                <th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>
+                    " . mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . "
+                </th>
+            </tr>
+            <tr>
+                <th style='text-align: center; width: 10%;'>Nº</th>
+                <th style='text-align: center; width: 20%;'>CPF</th>
+                <th style='text-align: center; width: 50%;'>NOME</th>
+            </tr>
+    ";
 
     foreach ($candidatos as $candidato) {
         if ($candidato['etapa'] < 2 || $candidato['etapa_candidato'] < 2) {
             continue;
         }
 
-        $cpf = substr($candidato['cpf'], 0, -5) . "*****";
+        // Máscara do CPF (mantém primeiros 6 dígitos e oculta o restante)
+        $cpf = preg_replace('/\D/', '', $candidato['cpf']); // remove pontuação
+        $cpf_mascarado = substr($cpf, 0, 6) . "*****";
 
         $html .= "
             <tr>
-                <td style='text-align: center;'>$contador</td>
-                <td style='text-align: center;'>$cpf</td>
+                <td style='text-align: center;'>{$contador}</td>
+                <td style='text-align: center;'>{$cpf_mascarado}</td>
                 <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
-            </tr>";
+            </tr>
+        ";
+
         $contador++;
     }
 
     $contadorParagrafo++;
-
     $html .= "</table>";
     $mpdf->WriteHTML($html);
 }
 
+$mpdf->Output("Convocação Etapa II - Entrevista e Teste Prático.pdf", 'D');
 
 $mpdf->Output("Convocação Etapa II - Entrevista e Teste Prático.pdf", 'D');
 ob_end_flush();

@@ -116,6 +116,8 @@
                     "id" => $linha['id'],
                     "nome" => mb_strtoupper($linha['nome_completo'], "UTF-8"),
                     "cpf" => $linha['cpf'],
+                    "cotista" => $linha['vaga_reservada'],
+                    "autodeclaracao" => $linha['autodeclaracao'],
                     "pontos" => $pontuacao_curriculo,
                     "militar" => $militar,
                     "tempo_sv_pub" => $tempo_total_sv_publico_dias,
@@ -227,11 +229,11 @@
                         <th width="80px" class="text-center"><i class="fa fa-trophy"></i> Posição</th>
                         <th><i class="fa fa-user"></i> Candidato</th>
                         <th width="140px"><i class="fa fa-id-card"></i> CPF</th>
+                        <th width="140px"><i class="fa fa-id-card"></i> Cotista</th>
                         <th width="120px" class="text-center"><i class="fa fa-trophy"></i> Pontuação</th>
                         <th width="100px" class="text-center"><i class="fa fa-shield"></i> Categoria</th>
                         <th width="110px" class="text-center"><i class="fa fa--clock-o"></i> Dias SV</th>
                         <th width="110px" class="text-center"><i class="fa fa-clock-o"></i> Dias Idade</th>
-                        <th width="200px"><i class="fa fa-envelope"></i> E-Mail</th>
                         <th width="100px" class="text-center"><i class="fa fa-list"></i> Etapa</th>
                         <th width="150px"><i class="fa fa-map-marker"></i> Cidade Escolhida</th>
                         <th width="80px" class="text-center"><i class="fa fa-cogs"></i> Ações</th>
@@ -268,6 +270,10 @@
                                 <?= $linha['cpf'] ?>
                             </td>
 
+                            <td>
+                                <?= $linha['vaga_reservada'] == 1 ? ucfirst($linha['autodeclaracao']) : ''  ?>
+                            </td>
+
                             <!-- Pontuação -->
                             <td class="text-center">
                                 <?= $linha['pontos'] ?>
@@ -292,11 +298,6 @@
                                 <span class="days-badge" data-bs-toggle="tooltip" title="Idade em dias">
                                     <?= $linha['tempo_idade'] ?>
                                 </span>
-                            </td>
-
-                            <!-- E-Mail -->
-                            <td>
-                                <?= htmlspecialchars($linha['mail']) ?>
                             </td>
 
                             <!-- Etapa -->

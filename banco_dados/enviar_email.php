@@ -58,8 +58,6 @@ $conexao = new Conexao();
 
 $get_email = $conexao->get_email_id($id_email);
 
-
-
 if ($get_email == null) {
     erro("Erro: 455 Algo errado não está certo!");
     exit();
@@ -92,7 +90,7 @@ if ($id_email != null && $resposta != null) {
     if ($resultado) {
         $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $id_email, "16105", "suporte", "Update", "Respondeu o email do $nome_completo_requerente", $alteracoes_detalhadas);
 
-        $resultado_selecao = $conexao->get_selecao_id();
+        $dados_selecao = $conexao->get_selecao_id();
 
         #########################################
         #Inicia a classe PHPMailer
@@ -110,12 +108,12 @@ if ($id_email != null && $resposta != null) {
         // 06/07/2025 -> Iago Silva Corrigindo o problema onde o E-Mail não estava sendo enviado por conta do SMTPAuth estar como false
         try {
             $mail_envia->isSMTP();
-            $mail_envia->Host = 'smtp.webmail.eb.mil.br'; // Servidor SMTP
+            $mail_envia->Host = $dados_selecao[0]['mail_smtp'] ?? 'smtp.webmail.eb.mil.br'; // Servidor SMTP
             $mail_envia->SMTPAuth = true;
-            $mail_envia->Username = 'siscant@3rm.eb.mil.br'; // Seu usuário SMTP
-            $mail_envia->Password = 'EMHFXQMNPYQMAWYD'; // Sua senha SMTP
+            $mail_envia->Username = $dados_selecao[0]['usuario_email'] ?? 'siscant@3rm.eb.mil.br'; // Seu usuário SMTP
+            $mail_envia->Password = $dados_selecao[0]['senha_email'] ?? 'EMHFXQMNPYQMAWYD'; // Sua senha SMTP
             $mail_envia->SMTPSecure = 'tls';  //'tls' Define o tipo de criptografia para TLS
-            $mail_envia->Port = 587; // Porta TCP para TLS
+            $mail_envia->Port = $dados_selecao[0]['porta_smtp'] ?? 587; // Porta TCP para TLS
 
             $mail_envia->From = 'siscant@3rm.eb.mil.br'; //Set who the message is to be sent from
             $mail_envia->FromName = utf8_decode('Não responda - Comando 3ª RM'); //Nome do Remetente

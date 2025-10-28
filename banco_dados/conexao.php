@@ -731,10 +731,8 @@ class Conexao
     public function pesquisa_cpf($cpf)
     {
         $stmt = $this->pdo->prepare(
-            "select u.*, c.nome nome_cidade, s.nome nome_selecao, s.codigo codigo_selecao, s.ano ano_selecao, rm rm_selecao
+            "select *
                 from usuario u
-                left join cidade c on c.id = u.id_cidade
-                inner join selecao s on s.id = u.id_selecao
                 where (cpf like :cpf or nome_completo like :cpf) and id_selecao = :selecao and u.apagado = 0"
         );
         $stmt->bindValue(':cpf', "%$cpf%", PDO::PARAM_STR);
@@ -1148,34 +1146,44 @@ class Conexao
 
     public function get_email_id($id)
     {
+        // 1️⃣ Busca os dados principais do e-mail
         $stmt = $this->pdo->prepare("
-    SELECT 
-        e.id,
-        e.remetente,
-        e.email_remetente,
-        e.assunto,
-        e.mensagem,
-        e.resposta,
-        e.data_criacao,
-        e.data_resposta,
-        e.id_usuario_respondeu,
-        JSON_OBJECTAGG(a.id, a.nome_arquivo) AS arquivos
-    FROM emails e
-    LEFT JOIN arquivo_email a ON e.id = a.id_email
-    WHERE e.id = :id
-    GROUP BY e.id
+        SELECT 
+            e.id,
+            e.remetente,
+            e.email_remetente,
+            e.assunto,
+            e.mensagem,
+            e.resposta,
+            e.data_criacao,
+            e.data_resposta,
+            e.id_usuario_respondeu
+        FROM emails e
+        WHERE e.id = :id
+        LIMIT 1
     ");
-
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $email = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Converter JSON string para array (se necessário)
-        if ($result && $result['arquivos']) {
-            $result['arquivos'] = json_decode($result['arquivos'], true);
+        if (!$email) {
+            return null; // nenhum email encontrado
         }
 
-        return $result;
+        // 2️⃣ Busca os anexos separados
+        $stmt = $this->pdo->prepare("
+        SELECT id, nome_arquivo, data_criacao 
+        FROM arquivo_email 
+        WHERE id_email = :id_email
+    ");
+        $stmt->bindValue(':id_email', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $arquivos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // 3️⃣ Adiciona ao array principal
+        $email['arquivos'] = $arquivos ?? [];
+
+        return $email;
     }
 
 
@@ -1199,18 +1207,23 @@ class Conexao
     public function get_lista_emails()
     {
         try {
-            $stmt = $this->pdo->prepare("
-            SELECT emails.*, u.posto_grad, u.nome_guerra
-            FROM emails
-            LEFT JOIN usuario u ON u.id = emails.id_usuario_respondeu
-            ORDER BY emails.data_criacao DESC
-        ");
+            $sql = "
+            SELECT 
+                e.*, 
+                u.posto_grad, 
+                u.nome_guerra
+            FROM emails e
+            LEFT JOIN usuario u ON u.id = e.id_usuario_respondeu
+            WHERE e.id_selecao = :id_selecao
+            ORDER BY e.data_criacao DESC
+        ";
 
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':id_selecao', $_SESSION['selecao'], PDO::PARAM_INT);
             $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $result ?: [];
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         } catch (Exception $e) {
-            // Em produção, você pode logar o erro
             error_log('Erro get_lista_emails: ' . $e->getMessage());
             return [];
         }
@@ -6651,46 +6664,64 @@ order by total_pontos_somados desc");
         return false;
     }
 
-    public function insere_email($remetente, $email_remetente, $assunto, $mensagem, $data_envio, $origem = 'webmail', $id_mensagem = null)
-    {
+    public function insere_email(
+        $id_selecao,
+        $remetente,
+        $email_remetente,
+        $assunto,
+        $mensagem,
+        $data_envio,
+        $origem = 'webmail',
+        $id_mensagem = null
+    ) {
         try {
+            // Inicia a transação
+            $this->pdo->beginTransaction();
+
             $sqlInsert = "
             INSERT INTO emails 
-            (remetente, email_remetente, assunto, mensagem, origem, id_mensagem, data_criacao)
+            (id_selecao, remetente, email_remetente, assunto, mensagem, origem, id_mensagem, data_criacao)
             VALUES 
-            (:remetente, :email_remetente, :assunto, :mensagem, :origem, :id_mensagem, :data_criacao)
+            (:id_selecao, :remetente, :email_remetente, :assunto, :mensagem, :origem, :id_mensagem, :data_criacao)
         ";
 
-            $this->pdo->beginTransaction();
             $query = $this->pdo->prepare($sqlInsert);
 
-            $query->bindValue(":remetente", $remetente);
-            $query->bindValue(":email_remetente", $email_remetente);
-            $query->bindValue(":assunto", $assunto);
-            $query->bindValue(":mensagem", $mensagem);
-            $query->bindValue(":origem", $origem);
-            $query->bindValue(":id_mensagem", $id_mensagem);
-            $query->bindValue(":data_criacao", $data_envio);
+            $query->bindValue(':id_selecao', $id_selecao, PDO::PARAM_INT);
+            $query->bindValue(':remetente', $remetente, PDO::PARAM_STR);
+            $query->bindValue(':email_remetente', $email_remetente, PDO::PARAM_STR);
+            $query->bindValue(':assunto', $assunto, PDO::PARAM_STR);
+            $query->bindValue(':mensagem', $mensagem, PDO::PARAM_STR);
+            $query->bindValue(':origem', $origem, PDO::PARAM_STR);
+            $query->bindValue(':id_mensagem', $id_mensagem, is_null($id_mensagem) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+            $query->bindValue(':data_criacao', $data_envio, PDO::PARAM_STR);
 
             if ($query->execute()) {
-                $data = [
-                    'id_adicionado' => $this->pdo->lastInsertId(),
-                    'remetente' => $remetente,
-                    'email_remetente' => $email_remetente,
-                    'assunto' => $assunto,
-                    'mensagem' => $mensagem,
-                    'origem' => $origem,
-                    'id_mensagem' => $id_mensagem,
-                    'data_criacao' => $data_envio,
-                ];
+                // Busca manual do último ID gerado na sessão atual
+                $stmt = $this->pdo->query("SELECT LAST_INSERT_ID()");
+                $id_adicionado = $stmt->fetchColumn();
+
+                // Finaliza a transação
                 $this->pdo->commit();
-                return $data;
+
+                return [
+                    'id_adicionado'   => (int) $id_adicionado,
+                    'id_selecao'      => $id_selecao,
+                    'remetente'       => $remetente,
+                    'email_remetente' => $email_remetente,
+                    'assunto'         => $assunto,
+                    'mensagem'        => $mensagem,
+                    'origem'          => $origem,
+                    'id_mensagem'     => $id_mensagem,
+                    'data_criacao'    => $data_envio,
+                ];
             } else {
                 $this->pdo->rollBack();
                 return false;
             }
         } catch (Exception $e) {
             $this->pdo->rollBack();
+            error_log('Erro em insere_email: ' . $e->getMessage());
             return false;
         }
     }

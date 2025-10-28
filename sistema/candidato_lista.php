@@ -192,7 +192,7 @@ $lista_candidatos = $conexao->get_todos_candidatos();
                                     <th><i class="fa fa-hashtag me-1"></i> ID</th>
                                     <th><i class="fa fa-id-card me-1"></i> CPF</th>
                                     <th><i class="fa fa-user me-1"></i> Nome</th>
-                                    <th><i class="fa fa-shield me-1"></i> Arma</th>
+                                    <th><i class="fa fa-thumb-tack me-1"></i> Localização </th>
                                     <th><i class="fa fa-heartbeat me-1"></i> Grupo</th>
                                     <th><i class="fa fa-heartbeat me-1"></i> Grupo Recurso</th>
                                     <th><i class="fa fa-phone me-1"></i> Telefone</th>
@@ -208,6 +208,8 @@ $lista_candidatos = $conexao->get_todos_candidatos();
                                 foreach ($lista_candidatos as $linha) {
                                     if ($linha['etapa'] < $_SESSION['etapa_selecao']) continue;
                                     if ($linha['medico_obrigatorio'] == '1') continue;
+
+                                    $cidade = $conexao->get_cidade_id($linha['id_cidade']);
 
                                     $incorporado = null;
                                     if ($linha['incorporado'] == '1') $incorporado = "<span class='badge bg-success'>Sim</span>";
@@ -239,7 +241,7 @@ $lista_candidatos = $conexao->get_todos_candidatos();
                                             </div>
                                         </div>
                                     </td>
-                                    <td><span class="badge bg-info">' . $linha['arma_quadro_servico'] . '</span></td>
+                                    <td><span class="badge bg-info">' . mb_strtoupper($cidade[0]['nome'] . '/' . $linha['uf']) . '</span></td>
                                     <td><span class="badge bg-secondary">' . $linha['grupo_saude'] . '</span></td>
                                     <td><span class="badge bg-warning text-dark">recurso_' . $linha['grupo_saude_recurso'] . '</span></td>
                                     <td>' . $linha['tel_celular'] . '</td>

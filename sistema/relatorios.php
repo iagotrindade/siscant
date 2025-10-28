@@ -470,18 +470,19 @@ $lista_especialidades = $conexao->get_especialidade();
 
                             <?php foreach ($lista_especialidades as $especialidade): ?>
                                 <?php
-                                $pula = true;
 
                                 $candidatos = $conexao->get_candidatos_especialidade($especialidade['id']);
+                                // Verifica se existe pelo menos um candidato com etapa == 2
+                                $tem_candidato_etapa2 = false;
                                 foreach ($candidatos as $candidato) {
                                     if ($candidato['etapa'] == 2) {
-                                        $pula = false;
-                                    } else {
-                                        $pula = true;
+                                        $tem_candidato_etapa2 = true;
+                                        break;
                                     }
                                 }
-                                if ($pula) {
-                                    continue;
+
+                                if (!$tem_candidato_etapa2) {
+                                    continue; // Pula especialidades sem candidatos da etapa 2
                                 }
                                 ?>
                                 <div class="col-lg-12">

@@ -17,6 +17,7 @@ if ($_GET['criptografia'] != hash('sha256', $id_email)) {
 
 $get_email_id = $conexao->get_email_id($id_email);
 
+
 $nome_completo = null;
 $mail = null;
 $mensagem = null;
@@ -485,26 +486,29 @@ if ($data_enviado != null)
                             </div>
                         </div>
 
-                        <div class="request-details">
-                            <div class="detail-row">
-                                <div class="detail-item full-width">
-                                    <span class="detail-label">
-                                        <i class="fa fa-file"></i>
-                                        Anexos:
-                                    </span>
-                                    <div class="message-value">
-                                        <?php foreach ($get_email_id['arquivos'] as $arquivo): ?>
-                                            <a href="./arquivos/arquivos_email/<?php echo $arquivo; ?>" target="_blank" class="arquivo-item">
-                                                <i class="fa fa-file"></i>
-                                                <?php echo $arquivo; ?>
-                                            </a>
-
-                                            <br>
-                                        <?php endforeach; ?>
+                        <?php if (!empty($get_email_id['arquivos'])): ?>
+                            <div class="request-details">
+                                <div class="detail-row">
+                                    <div class="detail-item full-width">
+                                        <span class="detail-label">
+                                            <i class="fa fa-file"></i>
+                                            Anexos:
+                                        </span>
+                                        <div class="message-value">
+                                            <?php foreach ($get_email_id['arquivos'] as $arquivo): ?>
+                                                <a href="./arquivos/arquivos_email/<?php echo htmlspecialchars($arquivo['nome_arquivo']); ?>"
+                                                    target="_blank"
+                                                    class="arquivo-item">
+                                                    <i class="fa fa-file"></i>
+                                                    <?php echo htmlspecialchars($arquivo['nome_arquivo']); ?>
+                                                </a>
+                                                <br>
+                                            <?php endforeach; ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -554,7 +558,7 @@ if ($data_enviado != null)
                                     </div>
                                     <div class="message-content">
                                         <div class="message-text"><?= $mensagem ?? 'Sem mensagem' ?></div>
-                                        <span class="message-time"><?= $data_enviado ?></span>
+                                        <span class="message-time"><?= $data_enviado ?? datetime('d/m/Y') ?></span>
                                     </div>
                                 </div>
 

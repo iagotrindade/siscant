@@ -15,6 +15,8 @@
     }
     
     $pesquisa = $_POST['pesquisa'];
+
+    
     
     $lista_usuarios = $conexao->pesquisa_cpf($pesquisa);  
     

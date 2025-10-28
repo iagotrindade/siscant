@@ -111,6 +111,8 @@
                 "id" => $linha['id'],
                 "nome" => mb_strtoupper($linha['nome_completo'], "UTF-8"),
                 "cpf" => $linha['cpf'],
+                "cotista" => $linha['vaga_reservada'],
+                "autodeclaracao" => $linha['autodeclaracao'],
                 "pontos" => $pontuacao_curriculo,
                 "militar" => $militar,
                 "tempo_sv_pub" => $tempo_total_sv_publico_dias,
@@ -238,7 +240,7 @@
                             <th class="text-center"><i class="fa fa-trophy"></i> Posição</th>
                             <th><i class="fa fa-user"></i> Candidato</th>
                             <th><i class="fa fa-id-card"></i> CPF</th>
-                            <th><i class="fa fa-envelope"></i> E-Mail</th>
+                            <th><i class="fa fa-id-card"></i> Cotista</th>
                             <th class="text-center"><i class="fa fa-trophy"></i> Pontuação</th>
                             <th class="text-center"><i class="fa fa-shield"></i> Categoria</th>
                             <th class="text-center"><i class="fa fa-clock-o"></i> Dias SV</th>
@@ -280,9 +282,8 @@
                                     <?= $linha['cpf'] ?>
                                 </td>
 
-                                <!-- E-mail -->
-                                <td class="text-center">
-                                    <?= htmlspecialchars($linha['mail']) ?>
+                                <td>
+                                    <?= $linha['vaga_reservada'] == 1 ? ucfirst($linha['autodeclaracao']) : ''  ?>
                                 </td>
 
                                 <!-- Pontuação -->

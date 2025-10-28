@@ -344,16 +344,28 @@ if ($_SESSION['perfil'] == "avaliador") {
                 <table border='1' style="width: 100%">
                     <tbody>
                         <tr>
-                            <td <?php if (isset($_SESSION['eipot']) == 1);
-                                echo "hidden" ?>><b>SOMATÓRIO DOS PONTOS VÁLIDOS</b></td>
+                            <td>
+                                <b><?= $_SESSION['selecao_codigo'] == "cet" ? 'SOMATÓRIO DOS PONTOS (APÓS TESTES DE CONHECIMENTOS)' : 'SOMATÓRIO DOS PONTOS' ?></b>
+
+                            </td>
+
                             <td><b>
                                     <?php
-
-                                    if ($valor['musica'])
-                                        echo round($somatorio_total_pontos_musica, 2);
-                                    else
-                                        echo $pontuacao_total + $nota_prova_teorico_pratico
-                                    ?> </b></td>
+                                    if (!empty($valor['musica'])) {
+                                        // Caso música: exibe a soma dos pontos de música
+                                        echo number_format((float)$somatorio_total_pontos_musica, 2, '.', '');
+                                    } elseif (!empty($_SESSION['selecao_codigo']) && $_SESSION['selecao_codigo'] === 'cet') {
+                                        // Fórmula correta: (2 × prova + currículo) / 3
+                                        $nota_calculada = (((float)$nota_prova_teorico_pratico * 2) + (float)$pontuacao_total) / 3;
+                                        echo number_format($nota_calculada, 2, '.', '');
+                                    } else {
+                                        // Demais casos
+                                        $total = (float)$pontuacao_total + (float)$nota_prova_teorico_pratico;
+                                        echo number_format($total, 2, '.', '');
+                                    }
+                                    ?>
+                                </b>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -376,14 +388,22 @@ if ($_SESSION['perfil'] == "avaliador") {
                             <div class="col-md-4">
 
                                 <?php
-                                if ($nota_prova_teorico_pratico < 10)
-                                    $nota_prova_teorico_pratico = "0" . $nota_prova_teorico_pratico . "00";
-                                else
-                                    $nota_prova_teorico_pratico = number_format($nota_prova_teorico_pratico, 2);
+                                $nota = (float) $nota_prova_teorico_pratico;
+
+                                // Formata com duas casas decimais, ponto como separador
+                                $nota_formatada = number_format($nota, 2, '.', '');
+
+                                // Adiciona zero à esquerda se for menor que 10
+                                if ($nota < 10) {
+                                    $nota_formatada = '0' . $nota_formatada;
+                                }
                                 ?>
 
                                 <label>Adicionar pontuação do teste Teórico/Prático</label>
-                                <input name="pontuacao_teorico_pratica" value="<?php echo $nota_prova_teorico_pratico ?>" class="form-control">
+                                <input
+                                    name="pontuacao_teorico_pratica"
+                                    value="<?= htmlspecialchars($nota_formatada, ENT_QUOTES, 'UTF-8') ?>"
+                                    class="form-control">
                             </div>
                             <div class="col-md-8">
                                 <br>
@@ -485,7 +505,7 @@ if ($_SESSION['perfil'] == "avaliador") {
 
                         </div>
                     </div>
-                    <?php endif; ?>
+                <?php endif; ?>
                 </div>
 
                 <div <?php if ($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "avaliador") echo " hidden " ?> class="alert alert-info">

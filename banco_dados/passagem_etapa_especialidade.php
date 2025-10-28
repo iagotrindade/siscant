@@ -53,6 +53,7 @@ $etapaSelecao = (int)$get_selecao[0]['etapa'];
 $id_especialidade = filter_input(INPUT_POST, 'id_especialidade', FILTER_SANITIZE_NUMBER_INT);
 $etapa = filter_input(INPUT_POST, 'etapa', FILTER_SANITIZE_NUMBER_INT);
 $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_SANITIZE_NUMBER_INT);
+$cotistas = $_POST['cotistas'];
 
 // Validação adicional para números positivos
 if ($id_especialidade <= 0 || $etapa <= 0 || $quantidade <= 0) {
@@ -179,6 +180,7 @@ foreach ($lista_candidatos as $candidato) {
         "nome" => mb_strtoupper($candidato['nome_completo'], "UTF-8"),
         "cpf" => $candidato['cpf'],
         "mail" => $candidato['mail'],
+        "vaga_reservada" => $candidato['vaga_reservada'],
         "pontos" => $pontuacao_curriculo,
         "militar" => $militar,
         "tempo_sv_pub" => $tempo_total_sv_publico_dias,
@@ -306,6 +308,61 @@ for ($i = 0; $i < $quantidade; $i++) {
         }
     } else {
         $sucesso = false;
+    }
+}
+
+if ($cotistas == 1) {
+    foreach ($vetor_ordenado_candidatos as $candidato) {
+        if ($candidato['vaga_reservada']) {
+            // Alterar a etapa do Candidato se já não estiver na etapa de destino
+            if ($candidato['etapa_candidato'] < $etapa) {
+                $resultadoEtapaCandidato = $conexao->altera_etapa_candidato($candidato['id'], $etapa);
+
+                if ($resultadoEtapaCandidato) {
+                    $obs = "Cod: 95471. Candidato passou para etapa " . $etapa . " pelo Script de Cotas!";
+                    $resultadoObs = $conexao->cadastra_observacao_candidato($candidato['id'], $obs, 1);
+                    $alteracoes_detalhadas = print_r($resultadoEtapaCandidato, true);
+
+                    if ($resultadoObs) {
+                        $insere_log = $conexao->insere_log(
+                            $_SESSION['id_usuario'],
+                            $candidato['cpf'],
+                            $candidato['id'],
+                            "14122",
+                            "usuario",
+                            "Insert",
+                            "Observação adicionada, Candidato passou para ETAPA " . $etapa . " pelo Script de Cotas",
+                            $alteracoes_detalhadas
+                        );
+                    }
+                } else {
+                    $sucesso = false;
+                }
+            }
+
+            $resultadoEtapaEspecialidade = $conexao->altera_etapa_especialidade($candidato['id'], $id_especialidade, $etapa);
+
+            if ($resultadoEtapaEspecialidade) {
+                $obs = "Cod: 95471. Candidato passou para etapa " . $etapa . " na especialidade " . $especialidade[0]['nome'] . " pelo Script de Cotas!";
+                $resultadoObs = $conexao->cadastra_observacao_candidato($candidato['id'], $obs, 1);
+                $alteracoes_detalhadas = print_r($resultadoEtapaEspecialidade, true);
+
+                if ($resultadoObs) {
+                    $insere_log = $conexao->insere_log(
+                        $_SESSION['id_usuario'],
+                        $candidato['cpf'],
+                        $candidato['id'],
+                        "14122",
+                        "usuario",
+                        "Insert",
+                        "Observação adicionada, Candidato passou para ETAPA " . $etapa . " na especialidade " . $especialidade[0]['nome'] . " pelo Script de Cotas!",
+                        $alteracoes_detalhadas
+                    );
+                }
+            } else {
+                $sucesso = false;
+            }
+        }
     }
 }
 

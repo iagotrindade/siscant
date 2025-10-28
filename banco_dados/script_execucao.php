@@ -239,9 +239,6 @@ if ($script == 'aptos_jise') {
 
 if ($script == 'inaptos_jise') {
     $lista_candidatos = $conexao->get_candidatos_concorrendo();
-    $usuarios_passaram_etapa3 = ["Lista de CPFs passaram etapa 4"];
-    $candidatos_processados = [];
-
     foreach ($lista_candidatos as $candidato) {
         // pula quem está apto ou não está na etapa 3
         if ((int)$candidato['apto_saude'] === 1 || (int)$candidato['etapa'] != 3) {
@@ -342,6 +339,91 @@ if ($script == 'inaptos_jise') {
                     // se não conseguiu alterar o status do usuário, continua para próxima especialidade/candidato
                     continue;
                 }
+            }
+        } // foreach especialidades
+    } // foreach candidatos
+
+    header("Location: ../sistema/etapa_passagem.php?sucesso=1");
+    exit();
+}
+
+if ($script == 'aptos_jisr') {
+    $lista_candidatos = $conexao->get_candidatos_desclassificados();
+
+    foreach ($lista_candidatos as $candidato) {
+        // pula quem está apto ou não está na etapa 3
+        if ((int)$candidato['apto_saude'] === 1 || (int)$candidato['etapa'] != 3 || $candidato['apto_saude_recurso'] != 1) {
+            continue;
+        }
+
+        $justificativa = 'Candidato APTO na Inspeção de Saúde em Grau de Recurso';
+
+        // carrega as especialidades UMA vez
+        $candidato['especialidades'] = $conexao->get_especialidade_candidato($candidato['id']);
+        if (!is_array($candidato['especialidades'])) {
+            $candidato['especialidades'] = [];
+        }
+
+        // carrega dados do usuário UMA vez
+        $get_candidato = $conexao->get_usuario_id($candidato['id']);
+
+        // Processa cada especialidade do candidato
+        foreach ($candidato['especialidades'] as $especialidade) {
+            if ($especialidade['etapa' != 3] || $especialidade['concorrendo'] == 1) {
+                continue;
+            }
+
+            // Pega nome da especialidade (usa o id da especialidade do array)
+            $nome_especialidade = "";
+            if (!empty($especialidade['id_especialidade'])) {
+                $get_especialidade_id = $conexao->get_especialidade_id($especialidade['id_especialidade']);
+                if (isset($get_especialidade_id[0]['nome'])) {
+                    $nome_especialidade = $get_especialidade_id[0]['nome'];
+                }
+            }
+
+            // atualiza status 'concorrendo' na especialidade
+            $resultado_concorrendo = $conexao->status_concorrendo_especialidade(
+                $especialidade['id_candidato_x_especialidade'],
+                1,
+                $justificativa
+            );
+
+            $alteracoes_detalhadas = print_r($resultado_concorrendo, true);
+
+            if ($resultado_concorrendo) {
+                // log com concatenação correta
+                $conexao->insere_log(
+                    $_SESSION['id_usuario'],
+                    $_SESSION['cpf'],
+                    $candidato['id'],
+                    "16120",
+                    "candidato_x_especialidade",
+                    "Update",
+                    "Alterou o status do candidato " . ($get_candidato[0]['cpf'] ?? $candidato['cpf']) . " para CONCORRENDO na especialidade $nome_especialidade! Justificativa: $justificativa",
+                    $alteracoes_detalhadas
+                );
+            } else {
+                $conexao = null;
+                erro("Erro 4575634 O status não mudou!");
+                exit();
+            }
+
+            // Altera o status para concorrendo
+            $observacao = "Candidato concorrendo ao Processo Seletivo! Justificativa: $justificativa";
+            $resultado_concorrendo_usuario = $conexao->status_concorrendo($candidato['id'], 1, $observacao);
+            $alteracoes_detalhadas_usuario = print_r($resultado_concorrendo_usuario, true);
+            if ($resultado_concorrendo_usuario) {
+                $conexao->insere_log(
+                    $_SESSION['id_usuario'],
+                    $_SESSION['cpf'],
+                    $candidato['id'],
+                    "16116",
+                    "usuario",
+                    "Update",
+                    "Alterou o status do candidato " . ($get_candidato[0]['cpf'] ?? $candidato['cpf']) . " para CONCORRENDO no processo seletivo! Justificativa: $observacao",
+                    $alteracoes_detalhadas_usuario
+                );
             }
         } // foreach especialidades
     } // foreach candidatos

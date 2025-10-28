@@ -112,8 +112,8 @@
                 "nome" => mb_strtoupper($linha['nome_completo'], "UTF-8"),
                 "cpf" => $linha['cpf'],
                 "mail" => $linha['mail'],
+                "cotista" => $linha['vaga_reservada'],
                 "autodeclaracao" => $linha['autodeclaracao'],
-                "vaga_reservada" => $linha['vaga_reservada'],
                 "pontos" => $pontuacao_curriculo,
                 "pratica" => $prova_pratica_musica,
                 "escrita" => $prova_escrita_musica,
@@ -227,7 +227,7 @@
                             <th width="80px" class="text-center"><i class="fa fa-trophy"></i> Posição</th>
                             <th><i class="fa fa-user"></i> Candidato</th>
                             <th width="140px"><i class="fa fa-id-card"></i> CPF</th>
-                            <th width="200px"><i class="fa fa-envelope"></i> E-Mail</th>
+                            <th width="140px"><i class="fa fa-id-card"></i> Cotista</th>
                             <th width="100px" class="text-center"><i class="fa fa-trophy"></i> Pontuação</th>
                             <th width="90px" class="text-center"><i class="fa fa-pencil"></i> Prática</th>
                             <th width="90px" class="text-center"><i class="fa fa-pencil"></i> Escrita</th>
@@ -285,9 +285,8 @@
                                     <?= $linha['cpf'] ?>
                                 </td>
 
-                                <!-- E-Mail -->
                                 <td>
-                                    <?= htmlspecialchars($linha['mail']) ?>
+                                    <?= $linha['vaga_reservada'] == 1 ? ucfirst($linha['autodeclaracao']) : ''  ?>
                                 </td>
 
                                 <!-- Pontuação -->

@@ -15,7 +15,7 @@ $lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
 
 $lista_suporte_inicial = $conexao->get_suporte();
 
-include '../sistema/captura_emails.php';
+include '../banco_dados/captura_emails.php';
 
 $lista_emails = $conexao->get_lista_emails();
 ?>
@@ -722,7 +722,7 @@ $lista_emails = $conexao->get_lista_emails();
                                         <th><i class="fa fa-question-circle me-1"></i> Motivo</th>
                                         <th><i class="fa fa-comment me-1"></i> Mensagem</th>
                                         <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
-                                        <th><i class="fa fa-server me-1"></i> Status</th>
+                                        <th><i class="fa fa-server me-1"></i> Respondido</th>
                                         <th><i class="fa fa-cogs me-1"></i> Ações</th>
                                     </tr>
                                 </thead>
@@ -838,7 +838,7 @@ $lista_emails = $conexao->get_lista_emails();
                                         <th><i class="fa fa-question-circle me-1"></i> Assunto</th>
                                         <th><i class="fa fa-comment me-1"></i> Mensagem</th>
                                         <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
-                                        <th><i class="fa fa-server me-1"></i> Status</th>
+                                        <th><i class="fa fa-server me-1"></i> Respondido</th>
                                         <th><i class="fa fa-cogs me-1"></i> Ações</th>
                                     </tr>
                                 </thead>
@@ -886,7 +886,7 @@ $lista_emails = $conexao->get_lista_emails();
                                         <td>' . trata_data_hora($linha['data_criacao' ?? date('Y-m-d H:i:s')]) . '</td>
                                         <td class="' . $status_class . '">' . $respondido . $dias_resposta . '</td>
                                         <td>
-                                            <a href="email_visualiza.php?criptografia=' . hash('sha256', $linha['id']) . '&id_email=' . $linha['id'] . '" class="btn btn-sm btn-primary" title="Visualizar">
+                                            <a target="_blank" href="email_visualiza.php?criptografia=' . hash('sha256', $linha['id']) . '&id_email=' . $linha['id'] . '" class="btn btn-sm btn-primary" title="Visualizar">
                                                 <i class="fa fa-search"></i>
                                             </a>
                                         </td>
