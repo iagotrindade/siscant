@@ -27,13 +27,22 @@ if ($_POST['resposta'] == "") {
     erro("O campo resposta é obrigatório!");
     exit();
 }
+
+if ($_POST['assunto'] == "") {
+    erro("O campo assunto é obrigatório!");
+    exit();
+}
+
 if ($_POST['id_email'] == "") {
     erro("Erro: 456465 Algo errado não está certo!");
     exit();
 }
 
 if ($_POST['resposta'] != "")
-    $resposta = htmlspecialchars(trim($_POST['resposta']));
+    $resposta =  nl2br(htmlspecialchars(trim($_POST['resposta'])));
+
+if ($_POST['assunto'] != "")
+    $assunto =  htmlspecialchars(trim($_POST['assunto']));
 
 if ($_POST['id_email'] != "")
     $id_email = $_POST['id_email'];
@@ -127,7 +136,7 @@ if ($id_email != null && $resposta != null) {
             $mail_envia->IsHTML(true); // Define que o e-mail será enviado como HTML
             $mail_envia->CharSet = 'utf-8'; // Charset da mensagem (opcional)
 
-            $mail_envia->Subject = "SiSCanT - Suporte ao Candidato"; // Assunto da mensagem
+            $mail_envia->Subject = $assunto; // Assunto da mensagem
 
             // Conteúdo do e-mail
             $mail_envia->Body = utf8_decode('        
@@ -181,7 +190,7 @@ if ($id_email != null && $resposta != null) {
                         <tr>
                             <td style="padding-bottom: 25px;">
                                 <p style="font-size: 14px; color: #555555; margin: 0;">
-                                    Sua dúvida encaminhada através vai E-mail foi respondida.
+                                    Sua dúvida encaminhada via e-mail foi respondida.
                                 </p>
                             </td>
                         </tr>
@@ -192,56 +201,13 @@ if ($id_email != null && $resposta != null) {
                                 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: green; border-left: 4px solid green; border-radius: 4px;">
                                     <tr>
                                         <td style="padding: 20px;">
-                                            <!-- Data Envio -->
-                                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 15px;">
-                                                <tr>
-                                                    <td width="120" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
-                                                        Data de Envio:
-                                                    </td>
-                                                    <td style="font-size: 14px; color: #555555;">
-                                                        ' . trata_data($data_enviado_requerente) . '
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            
-                                            <!-- Mensagem Enviada -->
-                                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
-                                                <tr>
-                                                    <td width="120" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
-                                                        Mensagem Enviada:
-                                                    </td>
-                                                    <td style="font-size: 14px; color: #555555;">
-                                                        ' . $mensagem_requerente . '
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            
-                                            <!-- Divider -->
-                                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
-                                                <tr>
-                                                    <td style="border-bottom: 1px solid #dddddd;"></td>
-                                                </tr>
-                                            </table>
-                                            
-                                            <!-- Data Resposta -->
-                                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 15px;">
-                                                <tr>
-                                                    <td width="120" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
-                                                        Data Resposta:
-                                                    </td>
-                                                    <td style="font-size: 14px; color: #555555;">
-                                                        ' . trata_data($datetime) . '
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            
                                             <!-- Resposta -->
                                             <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
-                                                    <td width="120" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
+                                                    <td width="100%" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
                                                         Resposta:
                                                     </td>
-                                                    <td style="font-size: 14px; color: #555555;">
+                                                    <td style="font-size: 14px; color: #FFFFFF;">
                                                         ' . $resposta . '
                                                     </td>
                                                 </tr>

@@ -217,7 +217,8 @@ if ($data_enviado != null)
         margin-bottom: 1rem;
     }
 
-    .chat-input input {
+    .chat-input input,
+    .chat-input textarea {
         flex: 1;
         padding: 1.2rem 1rem;
         border: 1px solid rgba(0, 0, 0, 0.1);
@@ -225,7 +226,8 @@ if ($data_enviado != null)
         outline: none;
     }
 
-    .chat-input button {
+    .chat-input button,
+    .send-mail-button {
         font-size: 20px;
         background-color: var(--primary-color);
         color: white;
@@ -236,7 +238,8 @@ if ($data_enviado != null)
         transition: background-color 0.2s;
     }
 
-    .chat-input button:hover {
+    .chat-input button:hover,
+    .send-mail-button:hover {
         background-color: #004d00;
     }
 
@@ -480,7 +483,7 @@ if ($data_enviado != null)
                                         Mensagem:
                                     </span>
                                     <div class="message-value">
-                                        <?= empty($mensagem) ? 'Sem mensagem' : $mensagem ?>
+                                        <?= empty($mensagem) ? 'Sem mensagem' : nl2br(htmlspecialchars($mensagem)) ?>
                                     </div>
                                 </div>
                             </div>
@@ -603,9 +606,22 @@ if ($data_enviado != null)
                                 <input type="text"
                                     placeholder="Digite sua mensagem..."
                                     autocomplete="off"
-                                    name="resposta">
-                                <button type="submit"><i class="bi bi-send"></i></button>
+                                    name="assunto"
+                                    value="Resposta - <?= $get_email_id['assunto'] ?>">
+                                <button><i class="bi bi-flag"></i></button>
                             </div>
+
+                            <div class="chat-input">
+                                <textarea
+                                    placeholder="Digite sua mensagem..."
+                                    autocomplete="off"
+                                    name="resposta"></textarea>
+                            </div>
+
+                            <div style="text-align: right;">
+                                <button class="send-mail-button" style="font-weight:600; width: 20%; padding: 10px; border-radius: 6px" type="submit">Enviar <i class="bi bi-send"></i> </button>
+                            </div>
+
                         <?php endif; ?>
                     </form>
                 </div>
