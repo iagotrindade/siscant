@@ -1112,6 +1112,24 @@ class Conexao
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function get_quantidade_x_usuario_email()
+    {
+        $id = $_SESSION['selecao'];
+        $stmt = $this->pdo->prepare(
+            "select u.id,u.posto_grad,u.nome_guerra,count(e.id_usuario_respondeu) quantidade
+                                        from emails e
+                                        inner join usuario u on u.id = e.id_usuario_respondeu
+                                        where e.id_usuario_respondeu is not null
+                                        and e.id_selecao = :id_selecao
+                                        group by e.id_usuario_respondeu
+                                        order by quantidade desc"
+        );
+        $stmt->bindValue(':id_selecao', $id);
+        $run = $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Suporte Inicial ID">

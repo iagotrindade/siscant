@@ -461,7 +461,6 @@ $lista_emails = $conexao->get_lista_emails();
     .stat-item {
         text-align: center;
         padding: 0.75rem;
-        background: #f8f9fa;
         border-radius: 8px;
     }
 
@@ -822,61 +821,61 @@ $lista_emails = $conexao->get_lista_emails();
             <?php endif; ?>
 
             <div class="card mb-4">
-                    <div class="card-header bg-primary text-white mb-20">
-                        <span class="mb-0">
-                            <i class="fa fa-envelope"></i> E-mails
-                        </span>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive mb-20">
-                            <table class="table table-hover table-striped" id="tabela_emails">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th><i class="fa fa-hashtag me-1"></i> ID</th>
-                                        <th><i class="fa fa-user me-1"></i> Remetente</th>
-                                        <th><i class="fa fa-id-card me-1"></i> Email</th>
-                                        <th><i class="fa fa-question-circle me-1"></i> Assunto</th>
-                                        <th><i class="fa fa-comment me-1"></i> Mensagem</th>
-                                        <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
-                                        <th><i class="fa fa-server me-1"></i> Respondido</th>
-                                        <th><i class="fa fa-cogs me-1"></i> Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
-                                    $respondidos_ni = 0;
-                                    $nao_respondidos_ni = 0;
-                                    $somatorio_dias_resposta_ni = 0;
-                                    $maior_tempo_ni = 0;
+                <div class="card-header bg-primary text-white mb-20">
+                    <span class="mb-0">
+                        <i class="fa fa-envelope"></i> E-mails
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive mb-20">
+                        <table class="table table-hover table-striped" id="tabela_emails">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th><i class="fa fa-hashtag me-1"></i> ID</th>
+                                    <th><i class="fa fa-user me-1"></i> Remetente</th>
+                                    <th><i class="fa fa-id-card me-1"></i> Email</th>
+                                    <th><i class="fa fa-question-circle me-1"></i> Assunto</th>
+                                    <th><i class="fa fa-comment me-1"></i> Mensagem</th>
+                                    <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
+                                    <th><i class="fa fa-server me-1"></i> Respondido</th>
+                                    <th><i class="fa fa-cogs me-1"></i> Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $respondidos_ni = 0;
+                                $nao_respondidos_ni = 0;
+                                $somatorio_dias_resposta_ni = 0;
+                                $maior_tempo_ni = 0;
 
-                                    foreach ($lista_emails as $linha) {
-                                        $dias_resposta = "";
-                                        $usuario_respondeu = "_" . mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                        $respondido = "_Não";
-                                        $status_class = "status-pendente";
+                                foreach ($lista_emails as $linha) {
+                                    $dias_resposta = "";
+                                    $usuario_respondeu = "_" . mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                    $respondido = "_Não";
+                                    $status_class = "status-pendente";
 
-                                        if ($linha['resposta'] != null) {
-                                            $respondido = "_Sim";
-                                            $respondidos_ni++;
-                                            $status_class = "status-respondido";
+                                    if ($linha['resposta'] != null) {
+                                        $respondido = "_Sim";
+                                        $respondidos_ni++;
+                                        $status_class = "status-respondido";
 
-                                            $dias_resposta = 0;
-                                            $data_enviado = new DateTime($linha['data_criacao']);
-                                            $data_respondido = new DateTime($linha['data_resposta']);
-                                            $intervalo = $data_enviado->diff($data_respondido);
-                                            $tempo_total = $intervalo->d + $intervalo->h / 24;
-                                            $tempo_total = $tempo_total + $intervalo->i / 1440;
-                                            $tempo_total = $tempo_total + $intervalo->s / 86400;
+                                        $dias_resposta = 0;
+                                        $data_enviado = new DateTime($linha['data_criacao']);
+                                        $data_respondido = new DateTime($linha['data_resposta']);
+                                        $intervalo = $data_enviado->diff($data_respondido);
+                                        $tempo_total = $intervalo->d + $intervalo->h / 24;
+                                        $tempo_total = $tempo_total + $intervalo->i / 1440;
+                                        $tempo_total = $tempo_total + $intervalo->s / 86400;
 
-                                            if ($intervalo->m > 0) $tempo_total = $tempo_total + (30 * $intervalo->m);
-                                            if ($tempo_total > $maior_tempo_ni) $maior_tempo_ni = $tempo_total;
-                                            $somatorio_dias_resposta_ni = $somatorio_dias_resposta_ni + $tempo_total;
-                                            $dias_resposta = ", em " . round($tempo_total, 2) . " dias por $usuario_respondeu ";
-                                        } else {
-                                            $nao_respondidos_ni++;
-                                        }
+                                        if ($intervalo->m > 0) $tempo_total = $tempo_total + (30 * $intervalo->m);
+                                        if ($tempo_total > $maior_tempo_ni) $maior_tempo_ni = $tempo_total;
+                                        $somatorio_dias_resposta_ni = $somatorio_dias_resposta_ni + $tempo_total;
+                                        $dias_resposta = ", em " . round($tempo_total, 2) . " dias por $usuario_respondeu ";
+                                    } else {
+                                        $nao_respondidos_ni++;
+                                    }
 
-                                        echo '
+                                    echo '
                                     <tr>
                                         <td>' . $linha['id'] . '</td>
                                         <td>' . $linha['email_remetente'] . '</td>
@@ -891,79 +890,128 @@ $lista_emails = $conexao->get_lista_emails();
                                             </a>
                                         </td>
                                     </tr>';
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Estatísticas -->
+                    <div class="row mt-4">
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="stat-card bg-success text-white p-2 rounded text-center">
+                                <h5 class="mb-1">Respondidos</h5>
+                                <h4 class="mb-0"><?php echo $respondidos_ni ?></h4>
+                            </div>
                         </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="stat-card bg-danger text-white p-2 rounded text-center">
+                                <h5 class="mb-1">Não Respondidos</h5>
+                                <h4 class="mb-0">
+                                    <?php
+                                    if ($respondidos_ni > 0 || $nao_respondidos_ni > 0)
+                                        $porcentagem_ni = round(($nao_respondidos_ni / ($nao_respondidos_ni + $respondidos_ni)) * 100, 2);
 
-                        <!-- Estatísticas -->
-                        <div class="row mt-4">
-                            <div class="col-md-3 col-6 mb-3">
-                                <div class="stat-card bg-success text-white p-2 rounded text-center">
-                                    <h5 class="mb-1">Respondidos</h5>
-                                    <h4 class="mb-0"><?php echo $respondidos_ni ?></h4>
-                                </div>
+                                    if ($nao_respondidos_ni > 0)
+                                        echo $nao_respondidos_ni . " <small>($porcentagem_ni%)</small>";
+                                    else echo '0';
+                                    ?>
+                                </h4>
                             </div>
-                            <div class="col-md-3 col-6 mb-3">
-                                <div class="stat-card bg-danger text-white p-2 rounded text-center">
-                                    <h5 class="mb-1">Não Respondidos</h5>
-                                    <h4 class="mb-0">
-                                        <?php
-                                        if ($respondidos_ni > 0 || $nao_respondidos_ni > 0)
-                                            $porcentagem_ni = round(($nao_respondidos_ni / ($nao_respondidos_ni + $respondidos_ni)) * 100, 2);
-
-                                        if ($nao_respondidos_ni > 0)
-                                            echo $nao_respondidos_ni . " <small>($porcentagem_ni%)</small>";
-                                        else echo '0';
-                                        ?>
-                                    </h4>
-                                </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="stat-card bg-info text-white p-2 rounded text-center">
+                                <h5 class="mb-1">Média de Resp</h5>
+                                <h4 class="mb-0"><?php if ($respondidos_ni > 0 && $somatorio_dias_resposta_ni > 0) echo round($somatorio_dias_resposta_ni / $respondidos_ni, 2) . " dias";
+                                                    else echo "0"; ?></h4>
                             </div>
-                            <div class="col-md-3 col-6 mb-3">
-                                <div class="stat-card bg-info text-white p-2 rounded text-center">
-                                    <h5 class="mb-1">Média de Resp</h5>
-                                    <h4 class="mb-0"><?php if ($respondidos_ni > 0 && $somatorio_dias_resposta_ni > 0) echo round($somatorio_dias_resposta_ni / $respondidos_ni, 2) . " dias";
-                                                        else echo "0"; ?></h4>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6 mb-3">
-                                <div class="stat-card bg-warning text-dark p-2 rounded text-center">
-                                    <h5 class="mb-1">Maior Tempo</h5>
-                                    <h4 class="mb-0"><?php echo round($maior_tempo_ni, 2) . " dias"; ?></h4>
-                                </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="stat-card bg-warning text-dark p-2 rounded text-center">
+                                <h5 class="mb-1">Maior Tempo</h5>
+                                <h4 class="mb-0"><?php echo round($maior_tempo_ni, 2) . " dias"; ?></h4>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
             <!-- Card Quantidade de respostas por usuário (Admin apenas) -->
             <?php if ($_SESSION['perfil'] == 'admin'): ?>
                 <?php
                 $lista_get_quantidade_x_usuario_suporte_cand = $conexao->get_quantidade_x_usuario_suporte_cand();
                 $lista_get_quantidade_x_usuario_suporte = $conexao->get_quantidade_x_usuario_suporte();
-                $lista_get_quantidade_x_usuario_suportes = array_merge(
-                    $lista_get_quantidade_x_usuario_suporte_cand ?? [],
-                    $lista_get_quantidade_x_usuario_suporte ?? []
-                );
+                $lista_get_quantidade_x_usuario_email = $conexao->get_quantidade_x_usuario_email();
 
-                // Ordenar por quantidade de respostas (decrescente)
-                usort($lista_get_quantidade_x_usuario_suportes, function ($a, $b) {
-                    return $b['quantidade'] - $a['quantidade'];
+                // Consolidar todos os dados em um array único por usuário
+                $usuarios_consolidados = [];
+
+                // Função para processar e consolidar os arrays
+                function consolidarUsuarios($array, &$usuarios_consolidados)
+                {
+                    if (!empty($array)) {
+                        foreach ($array as $usuario) {
+                            $id = $usuario['id'];
+                            if (!isset($usuarios_consolidados[$id])) {
+                                $usuarios_consolidados[$id] = [
+                                    'id' => $usuario['id'],
+                                    'posto_grad' => $usuario['posto_grad'],
+                                    'nome_guerra' => $usuario['nome_guerra'],
+                                    'quantidade_total' => 0,
+                                    'quantidade_inscritos' => 0,
+                                    'quantidade_nao_inscritos' => 0,
+                                    'quantidade_emails' => 0
+                                ];
+                            }
+
+                            // Identificar o tipo de contagem baseado no array de origem
+                            if (isset($usuario['quantidade'])) {
+                                $usuarios_consolidados[$id]['quantidade_total'] += $usuario['quantidade'];
+
+                                // Determinar o tipo (isso depende da estrutura dos seus arrays)
+                                if (in_array($usuario, $GLOBALS['lista_get_quantidade_x_usuario_suporte_cand'] ?? [])) {
+                                    $usuarios_consolidados[$id]['quantidade_inscritos'] += $usuario['quantidade'];
+                                } elseif (in_array($usuario, $GLOBALS['lista_get_quantidade_x_usuario_suporte'] ?? [])) {
+                                    $usuarios_consolidados[$id]['quantidade_nao_inscritos'] += $usuario['quantidade'];
+                                } elseif (in_array($usuario, $GLOBALS['lista_get_quantidade_x_usuario_email'] ?? [])) {
+                                    $usuarios_consolidados[$id]['quantidade_emails'] += $usuario['quantidade'];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Consolidar todos os tipos
+                consolidarUsuarios($lista_get_quantidade_x_usuario_suporte_cand, $usuarios_consolidados);
+                consolidarUsuarios($lista_get_quantidade_x_usuario_suporte, $usuarios_consolidados);
+                consolidarUsuarios($lista_get_quantidade_x_usuario_email, $usuarios_consolidados);
+
+                // Converter para array indexado e ordenar por quantidade total
+                $lista_consolidada = array_values($usuarios_consolidados);
+                usort($lista_consolidada, function ($a, $b) {
+                    return $b['quantidade_total'] - $a['quantidade_total'];
                 });
 
+                // Calcular totais
                 $total_respostas = 0;
-                foreach ($lista_get_quantidade_x_usuario_suportes as $linha) {
-                    $total_respostas += $linha['quantidade'];
+                $total_inscritos = 0;
+                $total_nao_inscritos = 0;
+                $total_emails = 0;
+
+                foreach ($lista_consolidada as $usuario) {
+                    $total_respostas += $usuario['quantidade_total'];
+                    $total_inscritos += $usuario['quantidade_inscritos'];
+                    $total_nao_inscritos += $usuario['quantidade_nao_inscritos'];
+                    $total_emails += $usuario['quantidade_emails'];
                 }
-                $max_respostas = $lista_get_quantidade_x_usuario_suportes[0]['quantidade'] ?? 1;
+
+                $max_respostas = $lista_consolidada[0]['quantidade_total'] ?? 1;
                 ?>
 
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white mb-20">
                         <span class="mb-0">
                             <i class="fa fa-trophy me-2"></i> Desempenho da Equipe
-                        </span>
                     </div>
                     <div class="card-body">
                         <!-- KPIs em Destaque -->
@@ -973,7 +1021,7 @@ $lista_emails = $conexao->get_lista_emails();
                                     <div class="kpi-icon mb-2">
                                         <i class="fa fa-users fa-2x text-primary"></i>
                                     </div>
-                                    <h3 class="kpi-value text-primary mb-0"><?php echo count($lista_get_quantidade_x_usuario_suportes); ?></h3>
+                                    <h3 class="kpi-value text-primary mb-0"><?php echo count($lista_consolidada); ?></h3>
                                     <p class="kpi-label text-muted mb-0">Colaboradores</p>
                                 </div>
                             </div>
@@ -989,10 +1037,10 @@ $lista_emails = $conexao->get_lista_emails();
                             <div class="col-md-3 col-6 mb-3">
                                 <div class="kpi-card text-center p-3">
                                     <div class="kpi-icon mb-2">
-                                        <i class="fa fa-line-chart fa-2x text-success"></i>
+                                        <i class="fa fa-line-chart fa-2x text-primary"></i>
                                     </div>
-                                    <h3 class="kpi-value text-success mb-0">
-                                        <?php echo $total_respostas > 0 ? round($total_respostas / count($lista_get_quantidade_x_usuario_suportes), 1) : 0; ?>
+                                    <h3 class="kpi-value text-primary mb-0">
+                                        <?php echo $total_respostas > 0 ? round($total_respostas / count($lista_consolidada), 1) : 0; ?>
                                     </h3>
                                     <p class="kpi-label text-muted mb-0">Média por Usuário</p>
                                 </div>
@@ -1008,23 +1056,56 @@ $lista_emails = $conexao->get_lista_emails();
                             </div>
                         </div>
 
-                        <!-- Grid de Performance -->
+                        <!-- Breakdown por Tipo -->
+                        <div class="divider" style="height: 1px; background-color: #eee; margin: 20px 0;"></div>
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="kpi-card text-center p-3 border-start border-4 border-primary">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-check fa-2x text-primary"></i>
+                                    </div>
+                                    <h4 class="kpi-value text-primary mb-0"><?php echo $total_inscritos; ?></h4>
+                                    <p class="kpi-label text-muted mb-0">Candidatos Inscritos</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="kpi-card text-center p-3 border-start border-4 border-info">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-user-plus fa-2x text-primary"></i>
+                                    </div>
+                                    <h4 class="kpi-value text-primary mb-0"><?php echo $total_nao_inscritos; ?></h4>
+                                    <p class="kpi-label text-muted mb-0">Não Inscritos</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="kpi-card text-center p-3 border-start border-4 border-success">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-envelope fa-2x text-success"></i>
+                                    </div>
+                                    <h4 class="kpi-value text-success mb-0"><?php echo $total_emails; ?></h4>
+                                    <p class="kpi-label text-muted mb-0">Emails</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ranking Consolidado -->
                         <h5 class="section-title mb-20">
-                            <i class="fa fa-medal me-2"></i>Performance Individual - Suporte ao candidato Inscrito
+                            <i class="fa fa-star me-2"></i> Perfomance Individual
                         </h5>
 
                         <div class="performance-grid">
                             <?php
                             $rank = 1;
-                            foreach ($lista_get_quantidade_x_usuario_suporte_cand as $linha) {
+                            foreach ($lista_consolidada as $usuario) {
                                 $foto = "user.jpg";
-                                $get_foto = $conexao->get_foto_usuario($linha['id']);
+                                $get_foto = $conexao->get_foto_usuario($usuario['id']);
                                 if (count($get_foto) > 0 && !empty($get_foto[0]['nome'])) {
                                     $foto = $get_foto[0]['nome'];
                                 }
 
-                                $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
+                                $nome_usuario = mb_strtoupper($usuario['posto_grad']) . " " . $usuario['nome_guerra'];
+                                $percentual = $max_respostas > 0 ? ($usuario['quantidade_total'] / $max_respostas) * 100 : 0;
+                                $percentual_total = $total_respostas > 0 ? ($usuario['quantidade_total'] / $total_respostas) * 100 : 0;
 
                                 // Determinar a cor do card baseado no rank
                                 $card_class = '';
@@ -1055,7 +1136,7 @@ $lista_emails = $conexao->get_lista_emails();
                                         <span class="mr-10 rank-badge <?php echo $badge_class; ?>">
                                             <?php echo $icon; ?>
                                         </span>
-                                        <span class="responses-count"><?php echo $linha['quantidade']; ?> respostas</span>
+                                        <span class="responses-count"><?php echo $usuario['quantidade_total']; ?> respostas</span>
                                     </div>
 
                                     <div class="card-body">
@@ -1063,14 +1144,36 @@ $lista_emails = $conexao->get_lista_emails();
                                             <div class="avatar-container">
                                                 <img class="performance-user-avatar" src="fotos/<?php echo $foto; ?>" alt="<?php echo $nome_usuario; ?>" onerror="this.src='imagens/user.jpg'">
                                                 <div class="avatar-overlay">
-                                                    <a href="usuario_visualiza.php?id_usuario=<?php echo $linha['id']; ?>" class="view-profile-btn">
+                                                    <a href="usuario_visualiza.php?id_usuario=<?php echo $usuario['id']; ?>" class="view-profile-btn">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
                                                 </div>
                                             </div>
 
                                             <h5 class="user-name"><?php echo $nome_usuario; ?></h5>
-                                            <small class="user-id text-muted">ID: <?php echo $linha['id']; ?></small>
+                                            <small class="user-id text-muted">ID: <?php echo $usuario['id']; ?></small>
+                                        </div>
+
+                                        <!-- Breakdown por tipo -->
+                                        <div class="breakdown-stats mb-10">
+                                            <div class="breakdown-item">
+                                                <small class="text-primary">
+                                                    <i class="fa fa-check me-1"></i>
+                                                    <?php echo $usuario['quantidade_inscritos']; ?> Inscritos
+                                                </small>
+                                            </div>
+                                            <div class="breakdown-item">
+                                                <small class="text-primary">
+                                                    <i class="fa fa-user-plus me-1"></i>
+                                                    <?php echo $usuario['quantidade_nao_inscritos']; ?> Não inscritos
+                                                </small>
+                                            </div>
+                                            <div class="breakdown-item">
+                                                <small class="text-success">
+                                                    <i class="fa fa-envelope me-1"></i>
+                                                    <?php echo $usuario['quantidade_emails']; ?> Emails
+                                                </small>
+                                            </div>
                                         </div>
 
                                         <div class="performance-stats">
@@ -1080,27 +1183,37 @@ $lista_emails = $conexao->get_lista_emails();
                                             </div>
                                             <div class="stat-item">
                                                 <span class="stat-label">Percentual</span>
-                                                <span class="stat-value"><?php echo round($percentual); ?>%</span>
+                                                <span class="stat-value"><?php echo round($percentual_total); ?>%</span>
                                             </div>
                                         </div>
 
-                                        <div class="performance-bar">
-                                            <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar"
-                                                    style="width: <?php echo $percentual; ?>%"
+                                        <!-- BARRA DE PROGRESSO RESTAURADA -->
+                                        <div class="performance-bar mt-3">
+                                            <div class="progress" style="height: 12px; border-radius: 6px;">
+                                                <div class="progress-bar 
+                                        <?php
+                                        if ($rank == 1) echo 'bg-gold';
+                                        elseif ($rank == 2) echo 'bg-silver';
+                                        elseif ($rank == 3) echo 'bg-bronze';
+                                        else echo 'bg-primary';
+                                        ?>"
+                                                    style="width: <?php echo $percentual; ?>%;"
                                                     role="progressbar"
                                                     aria-valuenow="<?php echo $percentual; ?>"
                                                     aria-valuemin="0"
                                                     aria-valuemax="100">
                                                 </div>
                                             </div>
+                                            <small class="text-muted d-block mt-1 text-center">
+                                                <?php echo round($percentual); ?>% do recorde
+                                            </small>
                                         </div>
                                     </div>
 
                                     <div class="card-footer">
                                         <small class="text-muted">
                                             <i class="fa fa-tachometer-alt me-1"></i>
-                                            <?php echo round($percentual); ?>% do total
+                                            <?php echo round($percentual_total); ?>% do total geral
                                         </small>
                                     </div>
                                 </div>
@@ -1110,129 +1223,24 @@ $lista_emails = $conexao->get_lista_emails();
                             ?>
                         </div>
 
-                        <?php if ($libera_suporte_inicial): ?>
+                        <!-- Leaderboard em Lista -->
+                        <div class="leaderboard mb-20 mt-4">
                             <h5 class="section-title mb-20">
-                                <i class="fa fa-medal me-2"></i>Performance Individual - Suporte ao candidato Não Inscrito
-                            </h5>
-
-                            <div class="performance-grid">
-                                <?php
-                                $rank = 1;
-                                foreach ($lista_get_quantidade_x_usuario_suporte as $linha) {
-                                    $foto = "user.jpg";
-                                    $get_foto = $conexao->get_foto_usuario($linha['id']);
-                                    if (count($get_foto) > 0 && !empty($get_foto[0]['nome'])) {
-                                        $foto = $get_foto[0]['nome'];
-                                    }
-
-                                    $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                    $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
-
-                                    // Determinar a cor do card baseado no rank
-                                    $card_class = '';
-                                    $badge_class = '';
-                                    $icon = '';
-
-                                    if ($rank == 1) {
-                                        $card_class = 'performance-card-gold';
-                                        $badge_class = 'bg-gold';
-                                        $icon = '🥇';
-                                    } elseif ($rank == 2) {
-                                        $card_class = 'performance-card-silver';
-                                        $badge_class = 'bg-silver';
-                                        $icon = '🥈';
-                                    } elseif ($rank == 3) {
-                                        $card_class = 'performance-card-bronze';
-                                        $badge_class = 'bg-bronze';
-                                        $icon = '🥉';
-                                    } else {
-                                        $card_class = 'performance-card-normal';
-                                        $badge_class = 'bg-secondary';
-                                        $icon = '#' . $rank;
-                                    }
-                                ?>
-
-                                    <div class="performance-card <?php echo $card_class; ?> p-20">
-                                        <div class="perform-card-header p-0" style="font-size: 1.4rem;">
-                                            <span class="mr-10 rank-badge <?php echo $badge_class; ?>">
-                                                <?php echo $icon; ?>
-                                            </span>
-                                            <span class="responses-count"><?php echo $linha['quantidade']; ?> respostas</span>
-                                        </div>
-
-                                        <div class="card-body">
-                                            <div class="user-profile">
-                                                <div class="avatar-container">
-                                                    <img class="performance-user-avatar" src="fotos/<?php echo $foto; ?>" alt="<?php echo $nome_usuario; ?>" onerror="this.src='imagens/user.jpg'">
-                                                    <div class="avatar-overlay">
-                                                        <a href="usuario_visualiza.php?id_usuario=<?php echo $linha['id']; ?>" class="view-profile-btn">
-                                                            <i class="fa fa-eye"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-
-                                                <h5 class="user-name"><?php echo $nome_usuario; ?></h5>
-                                                <small class="user-id text-muted">ID: <?php echo $linha['id']; ?></small>
-                                            </div>
-
-                                            <div class="performance-stats">
-                                                <div class="stat-item">
-                                                    <span class="stat-label">Posição</span>
-                                                    <span class="stat-value"><?php echo $rank; ?>º</span>
-                                                </div>
-                                                <div class="stat-item">
-                                                    <span class="stat-label">Percentual</span>
-                                                    <span class="stat-value"><?php echo round($percentual); ?>%</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="performance-bar">
-                                                <div class="progress" style="height: 8px;">
-                                                    <div class="progress-bar"
-                                                        style="width: <?php echo $percentual; ?>%"
-                                                        role="progressbar"
-                                                        aria-valuenow="<?php echo $percentual; ?>"
-                                                        aria-valuemin="0"
-                                                        aria-valuemax="100">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="card-footer">
-                                            <small class="text-muted">
-                                                <i class="fa fa-tachometer-alt me-1"></i>
-                                                <?php echo round($percentual); ?>% do total
-                                            </small>
-                                        </div>
-                                    </div>
-                                <?php
-                                    $rank++;
-                                }
-                                ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <!-- Leaderboard -->
-                        <div class="leaderboard mb-20">
-                            <h5 class="section-title mb-20">
-                                <i class="fa fa-star me-2"></i> Ranking de Respostas - Candidatos Inscritos
+                                <i class="fa fa-star me-2"></i> Leaderboard Detalhado
                             </h5>
 
                             <div class="leaderboard-list">
                                 <?php
                                 $rank = 1;
-                                $max_respostas = $lista_get_quantidade_x_usuario_suporte_cand[0]['quantidade'] ?? 1;
-
-                                foreach ($lista_get_quantidade_x_usuario_suporte_cand as $linha) {
+                                foreach ($lista_consolidada as $usuario) {
                                     $foto = "user.jpg";
-                                    $get_foto = $conexao->get_foto_usuario($linha['id']);
+                                    $get_foto = $conexao->get_foto_usuario($usuario['id']);
                                     if (count($get_foto) > 0 && !empty($get_foto[0]['nome'])) {
                                         $foto = $get_foto[0]['nome'];
                                     }
 
-                                    $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                    $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
+                                    $nome_usuario = mb_strtoupper($usuario['posto_grad']) . " " . $usuario['nome_guerra'];
+                                    $percentual = $max_respostas > 0 ? ($usuario['quantidade_total'] / $max_respostas) * 100 : 0;
 
                                     // Determinar a cor do rank
                                     $rank_class = '';
@@ -1260,24 +1268,25 @@ $lista_emails = $conexao->get_lista_emails();
                                             <img class="user-avatar" src="fotos/<?php echo $foto; ?>" alt="<?php echo $nome_usuario; ?>" onerror="this.src='imagens/user.jpg'">
                                             <div class="user-details">
                                                 <h5 class="user-name mb-1"><?php echo $nome_usuario; ?></h5>
-                                                <small class="text-muted">ID: <?php echo $linha['id']; ?></small>
+                                                <small class="text-muted">ID: <?php echo $usuario['id']; ?></small>
                                             </div>
                                         </div>
 
                                         <div class="user-stats">
                                             <div class="progress-container">
                                                 <div class="progress-bar-container">
+                                                    <!-- BARRA DE PROGRESSO NO LEADERBOARD -->
                                                     <div class="progress-bar" style="width: <?php echo $percentual; ?>%"></div>
                                                 </div>
                                                 <div class="stats-numbers">
-                                                    <span class="responses-count" style="color: #006400;"><?php echo $linha['quantidade']; ?> respostas</span>
+                                                    <span class="responses-count" style="color: #006400;"><?php echo $usuario['quantidade_total']; ?> respostas</span>
                                                     <span class="percentage"><?php echo round($percentual); ?>%</span>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="user-actions">
-                                            <a href="usuario_visualiza.php?id_usuario=<?php echo $linha['id']; ?>" class="btn btn-sm btn-outline-primary" title="Ver perfil">
+                                            <a href="usuario_visualiza.php?id_usuario=<?php echo $usuario['id']; ?>" class="btn btn-sm btn-outline-primary" title="Ver perfil">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </div>
@@ -1289,84 +1298,6 @@ $lista_emails = $conexao->get_lista_emails();
                             </div>
                         </div>
 
-                        <!-- Leaderboard Não Inscritos -->
-                        <?php if ($libera_suporte_inicial): ?>
-                            <div class="leaderboard mb-20">
-                                <h5 class="section-title mb-20">
-                                    <i class="fa fa-star me-2"></i> Ranking de Respostas - Não Inscritos
-                                </h5>
-
-                                <div class="leaderboard-list">
-                                    <?php
-                                    $rank = 1;
-                                    $max_respostas = $lista_get_quantidade_x_usuario_suporte[0]['quantidade'] ?? 1;
-
-                                    foreach ($lista_get_quantidade_x_usuario_suporte as $linha) {
-                                        $foto = "user.jpg";
-                                        $get_foto = $conexao->get_foto_usuario($linha['id']);
-                                        if (count($get_foto) > 0 && !empty($get_foto[0]['nome'])) {
-                                            $foto = $get_foto[0]['nome'];
-                                        }
-
-                                        $nome_usuario = mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                        $percentual = $max_respostas > 0 ? ($linha['quantidade'] / $total_respostas) * 100 : 0;
-
-                                        // Determinar a cor do rank
-                                        $rank_class = '';
-                                        $rank_icon = '';
-                                        if ($rank == 1) {
-                                            $rank_class = 'first-place';
-                                            $rank_icon = '🥇';
-                                        } elseif ($rank == 2) {
-                                            $rank_class = 'second-place';
-                                            $rank_icon = '🥈';
-                                        } elseif ($rank == 3) {
-                                            $rank_class = 'third-place';
-                                            $rank_icon = '🥉';
-                                        } else {
-                                            $rank_icon = '#' . $rank;
-                                        }
-                                    ?>
-
-                                        <div class="leaderboard-item <?php echo $rank_class; ?>">
-                                            <div class="user-rank">
-                                                <span class="rank-number"><?php echo $rank_icon; ?></span>
-                                            </div>
-
-                                            <div class="user-info">
-                                                <img class="user-avatar" src="fotos/<?php echo $foto; ?>" alt="<?php echo $nome_usuario; ?>" onerror="this.src='imagens/user.jpg'">
-                                                <div class="user-details">
-                                                    <h5 class="user-name mb-1"><?php echo $nome_usuario; ?></h5>
-                                                    <small class="text-muted">ID: <?php echo $linha['id']; ?></small>
-                                                </div>
-                                            </div>
-
-                                            <div class="user-stats">
-                                                <div class="progress-container">
-                                                    <div class="progress-bar-container">
-                                                        <div class="progress-bar" style="width: <?php echo $percentual; ?>%"></div>
-                                                    </div>
-                                                    <div class="stats-numbers">
-                                                        <span class="responses-count" style="color: #006400;"><?php echo $linha['quantidade']; ?> respostas</span>
-                                                        <span class="percentage"><?php echo round($percentual); ?>%</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="user-actions">
-                                                <a href="usuario_visualiza.php?id_usuario=<?php echo $linha['id']; ?>" class="btn btn-sm btn-outline-primary" title="Ver perfil">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    <?php
-                                        $rank++;
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
                         <!-- Resumo Estatístico -->
                         <div class="stats-summary mt-4 p-20 bg-light rounded-3">
                             <h5 class="mb-3">
@@ -1375,28 +1306,34 @@ $lista_emails = $conexao->get_lista_emails();
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="d-flex justify-content-between mb-2">
+                                        <span>Total de respostas:</span>
+                                        <strong><?php echo $total_respostas; ?></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
                                         <span>Maior performance:</span>
                                         <strong><?php echo $max_respostas; ?> respostas</strong>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span>Performance média:</span>
-                                        <strong><?php echo $total_respostas > 0 ? round($total_respostas / count($lista_get_quantidade_x_usuario_suportes), 1) : 0; ?> respostas</strong>
+                                        <strong><?php echo $total_respostas > 0 ? round($total_respostas / count($lista_consolidada), 1) : 0; ?> respostas</strong>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="d-flex justify-content-between mb-2">
                                         <span>Total de colaboradores:</span>
-                                        <strong><?php echo count($lista_get_quantidade_x_usuario_suportes); ?></strong>
+                                        <strong><?php echo count($lista_consolidada); ?></strong>
                                     </div>
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Taxa de atividade:</span>
-                                        <strong><?php echo $total_respostas > 0 ? '100%' : '0%'; ?></strong>
+                                        <span>Candidatos inscritos:</span>
+                                        <strong><?php echo $total_inscritos; ?> (<?php echo $total_respostas > 0 ? round(($total_inscritos / $total_respostas) * 100, 1) : 0; ?>%)</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Não inscritos + Emails:</span>
+                                        <strong><?php echo ($total_nao_inscritos + $total_emails); ?> (<?php echo $total_respostas > 0 ? round((($total_nao_inscritos + $total_emails) / $total_respostas) * 100, 1) : 0; ?>%)</strong>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             <?php endif; ?>

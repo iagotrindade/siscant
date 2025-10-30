@@ -140,8 +140,6 @@ if ($id_email != null && $resposta != null) {
 
             // Conteúdo do e-mail
             $mail_envia->Body = utf8_decode('        
-<!DOCTYPE html>
-<html lang="pt-BR">
 <head>
     <meta charset="utf-8">
     <title>Resposta - SiSCanT</title>
@@ -156,7 +154,7 @@ if ($id_email != null && $resposta != null) {
     </style>
     <![endif]-->
 </head>
-<body style="margin: 0; padding: 20px; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif; line-height: 1.4;">
+<body style="margin: 0; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif; line-height: 1.4;">
     <center>
         <table class="container-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <!-- Header -->
@@ -198,17 +196,27 @@ if ($id_email != null && $resposta != null) {
                         <!-- Message Box -->
                         <tr>
                             <td style="padding-bottom: 25px;">
-                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: green; border-left: 4px solid green; border-radius: 4px;">
+                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #FFFFFF; border: 1px solid #e9ecef; border-radius: 4px;">
                                     <tr>
                                         <td style="padding: 20px;">
-                                            <!-- Resposta -->
+                                            <!-- Título Resposta -->
                                             <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
-                                                    <td width="100%" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
-                                                        Resposta:
+                                                    <td>
+                                                        <p style="font-size: 13px; color: green; font-weight: bold;">
+                                                            Resposta:
+                                                        </p>
                                                     </td>
-                                                    <td style="font-size: 14px; color: #FFFFFF;">
-                                                        ' . $resposta . '
+                                                </tr>
+                                            </table>
+                                            
+                                            <!-- Conteúdo da Resposta -->
+                                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                <tr>
+                                                    <td>
+                                                        <p style="font-size: 14px; color: #333333; line-height: 1.6; margin: 0; text-align: left;">
+                                                            ' . nl2br($resposta) . '
+                                                        </p>
                                                     </td>
                                                 </tr>
                                             </table>
