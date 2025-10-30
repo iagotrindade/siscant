@@ -533,7 +533,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
-                                    <input name="titulo_1" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                    <input name="titulo_1" value="PROCESSO SELETIVO PARA XX 20XX/20XX" class="form-control">
                                 </div>
                             </div>
 
@@ -557,13 +557,13 @@ $lista_especialidades = $conexao->get_especialidade();
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_2" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">Conforme o § 4º, Art. 125 da Portaria 407-DGP, de 25 de Julho de 2022, ressalto a precedência da seguinte candidata gestante do Processo Seletivo Anterior (20XX/20XX) no atual Processo Seletivo (20XX/20XX): 1) OTT - SERVIÇO SOCIAL: ROSE MEIRE ANDRADE DA SILVA</textarea>
+                                    <textarea name="paragrafo_2" placeholder="3º Parágrafo do relatório" class="form-control" rows="3">O período para interposição de Recursos da Etapa II será no dia XX de agosto de 20XX das 0930h às 1130h e das 1300h às 1630h e no dia XX de agosto de 20XX das 0930h às 1130h, na Comissão de Seleção Especial - Rua dos Andradas 551, Centro Histórico, Porto Alegre. O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial, não serão aceitos recursos entregues fora do prazo ou no local errado.</textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_3" placeholder="3º Parágrafo do relatório" class="form-control" rows="3">O período para interposição de Recursos da Etapa II será no dia XX de agosto de 20XX das 0930h às 1130h e das 1300h às 1630h e no dia XX de agosto de 20XX das 0930h às 1130h, na Comissão de Seleção Especial - Rua dos Andradas 551, Centro Histórico, Porto Alegre. O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial, não serão aceitos recursos entregues fora do prazo ou no local errado.</textarea>
+                                    <textarea name="paragrafo_3" placeholder="3º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
 
@@ -1080,6 +1080,77 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
                             </div>
 
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-file-export me-2"></i> GERAR
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Resultado ISGREC -->
+                <div class="alert alert-info">
+                    <legend class="mb-3">
+                        Resultado da Inspeção de Saúde em Grau de Recurso
+                        <img src="imagens/pdf.png" height="30px">
+                    </legend>
+
+                    <div class="alert alert-danger mb-3">
+                        <h6 class="text-info mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                        <ul class="requisitos-list text-info">
+                            <li>Rodar o Script de Desclassificação dos candidatos INAPTOS na Etapa III</li>
+                            <li>Lançar o Resultado das Inspeções no SISCANT</li>
+                        </ul>
+                    </div>
+
+                    <form action="mpdf/relatorio_resultado_inspecao_saude_recurso.php" method="POST">
+                        <input type="hidden" name="etapa" value="3">
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="subtitulo" value="RESULTADO INSPEÇÃO DE SAÚDE EM GRAU DE RECURSO" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o Resultado da Inspeção de Saúde em Grau de Recurso, conforme anexo “A” (Calendário Geral de Atividades) do AVISO DE CONVOCAÇÃO PARA SELEÇÃO Nr X – SSMR/X, DE X DE JUNHO DE 20XX.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="2">A presente relação NÃO está em ordem de classificação.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Inicial da Inspeção</label>
+                                    <input name="data_inicial" type="date" class="form-control" style="height: 40px;">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Final da Inspeção</label>
+                                    <input name="data_final" type="date" class="form-control" style="height: 40px;">
+                                </div>
+                            </div>
+                    
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary w-100">
                                     <i class="fa fa-file-export me-2"></i> GERAR

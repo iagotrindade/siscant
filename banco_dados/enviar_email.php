@@ -12,7 +12,6 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'ouvidor') {
 }
 
 include_once '../sistema/funcoes.php';
-
 include_once '../envia_carta/src/Exception.php';
 include_once '../envia_carta/src/PHPMailer.php';
 include_once '../envia_carta/src/SMTP.php';
@@ -287,7 +286,7 @@ if ($id_email != null && $resposta != null) {
     }
     foreach ($lista_emails as $email) {
         if ($email['id'] != $id_email && $email['id_usuario_respondeu'] != $_SESSION['id_usuario'] && empty($email['resposta'])) {
-            $resultado = $conexao->insere_resposta_inicial($email['id'], '');
+            $resultado = $conexao->insere_resposta_email($email['id'], '');
         }
     }
 

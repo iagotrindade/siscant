@@ -10,32 +10,30 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta') {
 ?>
 
 <!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
-<div class="row">
+<div class="card">
     <div class="">
-        <div class="card">
-            <div class="">
-                <legend>Auditoria do Usuário</legend>
-                <div class="card-body">
-                    <table class="table table-hover table-bordered" id="tabela_dinamica">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>CPF</th>
-                                <th>Operação</th>
-                                <th>Tabela</th>
-                                <th>Alteração</th>
-                                <th>Data</th>
-                                <th>Sistema</th>
-                                <th>IP</th>
-                                <th>COD</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
+        <legend>Auditoria do Usuário</legend>
+        <div class="card-body">
+            <table class="table table-hover table-bordered" id="tabela_dinamica">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>CPF</th>
+                        <th>Operação</th>
+                        <th>Tabela</th>
+                        <th>Alteração</th>
+                        <th>Data</th>
+                        <th>Sistema</th>
+                        <th>IP</th>
+                        <th>COD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
 
-                            $lista_logs = $conexao->get_logs_usuario($id_usuario);
-                            foreach ($lista_logs as $linha) {
-                                echo '
+                    $lista_logs = $conexao->get_logs_usuario($id_usuario);
+                    foreach ($lista_logs as $linha) {
+                        echo '
                                 <tr>
                                 <td>' . ($linha['id']) . '</td>
                                 <td>' . $linha['cpf'] . '</td>
@@ -47,13 +45,11 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta') {
                                 <td>' . $linha['ip'] . '</td>
                                 <td>' . $linha['codigo'] . '</td>
                                 </tr>';
-                            }
-                            ?>
+                    }
+                    ?>
 
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

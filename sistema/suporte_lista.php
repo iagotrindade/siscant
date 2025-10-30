@@ -15,7 +15,9 @@ $lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
 
 $lista_suporte_inicial = $conexao->get_suporte();
 
-include '../banco_dados/captura_emails.php';
+if ($_GET['update_emails']) {
+    include '../banco_dados/captura_emails.php';
+}
 
 $lista_emails = $conexao->get_lista_emails();
 ?>
@@ -825,6 +827,10 @@ $lista_emails = $conexao->get_lista_emails();
                     <span class="mb-0">
                         <i class="fa fa-envelope"></i> E-mails
                     </span>
+
+                    <a href="suporte_lista.php?update_emails=true" class="btn btn-success btn-sm" data-bs-toggle="tooltip" title="Exportar para Excel">
+                        <i class="fa fa-refresh"></i> Sincronizar
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive mb-20">
@@ -854,7 +860,7 @@ $lista_emails = $conexao->get_lista_emails();
                                     $respondido = "_Não";
                                     $status_class = "status-pendente";
 
-                                    if ($linha['resposta'] != null) {
+                                    if ($linha['resposta'] != null || $linha['respondido']) {
                                         $respondido = "_Sim";
                                         $respondidos_ni++;
                                         $status_class = "status-respondido";

@@ -462,6 +462,7 @@ class Conexao
             $sql = "
             UPDATE emails 
             SET 
+                respondido = 1,
                 id_usuario_respondeu = :id_usuario,
                 resposta = :resposta,
                 data_resposta = :datetime
@@ -2313,7 +2314,7 @@ class Conexao
     // <editor-fold defaultstate="collapsed" desc="Get Candidatos Especialidade do Processo Desclassificados">
     public function get_candidatos_especialidade_desclassificados($id_especialidade)
     {
-        $stmt = $this->pdo->prepare("select u.*, c.nome cidade_escolheu_servir, cid.nome cidade_distribuicao, ce.concorrendo especialidade_concorrendo, 
+        $stmt = $this->pdo->prepare("select u.*, u.etapa AS etapa_candidato, c.nome cidade_escolheu_servir, cid.nome cidade_distribuicao, ce.concorrendo especialidade_concorrendo, ce.etapa AS etapa,
                                     ce.justificativa justificativa_especialidade, om_dist.abreviatura om_dist_abreviatura, 
                                     esp.nome nome_especialidade, esp.ott_stt ott_stt_especializacao, 
                                     cid_1_fase.nome nome_cidade_1_fase, om_1_fase.abreviatura abreviatura_om_1_fase

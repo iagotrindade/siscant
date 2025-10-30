@@ -87,6 +87,7 @@
                 "tempo_idade" => $tempo_total_idade_dias,
                 "mail" => $linha['mail'],
                 "etapa" => $linha['etapa'],
+                "etapa_candidato" => $linha['etapa_candidato'],
                 "cidade_escolheu_servir" => $linha['cidade_escolheu_servir'],
                 "cidade_distribuicao" => $linha['cidade_distribuicao'],
                 "om_dist_abreviatura" => $linha['om_dist_abreviatura'],
@@ -238,7 +239,7 @@
                             <!-- Nome -->
                             <td>
                                 <div class="candidate-info">
-                                    <span 
+                                    <span
                                         class="fw-semibold candidate-name text-decoration-none <?= $is_desclassificado ? 'text-muted' : 'text-dark' ?>">
                                         <?= htmlspecialchars($linha['nome']) ?>
                                     </span>
