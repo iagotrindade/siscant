@@ -86,8 +86,15 @@ if (!$inbox) {
 
                     $attachments[] = $safe_filename;
                 } else {
-                    if (isset($part->subtype) && in_array(strtoupper($part->subtype), ['PLAIN', 'HTML'])) {
-                        $message .= $data;
+                    if (isset($part->subtype)) {
+                        $subtype = strtoupper($part->subtype);
+
+                        // Dá prioridade ao HTML se existir, senão usa PLAIN
+                        if ($subtype === 'HTML' && empty($message)) {
+                            $message = $data;
+                        } elseif ($subtype === 'PLAIN' && empty($message)) {
+                            $message = $data;
+                        }
                     }
                 }
             }
