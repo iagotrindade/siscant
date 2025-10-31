@@ -118,6 +118,7 @@ try {
                                     </td>
                                 </tr>
 
+                                <!-- Warning -->
                                 <tr>
                                     <td>
                                         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">

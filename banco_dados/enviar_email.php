@@ -95,7 +95,48 @@ if ($id_email != null && $resposta != null) {
     if ($_POST)
         $resultado = $conexao->insere_resposta_email($id_email, $resposta);
     $alteracoes_detalhadas =  print_r($resultado, true);
+
     if ($resultado) {
+        // PROCESSAMENTO DOS ANEXOS DA RESPOSTA
+        $anexos_processados = [];
+
+        if (!empty($_FILES['anexos_resposta']) && is_array($_FILES['anexos_resposta']['name'])) {
+            $uploadDir = '../sistema/arquivos/arquivos_email/';
+
+            // Verifica se o diretório existe, se não, cria
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            foreach ($_FILES['anexos_resposta']['name'] as $key => $name) {
+                if ($_FILES['anexos_resposta']['error'][$key] === UPLOAD_ERR_OK) {
+                    $tmp_name = $_FILES['anexos_resposta']['tmp_name'][$key];
+                    $file_size = $_FILES['anexos_resposta']['size'][$key];
+
+                    // Validações de segurança
+                    $max_size = 10 * 1024 * 1024; // 10MB
+                    if ($file_size > $max_size) {
+                        continue; // Pula arquivos muito grandes
+                    }
+
+                    // Gera nome único para o arquivo
+                    $file_extension = pathinfo($name, PATHINFO_EXTENSION);
+                    $file_name = uniqid() . '_' . date('Ymd_His') . '.' . $file_extension;
+                    $file_path = $uploadDir . $file_name;
+
+                    // Move o arquivo para o diretório
+                    if (move_uploaded_file($tmp_name, $file_path)) {
+                        // Insere no banco de dados
+                        $insere_anexo = $conexao->insere_email_arquivo($id_email, $file_name, 'resposta');
+
+                        if ($insere_anexo) {
+                            $anexos_processados[] = $file_name;
+                        }
+                    }
+                }
+            }
+        }
+
         $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $id_email, "16105", "suporte", "Update", "Respondeu o email do $nome_completo_requerente", $alteracoes_detalhadas);
 
         $dados_selecao = $conexao->get_selecao_id();
@@ -113,6 +154,17 @@ if ($id_email != null && $resposta != null) {
                 'allow_self_signed' => true
             )
         );
+
+        // ADICIONAR ANEXOS AO E-MAIL
+        if (!empty($anexos_processados)) {
+            foreach ($anexos_processados as $anexo_nome) {
+                $anexo_path = $uploadDir . $anexo_nome;
+                if (file_exists($anexo_path)) {
+                    $mail_envia->addAttachment($anexo_path, $anexo_nome);
+                }
+            }
+        }
+
         // 06/07/2025 -> Iago Silva Corrigindo o problema onde o E-Mail não estava sendo enviado por conta do SMTPAuth estar como false
         try {
             $mail_envia->isSMTP();
@@ -136,6 +188,27 @@ if ($id_email != null && $resposta != null) {
             $mail_envia->CharSet = 'utf-8'; // Charset da mensagem (opcional)
 
             $mail_envia->Subject = $assunto; // Assunto da mensagem
+
+            // ADICIONA INFORMAÇÃO SOBRE ANEXOS NO CORPO DO E-MAIL
+            $info_anexos = '';
+            if (!empty($anexos_processados)) {
+                $info_anexos = '
+                <tr>
+                    <td style="padding-bottom: 15px;">
+                        <p style="font-size: 14px; color: #555555; margin: 0 0 10px 0;">
+                            <strong>Anexos incluídos na resposta:</strong>
+                        </p>
+                        <ul style="font-size: 14px; color: #555555; margin: 0; padding-left: 20px;">';
+
+                foreach ($anexos_processados as $anexo) {
+                    $info_anexos .= '<li>' . htmlspecialchars($anexo) . '</li>';
+                }
+
+                $info_anexos .= '
+                        </ul>
+                    </td>
+                </tr>';
+            }
 
             // Conteúdo do e-mail
             $mail_envia->Body = utf8_decode('        
@@ -191,6 +264,8 @@ if ($id_email != null && $resposta != null) {
                                 </p>
                             </td>
                         </tr>
+                        
+                        ' . $info_anexos . '
                         
                         <!-- Message Box -->
                         <tr>
@@ -271,6 +346,9 @@ if ($id_email != null && $resposta != null) {
             if ($enviado) {
                 $mensagem_formatada = str_replace("'", "`", $mensagem);
                 $alteracao = "E-Mail resposta de suporte enviado para: $nome_completo_requerente e E-Mail: " . $mail;
+                if (!empty($anexos_processados)) {
+                    $alteracao .= " com " . count($anexos_processados) . " anexo(s)";
+                }
 
                 $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $nome_completo_requerente, $id_suporte, "14116", "mail", "Insert", $alteracao, $mensagem_formatada);
             }

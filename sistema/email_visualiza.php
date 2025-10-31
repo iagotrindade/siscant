@@ -181,6 +181,70 @@ if ($data_enviado != null)
         font-size: 16px;
     }
 
+    .attachments-container {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 3px solid #007bff;
+    }
+
+    .attachments-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .attachments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .attachment-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .attachment-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #495057;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+
+    .attachment-link:hover {
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+
+    .attachment-link i {
+        font-size: 12px;
+    }
+
+    /* Para mensagens do bot (respostas) */
+    .bot-message .attachments-container {
+        border-left-color: #28a745;
+        background-color: #f0fff4;
+    }
+
+    .user-message .attachments-container {
+        border-left-color: #007bff;
+        background-color: #f8f9fa;
+    }
+
     @media (max-width: 768px) {
         .user-info-section {
             flex-direction: column;
@@ -400,6 +464,156 @@ if ($data_enviado != null)
         text-align: left;
     }
 
+    .attachments-upload-area {
+        margin: 15px 0;
+        padding: 20px;
+        border: 2px dashed #dee2e6;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+    }
+
+    .attachments-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .attachments-header i {
+        color: #6c757d;
+    }
+
+    .attachments-header small {
+        font-weight: normal;
+        color: #6c757d;
+    }
+
+    .attachments-dropzone {
+        border: 2px dashed #007bff;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background-color: white;
+    }
+
+    .attachments-dropzone:hover {
+        border-color: #0056b3;
+        background-color: #f8f9fa;
+    }
+
+    .attachments-dropzone.dragover {
+        border-color: #28a745;
+        background-color: #e8f5e8;
+    }
+
+    .dropzone-content i {
+        font-size: 48px;
+        color: #6c757d;
+        margin-bottom: 10px;
+    }
+
+    .dropzone-content p {
+        margin: 0 0 5px 0;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .dropzone-content small {
+        color: #6c757d;
+    }
+
+    .attachments-preview {
+        margin-top: 15px;
+        display: none;
+    }
+
+    .attachments-preview.has-files {
+        display: block;
+    }
+
+    .attachment-preview-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 15px;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        margin-bottom: 8px;
+    }
+
+    .attachment-preview-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .attachment-preview-icon {
+        width: 24px;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    .attachment-preview-name {
+        font-size: 14px;
+        color: #495057;
+        word-break: break-all;
+    }
+
+    .attachment-preview-size {
+        font-size: 12px;
+        color: #6c757d;
+        margin-left: auto;
+        margin-right: 15px;
+    }
+
+    .attachment-preview-remove {
+        background: none;
+        border: none;
+        color: #dc3545;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .attachment-preview-remove:hover {
+        background-color: #f8d7da;
+    }
+
+    .attachments-limits {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .attachments-limits small {
+        color: #6c757d;
+    }
+
+    .attachments-limits i {
+        margin-right: 5px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .attachments-upload-area {
+            padding: 15px;
+        }
+
+        .attachments-dropzone {
+            padding: 20px;
+        }
+
+        .dropzone-content i {
+            font-size: 36px;
+        }
+    }
+
     @media (max-width: 768px) {
         .message {
             max-width: 90%;
@@ -561,7 +775,30 @@ if ($data_enviado != null)
                                     </div>
                                     <div class="message-content">
                                         <div class="message-text"><?= $mensagem ?? 'Sem mensagem' ?></div>
-                                        <span class="message-time"><?= $data_enviado ?? datetime('d/m/Y') ?></span>
+
+                                        <!-- Área de Anexos da Mensagem do Usuário -->
+                                        <?php if (!empty($linha['arquivos']) && is_array($linha['arquivos'])): ?>
+                                            <div class="attachments-container">
+                                                <div class="attachments-title">
+                                                    <i class="fa fa-paperclip"></i>
+                                                    Anexos:
+                                                </div>
+                                                <div class="attachments-list">
+                                                    <?php foreach ($linha['arquivos'] as $arquivo): ?>
+                                                        <div class="attachment-item">
+                                                            <a href="./arquivos/arquivos_email/<?= htmlspecialchars($arquivo['nome_arquivo']) ?>"
+                                                                target="_blank"
+                                                                class="attachment-link">
+                                                                <i class="fa fa-file"></i>
+                                                                <?= htmlspecialchars($arquivo['nome_arquivo']) ?>
+                                                            </a>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <span class="message-time"><?= $data_envio ?? date('d/m/Y') ?></span>
                                     </div>
                                 </div>
 
@@ -574,6 +811,29 @@ if ($data_enviado != null)
                                         </div>
                                         <div class="message-content">
                                             <div class="message-text"><?= $resposta ?></div>
+
+                                            <!-- Área de Anexos da Resposta -->
+                                            <?php if (!empty($linha['arquivos_resposta']) && is_array($linha['arquivos_resposta'])): ?>
+                                                <div class="attachments-container">
+                                                    <div class="attachments-title">
+                                                        <i class="fa fa-paperclip"></i>
+                                                        Anexos da resposta:
+                                                    </div>
+                                                    <div class="attachments-list">
+                                                        <?php foreach ($linha['arquivos_resposta'] as $arquivo): ?>
+                                                            <div class="attachment-item">
+                                                                <a href="./arquivos/arquivos_email/<?= htmlspecialchars($arquivo['nome_arquivo']) ?>"
+                                                                    target="_blank"
+                                                                    class="attachment-link">
+                                                                    <i class="fa fa-file"></i>
+                                                                    <?= htmlspecialchars($arquivo['nome_arquivo']) ?>
+                                                                </a>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+
                                             <span class="message-time"><?= $data_resposta ?></span>
                                         </div>
                                     </div>
@@ -592,7 +852,7 @@ if ($data_enviado != null)
                         <?php endif; ?>
                     </div>
 
-                    <form action="../banco_dados/enviar_email.php" method="POST" id="suporte">
+                    <form action="../banco_dados/enviar_email.php" method="POST" id="suporte" enctype="multipart/form-data">
                         <input hidden type="text" name='criptografia' value="<?= $criptografia ?>">
                         <input hidden type="text" name='id_email' value="<?= $id_email ?>">
 
@@ -618,8 +878,44 @@ if ($data_enviado != null)
                                     name="resposta"></textarea>
                             </div>
 
-                            <div style="text-align: right;">
-                                <button class="send-mail-button" style="font-weight:600; width: 20%; padding: 10px; border-radius: 6px" type="submit">Enviar <i class="bi bi-send"></i> </button>
+                            <!-- Área de Anexos da Resposta -->
+                            <div class="attachments-upload-area">
+                                <div class="attachments-header">
+                                    <i class="fa fa-paperclip"></i>
+                                    <span>Anexos da Resposta</span>
+                                    <small>(Opcional)</small>
+                                </div>
+
+                                <div class="attachments-dropzone" id="attachmentsDropzone">
+                                    <div class="dropzone-content">
+                                        <i class="fa fa-cloud-upload-alt"></i>
+                                        <p>Arraste arquivos aqui ou clique para selecionar</p>
+                                        <small>Formatos permitidos: PDF, Word, Excel, Imagens, etc.</small>
+                                    </div>
+                                    <input type="file"
+                                        name="anexos_resposta[]"
+                                        id="anexosInput"
+                                        multiple
+                                        style="display: none;"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.txt,.zip,.rar">
+                                </div>
+
+                                <div class="attachments-preview" id="attachmentsPreview">
+                                    <!-- Os arquivos selecionados aparecerão aqui -->
+                                </div>
+
+                                <div class="attachments-limits">
+                                    <small>
+                                        <i class="fa fa-info-circle"></i>
+                                        Tamanho máximo por arquivo: 10MB | Máximo de 5 arquivos
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div style="text-align: right; margin-top: 20px;">
+                                <button class="send-mail-button" style="font-weight:600; width: 20%; padding: 10px; border-radius: 6px" type="submit">
+                                    Enviar <i class="bi bi-send"></i>
+                                </button>
                             </div>
 
                         <?php endif; ?>
@@ -676,6 +972,124 @@ if ($data_enviado != null)
                     }
                 });
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropzone = document.getElementById('attachmentsDropzone');
+        const fileInput = document.getElementById('anexosInput');
+        const preview = document.getElementById('attachmentsPreview');
+        const maxFiles = 5;
+        const maxSize = 10 * 1024 * 1024; // 10MB
+
+        // Clique no dropzone
+        dropzone.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        // Arrastar e soltar
+        dropzone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', function() {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        // Seleção de arquivos
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+
+        function handleFiles(files) {
+            const currentFiles = preview.querySelectorAll('.attachment-preview-item').length;
+
+            if (currentFiles + files.length > maxFiles) {
+                alert(`Você pode enviar no máximo ${maxFiles} arquivos.`);
+                return;
+            }
+
+            for (let file of files) {
+                if (file.size > maxSize) {
+                    alert(`O arquivo "${file.name}" excede o tamanho máximo de 10MB.`);
+                    continue;
+                }
+
+                addFilePreview(file);
+            }
+
+            updatePreviewVisibility();
+        }
+
+        function addFilePreview(file) {
+            const item = document.createElement('div');
+            item.className = 'attachment-preview-item';
+
+            const size = formatFileSize(file.size);
+            const icon = getFileIcon(file.name);
+
+            item.innerHTML = `
+            <div class="attachment-preview-info">
+                <div class="attachment-preview-icon">
+                    <i class="${icon}"></i>
+                </div>
+                <div class="attachment-preview-name">${file.name}</div>
+                <div class="attachment-preview-size">${size}</div>
+            </div>
+            <button type="button" class="attachment-preview-remove">
+                <i class="fa fa-times"></i>
+            </button>
+        `;
+
+            // Remover arquivo
+            item.querySelector('.attachment-preview-remove').addEventListener('click', function() {
+                item.remove();
+                updatePreviewVisibility();
+            });
+
+            preview.appendChild(item);
+        }
+
+        function updatePreviewVisibility() {
+            if (preview.querySelectorAll('.attachment-preview-item').length > 0) {
+                preview.classList.add('has-files');
+            } else {
+                preview.classList.remove('has-files');
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const icons = {
+                'pdf': 'fa fa-file-pdf-o',
+                'doc': 'fa fa-file-word-o',
+                'docx': 'fa fa-file-word-o',
+                'xls': 'fa fa-file-excel-o',
+                'xlsx': 'fa fa-file-excel-o',
+                'jpg': 'fa fa-file-image-o',
+                'jpeg': 'fa fa-file-image-o',
+                'png': 'fa fa-file-image-o',
+                'gif': 'fa fa-file-image-o',
+                'txt': 'fa fa-file-text-o',
+                'zip': 'fa fa-file-archive-o',
+                'rar': 'fa fa-file-archive-o'
+            };
+            return icons[ext] || 'fa fa-file-o';
+        }
     });
 </script>
 </body>

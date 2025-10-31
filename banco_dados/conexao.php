@@ -3624,15 +3624,40 @@ order by total_pontos_somados desc");
 
     public function get_emails_candidato($email)
     {
-        $stmt = $this->pdo->prepare(
-            "
-                        select * from emails
-                        where email_remetente = :email"
-        );
+        // Primeiro busca os emails
+        $stmt = $this->pdo->prepare("
+        SELECT * FROM emails 
+        WHERE email_remetente = :email 
+        ORDER BY data_criacao ASC
+    ");
         $stmt->bindValue(':email', $email);
-        $run = $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        $stmt->execute();
+        $emails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Para cada email, busca os arquivos
+        foreach ($emails as &$email_row) {
+            // Arquivos da mensagem original
+            $stmt_arquivos = $this->pdo->prepare("
+            SELECT nome_arquivo
+            FROM arquivo_email 
+            WHERE id_email = :id_email
+        ");
+            $stmt_arquivos->bindValue(':id_email', $email_row['id']);
+            $stmt_arquivos->execute();
+            $email_row['arquivos'] = $stmt_arquivos->fetchAll(PDO::FETCH_ASSOC);
+
+            // Arquivos da resposta (se houver)
+            $stmt_arquivos_resposta = $this->pdo->prepare("
+            SELECT nome_arquivo
+            FROM arquivo_email 
+            WHERE id_email = :id_email AND tipo = 'resposta'
+        ");
+            $stmt_arquivos_resposta->bindValue(':id_email', $email_row['id']);
+            $stmt_arquivos_resposta->execute();
+            $email_row['arquivos_resposta'] = $stmt_arquivos_resposta->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return $emails;
     }
 
     // </editor-fold>
@@ -6745,22 +6770,27 @@ order by total_pontos_somados desc");
         }
     }
 
-    public function insere_email_arquivo($id_email, $nome_arquivo)
+    public function insere_email_arquivo($id_email, $nome_arquivo, $tipo_arquivo = '')
     {
         $datetime = date('Y-m-d H:i:s');
 
         try {
+            // Se tipo_arquivo estiver vazio, é anexo original
+            // Se tipo_arquivo for "resposta", é anexo da resposta
+            $tipo_final = ($tipo_arquivo === 'resposta') ? 'resposta' : 'anexo';
+
             $sqlInsert = "
-            INSERT INTO arquivo_email 
-            (id_email, nome_arquivo, data_criacao)
-            VALUES 
-            (:id_email, :nome_arquivo, :data_criacao)
+        INSERT INTO arquivo_email 
+        (id_email, nome_arquivo, tipo, data_criacao)
+        VALUES 
+        (:id_email, :nome_arquivo, :tipo, :data_criacao)
         ";
 
             $this->pdo->beginTransaction();
             $query = $this->pdo->prepare($sqlInsert);
 
             $query->bindValue(":id_email", $id_email);
+            $query->bindValue(":tipo", $tipo_final);
             $query->bindValue(":nome_arquivo", $nome_arquivo);
             $query->bindValue(":data_criacao", $datetime);
 
@@ -6768,6 +6798,7 @@ order by total_pontos_somados desc");
                 $data = [
                     'id_adicionado' => $this->pdo->lastInsertId(),
                     'id_email' => $id_email,
+                    'tipo' => $tipo_final,
                     'nome_arquivo' => $nome_arquivo,
                     'data_criacao' => $datetime,
                 ];
@@ -6779,6 +6810,7 @@ order by total_pontos_somados desc");
             }
         } catch (Exception $e) {
             $this->pdo->rollBack();
+            error_log("Erro ao inserir arquivo de email: " . $e->getMessage());
             return false;
         }
     }
