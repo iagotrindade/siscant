@@ -907,7 +907,7 @@ if ($data_enviado != null)
                                 <div class="attachments-limits">
                                     <small>
                                         <i class="fa fa-info-circle"></i>
-                                        Tamanho máximo por arquivo: 10MB | Máximo de 5 arquivos
+                                        Tamanho máximo por arquivo: 10MB | Máximo de 50 arquivos
                                     </small>
                                 </div>
                             </div>
@@ -978,7 +978,7 @@ if ($data_enviado != null)
         const dropzone = document.getElementById('attachmentsDropzone');
         const fileInput = document.getElementById('anexosInput');
         const preview = document.getElementById('attachmentsPreview');
-        const maxFiles = 5;
+        const maxFiles = 50;
         const maxSize = 10 * 1024 * 1024; // 10MB
 
         // Clique no dropzone

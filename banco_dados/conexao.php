@@ -10396,15 +10396,15 @@ order by total_pontos_somados desc");
     }
 
     // 25/07/2025 - Iago Silva - Adicionando função para inserir uma nova notificação
-    public function insere_notificacao($etapa, $titulo, $mensagem)
+    public function insere_notificacao($etapa, $id_especialidade, $titulo, $mensagem)
     {
         $datetime = date('Y-m-d H:i:s');
         $usuario = $_SESSION['id_usuario'];
         $id_selecao = $_SESSION['selecao'];
 
         try {
-            $sqlInsert = "INSERT INTO notificacao (id_selecao, etapa, titulo, mensagem, id_usuario_inseriu, data_envio) 
-                          VALUES (:id_selecao, :etapa, :titulo, :mensagem, :id_usuario_inseriu, :data_envio)";
+            $sqlInsert = "INSERT INTO notificacao (id_selecao, etapa, id_especialidade, titulo, mensagem, id_usuario_inseriu, data_envio) 
+                          VALUES (:id_selecao, :etapa, :id_especialidade, :titulo, :mensagem, :id_usuario_inseriu, :data_envio)";
 
             $this->pdo->beginTransaction();
 
@@ -10412,6 +10412,7 @@ order by total_pontos_somados desc");
 
             $query->bindValue(":id_selecao", $id_selecao);
             $query->bindValue(":etapa", $etapa);
+             $query->bindValue(":id_especialidade", $id_especialidade);
             $query->bindValue(":titulo", $titulo);
             $query->bindValue(":mensagem", $mensagem);
             $query->bindValue(":id_usuario_inseriu", $usuario);
@@ -10421,6 +10422,7 @@ order by total_pontos_somados desc");
                 $data = [
                     'id_selecao' => $id_selecao,
                     'etapa' => $etapa,
+                    'id_especialidade' => $id_especialidade,
                     'titulo' => $titulo,
                     'mensagem' => $mensagem,
                     'id_usuario_inseriu' => $usuario,

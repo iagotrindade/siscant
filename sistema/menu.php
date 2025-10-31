@@ -183,7 +183,25 @@ if (in_array($termo, $tagsArray)) {
 }
 
 // 27/08/2025 -> Iago Silva Adicionado contagem de notificações recentes
-$notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
+$todasNotificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
+
+$notificacoes = [];
+
+foreach ($todasNotificacoes as $notificacao) {
+    if (!$notificacao['id_especialidade']) {
+        $notificacoes[] = $notificacao;
+    }
+
+    if ($perfil == 'candidato') {
+        $lista_inscricoes = $conexao->get_especialidade_candidato($_SESSION['id_usuario']);
+
+        foreach ($lista_inscricoes as $especialidade) {
+            if ($notificacao['id_especialidade'] == $especialidade['id_especialidade']) {
+                $notificacoes[] = $notificacao;
+            }
+        }
+    }
+}
 
 $novas_notificacoes = false;
 $novas_notificacoes_count = 0;

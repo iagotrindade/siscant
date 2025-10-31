@@ -53,16 +53,6 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
         font-weight: 700;
     }
 
-    .form-control {
-        border-radius: 6px;
-        border: 1px solid var(--border-color);
-    }
-
-    .form-control:focus {
-        border-color: var(--secondary-color);
-        box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
-    }
-
     .form-check-input:checked {
         background-color: var(--primary-color);
         border-color: var(--primary-color);
@@ -70,21 +60,6 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
 
     .table-hover tbody tr:hover {
         background-color: rgba(34, 139, 34, 0.1);
-    }
-
-    .form-control,
-    .form-select {
-        border-radius: 6px;
-        padding: 10px 15px;
-        border: 1px solid #D3D3D3;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        border-color: #228B22;
-        outline: 0;
-        box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
     }
 
     .btn-primary {
@@ -158,11 +133,6 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
         color: #dee2e6;
     }
 
-    .form-control:focus {
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-
     .char-count {
         font-size: 0.85rem;
         color: #6c757d;
@@ -206,7 +176,7 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
 
                             <div class="mb-10">
                                 <label for="notificationEtapa" class="form-label">Etapa da Notificação</label>
-                                <select class="form-control" id="notificationEtapa" name="etapa" required style="border-radius: 6px; padding: 10px 15px; border: 1px solid #D3D3D3;">
+                                <select class="form-control" id="notificationEtapa" name="etapa" required>
                                     <option value="">Selecione a etapa</option>
                                     <option value="0">Todas</option>
                                     <option value="1">Etapa 1</option>
@@ -216,6 +186,30 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                                     <option value="5">Etapa 5</option>
                                     <option value="6">Etapa 6</option>
                                     <option value="7">Etapa 7</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-10">
+                                <label for="notificationEtapa" class="form-label">Especialidade</label>
+
+                                <select onchange="fomulario.submit()" name="id_especialidade" class="form-control form-select-lg">
+                                    <option value="all">Todas</option>
+                                    <?php
+                                    if ($avaliador) {
+                                        foreach ($lista_especialidade_avaliador as $value) {
+                                            $selected = $id_especialidade_selecionada == $value['id_especialidade'] ? 'selected' : '';
+                                            echo '<option ' . $selected . ' value="' . $value['id_especialidade'] . '">' .
+                                                mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . htmlspecialchars($value['nome']) . '</option>';
+                                        }
+                                    } else {
+                                        $resultado = $conexao->get_especialidade();
+                                        foreach ($resultado as $value) {
+                                            $selected = $id_especialidade_selecionada == $value['id'] ? 'selected' : '';
+                                            echo '<option ' . $selected . ' value="' . $value['id'] . '">' .
+                                                mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . htmlspecialchars($value['nome']) . '</option>';
+                                        }
+                                    }
+                                    ?>
                                 </select>
                             </div>
 

@@ -100,39 +100,48 @@ if ($id_email != null && $resposta != null) {
         // PROCESSAMENTO DOS ANEXOS DA RESPOSTA
         $anexos_processados = [];
 
-        if (!empty($_FILES['anexos_resposta']) && is_array($_FILES['anexos_resposta']['name'])) {
+        if (isset($_FILES['anexos_resposta']['name']) && is_array($_FILES['anexos_resposta']['name'])) {
             $uploadDir = '../sistema/arquivos/arquivos_email/';
 
             // Verifica se o diretório existe, se não, cria
             if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
+                mkdir($uploadDir, 0777, true);
             }
 
             foreach ($_FILES['anexos_resposta']['name'] as $key => $name) {
-                if ($_FILES['anexos_resposta']['error'][$key] === UPLOAD_ERR_OK) {
-                    $tmp_name = $_FILES['anexos_resposta']['tmp_name'][$key];
-                    $file_size = $_FILES['anexos_resposta']['size'][$key];
+                $error = $_FILES['anexos_resposta']['error'][$key];
+                $tmp_name = $_FILES['anexos_resposta']['tmp_name'][$key];
+                $file_size = $_FILES['anexos_resposta']['size'][$key];
 
-                    // Validações de segurança
-                    $max_size = 10 * 1024 * 1024; // 10MB
+                if (is_uploaded_file($tmp_name)) {
+                   
+                    // Valida tamanho máximo (10 MB)
+                    $max_size = 10 * 1024 * 1024;
                     if ($file_size > $max_size) {
-                        continue; // Pula arquivos muito grandes
+                        error_log("Arquivo muito grande: $name");
+                        continue;
                     }
 
-                    // Gera nome único para o arquivo
-                    $file_extension = pathinfo($name, PATHINFO_EXTENSION);
+                    // Gera nome seguro e único
+                    $file_extension = end(explode('.', $_FILES['anexos_resposta']['name'][$key]));
                     $file_name = uniqid() . '_' . date('Ymd_His') . '.' . $file_extension;
-                    $file_path = $uploadDir . $file_name;
+                    $file_path = $uploadDir .  $file_name;
 
-                    // Move o arquivo para o diretório
+                    // Move arquivo para o diretório final
                     if (move_uploaded_file($tmp_name, $file_path)) {
                         // Insere no banco de dados
                         $insere_anexo = $conexao->insere_email_arquivo($id_email, $file_name, 'resposta');
 
                         if ($insere_anexo) {
                             $anexos_processados[] = $file_name;
+                        } else {
+                            error_log("Erro ao inserir anexo no banco: $file_name");
                         }
+                    } else {
+                        error_log("Falha ao mover arquivo: $name");
                     }
+                } else {
+                    error_log("Erro no upload de $name - Código: $error");
                 }
             }
         }

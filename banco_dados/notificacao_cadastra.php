@@ -37,15 +37,20 @@ if ($usuario_logado[0]['assinatura_sistema'] != $_SESSION['assinatura_sistema'])
 $etapa = $_POST['etapa'];
 $titulo = trim($_POST['titulo']);
 $mensagem = $_POST['mensagem'];
+$id_especialidade = $_POST['id_especialidade'];
 
 if ($titulo == null || $mensagem == "") {
     erro("Os campos Título, Mensagem e Etapa são obrigatórios!");
     exit();
 }
 
+if($id_especialidade == 'all') {
+    $id_especialidade = null;
+}
+
 if ($_POST) {
     $etapa = $etapa == "" ? null : $etapa;
-    $resultado = $conexao->insere_notificacao($etapa, $titulo, $mensagem);
+    $resultado = $conexao->insere_notificacao($etapa, $id_especialidade, $titulo, $mensagem);
 }
 
 $alteracoes_detalhadas =  print_r($resultado);
