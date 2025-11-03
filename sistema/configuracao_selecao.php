@@ -297,7 +297,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 
         <!-- Configurações de E-mail -->
         <div class="col-md-12">
-            <h3 class="section-title"><i class="fa fa-envelope"></i> Configurações de E-mail</h3>
+            <h3 class="section-title"><i class="fa fa-envelope-o"></i> Configurações de E-mail</h3>
         </div>
 
         <!-- Agenda da Inscrição -->

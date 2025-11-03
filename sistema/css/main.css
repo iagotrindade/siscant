@@ -810,21 +810,21 @@ a.bg-info:focus {
 }
 
 .bg-warning {
-  background-color: #fcf8e3;
+  background-color: #ffc107 !important;
 }
 
 a.bg-warning:hover,
 a.bg-warning:focus {
-  background-color: #f7ecb5;
+  background-color: #e0a800 !important;
 }
 
 .bg-danger {
-  background-color: #f2dede;
+  background-color: #dc3545 !important;
 }
 
 a.bg-danger:hover,
 a.bg-danger:focus {
-  background-color: #e4b9b9;
+  background-color: #bb2d3b !important;
 }
 
 .page-header {

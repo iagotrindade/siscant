@@ -216,10 +216,10 @@ $lista_candidatos = $conexao->get_candidatos_desclassificados();
                                         <span class="badge badge-etapa-desclassified">et_' . $linha['etapa'] . '</span>
                                     </td>
                                     <td class="text-center">
-                                        <a class="btn-modern btn-delete" onclick="funcao_apagar(\'' . $linha['id'] . '\', \'candidato\')" 
+                                        <a class="btn btn-sm action-btn" onclick="funcao_apagar(\'' . $linha['id'] . '\', \'candidato\')" 
                                            data-bs-toggle="tooltip" 
                                            title="Excluir candidato">
-                                            <i class="fa fa-trash"></i> Excluir
+                                            <i class="fa fa-trash"></i>
                                         </a>
                                     </td>
                                 </tr>';

@@ -129,7 +129,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 <div class="content-wrapper">
     <div class="page-title">
         <div>
-            <h1>Especialidades <i class="fa fa-wrench"></i></h1>
+            <h1>Especialidades <i class="fa fa-graduation-cap"></i></h1>
         </div>
         <div>
             <ul class="breadcrumb">

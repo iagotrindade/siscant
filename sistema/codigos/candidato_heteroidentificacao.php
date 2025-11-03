@@ -28,327 +28,450 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
 
 ?>
 <a name='heteroidentificacao'></a>
-<div <?php if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'chc' && $_SESSION['perfil'] != 'cr' && $_SESSION['perfil'] != 'consulta') echo 'hidden' ?>>
-    <div class="card p-4">
-        <div class="row">
-            <h4 class="col-md-11">
-                <a data-toggle="collapse" href="#hetero">Mostrar/Esconder Pareceres Comissão Heteroidentificação</a>
-            </h4>
+<div <?= $_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'chc' && $_SESSION['perfil'] != 'cr' && $_SESSION['perfil'] != 'consulta' ? 'hidden' : '' ?>>
+    <!-- Comissão Heteroidentificação -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header dashboard-header mb-20 d-flex justify-content-between align-items-center">
+            <span class="card-title mb-0">
+                <i class="fa fa-users me-2"></i>
+                Comissão de Heteroidentificação
 
-            <div class="col-md-1 row text-center">
-                <label for="heteroidentificacao" class="form-label">Baixar Pareceres</label>
-                <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?php echo $id_usuario; ?>&fase=1">
-
-                    <img src="imagens/pdf.png" alt="Ícone de Heteroidentificação" style="width: 50px; margin-bottom: 20px;">
+                <span class="badge bg-primary me-3">
+                    <i class="fa fa-file-alt me-1"></i>
+                    Pareceres: <?= count($pareceresFase1) ?>
+                </span>
+            </span>
+            <div class="d-flex align-items-center">
+                <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?= $id_usuario ?>&fase=1"
+                    class="btn btn-success btn-sm"
+                    data-bs-toggle="tooltip"
+                    title="Baixar Relatório de Pareceres">
+                    <i class="fa fa-file-pdf me-1"></i>GERAR ATA
                 </a>
             </div>
         </div>
-        <!-- Análises -->
-        <?php $contadorHetero = 0; ?>
-        <div class="row collapse" id="hetero">
-            <?php foreach ($pareceresFase1 as $parecer) : ?>
-                <?php $contadorHetero++; ?>
-                <div class="col-md-12 mb-40">
-                    <form <?php if ($parecer['id_avaliador'] != $_SESSION['id_usuario']) echo 'hidden'; ?> action="../banco_dados/candidato_edita_heteroidentificacao.php" method="post" class="row" aria-labelledby="titulo-heteroidentificacao">
-                        <input hidden type="text" value="<?php echo $parecer['id']; ?>" name="id_parecer">
-                        <input hidden type="text" value="<?php echo $parecer['id_avaliador']; ?>" name="id_avaliador">
-                        <input hidden type="text" value="<?php echo $id_usuario; ?>" name="id_candidato">
-                        <input value="<?php echo $cpf; ?>" maxlength="50" name="cpf_candidato" hidden>
-                        <input value="1" name="fase" hidden>
-                        <fieldset class="col-md-12">
-                            <h4>Parecer número: <?php echo ($contadorHetero); ?></h4>
-                            <p style="font-size: 16px;" id="titulo-heteroidentificacao" class="mb-4">
-                                Análise realizada em <?php echo (trata_data_hora($parecer['data_avaliacao'])); ?> pelo <?php echo ($parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador']); ?>
-                            </p>
 
-                            <!-- Justificativa -->
-                            <div class="mb-20">
-                                <label for="justificativa" class="form-label">Justificativa do Parecer</label>
-                                <textarea
-                                    name="justificativa"
-                                    id="justificativa"
-                                    class="form-control"
-                                    rows="4"
-                                    required><?php if ($parecer['justificativa'] != null) echo $parecer['justificativa']; ?></textarea>
-                            </div>
+        <div class="card-body">
+            <!-- Lista de Pareceres com Collapse -->
+            <div class="accordion" id="accordionHetero">
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <a data-toggle="collapse" href="#hetero">
+                            <i class="fa fa-eye me-2"></i>
+                            Mostrar/Esconder Pareceres Comissão Heteroidentificação (<?= count($pareceresFase1) ?>)
+                        </a>
+                    </h3>
+                    <div id="hetero" class="accordion-collapse collapse" data-bs-parent="#hetero">
+                        <div class="accordion-body">
+                            <?php $contadorHetero = 0; ?>
+                            <?php foreach ($pareceresFase1 as $parecer): ?>
+                                <?php $contadorHetero++; ?>
+                                <div class="parecer-item mb-20 p-3 border rounded">
+                                    <?php if ($parecer['id_avaliador'] == $_SESSION['id_usuario']): ?>
+                                        <!-- Formulário Edição (próprio avaliador) -->
+                                        <form action="../banco_dados/candidato_edita_heteroidentificacao.php" method="post">
+                                            <input type="hidden" name="id_parecer" value="<?= $parecer['id'] ?>">
+                                            <input type="hidden" name="id_avaliador" value="<?= $parecer['id_avaliador'] ?>">
+                                            <input type="hidden" name="id_candidato" value="<?= $id_usuario ?>">
+                                            <input type="hidden" name="cpf_candidato" value="<?= $cpf ?>">
+                                            <input type="hidden" name="fase" value="1">
 
-                            <!-- Resultado da autodeclaração -->
-                            <div class="mb-20">
-                                <label for="parecer" class="form-label">Autodeclaração</label>
-                                <select name="parecer" id="parecer" class="form-control" required>
-                                    <option value="">Selecione uma opção</option>
-                                    <option value="confirmada" <?php if ($parecer['parecer'] == 'confirmada') echo "selected"; ?>>Confirmada</option>
-                                    <option value="nao_confirmada" <?php if ($parecer['parecer'] == 'nao_confirmada') echo "selected"; ?>>Não confirmada</option>
-                                    <option value="nao_compareceu" <?php if ($parecer['parecer'] == 'nao_compareceu') echo "selected"; ?>>Não compareceu</option>
-                                </select>
-                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h5 class="text-primary">
+                                                        <i class="fa fa-check me-2"></i>
+                                                        Parecer Nº <?= $contadorHetero ?> (Seu Parecer)
+                                                        <span class="badge bg-warning">
+                                                            <i class="fa fa-edit me-1"></i>Editável
+                                                        </span>
+                                                    </h5>
+                                                    <p class="text-muted mb-20">
+                                                        <i class="fa fa-calendar me-1"></i>
+                                                        Análise realizada em <?= trata_data_hora($parecer['data_avaliacao']) ?>
+                                                        por <?= $parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador'] ?>
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                            <!-- Botão -->
-                            <div>
-                                <button type="submit" class="btn btn-primary col-md-12">
-                                    Salvar
-                                </button>
-                            </div>
-                        </fieldset>
-                    </form>
+                                            <div class="row">
+                                                <div class="col-md-12 mb-20">
+                                                    <label class="form-label fw-semibold">
+                                                        <i class="fa fa-edit me-1"></i>
+                                                        Justificativa do Parecer
+                                                    </label>
+                                                    <textarea name="justificativa" class="form-control" rows="4" required><?= htmlspecialchars($parecer['justificativa'] ?? '') ?></textarea>
+                                                </div>
 
-                    <div class="" <?php if  ($parecer['id_avaliador'] == $_SESSION['id_usuario']) echo 'hidden'; ?>>
-                        <h4>Parecer número: <?php echo ($contadorHetero); ?></h4>
-                        <p style="font-size: 16px;" id="titulo-heteroidentificacao" class="mb-4">
-                            Análise realizada em <?php echo (trata_data_hora($parecer['data_avaliacao'])); ?> pelo <?php echo ($parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador']); ?>
-                        </p>
+                                                <div class="col-md-12 mb-20">
+                                                    <label class="form-label fw-semibold">
+                                                        <i class="fa fa-balance-scale me-1"></i>
+                                                        Resultado da Autodeclaração
+                                                    </label>
+                                                    <select name="parecer" class="form-control" required>
+                                                        <option value="">Selecione uma opção</option>
+                                                        <option value="confirmada" <?= $parecer['parecer'] == 'confirmada' ? 'selected' : '' ?>>Confirmada</option>
+                                                        <option value="nao_confirmada" <?= $parecer['parecer'] == 'nao_confirmada' ? 'selected' : '' ?>>Não confirmada</option>
+                                                        <option value="nao_compareceu" <?= $parecer['parecer'] == 'nao_compareceu' ? 'selected' : '' ?>>Não compareceu</option>
+                                                    </select>
+                                                </div>
 
-                        <!-- Justificativa -->
-                        <div class="mb-20">
-                            <label for="justificativa" class="form-label">Justificativa do Parecer</label>
-                            <textarea
-                                name="justificativa"
-                                id="justificativa"
-                                class="form-control"
-                                rows="4"
-                                disabled><?php if ($parecer['justificativa'] != null) echo $parecer['justificativa']; ?></textarea>
-                        </div>
+                                                <div class="col-md-12">
+                                                    <button type="submit" class="btn btn-primary w-100">
+                                                        <i class="fa fa-save me-2"></i>
+                                                        ATUALIZAR PARECER
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    <?php else: ?>
+                                        <!-- Visualização (outros avaliadores) -->
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <h5 class="text-secondary">
+                                                    <i class="fa fa-user me-2"></i>
+                                                    Parecer Nº <?= $contadorHetero ?>
+                                                    <span class="badge bg-primary">
+                                                        <i class="fa fa-eye me-1"></i> Somente leitura
+                                                    </span>
+                                                </h5>
+                                                <p class="text-muted mb-20">
+                                                    <i class="fa fa-calendar me-1"></i>
+                                                    Análise realizada em <?= trata_data_hora($parecer['data_avaliacao']) ?>
+                                                    por <?= $parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador'] ?>
+                                                </p>
+                                            </div>
+                                        </div>
 
-                        <!-- Resultado da autodeclaração -->
-                        <div class="mb-20">
-                            <label for="resultado" class="form-label">Autodeclaração</label>
-                            <input
-                                name="resultado"
-                                id="resultado"
-                                class="form-control"
-                                value="<?php if ($parecer['parecer'] == 'confirmada') {
-                                            echo ('Confirmada');
-                                        } elseif ($parecer['parecer'] == 'nao_confirmada') {
-                                            echo ('Não Confirmada');
-                                        } elseif ($parecer['parecer'] == 'nao_compareceu') {
-                                            echo ('Não compareceu');
-                                        } ?>"
-                                disabled>
+                                        <div class="row">
+                                            <div class="col-md-12 mb-20">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="fa fa-edit me-1"></i>
+                                                    Justificativa do Parecer
+                                                </label>
+                                                <textarea class="form-control" rows="4" disabled><?= htmlspecialchars($parecer['justificativa'] ?? '') ?></textarea>
+                                            </div>
+
+                                            <div class="col-md-12 mb-20">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="fa fa-balance-scale me-1"></i>
+                                                    Resultado da Autodeclaração
+                                                </label>
+                                                <?php
+                                                $resultado_text = '';
+                                                if ($parecer['parecer'] == 'confirmada') $resultado_text = 'Confirmada';
+                                                elseif ($parecer['parecer'] == 'nao_confirmada') $resultado_text = 'Não Confirmada';
+                                                elseif ($parecer['parecer'] == 'nao_compareceu') $resultado_text = 'Não compareceu';
+
+                                                $resultado_class = 'danger';
+                                                if ($parecer['parecer'] == 'confirmada') $resultado_class = 'primary';
+                                                elseif ($parecer['parecer'] == 'nao_confirmada') $resultado_class = 'danger';
+                                                elseif ($parecer['parecer'] == 'nao_compareceu') $resultado_class = 'warning';
+                                                ?>
+                                                <div class="form-control" disabled>
+                                                    <span class="badge bg-<?= $resultado_class ?> fs-6"><?= $resultado_text ?></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <?php if ($contadorHetero < count($pareceresFase1)): ?>
+                                    <hr class="my-4">
+                                <?php endif; ?>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-12 mb-40 mt-20" style="height: 1px; border-bottom: 1px solid #ccc;"></div>
-            <?php endforeach; ?>
-        </div>
-
-        <!-- Resultado Final -->
-        <div class="row" <?php if ($totalFase1 < 5) echo ('hidden'); ?>>
-            <div class="col-md-12">
-                <legend>
-                    <h4>
-                        Resultado Final: <?php echo (get_parecer_final_heteroidentificacao($id_usuario, $pareceres, 1)); ?>
-                    </h4>
-                </legend>
             </div>
-        </div>
 
-        <!-- Inserir avaliação -->
-        <div class="card p-4" <?php if ($bloquearInclusao || $_SESSION['perfil'] != 'admin' && $_SESSION['perfil' != 'chc']) echo ('hidden'); ?>>
-            <div class="row">
-                <div class="col-md-12">
-                    <form action="../banco_dados/candidato_heteroidentificacao.php" method="post" class="row" aria-labelledby="titulo-heteroidentificacao">
-                        <input hidden type="text" value="<?php echo $id_usuario; ?>" name="id_candidato">
-                        <input value="<?php echo $cpf; ?>" maxlength="50" name="cpf_candidato" hidden>
-                        <input value="1" name="fase" hidden>
-                        <fieldset class="col-md-12">
-                            <legend id="titulo-heteroidentificacao" class="mb-4">Inserir Parecer Comissão Heteroidentificação</legend>
-
-                            <!-- Justificativa -->
-                            <div class="mb-20">
-                                <label for="justificativa" class="form-label">Justificativa do Parecer</label>
-                                <textarea
-                                    name="justificativa"
-                                    id="justificativa"
-                                    class="form-control"
-                                    rows="4"
-                                    placeholder="Digite a justificativa para seu parecer aqui..."
-                                    required></textarea>
+            <!-- Resultado Final -->
+            <?php if ($totalFase1 >= 5): ?>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-bar-chart fa-2x mr-10"></i>
+                                <div>
+                                    <h5 class="mb-0">Resultado Final da Comissão</h5>
+                                    <p class="mb-0 fs-5 fw-bold"><?= get_parecer_final_heteroidentificacao($id_usuario, $pareceres, 1) ?></p>
+                                </div>
                             </div>
-
-                            <!-- Resultado da autodeclaração -->
-                            <div class="mb-20">
-                                <label for="parecer" class="form-label">Autodeclaração</label>
-                                <select name="parecer" id="parecer" class="form-control" required>
-                                    <option value="">Selecione uma opção</option>
-                                    <option value="confirmada">Confirmada</option>
-                                    <option value="nao_confirmada">Não confirmada</option>
-                                    <option value="nao_compareceu">Não compareceu</option>
-                                </select>
-                            </div>
-
-                            <!-- Botão -->
-                            <div>
-                                <button type="submit" class="btn btn-primary col-md-12">
-                                    Salvar
-                                </button>
-                            </div>
-                        </fieldset>
-                    </form>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
+
+            <!-- Formulário Inserir Novo Parecer -->
+            <?php if (!$bloquearInclusao && ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'chc')): ?>
+                <div class="card border-primary mt-4">
+                    <div class="card-header bg-primary text-white mb-20">
+                        <span class="mb-0">
+                            <i class="fa fa-plus-circle me-2"></i>
+                            Inserir Novo Parecer
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/candidato_heteroidentificacao.php" method="post">
+                            <input type="hidden" name="id_candidato" value="<?= $id_usuario ?>">
+                            <input type="hidden" name="cpf_candidato" value="<?= $cpf ?>">
+                            <input type="hidden" name="fase" value="1">
+
+                            <div class="row">
+                                <div class="col-md-12 mb-20">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fa fa-edit me-1"></i>
+                                        Justificativa do Parecer
+                                    </label>
+                                    <textarea name="justificativa" class="form-control" rows="4" placeholder="Digite a justificativa para seu parecer aqui..." required></textarea>
+                                </div>
+
+                                <div class="col-md-12 mb-20">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fa fa-balance-scale me-1"></i>
+                                        Resultado da Autodeclaração
+                                    </label>
+                                    <select name="parecer" class="form-control" required>
+                                        <option value="">Selecione uma opção</option>
+                                        <option value="confirmada">Confirmada</option>
+                                        <option value="nao_confirmada">Não confirmada</option>
+                                        <option value="nao_compareceu">Não compareceu</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary w-100 py-2">
+                                        <i class="fa fa-save me-2"></i>
+                                        SALVAR PARECER
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
-    <div class="card p-4">
-        <div class="row">
-            <h4 class="col-md-11">
-                <a data-toggle="collapse" href="#heteroRevisora">Mostrar/Esconder Pareceres Comissão Revisora</a>
-            </h4>
+    <!-- Comissão Revisora (estrutura similar à acima) -->
+    <div class="card dashboard-card mb-20">
+        <div class="card-header dashboard-header mb-20 d-flex justify-content-between align-items-center">
+            <span class="card-title mb-0">
+                <i class="fa fa-user-shield me-2"></i>
+                Comissão Revisora
+            </span>
 
-            <div class="col-md-1 row text-center">
-                <label for="heteroidentificacao" class="form-label">Baixar Pareceres</label>
-                <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?php echo $id_usuario; ?>&fase=2">
-
-                    <img src="imagens/pdf.png" alt="Ícone de Heteroidentificação" style="width: 50px; margin-bottom: 20px;">
+            <span class="badge bg-primary me-3">
+                <i class="fa fa-file-alt me-1"></i>
+                Pareceres: <?= count($pareceresFase2) ?>
+            </span>
+            <div class="d-flex align-items-center">
+                <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?= $id_usuario ?>&fase=2"
+                    class="btn btn-sm btn-success"
+                    data-bs-toggle="tooltip"
+                    title="Baixar Relatório de Pareceres Revisores">
+                    <i class="fa fa-file-pdf me-1"></i>GERAR ATA
                 </a>
             </div>
         </div>
-        <!-- Análises Revisora -->
-        <?php $contadorRevisora = 0; ?>
 
-        <div class="row collapse" id="heteroRevisora">
-            <?php foreach ($pareceresFase2 as $parecer) : ?>
-                <?php $contadorRevisora++; ?>
-                <div class="col-md-12 mb-40">
-                    <form <?php if ($parecer['id_avaliador'] != $_SESSION['id_usuario']) echo 'hidden'; ?> action="../banco_dados/candidato_edita_heteroidentificacao.php" method="post" class="row" aria-labelledby="titulo-heteroidentificacao">
-                        <input hidden type="text" value="<?php echo $parecer['id']; ?>" name="id_parecer">
-                        <input hidden type="text" value="<?php echo $parecer['id_avaliador']; ?>" name="id_avaliador">
-                        <input hidden type="text" value="<?php echo $id_usuario; ?>" name="id_candidato">
-                        <input value="<?php echo $cpf; ?>" maxlength="50" name="cpf_candidato" hidden>
-                        <input value="1" name="fase" hidden>
-                        <fieldset class="col-md-12">
-                            <h4>Parecer revisor número: <?php echo ($contadorRevisora); ?></h4>
-                            <p style="font-size: 16px;" id="titulo-heteroidentificacao" class="mb-4">
-                                Análise realizada em <?php echo (trata_data_hora($parecer['data_avaliacao'])); ?> pelo (a) <?php echo ($parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador']); ?>
-                            </p>
+        <div class="card-body">
+            <!-- Lista de Pareceres Revisores com Collapse -->
+            <div class="accordion" id="accordionRevisora">
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <a data-toggle="collapse" href="#heteroRevisora">
+                            <i class="fa fa-eye me-2"></i>
+                            Mostrar/Esconder Pareceres Comissão Revisora (<?= count($pareceresFase2) ?>)
+                        </a>
+                    </h3>
+                    <div id="heteroRevisora" class="accordion-collapse collapse" data-bs-parent="#heteroRevisora">
+                        <div class="accordion-body">
+                            <?php $contadorRevisora = 0; ?>
+                            <?php foreach ($pareceresFase2 as $parecer): ?>
+                                <?php $contadorRevisora++; ?>
+                                <div class="parecer-item mb-4 p-3 border rounded">
+                                    <?php if ($parecer['id_avaliador'] == $_SESSION['id_usuario']): ?>
+                                        <!-- Formulário Edição (próprio avaliador) -->
+                                        <form action="../banco_dados/candidato_edita_heteroidentificacao.php" method="post">
+                                            <input type="hidden" name="id_parecer" value="<?= $parecer['id'] ?>">
+                                            <input type="hidden" name="id_avaliador" value="<?= $parecer['id_avaliador'] ?>">
+                                            <input type="hidden" name="id_candidato" value="<?= $id_usuario ?>">
+                                            <input type="hidden" name="cpf_candidato" value="<?= $cpf ?>">
+                                            <input type="hidden" name="fase" value="2">
 
-                            <!-- Justificativa Revisora -->
-                            <div class="mb-20">
-                                <label for="justificativa" class="form-label">Justificativa do Parecer</label>
-                                <textarea
-                                    name="justificativa"
-                                    id="justificativa"
-                                    class="form-control"
-                                    rows="4"
-                                    required><?php if ($parecer['justificativa'] != null) echo $parecer['justificativa']; ?></textarea>
-                            </div>
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <h5 class="text-primary">
+                                                        <i class="fa fa-user-shield me-2"></i>
+                                                        Parecer Revisor Nº <?= $contadorRevisora ?> (Seu Parecer)
+                                                        <span class="badge bg-warning">
+                                                            <i class="fa fa-edit me-1"></i>Editável
+                                                        </span>
+                                                    </h5>
+                                                    <p class="text-muted mb-20">
+                                                        <i class="fa fa-calendar me-1"></i>
+                                                        Análise realizada em <?= trata_data_hora($parecer['data_avaliacao']) ?>
+                                                        por <?= $parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador'] ?>
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                            <!-- Resultado da autodeclaração Revisora -->
-                            <div class="mb-20">
-                                <label for="parecer" class="form-label">Autodeclaração</label>
-                                <select name="parecer" id="parecer" class="form-control" required>
-                                    <option value="">Selecione uma opção</option>
-                                    <option value="confirmada" <?php if ($parecer['parecer'] == 'confirmada') echo "selected"; ?>>Confirmada</option>
-                                    <option value="nao_confirmada" <?php if ($parecer['parecer'] == 'nao_confirmada') echo "selected"; ?>>Não confirmada</option>
-                                    <option value="nao_compareceu" <?php if ($parecer['parecer'] == 'nao_compareceu') echo "selected"; ?>>Não compareceu</option>
-                                </select>
-                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 mb-20">
+                                                    <label class="form-label fw-semibold">
+                                                        <i class="fa fa-edit me-1"></i>
+                                                        Justificativa do Parecer Revisor
+                                                    </label>
+                                                    <textarea name="justificativa" class="form-control" rows="4" required><?= htmlspecialchars($parecer['justificativa'] ?? '') ?></textarea>
+                                                </div>
 
-                            <!-- Botão -->
-                            <div>
-                                <button type="submit" class="btn btn-primary col-md-12">
-                                    Salvar
-                                </button>
-                            </div>
-                        </fieldset>
-                    </form>
+                                                <div class="col-md-12 mb-20">
+                                                    <label class="form-label fw-semibold">
+                                                        <i class="fa fa-balance-scale me-1"></i>
+                                                        Resultado da Autodeclaração
+                                                    </label>
+                                                    <select name="parecer" class="form-control" required>
+                                                        <option value="">Selecione uma opção</option>
+                                                        <option value="confirmada" <?= $parecer['parecer'] == 'confirmada' ? 'selected' : '' ?>>Confirmada</option>
+                                                        <option value="nao_confirmada" <?= $parecer['parecer'] == 'nao_confirmada' ? 'selected' : '' ?>>Não confirmada</option>
+                                                        <option value="nao_compareceu" <?= $parecer['parecer'] == 'nao_compareceu' ? 'selected' : '' ?>>Não compareceu</option>
+                                                    </select>
+                                                </div>
 
-                    <div class="" <?php if ($parecer['id_avaliador'] == $_SESSION['id_usuario']) echo 'hidden'; ?>>
-                        <h4>Parecer revisor número: <?php echo ($contadorRevisora); ?></h4>
-                        <p style="font-size: 16px;" id="titulo-heteroidentificacao" class="mb-4">
-                            Análise realizada em <?php echo (trata_data_hora($parecer['data_avaliacao'])); ?> pelo <?php echo ($parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador']); ?>
-                        </p>
+                                                <div class="col-md-12">
+                                                    <button type="submit" class="btn btn-primary w-100">
+                                                        <i class="fa fa-save me-2"></i>
+                                                        ATUALIZAR PARECER REVISOR
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    <?php else: ?>
+                                        <!-- Visualização (outros avaliadores) -->
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <h5 class="text-secondary">
+                                                    <i class="fa fa-user-shield me-2"></i>
+                                                    Parecer Revisor Nº <?= $contadorRevisora ?>
+                                                    <span class="badge bg-primary">
+                                                        <i class="fa fa-eye me-1"></i> Somente leitura
+                                                    </span>
+                                                </h5>
+                                                <p class="text-muted mb-20">
+                                                    <i class="fa fa-calendar me-1"></i>
+                                                    Análise realizada em <?= trata_data_hora($parecer['data_avaliacao']) ?>
+                                                    por <?= $parecer['graduacao_avaliador'] . ' ' . $parecer['nome_avaliador'] ?>
+                                                </p>
+                                            </div>
+                                        </div>
 
-                        <!-- Justificativa Revisora -->
-                        <div class="mb-20">
-                            <label for="justificativa" class="form-label">Justificativa do Parecer</label>
-                            <textarea
-                                name="justificativa"
-                                id="justificativa"
-                                class="form-control"
-                                rows="4"
-                                disabled><?php if ($parecer['justificativa'] != null) echo $parecer['justificativa']; ?></textarea>
-                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 mb-20">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="fa fa-edit me-1"></i>
+                                                    Justificativa do Parecer Revisor
+                                                </label>
+                                                <textarea class="form-control" rows="4" disabled><?= htmlspecialchars($parecer['justificativa'] ?? '') ?></textarea>
+                                            </div>
 
-                        <!-- Resultado da autodeclaração Revisora -->
-                        <div class="mb-20">
-                            <label for="resultado" class="form-label">Autodeclaração</label>
-                            <input
-                                name="resultado"
-                                id="resultado"
-                                class="form-control"
-                                value="<?php if ($parecer['parecer'] == 'confirmada') {
-                                            echo ('Confirmada');
-                                        } elseif ($parecer['parecer'] == 'nao_confirmada') {
-                                            echo ('Não Confirmada');
-                                        } elseif ($parecer['parecer'] == 'nao_compareceu') {
-                                            echo ('Não compareceu');
-                                        } ?>"
-                                disabled>
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="fa fa-balance-scale me-1"></i>
+                                                    Resultado da Autodeclaração
+                                                </label>
+                                                <?php
+                                                $resultado_text = '';
+                                                if ($parecer['parecer'] == 'confirmada') $resultado_text = 'Confirmada';
+                                                elseif ($parecer['parecer'] == 'nao_confirmada') $resultado_text = 'Não Confirmada';
+                                                elseif ($parecer['parecer'] == 'nao_compareceu') $resultado_text = 'Não compareceu';
+
+                                                $resultado_class = 'secondary';
+                                                if ($parecer['parecer'] == 'confirmada') $resultado_class = 'success';
+                                                elseif ($parecer['parecer'] == 'nao_confirmada') $resultado_class = 'danger';
+                                                elseif ($parecer['parecer'] == 'nao_compareceu') $resultado_class = 'warning';
+                                                ?>
+                                                <div class="form-control" disabled>
+                                                    <span class="badge bg-<?= $resultado_class ?> fs-6"><?= $resultado_text ?></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <?php if ($contadorRevisora < count($pareceresFase2)): ?>
+                                    <hr class="my-4">
+                                <?php endif; ?>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-12 mb-40 mt-20" style="height: 1px; border-bottom: 1px solid #ccc;"></div>
-            <?php endforeach; ?>
-        </div>
-
-        <!-- Resultado Final Revisora -->
-        <div class="row" <?php if ($totalFase2 < 3) echo ('hidden'); ?>>
-            <div class="col-md-12">
-                <legend>
-                    <h4>
-                        Resultado Final Comissão Revisora: <?php echo (get_parecer_final_heteroidentificacao($id_usuario, $pareceres, 2)); ?>
-                    </h4>
-                </legend>
             </div>
-        </div>
 
-        <!-- Inserir avaliação Revisora -->
-        <div class="card p-4" <?php if ($bloquearInclusaoRevisora || $_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'cr') echo ('hidden'); ?>>
-            <div class="row">
-                <div class="col-md-12">
-                    <form action="../banco_dados/candidato_heteroidentificacao.php" method="post" class="row" aria-labelledby="titulo-heteroidentificacao">
-                        <input hidden type="text" value="<?php echo $id_usuario; ?>" name="id_candidato">
-                        <input value="<?php echo $cpf; ?>" maxlength="50" name="cpf_candidato" hidden>
-                        <input value="2" name="fase" hidden>
-                        <fieldset class="col-md-12">
-                            <legend id="titulo-heteroidentificacao" class="mb-4">Inserir Parecer Comissão Revisora</legend>
-
-                            <!-- Justificativa -->
-                            <div class="mb-20">
-                                <label for="justificativa" class="form-label">Justificativa do Parecer</label>
-                                <textarea
-                                    name="justificativa"
-                                    id="justificativa"
-                                    class="form-control"
-                                    rows="4"
-                                    placeholder="Digite a justificativa para seu parecer aqui..."
-                                    required></textarea>
+            <!-- Resultado Final Revisora -->
+            <?php if ($totalFase2 >= 3): ?>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-bar-chart fa-2x mr-10"></i>
+                                <div>
+                                    <h5 class="mb-0">Resultado Final da Comissão Revisora</h5>
+                                    <p class="mb-0 fs-5 fw-bold"><?= get_parecer_final_heteroidentificacao($id_usuario, $pareceres, 2) ?></p>
+                                </div>
                             </div>
-
-                            <!-- Resultado da autodeclaração -->
-                            <div class="mb-20">
-                                <label for="parecer" class="form-label">Autodeclaração</label>
-                                <select name="parecer" id="parecer" class="form-control" required>
-                                    <option value="">Selecione uma opção</option>
-                                    <option value="confirmada">Confirmada</option>
-                                    <option value="nao_confirmada">Não confirmada</option>
-                                    <option value="nao_compareceu">Não compareceu</option>
-                                </select>
-                            </div>
-
-                            <!-- Botão -->
-                            <div>
-                                <button type="submit" class="btn btn-primary col-md-12">
-                                    Salvar
-                                </button>
-                            </div>
-                        </fieldset>
-                    </form>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
+
+            <!-- Formulário Inserir Novo Parecer Revisor -->
+            <?php if (!$bloquearInclusaoRevisora && ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'cr')): ?>
+                <div class="card border-warning mt-4">
+                    <div class="card-header bg-warning text-dark mb-20">
+                        <span class="mb-0">
+                            <i class="fa fa-plus-circle me-2"></i>
+                            Inserir Novo Parecer Revisor
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <form action="../banco_dados/candidato_heteroidentificacao.php" method="post">
+                            <input type="hidden" name="id_candidato" value="<?= $id_usuario ?>">
+                            <input type="hidden" name="cpf_candidato" value="<?= $cpf ?>">
+                            <input type="hidden" name="fase" value="2">
+
+                            <div class="row">
+                                <div class="col-md-12 mb-20">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fa fa-edit me-1"></i>
+                                        Justificativa do Parecer Revisor
+                                    </label>
+                                    <textarea name="justificativa" class="form-control" rows="4" placeholder="Digite a justificativa para seu parecer revisor aqui..." required></textarea>
+                                </div>
+
+                                <div class="col-md-12 mb-20">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fa fa-balance-scale me-1"></i>
+                                        Resultado da Autodeclaração
+                                    </label>
+                                    <select name="parecer" class="form-control" required>
+                                        <option value="">Selecione uma opção</option>
+                                        <option value="confirmada">Confirmada</option>
+                                        <option value="nao_confirmada">Não confirmada</option>
+                                        <option value="nao_compareceu">Não compareceu</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary w-100 py-2 text-dark">
+                                        <i class="fa fa-save me-2"></i>
+                                        SALVAR PARECER REVISOR
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
