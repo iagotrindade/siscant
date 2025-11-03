@@ -15,66 +15,70 @@ if ($_SESSION['perfil'] == "avaliador") {
 }
 ?>
 
-<div class="card" <?php if (isset($_SESSION['eipot']) == 1) echo " hidden "; ?>>
-    <a name="calcular_data"></a>
-    <div class="row" <?php if ($_SESSION['selecao_regiao'] != 3) echo ' hidden ' ?>>
-        <div class="col-md-12">
-            <legend>Calculadora rápida de meses </legend>
-        </div>
-
-        <form action="<?php echo 'usuario_visualiza.php?=' . $id_usuario . '#calcular_data' ?>" method="GET">
-            <div class="col-md-4">
-                <label>Data de início</label>
-                <input id="data_inicio_calcular" name="data_inicio_calcular" onblur="calcula_data()" maxlength="120" class="form-control">
-            </div>
-            <div class="col-md-4">
-                <label>Data de Fim</label>
-                <input id="data_fim_calcular" name="data_fim_calcular" onblur="calcula_data()" maxlength="120" class="form-control">
-            </div>
-            <div class="col-md-4">
-                <br>
-                <p id='diferenca_datas'><b>
-                        <legend>Diferença em Meses: </legend>
-                    </b></p>
-            </div>
-        </form>
+<!-- Calculadora de Datas -->
+<div class="card dashboard-card mb-4" <?= isset($_SESSION['eipot']) == 1 ? "hidden" : "" ?>>
+    <div class="card-header dashboard-header mb-20">
+        <span class="card-title mb-0">
+            <i class="fa fa-calculator me-2"></i>
+            Calculadora Rápida de Datas
+        </span>
     </div>
-    <a name="calcula_data_dias"></a>
-    <div class="row" <?php if ($_SESSION['selecao_regiao'] == 3) echo ' hidden ' ?>>
-        <div class="col-md-12">
-            <legend>Calculadora rápida de Dias </legend>
+    <div class="card-body">
+        <!-- Calculadora de Meses -->
+        <div class="row" <?= $_SESSION['selecao_regiao'] != 3 ? 'hidden' : '' ?>>
+            <form action="<?= 'usuario_visualiza.php?=' . $id_usuario . '#calcular_data' ?>" method="GET">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">Data de Início</label>
+                    <input id="data_inicio_calcular" name="data_inicio_calcular" onblur="calcula_data()" maxlength="120" class="form-control" placeholder="DD/MM/AAAA">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">Data de Fim</label>
+                    <input id="data_fim_calcular" name="data_fim_calcular" onblur="calcula_data()" maxlength="120" class="form-control" placeholder="DD/MM/AAAA">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">Resultado</label>
+                    <div class="form-control bg-light">
+                        <p id='diferenca_datas' class="mb-0 fw-bold text-primary">Diferença em Meses: </p>
+                    </div>
+                </div>
+            </form>
         </div>
 
-        <form action="<?php echo 'usuario_visualiza.php?=' . $id_usuario . '#calcula_data_dias' ?>" method="GET">
-            <div class="col-md-4">
-                <label>Data de início</label>
-                <input id="data_inicio_calcular_dias" name="data_inicio_calcular_dias" onblur="calcula_data_dias()" maxlength="120" class="form-control">
+        <!-- Calculadora de Dias -->
+        <a name="calcula_data_dias"></a>
+        <div class="row" <?= $_SESSION['selecao_regiao'] == 3 ? 'hidden' : '' ?>>
+            <div class="col-md-12 mb-3">
+                <h5 class="text-primary">
+                    <i class="fa fa-calendar-day me-2"></i>
+                    Calculadora de Dias
+                </h5>
             </div>
-            <div class="col-md-4">
-                <label>Data de Fim</label>
-                <input id="data_fim_calcular_dias" name="data_fim_calcular_dias" onblur="calcula_data_dias()" maxlength="120" class="form-control">
-            </div>
-            <div class="col-md-4">
-                <br>
-                <p id='diferenca_datas_dias'><b>
-                        <legend>Diferença em dias: </legend>
-                    </b></p>
-            </div>
-        </form>
+            <form action="<?= 'usuario_visualiza.php?=' . $id_usuario . '#calcula_data_dias' ?>" method="GET">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">Data de Início</label>
+                    <input id="data_inicio_calcular_dias" name="data_inicio_calcular_dias" onblur="calcula_data_dias()" maxlength="120" class="form-control" placeholder="DD/MM/AAAA">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">Data de Fim</label>
+                    <input id="data_fim_calcular_dias" name="data_fim_calcular_dias" onblur="calcula_data_dias()" maxlength="120" class="form-control" placeholder="DD/MM/AAAA">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-semibold">Resultado</label>
+                    <div class="form-control bg-light">
+                        <p id='diferenca_datas_dias' class="mb-0 fw-bold text-primary">Diferença em Dias: </p>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <?php
-
 $inscricoes = $conexao->get_especialidade_candidato($id_usuario);
 
 foreach ($inscricoes as $valor) {
-
-    //echo "Especialidade: " . mb_strtoupper($valor['ott_stt'], "UTF-8") . " " .$valor['especialidade'] . "<br>";
     $id_candidato_x_especialidade = null;
-
     $resultado_verificacao = $conexao->verifica_especialidade_candidato($id_usuario, $valor['id_especialidade']);
-
 
     if (count($resultado_verificacao) > 0) {
         $id_candidato_x_especialidade = $resultado_verificacao[0]['id_candidato_x_especialidade'];
@@ -86,8 +90,6 @@ foreach ($inscricoes as $valor) {
         $concorrendo_especialidade          = $resultado_verificacao[0]['concorrendo'];
         $justificativa_especialidade        = $resultado_verificacao[0]['justificativa'];
         $id_usuario_alterou_concorrendo_especialidade     = $resultado_verificacao[0]['id_usuario_alterou_concorrendo'];
-
-
         $nota_prova_teorico_pratico     = (float)$resultado_verificacao[0]['nota_prova_teorico_pratico'];
         $prova_pratica_musica           = (float)$resultado_verificacao[0]['prova_pratica_musica'];
         $prova_teorica_musica           = (float)$resultado_verificacao[0]['prova_teorica_musica'];
@@ -95,16 +97,14 @@ foreach ($inscricoes as $valor) {
         $usuario_avaliou_provas_musica  = $resultado_verificacao[0]['usuario_avaliou_provas_musica'];
     }
 
-
     if ($id_candidato_x_especialidade != null)
-        ////////////// CIDADES CADASTRADAS
         $lista_cidades = $conexao->get_prioridade_especialidade_candidato($id_candidato_x_especialidade);
 
     $cor_fundo = "info";
     $texto_nao_concorrendo_especialidade = "";
     if (!$concorrendo_especialidade) {
         $cor_fundo = "laranja";
-        $texto_nao_concorrendo_especialidade = "<font color = 'red'>NÃO CONCORRENDO</font>";
+        $texto_nao_concorrendo_especialidade = "<span class='badge bg-danger'>NÃO CONCORRENDO</span>";
     }
 
     echo '<a name=avaliacao_id_' . $id_especialidade . '></a>';
@@ -118,508 +118,532 @@ foreach ($inscricoes as $valor) {
                 $avaliador_pode_avaliar_id_especialidade = true;
         }
     }
-
 ?>
-    <div class="card" <?php if (isset($avaliador_pode_avaliar_id_especialidade) && !$avaliador_pode_avaliar_id_especialidade) echo "hidden" ?>>
-        <legend <?php if (isset($_SESSION['eipot']) == 1) echo " hidden "; ?>>Especialidade: <?php echo " <u><a href='relatorio_especialidade_candidato.php?id_especialidade=" . $valor['id_especialidade'] . "'>" . mb_strtoupper($valor['ott_stt'], "UTF-8") . " - " . $valor['especialidade'] . " - " . $valor['data_habilitacao'] . "</a></u> $texto_nao_concorrendo_especialidade<br>"; ?></u></legend>
-        <div class="card-body ">
+    <!-- Card da Especialidade -->
+    <div class="card dashboard-card mb-20" <?= isset($avaliador_pode_avaliar_id_especialidade) && !$avaliador_pode_avaliar_id_especialidade ? "hidden" : "" ?>>
+        <div class="card-header dashboard-header d-flex justify-content-between align-items-center mb-20">
+            <span class="card-title mb-0">
+                <i class="fa fa-graduation-cap me-2"></i>
+                Especialidade: <?= mb_strtoupper($valor['ott_stt'], "UTF-8") . " - " . $valor['especialidade'] . " - " . $valor['data_habilitacao'] ?>
+                <?= $texto_nao_concorrendo_especialidade ?>
+            </span>
+            <a href='relatorio_especialidade_candidato.php?id_especialidade=<?= $valor['id_especialidade'] ?>'
+                class="btn btn-success btn-sm"
+                data-bs-toggle="tooltip"
+                title="Ver relatório completo">
+                <i class="fa fa-bar-chart me-1"></i> VER ESPECIALIDADE
+            </a>
+        </div>
 
-            <?php
-            if ($selecao_libera_prioridade_candidato == '1') {
-                echo '<label> Prioridades de cidades selecionadas para essa especialidade:</label>';
+        <div class="card-body">
+            <!-- Prioridades de Cidades -->
+            <?php if ($selecao_libera_prioridade_candidato == '1'): ?>
+                <div class="alert alert-info mb-20">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-map-marker fa-2x mr-10"></i>
+                        <div>
+                            <strong>Prioridades de cidades selecionadas:</strong>
+                            <div class="mt-2">
+                                <?php foreach ($lista_cidades as $linha): ?>
+                                    <span class="badge bg-primary me-2 mb-2">
+                                        <?= $linha['prioridade'] ?>ª <?= $linha['nome'] ?>
+                                    </span>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-                foreach ($lista_cidades as $linha) {
-                    echo " " . $linha['prioridade'] . "ª " . " " . $linha['nome'] . " | ";
-                }
-                echo "<br><br>";
-            }
-            ?>
+            <!-- Tabela de Documentos -->
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="25%"><i class="fa fa-file-text"></i> Nome do Arquivo</th>
+                            <th width="10%"><i class="fa fa-calendar"></i> Data Início</th>
+                            <th width="10%"><i class="fa fa-calendar"></i> Data Fim</th>
+                            <th width="15%"><i class="fa fa-file-text"></i> Resumo do PDF</th>
+                            <th width="8%"><i class="fa fa-times"></i> Multiplicar</th>
+                            <th width="12%"><i class="fa fa-comment"></i> Justificativa</th>
+                            <th width="10%"><i class="fa fa-thumbs-up"></i> Avaliar Doc</th>
+                            <th width="5%"><i class="fa fa-trophy"></i> Pts</th>
+                            <th width="5%"><i class="fa fa-user"></i> Avaliação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($id_especialidade != null) {
+                            $lista_curriculo_adicionado = $conexao->get_curriculos_inseridos_candidato($id_usuario, $id_especialidade);
+                            $pontuacao_total = 0;
 
-            <table class="table table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nome do arquivo</th>
-                        <th>Data Início</th>
-                        <th>Data Fim</th>
-                        <th>Resumo do PDF</th>
-                        <th>Multiplicar</th>
-                        <th>Justificativa</th>
-                        <th>Avaliar Doc</th>
-                        <th>Pts</th>
-                        <th>Avaliação</th>
-                    </tr>
-                </thead>
-                <tbody>
+                            foreach ($lista_curriculo_adicionado as $linha) {
+                                $validado = null;
+                                $pontuacao = null;
 
-                    <?php
-
-                    if ($id_especialidade != null) {
-                        $lista_curriculo_adicionado = $conexao->get_curriculos_inseridos_candidato($id_usuario, $id_especialidade);
-                        $pontuacao_total = 0;
-
-                        foreach ($lista_curriculo_adicionado as $linha) {
-                            $validado = null;
-                            $pontuacao = null;
-
-                            if ($linha['pontuacao'] != null && $linha['pontuacao'] > 0) {
-                                if ($linha['valido'] == '1') {
-                                    $pontuacao = $linha['pontuacao'] / 1000;
-
-                                    $multi = (int)$linha['multiplicador'];
-                                    if ($multi > 1)
-                                        $pontuacao = $pontuacao * $multi;
-
-                                    $pontuacao_total = $pontuacao_total + $pontuacao;
+                                if ($linha['pontuacao'] != null && $linha['pontuacao'] > 0) {
+                                    if ($linha['valido'] == '1') {
+                                        $pontuacao = $linha['pontuacao'] / 1000;
+                                        $multi = (int)$linha['multiplicador'];
+                                        if ($multi > 1)
+                                            $pontuacao = $pontuacao * $multi;
+                                        $pontuacao_total = $pontuacao_total + $pontuacao;
+                                    }
                                 }
-                            }
 
-                            $usuario_avaliou = $conexao->get_usuario_id($linha['usuario_avaliou']);
-                            $foto = "<a href='usuario_visualiza.php?id_usuario=" . $linha['usuario_avaliou'] . "'><img class='img-circle' src='fotos/user.jpg' width='40px'></a>";
-                            if (count($usuario_avaliou) > 0) {
-                                $get_foto = $conexao->get_foto_usuario($usuario_avaliou[0]['id']);
-                                if (count($get_foto) > 0) {
-                                    $foto = $get_foto[0]['nome'];
-                                    $foto = "<a href='usuario_visualiza.php?id_usuario=" . $linha['usuario_avaliou'] . "'><img class='img-circle' src='fotos/$foto' width='40px'></a>";
+                                $usuario_avaliou = $conexao->get_usuario_id($linha['usuario_avaliou']);
+                                $foto = "<a href='usuario_visualiza.php?id_usuario=" . $linha['usuario_avaliou'] . "' class='d-inline-block' data-bs-toggle='tooltip' title='Visualizar avaliador'><img class='img-circle rounded-circle border' src='fotos/user.jpg' width='40' height='40' style='object-fit: cover;'></a>";
+                                if (count($usuario_avaliou) > 0) {
+                                    $get_foto = $conexao->get_foto_usuario($usuario_avaliou[0]['id']);
+                                    if (count($get_foto) > 0) {
+                                        $foto = $get_foto[0]['nome'];
+                                        $foto = "<a href='usuario_visualiza.php?id_usuario=" . $linha['usuario_avaliou'] . "' class='d-inline-block' data-bs-toggle='tooltip' title='Visualizar avaliador'><img class='img-circle rounded-circle border' src='fotos/$foto' width='40' height='40' style='object-fit: cover;'></a>";
+                                    }
                                 }
-                            }
 
-                            if ($linha['valido'] == '0')
-                                $validado = "<img  src='imagens/no_like.jpg' width='40px'>" . $foto;
-                            if ($linha['valido'] == '1')
-                                $validado = "<img  src='imagens/like.jpg' width='40px'>" . $foto;
+                                if ($linha['valido'] == '0')
+                                    $validado = "<span class='badge bg-danger me-2 mr-10'  style='font-size: 18px; border-radius: 360px !important; padding: 10px'><i class='fa fa-thumbs-down'></i></span>" . $foto;
+                                if ($linha['valido'] == '1')
+                                    $validado = "<span class='badge bg-primary me-2 mr-10'  style='font-size: 18px; border-radius: 360px !important; padding: 10px;'><i class='fa fa-thumbs-up'></i></span>" . $foto;
 
+                                $crip = hash('sha256', $_SESSION['chave'] . "freitas" . $linha['id_especialidade_curriculo']);
+                                $dt_inicio = $linha['data_inicio'] != null ? trata_data($linha['data_inicio']) : null;
+                                $dt_fim = $linha['data_termino'] != null ? trata_data($linha['data_termino']) : null;
+                                $justificativa = $linha['justificativa'];
+                        ?>
+                                <tr>
+                                    <td>
+                                        <a href="baixaPDF.php?codigo=cand_esp_aval&nome_arquivo=<?= $linha['nome'] ?>" target="_blank" class="text-decoration-none">
+                                            <i class="fa fa-file-pdf me-1 text-danger"></i>
+                                            <?= htmlspecialchars($linha['nome_curriculo']) ?>
+                                        </a>
+                                    </td>
+                                    <td><?= $dt_inicio ?></td>
+                                    <td><?= $dt_fim ?></td>
+                                    <td><?= htmlspecialchars($linha['carga_horaria']) ?></td>
 
-                            $crip = hash('sha256', $_SESSION['chave'] . "freitas" . $linha['id_especialidade_curriculo']);
-
-                            $dt_inicio = null;
-                            if ($linha['data_inicio'] != null)
-                                $dt_inicio = trata_data($linha['data_inicio']);
-
-                            $dt_fim = null;
-                            if ($linha['data_termino'] != null)
-                                $dt_fim = trata_data($linha['data_termino']);
-
-                            $justificativa = $linha['justificativa'];
-
-                            echo '
-                                    <tr>
-                                        <td style="width:30%;"><a href="baixaPDF.php?codigo=cand_esp_aval&nome_arquivo=' . $linha['nome'] . '" target="_blank">' . $linha['nome_curriculo'] . '</a></td>
-                                        <td>' . $dt_inicio . '</td>
-                                        <td>' . $dt_fim . '</td>
-                                        <td>' . $linha['carga_horaria'] . '</td>
-
-                                        <form action="../banco_dados/valida_curriculo.php" method="post">
+                                    <form action="../banco_dados/valida_curriculo.php" method="post">
                                         <td>
-                                            <select class="form-control" name="multiplicador" ';
-                            if ($linha['multiplicacao'] != '1') echo ' disabled  >';
-                            for ($i = 0; $i <= $linha['quantidade_multiplicacao']; $i++) {
-                                echo '<option';
-                                if ($linha['multiplicador'] == $i) echo " selected ";
-                                echo ' value="' . $i . '"> ' . $i . ' </option>';
-                            }
-                            echo '
+                                            <select class="form-control form-control-sm" name="multiplicador" <?= $linha['multiplicacao'] != '1' ? 'disabled' : '' ?>>
+                                                <?php for ($i = 0; $i <= $linha['quantidade_multiplicacao']; $i++): ?>
+                                                    <option value="<?= $i ?>" <?= $linha['multiplicador'] == $i ? 'selected' : '' ?>>
+                                                        <?= $i ?>
+                                                    </option>
+                                                <?php endfor; ?>
                                             </select>
                                         </td>
-                                        <td><textarea style="width:100%;" name="justificativa">' . $justificativa . '</textarea></td>
                                         <td>
-                                                <input hidden type="text" value="' . $id_usuario . '" name="id_usuario">
-                                                <input hidden type="text" value="' . $id_especialidade . '" name="id_especialidade">
-                                                <input hidden type="text" value="' . $crip . '" name="criptografia">
-                                                <input hidden type="text" value="' . $linha['id_especialidade_curriculo'] . '" name="id_especialidade_curriculo">
-                                                <input hidden type="text" value="' . $linha['id_curriculo'] . '" name="id_curriculo">
-
-                                                <select name="valido" class="form-control" onchange="submit()" >
-                                                  <option selected value=""></option> 
-                                                  <option value="1">VÁLIDO</option> 
-                                                  <option value="0">INVÁLIDO</option>
-                                                </select>
-
+                                            <textarea class="form-control form-control-sm" name="justificativa" rows="2" style="width:100%;"><?= htmlspecialchars($justificativa) ?></textarea>
                                         </td>
-                                            
-                                        </form>
+                                        <td>
+                                            <input type="hidden" value="<?= $id_usuario ?>" name="id_usuario">
+                                            <input type="hidden" value="<?= $id_especialidade ?>" name="id_especialidade">
+                                            <input type="hidden" value="<?= $crip ?>" name="criptografia">
+                                            <input type="hidden" value="<?= $linha['id_especialidade_curriculo'] ?>" name="id_especialidade_curriculo">
+                                            <input type="hidden" value="<?= $linha['id_curriculo'] ?>" name="id_curriculo">
 
-                                        <td>' . $pontuacao . '</td>
-                                        <td>' . $validado . '</td>
-                                    </tr>';
-                        }
-                    }
-                    ?>
+                                            <select name="valido" class="form-control form-control-sm" onchange="submit()">
+                                                <option value="">Selecionar</option>
+                                                <option value="1">VÁLIDO</option>
+                                                <option value="0">INVÁLIDO</option>
+                                            </select>
+                                        </td>
+                                    </form>
 
-                </tbody>
-            </table>
-        </div>
-
-        <?php
-
-        $somatorio_total_pontos_musica = (((($prova_teorica_musica * 2) + ($prova_pratica_musica * 2) + $prova_oral_musica) / 5) + $pontuacao_total) / 2;
-
-        //$prova_pratica_musica = number_format($prova_pratica_musica, 2);
-
-        if ($prova_pratica_musica < 10)
-            $prova_pratica_musica = "0" . $prova_pratica_musica . "00";
-        else
-            $prova_pratica_musica = number_format($prova_pratica_musica, 2);
-
-
-        if ($prova_oral_musica < 10)
-            $prova_oral_musica = "0" . $prova_oral_musica . "00";
-        else
-            $prova_oral_musica = number_format($prova_oral_musica, 2);
-
-
-        if ($prova_teorica_musica < 10)
-            $prova_teorica_musica = "0" . $prova_teorica_musica . "00";
-        else
-            $prova_teorica_musica = number_format($prova_teorica_musica, 2);
-
-
-        //if($valor['musica'] == '1' && count($lista_curriculo_adicionado) > 0) Verifica se tem pelo menos um currículo
-        if ($valor['musica'] == '1') {
-            $foto_html = null;
-            if ($usuario_avaliou_provas_musica > 0) {
-                $foto_avaliador_musica = $conexao->get_foto_usuario($usuario_avaliou_provas_musica);
-
-                if (count($foto_avaliador_musica) > 0)
-                    $foto_html = "<a href='usuario_visualiza.php?id_usuario=" . $usuario_avaliou_provas_musica . "'><img class='img-circle' src='fotos/" . $foto_avaliador_musica[0]['nome'] . "' width='40px'></a>";
-                else
-                    $foto_html = "<a href='usuario_visualiza.php?id_usuario=" . $usuario_avaliou_provas_musica . "'><img class='img-circle' src='fotos/user.jpg' width='40px'></a>";
-            }
-            $crip_musica = hash('sha256', $_SESSION['chave'] . "freitas");
-
-
-
-            echo '
-                    <div class="alert alert-info">
-
-                        <form action="../banco_dados/prova_musica_salvar.php" method="post">
-                        <input hidden type="text" value="' . $id_usuario . '" name="id_usuario">
-                        <input hidden type="text" value="' . $id_especialidade . '" name="id_especialidade">
-                        <input hidden type="text" value="' . $crip_musica . '" name="criptografia">
-                        <input hidden type="text" value="' . $linha['id_especialidade_curriculo'] . '" name="id_especialidade_curriculo">
-                        <input hidden type="text" value="' . $id_candidato_x_especialidade . '" name="id_candidato_x_especialidade">
-
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <b>Pontuação da Prova Escrita:</b><br>
-                                <input type="text"value="' . $prova_teorica_musica . '"  name="pontuacao_teorica">
-                            </div>
-                            <div class="col-lg-3">
-                                <b>Pontuação da Prova Oral:</b><br>
-                                <input type="text" value="' . $prova_oral_musica . '" name="pontuacao_oral">
-                            </div>
-                            <div class="col-lg-3">
-                                <b>Pontuação da Prova Prática:</b><br>
-                                <input type="text" value="' . $prova_pratica_musica . '" name="pontuacao_pratica">
-                            </div>
-                            <div class="col-lg-3">
-                                 ' . $foto_html . ' 
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <button type="submit" class="btn btn-primary btn-block">SALVAR PONTUAÇÃO DAS PROVAS</button>
-                            </div>
-                        </div>
-                        </form>
-                    </div>';
-        }
-
-        ?>
-
-        <a name='concorrendo_especialidade_id_<?php echo $id_especialidade ?>'></a>
-        <table border='1' style="width: 100%">
-            <tbody>
-                <tr>
-                    <td>
-                        <b><?= $_SESSION['selecao_codigo'] == "cet" ? 'SOMATÓRIO DOS PONTOS (APÓS TESTES DE CONHECIMENTOS)' : 'SOMATÓRIO DOS PONTOS' ?></b>
-
-                    </td>
-
-                    <td><b>
-                            <?php
-                            if (!empty($valor['musica'])) {
-                                // Caso música: exibe a soma dos pontos de música
-                                echo number_format((float)$somatorio_total_pontos_musica, 2, '.', '');
-                            } elseif (!empty($_SESSION['selecao_codigo']) && $_SESSION['selecao_codigo'] === 'cet') {
-                                // Fórmula correta: (2 × prova + currículo) / 3
-                                $nota_calculada = (((float)$nota_prova_teorico_pratico * 2) + (float)$pontuacao_total) / 3;
-                                echo number_format($nota_calculada, 2, '.', '');
-                            } else {
-                                // Demais casos
-                                $total = (float)$pontuacao_total + (float)$nota_prova_teorico_pratico;
-                                echo number_format($total, 2, '.', '');
-                            }
-                            ?>
-                        </b>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <?php if ($valor['teste_pratico'] == 1) echo ' <br><br><br>   '; ?>
-
-        <div class="alert alert-warning" <?php if ($valor['teste_pratico'] == 0) echo ' hidden '; ?>>
-            <div class="row">
-                <form method="post" action="../banco_dados/nota_teorico_pratica.php" enctype="multipart/form-data">
-
-                    <?php
-                    $id_cand_esp = $conexao->get_id_candidato_x_especialidade($id_usuario, $id_especialidade);
-                    echo ' 
-                            <input hidden type="text" value="' . $id_usuario . '" name="id_usuario">
-                            <input hidden type="text" value="' . $crip . '" name="criptografia">
-                            <input hidden type="text" value="' . $id_especialidade . '" name="id_especialidade">
-                            <input hidden type="text" value="' . $linha['id_especialidade_curriculo'] . '" name="id_especialidade_curriculo">
-                            <input hidden type="text" value="' . $id_cand_esp[0]['id'] . '" name="id_candidato_x_especialidade">
-                        '; ?>
-                    <div class="col-md-4">
-
+                                    <td class="text-center">
+                                        <span class="badge bg-primary"><?= $pontuacao ?></span>
+                                    </td>
+                                    <td class="d-flex text-center"><?= $validado ?></td>
+                                </tr>
                         <?php
-                        $nota = (float) $nota_prova_teorico_pratico;
-
-                        // Formata com duas casas decimais, ponto como separador
-                        $nota_formatada = number_format($nota, 2, '.', '');
-
-                        // Adiciona zero à esquerda se for menor que 10
-                        if ($nota < 10) {
-                            $nota_formatada = '0' . $nota_formatada;
+                            }
                         }
                         ?>
-
-                        <label>Adicionar pontuação do teste Teórico/Prático</label>
-                        <input
-                            name="pontuacao_teorico_pratica"
-                            value="<?= htmlspecialchars($nota_formatada, ENT_QUOTES, 'UTF-8') ?>"
-                            class="form-control">
-                    </div>
-                    <div class="col-md-8">
-                        <br>
-                        <input type="submit" class="btn btn-primary btn-block" value="Adicionar Nota" />
-                    </div>
-                </form>
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-        <div class="row">
-            <?php if ($_SESSION['perfil'] == 'admin' && $_SESSION['selecao_regiao'] == 6 || $_SESSION['codigo'] == 'cet'): ?>>
-            <div class="col-md-12">
+            <!-- Somatório de Pontos -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="alert alert-success">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-bar-chart fa-2x mr-10"></i>
+                            <div>
+                                <h5 class="mb-0">
+                                    <?= $_SESSION['selecao_codigo'] == "cet" ? 'SOMATÓRIO DOS PONTOS (APÓS TESTES DE CONHECIMENTOS)' : 'SOMATÓRIO DOS PONTOS' ?>
+                                </h5>
+                                <p class="mb-0 fs-4" style="font-weight: 600;">
+                                    <?php
+                                    if (!empty($valor['musica'])) {
+                                        echo number_format((float)$somatorio_total_pontos_musica, 2, '.', '');
+                                    } elseif (!empty($_SESSION['selecao_codigo']) && $_SESSION['selecao_codigo'] === 'cet') {
+                                        $nota_calculada = (((float)$nota_prova_teorico_pratico * 2) + (float)$pontuacao_total) / 3;
+                                        echo number_format($nota_calculada, 2, '.', '');
+                                    } else {
+                                        $total = (float)$pontuacao_total + (float)$nota_prova_teorico_pratico;
+                                        echo number_format($total, 2, '.', '');
+                                    }
+                                    ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção de Música -->
+            <?php if ($valor['musica'] == '1'): ?>
+                <?php
+
+                $avaliador = $conexao->get_usuario_id($usuario_avaliou_provas_musica);
+                $foto_html = null;
+                if ($usuario_avaliou_provas_musica > 0) {
+                    $foto_avaliador_musica = $conexao->get_foto_usuario($usuario_avaliou_provas_musica);
+                    if (count($foto_avaliador_musica) > 0)
+                        $foto_html = "<a href='usuario_visualiza.php?id_usuario=" . $usuario_avaliou_provas_musica . "' class='d-inline-block' data-bs-toggle='tooltip' title='Visualizar avaliador'><img class='img-circle rounded-circle border' src='fotos/" . $foto_avaliador_musica[0]['nome'] . "' width='50' height='50' style='object-fit: cover;'></a>";
+                    else
+                        $foto_html = "<a href='usuario_visualiza.php?id_usuario=" . $usuario_avaliou_provas_musica . "' class='d-inline-block' data-bs-toggle='tooltip' title='Visualizar avaliador'><img class='img-circle rounded-circle border' src='fotos/user.jpg' width='50' height='50' style='object-fit: cover;'></a>";
+                }
+                $crip_musica = hash('sha256', $_SESSION['chave'] . "freitas");
+                ?>
                 <div class="alert alert-info">
-                    <legend>Adicionar currículo para o candidato na especialidade<u><?php echo mb_strtoupper($valor['ott_stt'], "UTF-8") . " - " . $valor['especialidade'] ?></u></legend>
+                    <div class="card border-info">
+                        <div class="card-header bg-info text-white mb-20">
+                            <span class="mb-0">
+                                <i class="fa fa-music me-2"></i>
+                                Avaliação de Provas - Especialidade Musical
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <form action="../banco_dados/prova_musica_salvar.php" method="post">
+                                <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
+                                <input type="hidden" name="id_especialidade" value="<?= $id_especialidade ?>">
+                                <input type="hidden" name="criptografia" value="<?= $crip_musica ?>">
+                                <input type="hidden" name="id_especialidade_curriculo" value="<?= $linha['id_especialidade_curriculo'] ?>">
+                                <input type="hidden" name="id_candidato_x_especialidade" value="<?= $id_candidato_x_especialidade ?>">
 
-                    <form method="post" action="arquivo_upload_operador_candidato.php" enctype="multipart/form-data">
-                        <input hidden name="user" value="<?php echo $id_especialidade ?>">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>
-                                        <font color="red"> *Máximo 5 MegaBytes no formato PDF</font>
+                                <div class="row">
+                                    <div class="col-lg-3 mb-20">
+                                        <label class="form-label fw-semibold"><i class="fa fa-pencil"></i> Prova Escrita</label>
+                                        <input type="text" value="<?= $prova_teorica_musica ?>" name="pontuacao_teorica" class="form-control">
+                                    </div>
+                                    <div class="col-lg-3 mb-20">
+                                        <label class="form-label fw-semibold"><i class="fa fa-pencil"></i> Prova Oral</label>
+                                        <input type="text" value="<?= $prova_oral_musica ?>" name="pontuacao_oral" class="form-control">
+                                    </div>
+                                    <div class="col-lg-3 mb-20">
+                                        <label class="form-label fw-semibold"><i class="fa fa-pencil"></i> Prova Prática</label>
+                                        <input type="text" value="<?= $prova_pratica_musica ?>" name="pontuacao_pratica" class="form-control">
+                                    </div>
+                                    <div class="col-lg-3 mb-20 d-flex flex-column align-items-center justify-content-end">
+                                        <?= $foto_html ?>
+                                        <?= $avaliador[0]['posto_grad'] ?>
+                                        <?= $avaliador[0]['nome_guerra'] ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary w-100 py-2">
+                                            <i class="fa fa-save me-2"></i>
+                                            SALVAR PONTUAÇÃO DAS PROVAS
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Teste Teórico/Prático -->
+            <?php if ($valor['teste_pratico'] == 1): ?>
+                <div class="alert alert-warning">
+                    <div class="card border-warning">
+                        <div class="card-header bg-warning text-dark mb-20">
+                            <span class="mb-0">
+                                <i class="fa fa-flask me-2"></i>
+                                Teste Teórico/Prático
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="../banco_dados/nota_teorico_pratica.php" enctype="multipart/form-data">
+                                <?php
+                                $id_cand_esp = $conexao->get_id_candidato_x_especialidade($id_usuario, $id_especialidade);
+                                $nota = (float) $nota_prova_teorico_pratico;
+                                $nota_formatada = number_format($nota, 2, '.', '');
+                                if ($nota < 10) {
+                                    $nota_formatada = '0' . $nota_formatada;
+                                }
+                                ?>
+                                <input type="hidden" value="<?= $id_usuario ?>" name="id_usuario">
+                                <input type="hidden" value="<?= $crip ?>" name="criptografia">
+                                <input type="hidden" value="<?= $id_especialidade ?>" name="id_especialidade">
+                                <input type="hidden" value="<?= $linha['id_especialidade_curriculo'] ?>" name="id_especialidade_curriculo">
+                                <input type="hidden" value="<?= $id_cand_esp[0]['id'] ?>" name="id_candidato_x_especialidade">
+
+                                <div class="row">
+                                    <div class="col-md-12 mb-20">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fa fa-edit me-1"></i>
+                                            Pontuação do Teste Teórico/Prático
+                                        </label>
+                                        <input name="pontuacao_teorico_pratica"
+                                            value="<?= htmlspecialchars($nota_formatada, ENT_QUOTES, 'UTF-8') ?>"
+                                            class="form-control"
+                                            placeholder="Digite a pontuação">
+                                    </div>
+                                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100 py-2">
+                                            <i class="fa fa-save me-2"></i>
+                                            SALVAR NOTA
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Adicionar Currículo (Admin) -->
+            <?php if ($_SESSION['perfil'] == 'admin' && ($_SESSION['selecao_regiao'] == 6 || $_SESSION['codigo'] == 'cet')): ?>
+                <div class="card border-primary mt-4">
+                    <div class="card-header bg-primary text-white mb-20">
+                        <span class="mb-0">
+                            <i class="fa fa-plus-circle me-2"></i>
+                            Adicionar Currículo para o Candidato
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="arquivo_upload_operador_candidato.php" enctype="multipart/form-data">
+                            <input type="hidden" name="user" value="<?= $id_especialidade ?>">
+                            <input type="hidden" name="id_candidato" value="<?= $id_usuario ?>">
+                            <input type="hidden" name="crip" value="<?= hash('sha256', $_SESSION['id_usuario'] . $_SESSION['chave']) ?>">
+
+                            <div class="row">
+                                <div class="col-md-12 mb-20">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fa fa-file-pdf-o me-1"></i>
+                                        Selecione o Currículo
                                     </label>
-
-                                    <select name="id_curriculo" class="form-control">
+                                    <select name="id_curriculo" class="form-control" required>
                                         <option value="">Selecione o arquivo a ser adicionado</option>
                                         <?php
                                         $lista_curriculos = $conexao->get_curriculo_cadastrados();
                                         foreach ($lista_curriculos as $linha) {
-                                            //if($linha['id'] == 42)
-                                            echo '<option value="' . $linha['id'] . '">' . $linha['nome'] . ' </option>';
-
-                                            /*
-                                                    if($linha['id'] == 20)
-                                                        echo '<option value="'.$linha['id'].'">'.$linha['nome'].' </option>';
-                                                    
-                                                    if($linha['id'] == 32)
-                                                        echo '<option value="'.$linha['id'].'">'.$linha['nome'].' </option>';
-                                                    
-                                                    if($linha['id'] == 33)
-                                                        echo '<option value="'.$linha['id'].'">'.$linha['nome'].' </option>';
-                                                    
-                                                    if($linha['id'] == 34)
-                                                        echo '<option value="'.$linha['id'].'">'.$linha['nome'].' </option>';
-                                                    
-                                                    if($linha['id'] == 35)
-                                                        echo '<option value="'.$linha['id'].'">'.$linha['nome'].' </option>';
-                                                    
-                                                    if($linha['id'] == 21 && $valor['ott_stt'] == "stt")
-                                                        echo '<option value="'.$linha['id'].'">'.$linha['nome'].' </option>';
-                                                    
-                                                    if($linha['id'] == 36 && $id_especialidade == 7)
-                                                        echo '<option value="'.$linha['id'].'">'.$linha['nome'].' </option>';
-                                                    */
+                                            echo '<option value="' . $linha['id'] . '">' . htmlspecialchars($linha['nome']) . '</option>';
                                         }
                                         ?>
                                     </select>
+                                    <small class="text-muted">
+                                        <i class="fa fa-info-circle me-1"></i>
+                                        Máximo 5MB, formato PDF
+                                    </small>
                                 </div>
-                            </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Data de Início</label>
-                                    <input id="nome" name="data_inicio" maxlength="120" class="form-control">
+                                <div class="col-md-4 mb-20">
+                                    <label class="form-label fw-semibold"><i class="fa fa-calendar"></i> Data de Início</label>
+                                    <input type="text" name="data_inicio" class="form-control">
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Data de Finalização</label>
-                                    <input id="nome" name="data_fim" maxlength="120" class="form-control">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold"><i class="fa fa-calendar"></i> Data de Finalização</label>
+                                    <input type="text" name="data_fim" class="form-control">
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Carga Horária</label>
-                                    <input id="carga_horaria" name="carga_horaria" maxlength="120" class="form-control">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold"><i class="fa fa-clock-o"></i> Carga Horária</label>
+                                    <input name="carga_horaria" class="form-control" placeholder="Horas totais">
                                 </div>
-                            </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <br> <input type="file" name="arquivo" />
-                                </div>
-                            </div>
-
-                            <input hidden type="text" name="id_candidato" value="<?php echo $id_usuario ?>">
-                            <input hidden type="text" name="crip" value="<?php echo hash('sha256', $_SESSION['id_usuario'] . $_SESSION['chave']) ?>">
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input type="submit" class="btn btn-primary btn-block" value="Enviar Arquivo" />
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        <?php endif; ?>
-        </div>
-
-        <div <?php if ($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "avaliador") echo " hidden " ?> class="alert alert-info">
-            <legend>Concorrendo/Não concorrendo na especialidade <?php echo mb_strtoupper($valor['ott_stt'], "UTF-8") . " - " . $valor['especialidade'] ?></legend>
-            <div class="row">
-                <div class="col-md-6">
-                    <form action="../banco_dados/candidato_concorrendo_especialidade.php" method="post">
-                        <input hidden name="criptografia" value="<?php echo  hash('sha256', $_SESSION['chave'] . $id_usuario . "freitas"); ?>">
-                        <input hidden name="id_usuario" value="<?php echo $id_usuario ?>">
-                        <input hidden name="id_candidato_x_especialidade" value="<?php echo $id_candidato_x_especialidade ?>">
-                        <input hidden name="id_especialidade" value="<?php echo $id_especialidade ?>">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="animated-checkbox form-group">
-                                    <label>
-                                        <input <?php if ($concorrendo_especialidade) echo "checked" ?> type="checkbox" name="concorrendo">
-                                        <span class="label-text">Candidato concorrendo no especialidade</span>
+                                <div class="col-md-12 mb-20">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fa fa-paperclip me-1"></i>
+                                        Selecionar Arquivo
                                     </label>
+                                    <input type="file" name="arquivo" class="form-control" accept=".pdf" required>
                                 </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <label> Justificativa da mudança </label><br>
-                                <textarea name="justificativa" style="width: 100%"></textarea>
-                            </div>
-                        </div>
-                        <br>
-                        <div <?php if ($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "avaliador") echo "hidden" ?> class="row">
-                            <div class="col-lg-12">
-                                <button type="submit" class="btn btn-primary btn-block">SALVAR</button>
-                            </div>
-                        </div>
-                    </form>
 
-                </div>
-
-                <div <?php if ($justificativa_especialidade == null) echo "hidden" ?>>
-                    <?php
-
-                    $get_foto = $conexao->get_foto_usuario($id_usuario_alterou_concorrendo_especialidade);
-                    if ($id_usuario_alterou_concorrendo_especialidade != null)
-                        $foto = "<a href='usuario_visualiza.php?id_usuario=" . $id_usuario_alterou_concorrendo_especialidade . "'><img class='img-circle' src='fotos/user.jpg' width='40px'></a>";
-                    if (count($get_foto) > 0)
-                        $foto = "<a href='usuario_visualiza.php?id_usuario=" . $id_usuario_alterou_concorrendo_especialidade . "'><img class='img-circle' src='fotos/" . $get_foto[0]['nome'] . "' width='40px'></a>";
-
-                    ?>
-
-                    <div class="col-md-6">
-                        <div <?php if (!$concorrendo_especialidade) echo "hidden" ?> class="alert alert-success">
-                            <b>CONCORRENDO nesta especialidade!
-                                <br><br>
-                                Justificativa:</b> <?php echo $justificativa_especialidade . " - " . $foto ?>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div <?php if ($concorrendo_especialidade) echo "hidden" ?> class="alert alert-danger">
-                            <b>ELIMINADO desta especialidade!
-                                <br><br>
-                                Justificativa:</b> <?php echo $justificativa_especialidade . " - " . $foto ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="col-md-12" <?php if ($_SESSION['perfil'] != 'admin') echo "hidden" ?>>
-                        <form action="../banco_dados/candidato_especialidade_etapa_atualiza.php" method="post">
-                            <input hidden name="criptografia" value="<?php echo  hash('sha256', $_SESSION['chave'] . $id_usuario . "freitas"); ?>">
-                            <input hidden name="id_usuario" value="<?php echo $id_usuario ?>">
-                            <input hidden name="id_especialidade" value="<?php echo $valor['id_especialidade'] ?>">
-                            <input hidden name="etapa_atual" value="<?php echo $valor['etapa'] ?>">
-                            <input hidden name="nome_especialidade" value="<?php echo $valor['especialidade'] ?>">
-
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="animated-checkbox form-group">
-                                        <label>Selecione a ETAPA do candidato na especialidade</label>
-                                        <select name="etapa_especialidade" class="form-control">
-                                            <option value="">Selecione a opção</option>
-                                            <option <?php if ($valor['etapa'] == 1) echo 'selected' ?> value="1">Etapa I</option>
-                                            <option <?php if ($valor['etapa'] == 2) echo 'selected' ?> value="2">Etapa II</option>
-                                            <option <?php if ($valor['etapa'] == 3) echo 'selected' ?> value="3">Etapa III</option>
-                                            <option <?php if ($valor['etapa'] == 4) echo 'selected' ?> value="4">Etapa IV</option>
-                                            <option <?php if ($valor['etapa'] == 5) echo 'selected' ?> value="5">Etapa V</option>
-                                            <option <?php if ($valor['etapa'] == 6) echo 'selected' ?> value="6">Etapa VI</option>
-                                            <option <?php if ($valor['etapa'] == 7) echo 'selected' ?> value="7">Etapa VII</option>
-                                            <option <?php if ($valor['etapa'] == 8) echo "selected" ?> value="8">Etapa VIII</option>
-                                            <option <?php if ($valor['etapa'] == 9) echo "selected" ?> value="9">Etapa IX</option>
-                                            <option <?php if ($valor['etapa'] == 10) echo "selected" ?>value="10">Etapa X</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary btn-block">SALVAR</button>
+                                <div class="col-md-4 mb-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100 py-2">
+                                        <i class="fa fa-upload me-2"></i>
+                                        ENVIAR ARQUIVO
+                                    </button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
+            <?php endif; ?>
 
-                <div class="col-md-6"
-                    <?php
-                    //if($etapa < 4 || !$concorrendo_especialidade) 
-                    echo " hidden ";
-                    ?>>
-                    <form action="../banco_dados/candidato_altera_cidade_vai_servir.php" method="post">
-                        <div class="form-group">
-                            <label>Cidade onde o candidato escolheu servir</label>
-                            <select name="cidade_candidato" class="form-control">
+            <!-- Gerenciamento da Especialidade -->
+            <?php if ($_SESSION['perfil'] != "admin" && $_SESSION['perfil'] != "avaliador") echo " hidden "; ?>
+            <div class="card border-secondary">
+                <div class="card-header bg-secondary text-white mb-20">
+                    <span class="mb-0">
+                        <i class="fa fa-cogs me-2"></i>
+                        Gerenciamento da Especialidade
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Concorrência na Especialidade -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header mb-20">
+                                    <span class="mb-0">
+                                        <i class="fa fa-flag me-2"></i>
+                                        Concorrendo/Desclassificado
+                                    </span>
+                                </div>
 
-                                <option value="">CIDADE NÃO ESCOLHIDA</option>
-                                <?php
-                                $lista_cidades = $conexao->get_cidades_especialidade($valor['id_especialidade']);
-                                foreach ($lista_cidades as $linha_cidade) {
-                                    if ($valor['cidade_escolheu_servir'] == $linha_cidade['id'])
-                                        echo "<option selected value='" . $linha_cidade['id'] . "'>" . $linha_cidade['nome'] . "</option>";
-                                    else
-                                        echo "<option value='" . $linha_cidade['id'] . "'>" . $linha_cidade['nome'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                            <input name="id_especialidade_servir" hidden value='<?php echo $valor['id_especialidade']; ?>'>
-                            <input name="c_p_f_candidato_servir" hidden value='<?php echo $cpf; ?>'>
-                            <input name="id_candidato_servir" hidden value='<?php echo $id_usuario; ?>'>
-                            <button type="submit" class="btn btn-primary btn-block">SALVAR</button>
+                                <!-- Alertas de Status -->
+                                <?php if ($justificativa_especialidade != null): ?>
+                                    <?php
+                                    $get_foto = $conexao->get_foto_usuario($id_usuario_alterou_concorrendo_especialidade);
+                                    if ($id_usuario_alterou_concorrendo_especialidade != null)
+                                        $foto = "<a href='usuario_visualiza.php?id_usuario=" . $id_usuario_alterou_concorrendo_especialidade . "' class='d-inline-block' data-bs-toggle='tooltip' title='Visualizar usuário'><img class='img-circle rounded-circle border' src='fotos/user.jpg' width='40' height='40' style='object-fit: cover;'></a>";
+                                    if (count($get_foto) > 0)
+                                        $foto = "<a href='usuario_visualiza.php?id_usuario=" . $id_usuario_alterou_concorrendo_especialidade . "' class='d-inline-block' data-bs-toggle='tooltip' title='Visualizar usuário'><img class='img-circle rounded-circle border' src='fotos/" . $get_foto[0]['nome'] . "' width='40' height='40' style='object-fit: cover;'></a>";
+                                    ?>
+
+                                    <?php if (!$concorrendo_especialidade): ?>
+                                        <div class="alert alert-danger d-flex align-items-center">
+                                            <i class="fa fa-times-circle fa-2x mr-10"></i>
+                                            <div class="flex-grow-1">
+                                                <strong>ELIMINADO desta especialidade!</strong><br>
+                                                <span class="text-muted"><?= htmlspecialchars($justificativa_especialidade) ?></span>
+                                            </div>
+                                            <div class="ms-3">
+                                                <?= $foto ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($concorrendo_especialidade): ?>
+                                        <div class="alert alert-success d-flex align-items-center">
+                                            <i class="fa fa-check-circle fa-2x mr-10"></i>
+                                            <div class="flex-grow-1">
+                                                <strong>CONCORRENDO nesta especialidade!</strong><br>
+                                                <span class="text-muted"><?= htmlspecialchars($justificativa_especialidade) ?></span>
+                                            </div>
+                                            <div class="ms-3">
+                                                <?= $foto ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+
+                                <div class="card-body">
+                                    <form action="../banco_dados/candidato_concorrendo_especialidade.php" method="post">
+                                        <input type="hidden" name="criptografia" value="<?= hash('sha256', $_SESSION['chave'] . $id_usuario . "freitas") ?>">
+                                        <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
+                                        <input type="hidden" name="id_candidato_x_especialidade" value="<?= $id_candidato_x_especialidade ?>">
+                                        <input type="hidden" name="id_especialidade" value="<?= $id_especialidade ?>">
+
+                                        <div class="mb-10">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" name="concorrendo" id="concorrendo_<?= $id_especialidade ?>" <?= $concorrendo_especialidade ? 'checked' : '' ?>>
+                                                <label class="form-check-label fw-semibold" for="concorrendo_<?= $id_especialidade ?>">
+                                                    Candidato concorrendo na especialidade
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-20">
+                                            <label class="form-label fw-semibold"><i class="fa fa-comment-o"></i> Justificativa</label>
+                                            <textarea name="justificativa" class="form-control" rows="3" placeholder="Digite a justificativa para a mudança de status"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fa fa-save me-2"></i>
+                                            SALVAR STATUS
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+
+                        <!-- Etapa e Cidade de Serviço -->
+                        <div class="col-md-6">
+                            <!-- Etapa da Especialidade -->
+                            <?php if ($_SESSION['perfil'] == 'admin'): ?>
+                                <div class="card mb-4">
+                                    <div class="card-header mb-20">
+                                        <span class="mb-0">
+                                            <i class="fa fa-list-ol me-2"></i>
+                                            Etapa da Especialidade
+                                        </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="../banco_dados/candidato_especialidade_etapa_atualiza.php" method="post">
+                                            <input type="hidden" name="criptografia" value="<?= hash('sha256', $_SESSION['chave'] . $id_usuario . "freitas") ?>">
+                                            <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
+                                            <input type="hidden" name="id_especialidade" value="<?= $valor['id_especialidade'] ?>">
+                                            <input type="hidden" name="etapa_atual" value="<?= $valor['etapa'] ?>">
+                                            <input type="hidden" name="nome_especialidade" value="<?= $valor['especialidade'] ?>">
+
+                                            <div class="mb-10">
+                                                <label class="form-label fw-semibold"> <i class="fa fa-list-ol me-2"></i> Etapa do Candidato</label>
+                                                <select name="etapa_especialidade" class="form-control" required>
+                                                    <option value="">Selecione a etapa</option>
+                                                    <?php for ($i = 1; $i <= 10; $i++): ?>
+                                                        <option value="<?= $i ?>" <?= $valor['etapa'] == $i ? 'selected' : '' ?>>
+                                                            Etapa <?= $i ?>
+                                                        </option>
+                                                    <?php endfor; ?>
+                                                </select>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="fa fa-save me-2"></i>
+                                                SALVAR ETAPA
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Cidade de Serviço -->
+                             <?php if($etapa >= 4 && $concorrendo_especialidade): ?>
+                                <div class="card">
+                                    <div class="card-header mb-20">
+                                        <span class="mb-0">
+                                            <i class="fa fa-map-marker me-2"></i>
+                                            Guarnição EST/EBST
+                                        </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="../banco_dados/candidato_altera_cidade_vai_servir.php" method="post">
+                                            <div class="mb-20">
+                                                <label class="form-label fw-semibold"><i class="fa fa-map-marker"></i> Cidade Escolhida</label>
+                                                <select name="cidade_candidato" class="form-control" required>
+                                                    <option value="">CIDADE NÃO ESCOLHIDA</option>
+                                                    <?php
+                                                    $lista_cidades = $conexao->get_cidades_especialidade($valor['id_especialidade']);
+                                                    foreach ($lista_cidades as $linha_cidade) {
+                                                        $selected = $valor['cidade_escolheu_servir'] == $linha_cidade['id'] ? 'selected' : '';
+                                                        echo "<option value='" . $linha_cidade['id'] . "' $selected>" . htmlspecialchars($linha_cidade['nome']) . "</option>";
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+
+                                            <input type="hidden" name="id_especialidade_servir" value='<?= $valor['id_especialidade'] ?>'>
+                                            <input type="hidden" name="c_p_f_candidato_servir" value='<?= $cpf ?>'>
+                                            <input type="hidden" name="id_candidato_servir" value='<?= $id_usuario ?>'>
+
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="fa fa-save me-2"></i>
+                                                SALVAR CIDADE
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            <?php endif;?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-<?php
-}
+<?php } ?>

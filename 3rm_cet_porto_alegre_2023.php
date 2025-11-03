@@ -14,6 +14,7 @@ $string = "selecao_cet_1035_2022";
 $codigo_criptografar = $rand.time().$string;
 $codigo_chave = substr(md5( $codigo_criptografar) ,0,6);
 $_SESSION['chave'] = $codigo_chave;
+$_SESSION['codigo'] = "cet";
 
 // Mudar essas variaveis
 $_SESSION['nome_arquivo'] = "3rm_cet_porto_alegre_2023.php";

@@ -11,23 +11,22 @@ if(!isset($_GET['data_inicio']) || !isset($_GET['data_fim']))
 
 if($_GET['data_inicio'] ==  "__/__/____"  || $_GET['data_fim'] ==  "__/__/____" || $_GET['data_fim'] == '' || $_GET['data_inicio'] == '')
 {
-    echo '<p id="diferenca_datas"><b><legend>Diferença em Meses: </legend></b></p>';
+    echo '<p id="diferenca_datas" class="mb-0 fw-bold text-primary">Diferença em meses: </p>';
     exit();
 }
-
 
 $data_inicio = $_GET['data_inicio'];
 $data_fim = $_GET['data_fim'];
 
 if(!valida_data($data_inicio))
 {
-    echo '<p id="diferenca_datas"><b><legend>Data de Início inválida! </legend></b></p>';
+    echo '<p id="diferenca_datas" class="mb-0 fw-bold text-primary">Data inicial inválida: </p>';
     exit();
 }
 
 if(!valida_data($data_fim))
 {
-    echo '<p id="diferenca_datas"><b><legend>Data de Fim inválida!</legend></b></p>';
+    echo '<p id="diferenca_datas" class="mb-0 fw-bold text-primary">Data final inválida: </p>';
     exit();
 }
 
@@ -55,4 +54,4 @@ $total_meses = round($total_meses,2);
 
 ?>
 
-<p id='diferenca_datas'><b><legend>Diferença em Meses: <?php echo $total_meses ?> </legend> </b></p>
+<p id='diferenca_datas' class="mb-0 fw-bold text-primary"><?php echo $total_meses ?> </p>

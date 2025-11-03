@@ -311,7 +311,7 @@ $especialidade_medico = false;
                             class="btn btn-success btn-sm"
                             data-bs-toggle="tooltip"
                             title="Exportar para Excel">
-                            <i class="fa fa-file-excel me-1"></i>Exportar
+                            <i class="fa fa-file-excel-o me-1"></i> Exportar
                         </a>
                     <?php endif; ?>
                 </div>

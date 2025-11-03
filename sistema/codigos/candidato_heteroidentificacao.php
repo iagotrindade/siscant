@@ -46,7 +46,7 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
                     class="btn btn-success btn-sm"
                     data-bs-toggle="tooltip"
                     title="Baixar Relatório de Pareceres">
-                    <i class="fa fa-file-pdf me-1"></i>GERAR ATA
+                    <i class="fa fa-file-pdf-o me-1"></i> GERAR ATA
                 </a>
             </div>
         </div>
@@ -269,7 +269,7 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
                     class="btn btn-sm btn-success"
                     data-bs-toggle="tooltip"
                     title="Baixar Relatório de Pareceres Revisores">
-                    <i class="fa fa-file-pdf me-1"></i>GERAR ATA
+                    <i class="fa fa-file-pdf-o me-1"></i> GERAR ATA
                 </a>
             </div>
         </div>
