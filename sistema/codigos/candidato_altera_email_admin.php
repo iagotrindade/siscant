@@ -38,7 +38,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == '1') {
                 <!-- E-mail Atual -->
                 <div class="col-md-6 mb-20">
                     <label class="form-label fw-semibold">
-                        <i class="fa fa-envelope me-1"></i>
+                        <i class="fa fa-envelope me-1"></i> E-mail anterior
                     </label>
                     <input type="text"
                         name="email"

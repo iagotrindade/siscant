@@ -43,7 +43,7 @@ if ($data_abertura != null && !valida_data($_POST['data_abertura'])) {
     exit();
 }
 
-$cpf_candidato = $_POST['c_p_f_candidato'];
+$cpf_candidato = $_POST['cpf_candidato'];
 $id_candidato = $_POST['id_candidato'];
 $cidade_isgrec = $_POST['cidade_isgrec'];
 
