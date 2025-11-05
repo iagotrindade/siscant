@@ -17,7 +17,6 @@ if ($_GET['criptografia'] != hash('sha256', $id_email)) {
 
 $get_email_id = $conexao->get_email_id($id_email);
 
-
 $nome_completo = null;
 $mail = null;
 $mensagem = null;
@@ -852,7 +851,7 @@ if ($data_enviado != null)
                         <?php endif; ?>
                     </div>
 
-                    <form action="../banco_dados/enviar_email.php" method="POST" id="suporte" enctype="multipart/form-data">
+                    <form action="../banco_dados/responder_email.php" method="POST" id="suporte" enctype="multipart/form-data">
                         <input hidden type="text" name='criptografia' value="<?= $criptografia ?>">
                         <input hidden type="text" name='id_email' value="<?= $id_email ?>">
 

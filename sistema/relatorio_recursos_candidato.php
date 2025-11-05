@@ -14,6 +14,12 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
 
 ?>
 
+<style>
+    .bg-danger {
+        background-color: #DC143C !important;
+    }
+</style>
+
 <div class="content-wrapper">
     <div class="page-title">
         <div>
@@ -115,14 +121,8 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                     } else {
                                         $status_final_class = 'warning';
                                     }
-
-                                    // Cor de fundo para desclassificados
-                                    $bg_color = '';
-                                    if ($linha['concorrendo'] == 0) {
-                                        $bg_color = 'bg-danger text-white';
-                                    }
                                 ?>
-                                    <tr class="<?= $bg_color ?>">
+                                    <tr>
                                         <!-- Foto -->
                                         <td class="text-center">
                                             <a href="usuario_visualiza.php?id_usuario=<?= $linha['id_candidato'] ?>"
@@ -148,6 +148,12 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SES
                                         <!-- Nome -->
                                         <td>
                                             <span class="fw-medium"><?= htmlspecialchars($linha['nome_completo']) ?></span>
+
+                                            <?php if ($linha['concorrendo'] == 0): ?>
+                                                <span class="status-final-badge badge bg-danger">
+                                                    <i class="fa fa-info-circle"></i> DESCLASSIFICADO
+                                                </span>
+                                            <?php endif; ?>
                                         </td>
 
                                         <!-- Etapa -->

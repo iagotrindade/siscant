@@ -551,13 +551,13 @@ $lista_especialidades = $conexao->get_especialidade();
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_1" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga a relação dos candidatos inscritos, por ordem de classificação nas especialidades para OFICIAL TÉCNICO TEMPORÁRIO (OTT) e SARGENTO TÉCNICO TEMPORÁRIO (STT), conforme anexo "A" (Calendário Geral de Atividades), do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
+                                    <textarea name="paragrafo_1" placeholder="1º Parágrafo do relatório" class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_2" placeholder="3º Parágrafo do relatório" class="form-control" rows="3">O período para interposição de Recursos da Etapa II será no dia XX de agosto de 20XX das 0930h às 1130h e das 1300h às 1630h e no dia XX de agosto de 20XX das 0930h às 1130h, na Comissão de Seleção Especial - Rua dos Andradas 551, Centro Histórico, Porto Alegre. O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial, não serão aceitos recursos entregues fora do prazo ou no local errado.</textarea>
+                                    <textarea name="paragrafo_2" placeholder="3º Parágrafo do relatório" class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
 
@@ -1452,6 +1452,133 @@ $lista_especialidades = $conexao->get_especialidade();
                             </div>
                         </form>
                     </div>
+                </div>
+
+                <!-- Convocação EAF -->
+                <div class="alert alert-info">
+                    <legend class="mb-3">
+                        Convocação para o Exame de Aptidão Física (EAF)
+                        <img src="imagens/pdf.png" height="30px">
+                    </legend>
+
+                    <div class="alert alert-danger mb-3">
+                        <h6 class="text-info mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                        <ul class="requisitos-list text-info">
+                            <li>A publicação irá considerar somente os candidatos que estão CONCORRENDO na Etapa IV</li>
+                            <li>Passar o SISCANT para Etapa IV</li>
+                        </ul>
+                    </div>
+
+                    <form action="mpdf/relatorio_convocacao_et_4.php" method="POST">
+                        <input name="tipo_relatorio" type="hidden" value="classificacao">
+                        <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                        <input name="etapa" type="hidden" value="<?php echo ($etapa_atual); ?>">
+                        <input name="orientacao" type="hidden" value="retrato">
+                        <input name="tipo_especialdiade" type="hidden" value="todas">
+                        <input name="cabecalho" type="hidden" value="sim">
+
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="titulo_1" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="titulo_2" value="CONVOCAÇÃO PARA O EXAME DE APTIDÃO FÍSICA (EAF)" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="cidade_dt" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_1" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da 3ª Região Militar divulga a chamada dos candidatos selecionados para a Etapa IV – EXAME DE APTIDÃO FÍSICA, conforme anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_2" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">Informo que será ELIMINADO o candidato CONVOCADO que NÃO COMPARECER à Etapa IV.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_3" placeholder="3º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">Todos os candidatos deverão utilizar trajes desportivos para realização dos exames de aptidão física.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_4" placeholder="4º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">O candidato deverá apresentar, obrigatoriamente, documento de identificação com foto e atestado médico emitido por profissional da área de cardiologia, inscrito no CRM, assinado e carimbado, com data de até 20 (vinte) dias antes do início da Etapa IV, atestando que o candidato está apto a realizar o EAF. A não entrega de atestado médico, quando da apresentação do candidato, conforme acima descrito, inviabiliza sua participação no EAF, tendo por objetivo preservar sua saúde.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_5" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">A presente relação NÃO está em ordem de classificação.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <label>Texto Grupo Um</label>
+                                    <textarea name="grupo_um_texto" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">XX NOV XX às 0700 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group" style="display: flex; flex-direction: column;">
+                                    <label class="form-label">Selecione as Especialidades (deixe em branco para todas):</label>
+                                    <select name="grupo_um_especialidades[]" class="form-control select2" style="width: 100%;" multiple>
+                                        <?php
+                                        $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
+                                        foreach ($lista_especialidades as $value) { ?>
+                                            <option value="<?php echo htmlspecialchars($value['id']); ?>"
+                                                <?php echo in_array($value['id'], $ids_selecionados) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($value['nome']); ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <label>Texto Grupo Dois</label>
+                                    <textarea name="grupo_um_texto" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">XX NOV XX às 1300 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group" style="display: flex; flex-direction: column;">
+                                    <label class="form-label">Selecione as Especialidades (deixe em branco para todas):</label>
+                                    <select name="grupo_dois_especialidades[]" class="form-control select2" style="width: 100%;" multiple>
+                                        <?php
+                                        $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
+                                        foreach ($lista_especialidades as $value) { ?>
+                                            <option value="<?php echo htmlspecialchars($value['id']); ?>"
+                                                <?php echo in_array($value['id'], $ids_selecionados) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($value['nome']); ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-file-export me-2"></i> GERAR
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

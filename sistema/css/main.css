@@ -2392,17 +2392,17 @@ output {
 
 .botao-ajuda {
   position: fixed;
-  bottom: 20px;
+  bottom: 70px;
   right: 20px;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background-color: var(--primary-color);
   color: white;
   border-radius: 50%;
   text-align: center;
-  line-height: 50px;
+  line-height: 40px;
   text-decoration: none;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
@@ -2417,6 +2417,36 @@ output {
 }
 
 .botao-ajuda:active {
+  transform: scale(0.95);
+}
+
+.botao-topo {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+  text-decoration: none;
+  font-size: 25px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.botao-topo:hover {
+  background-color: var(--secondary-color);
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.botao-topo:active {
   transform: scale(0.95);
 }
 
@@ -13054,7 +13084,8 @@ body.stop-scrolling {
   box-sizing: border-box;
   cursor: pointer;
   display: block;
-  min-height: 32px;
+  min-height: 46px;
+  
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;

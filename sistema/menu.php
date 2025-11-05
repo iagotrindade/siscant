@@ -282,6 +282,7 @@ foreach ($notificacoes as $notificacao) {
 </head>
 
 <body class="sidebar-mini fixed">
+    <a name="topo"></a>
     <div class="wrapper">
         <!-- Navbar-->
         <header class="main-header hidden-print">

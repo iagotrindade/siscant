@@ -54,166 +54,131 @@ try {
     $mail_envia->Subject = "SiSCanT - Suporte ao Candidato"; // Assunto da mensagem
 
     $mail_envia->Body = utf8_decode('        
-        <!DOCTYPE html>
-        <html lang="pt-BR">
         <head>
-            <meta charset="utf-8">
-            <title>Resposta - SiSCanT</title>
-            <!--[if mso]>
-            <style>
-                .container-table {
-                    width: 600px;
-                }
-                .header-cell {
-                    background-color: green !important;
-                }
-            </style>
-            <![endif]-->
-        </head>
-        <body style="margin: 0; padding: 20px; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif; line-height: 1.4;">
-            <center>
-                <table class="container-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <!-- Header -->
-                    <tr>
-                        <td class="header-cell" style="background-color: green; padding: 25px 20px; text-align: center; color: #ffffff;">
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                    <td style="text-align: center;">
-                                        <h1 style="font-size: 22px; margin: 0 0 5px 0; font-weight: bold;">RESPOSTA RECEBIDA</h1>
-                                        <p style="font-size: 14px; margin: 0; opacity: 0.9;">Sistema de Seleção de Candidatos Temporários</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    
-                    <!-- Content -->
-                    <tr>
-                        <td style="padding: 30px 25px;">
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <!-- Greeting -->
-                                <tr>
-                                    <td style="padding-bottom: 20px;">
-                                        <p style="font-size: 16px; color: #333333; margin: 0;">
-                                            Prezado(a) <strong>' . $nome_completo_requerente . '</strong>,
-                                        </p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- Intro -->
-                                <tr>
-                                    <td style="padding-bottom: 25px;">
-                                        <p style="font-size: 14px; color: #555555; margin: 0;">
-                                            Sua dúvida encaminhada através vai E-mail foi respondida.
-                                        </p>
-                                    </td>
-                                </tr>
-                                
-                                <!-- Message Box -->
-                                <tr>
-                                    <td style="padding-bottom: 25px;">
-                                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: green; border-left: 4px solid green; border-radius: 4px;">
-                                            <tr>
-                                                <td style="padding: 20px;">
-                                                    <!-- Data Envio -->
-                                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 15px;">
-                                                        <tr>
-                                                            <td width="120" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
-                                                                Data de Envio:
-                                                            </td>
-                                                            <td style="font-size: 14px; color: #555555;">
-                                                                ' . trata_data($data_enviado_requerente) . '
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                    
-                                                    <!-- Mensagem Enviada -->
-                                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
-                                                        <tr>
-                                                            <td width="120" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
-                                                                Mensagem Enviada:
-                                                            </td>
-                                                            <td style="font-size: 14px; color: #555555;">
-                                                                ' . $mensagem_requerente . '
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                    
-                                                    <!-- Divider -->
-                                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #dddddd;"></td>
-                                                        </tr>
-                                                    </table>
-                                                    
-                                                    <!-- Data Resposta -->
-                                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 15px;">
-                                                        <tr>
-                                                            <td width="120" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
-                                                                Data Resposta:
-                                                            </td>
-                                                            <td style="font-size: 14px; color: #555555;">
-                                                                ' . trata_data($datetime) . '
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                    
-                                                    <!-- Resposta -->
-                                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                                        <tr>
-                                                            <td width="120" style="font-size: 14px; color: green; font-weight: bold; vertical-align: top;">
+        <meta charset="utf-8">
+        <title>Resposta - SiSCanT</title>
+        <!--[if mso]>
+        <style>
+            .container-table {
+                width: 600px;
+            }
+            .header-cell {
+                background-color: green !important;
+            }
+        </style>
+        <![endif]-->
+    </head>
+    <body style="margin: 0; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif; line-height: 1.4;">
+        <center>
+            <table class="container-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <!-- Header -->
+                <tr>
+                    <td class="header-cell" style="background-color: green; padding: 25px 20px; text-align: center; color: #ffffff;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="text-align: center;">
+                                    <h1 style="font-size: 22px; margin: 0 0 5px 0; font-weight: bold;">RESPOSTA RECEBIDA</h1>
+                                    <p style="font-size: 14px; margin: 0; opacity: 0.9;">Sistema de Seleção de Candidatos Temporários</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <!-- Content -->
+                <tr>
+                    <td style="padding: 30px 25px;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <!-- Greeting -->
+                            <tr>
+                                <td style="padding-bottom: 20px;">
+                                    <p style="font-size: 16px; color: #333333; margin: 0;">
+                                        Prezado(a) <strong>' . $nome_completo_requerente . '</strong>,
+                                    </p>
+                                </td>
+                            </tr>
+                            
+                            <!-- Intro -->
+                            <tr>
+                                <td style="padding-bottom: 25px;">
+                                    <p style="font-size: 14px; color: #555555; margin: 0;">
+                                        Sua dúvida encaminhada via e-mail foi respondida.
+                                    </p>
+                                </td>
+                            </tr>
+                            
+                            <!-- Message Box -->
+                            <tr>
+                                <td style="padding-bottom: 25px;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #FFFFFF; border: 1px solid #e9ecef; border-radius: 4px;">
+                                        <tr>
+                                            <td style="padding: 20px;">
+                                                <!-- Título Resposta -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td>
+                                                            <p style="font-size: 13px; color: green; font-weight: bold;">
                                                                 Resposta:
-                                                            </td>
-                                                            <td style="font-size: 14px; color: #555555;">
-                                                                ' . $resposta . '
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                
-                                <!-- Warning -->
-                                <tr>
-                                    <td>
-                                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
-                                            <tr>
-                                                <td style="padding: 15px; text-align: center;">
-                                                    <p style="font-size: 13px; color: #856404; margin: 0;">
-                                                        <strong>IMPORTANTE:</strong> Não responda a este email, pois sua mensagem não será visualizada. 
-                                                        A comunicação deve ser feita exclusivamente através do SiSCanT.
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    
-                    <!-- Footer -->
-                    <tr>
-                        <td style="background-color: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e9ecef;">
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                    <td>
-                                        <p style="font-size: 13px; color: #6c757d; margin: 0;">
-                                            <strong style="color: green;">SiSCanT</strong><br>
-                                            Sistema de Seleção de Candidatos Temporários
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </center>
-        </body>
-        </html>
-        ');
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <!-- Conteúdo da Resposta -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td>
+                                                            <p style="font-size: 14px; color: #333333; line-height: 1.6; margin: 0; text-align: left;">
+                                                                ' . nl2br($resposta) . '
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <!-- Warning -->
+                            <tr>
+                                <td>
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+                                        <tr>
+                                            <td style="padding: 15px; text-align: center;">
+                                                <p style="font-size: 13px; color: #856404; margin: 0;">
+                                                    <strong>IMPORTANTE:</strong> Não responda a este email, pois sua mensagem não será visualizada. 
+                                                    A comunicação deve ser feita exclusivamente através do SiSCanT.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e9ecef;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td>
+                                    <p style="font-size: 13px; color: #6c757d; margin: 0;">
+                                        <strong style="color: green;">SiSCanT</strong><br>
+                                        Sistema de Seleção de Candidatos Temporários
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </body>
+    </html>
+    ');
     #Envio da Mensagem
     $mail_envia->SMTPDebug = 0;
     $enviado = $mail_envia->send(); // Envia o e-mail

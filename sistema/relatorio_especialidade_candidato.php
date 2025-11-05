@@ -327,7 +327,8 @@ $especialidade_medico = false;
                                     <th width="100px"><i class="fa fa-stethoscope"></i> Grupo IS</th>
                                     <th width="140px"><i class="fa fa-calendar"></i> Data Ex. Médico</th>
                                     <th width="120px"><i class="fa fa-pencil"></i> Nota Prova</th>
-                                    <th width="120px"><i class="fa fa-percent"></i> Progresso</th>
+                                    <th width="120px"><i class="fa fa-percent"></i> AV. Currículo
+                                </th>
                                     <th width="80px" class="text-center"><i class="fa fa-cogs"></i> Ações</th>
                                 </tr>
                             </thead>

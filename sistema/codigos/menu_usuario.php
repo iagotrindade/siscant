@@ -80,7 +80,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         <li <?php if ($_SESSION['selecao_codigo'] != 'mfdv') echo "hidden" ?> class="treeview"><a href="medicos_obrigatorios.php"><i class="fa fa-user-md"></i><span>Médicos Obrigatórios</span></a></li>
 
         <li <?php if (!isset($_SESSION['eipot']) || $perfil == "chc" || $perfil == "cr") echo "hidden" ?> class="treeview"><a href="eipot_etapa_III.php"><i class="fa fa-stethoscope"></i><?php if ($_SESSION['perfil'] == "jise") echo ('JISE');
-                                                                                                                                                                                            else echo ('Dados Cadastro IS - SIPMED') ?></a>                                                                                                                                                                                     
+                                                                                                                                                                                            else echo ('Dados Cadastro IS - SIPMED') ?></a>
         <li <?php if (!isset($_SESSION['eipot']) || $perfil != 'admin' && $perfil != 'consulta' && $perfil != 'chc' && $perfil != 'cr') echo "hidden" ?> class="treeview"><a href="eipot_etapa_v.php"><i class="fa fa-check-circle"></i><?php if ($_SESSION['perfil'] == "chc" || $_SESSION['perfil'] == "cr") echo ('Heteroidentificação');
                                                                                                                                                                                                                                         else echo ('Heteroidentificação') ?></a>
         <li <?php if (!isset($_SESSION['eipot']) || $perfil != "admin") echo " hidden " ?> class="treeview"><a href="candidato_lista_escolha_guarnicao_eipot.php"><i class="fa fa-map-pin"></i><span>Escolha de Guarnição </span></a></li>
@@ -89,11 +89,11 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </ul>
 </li>
 
-<?php if ($perfil == "jise"):?>
+<?php if ($perfil == "jise"): ?>
     <li>
         <a href="relatorio_etapa_III.php"><i class="fa fa-stethoscope"></i><span>Inspeção de Saúde</span></a>
     </li>
-<?php endif;?>
+<?php endif; ?>
 
 <!-- Esconde as Publicações do EIPOT caso a seleção não seja EIPOT -->
 <li <?php if ($perfil != "admin" || !isset($_SESSION['eipot'])) echo "hidden" ?> class="treeview">
@@ -130,7 +130,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </a>
 
     <ul class="treeview-menu">
-        <?php if(isset($_SESSION['eipot'])): ?>
+        <?php if (isset($_SESSION['eipot'])): ?>
             <li><a href="configuracoes_recursos.php"><i class="fa fa-file-text"></i><span>Recursos</span></a></li>
         <?php endif; ?>
 
@@ -152,6 +152,12 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </ul>
 </li>
 
-<a href="../ajuda.php" target="_blank" class="botao-ajuda" title="Precisa de Ajuda?">
-    <i class="fa fa-question"></i>
-</a>
+<div class="d-flex flex-column">
+    <a href="#topo" class="botao-ajuda" title="Precisa de Ajuda?">
+        <i class="fa fa-arrow-up"></i>
+    </a>
+
+    <a href="../ajuda.php" target="_blank" class="botao-topo" title="Precisa de Ajuda?">
+        <i class="fa fa-question"></i>
+    </a>
+</div>

@@ -195,20 +195,13 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                                 <select onchange="fomulario.submit()" name="id_especialidade" class="form-control form-select-lg">
                                     <option value="all">Todas</option>
                                     <?php
-                                    if ($avaliador) {
-                                        foreach ($lista_especialidade_avaliador as $value) {
-                                            $selected = $id_especialidade_selecionada == $value['id_especialidade'] ? 'selected' : '';
-                                            echo '<option ' . $selected . ' value="' . $value['id_especialidade'] . '">' .
-                                                mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . htmlspecialchars($value['nome']) . '</option>';
-                                        }
-                                    } else {
-                                        $resultado = $conexao->get_especialidade();
-                                        foreach ($resultado as $value) {
-                                            $selected = $id_especialidade_selecionada == $value['id'] ? 'selected' : '';
-                                            echo '<option ' . $selected . ' value="' . $value['id'] . '">' .
-                                                mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . htmlspecialchars($value['nome']) . '</option>';
-                                        }
+                                    $resultado = $conexao->get_especialidade();
+                                    foreach ($resultado as $value) {
+                                        $selected = $id_especialidade_selecionada == $value['id'] ? 'selected' : '';
+                                        echo '<option ' . $selected . ' value="' . $value['id'] . '">' .
+                                            mb_strtoupper($value['ott_stt'], "UTF-8") . " - " . htmlspecialchars($value['nome']) . '</option>';
                                     }
+
                                     ?>
                                 </select>
                             </div>
@@ -289,7 +282,14 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                             <?php endif; ?>
 
                             <?php foreach ($notificacoes as $notificacao) : ?>
-                                <div class="card mb-10 mx-3 mt-10">
+                                <?php
+                                if (isset($notificacao['id_especialidade'])) {
+                                    $especialidade = $conexao->get_especialidade_id($notificacao['id_especialidade']);
+
+                                    $especialidadeNome = mb_strtoupper($especialidade[0]['ott_stt'] . ' - ' . $especialidade[0]['nome']);
+                                }
+                                ?>
+                                <div class="card mb-10 mx-3 mt-20">
                                     <div class="card-body">
                                         <div class="mb-2" style="display: flex; justify-content: space-between; align-items: center;">
                                             <div class="mb-10">
@@ -297,7 +297,14 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
                                                 <span class="badge notification-badge" style="background-color: #228B22;">
                                                     Etapa: <?= $notificacao['etapa'] == 0 ? 'TODAS' : $notificacao['etapa'] ?>
                                                 </span>
+
+                                                <?php if ($notificacao['id_especialidade']) : ?>
+                                                    <span class="badge notification-badge" style="background-color: #228B22;">
+                                                        <?= $especialidadeNome ?>
+                                                    </span>
+                                                <?php endif; ?>
                                             </div>
+
                                             <a
                                                 class="btn btn-sm action-btn"
                                                 onclick="funcao_apagar('<?= $notificacao['id'] ?>', 'notificacao')">

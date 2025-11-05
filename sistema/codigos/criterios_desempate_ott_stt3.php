@@ -197,7 +197,7 @@
                         <th class="text-center"><i class="fa fa-shield"></i> Categoria</th>
                         <th class="text-center"><i class="fa fa-clock-o"></i> Dias SV</th>
                         <th class="text-center"><i class="fa fa-clock-o"></i> Dias Idade</th>
-                        <th class="text-center"><i class="fa fa-list"></i> Etapa</th>
+                        <th class="text-center"><i class="fa fa-list"></i> Etapa na Especialidade</th>
                         <th class="text-center"><i class="fa fa-info-circle"></i> Status</th>
                         <th class="text-center"><i class="fa fa-map-marker"></i> Cidade Escolhida</th>
                         <th class="text-center"><i class="fa fa-map-marker"></i> Cidade 1º Fase</th>

@@ -496,6 +496,68 @@ class Conexao
             return false;
         }
     }
+
+    public function insere_email_enviado(
+        $id_selecao,
+        $remetente,
+        $email_remetente,
+        $assunto,
+        $mensagem,
+        $data_envio,
+        $origem,
+        $id_usuario_enviou
+    ) {
+        try {
+            // Inicia a transação
+            $this->pdo->beginTransaction();
+
+            $sqlInsert = "
+            INSERT INTO emails 
+            (id_selecao, remetente, email_remetente, assunto, mensagem, origem, id_usuario_enviou, data_criacao)
+            VALUES 
+            (:id_selecao, :remetente, :email_remetente, :assunto, :mensagem, :origem, :id_usuario_enviou, :data_criacao)
+        ";
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(':id_selecao', $id_selecao, PDO::PARAM_INT);
+            $query->bindValue(':remetente', $remetente, PDO::PARAM_STR);
+            $query->bindValue(':email_remetente', $email_remetente, PDO::PARAM_STR);
+            $query->bindValue(':assunto', $assunto, PDO::PARAM_STR);
+            $query->bindValue(':mensagem', $mensagem, PDO::PARAM_STR);
+            $query->bindValue(':origem', $origem, PDO::PARAM_STR);
+            $query->bindValue(':id_usuario_enviou', $id_usuario_enviou, is_null($id_usuario_enviou) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+            $query->bindValue(':data_criacao', $data_envio, PDO::PARAM_STR);
+
+            if ($query->execute()) {
+                // Busca manual do último ID gerado na sessão atual
+                $stmt = $this->pdo->query("SELECT LAST_INSERT_ID()");
+                $id_adicionado = $stmt->fetchColumn();
+
+                // Finaliza a transação
+                $this->pdo->commit();
+
+                return [
+                    'id_adicionado'   => (int) $id_adicionado,
+                    'id_selecao'      => $id_selecao,
+                    'remetente'       => $remetente,
+                    'email_remetente' => $email_remetente,
+                    'assunto'         => $assunto,
+                    'mensagem'        => $mensagem,
+                    'origem'          => $origem,
+                    'id_usuario_enviou'     => $id_usuario_enviou,
+                    'data_criacao'    => $data_envio,
+                ];
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            error_log('Erro em insere_email: ' . $e->getMessage());
+            return false;
+        }
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Candidato altera senha">
@@ -755,6 +817,22 @@ class Conexao
                 where cpf = :cpf and id_selecao = :selecao and u.apagado = 0"
         );
         $stmt->bindValue(':cpf', $cpf);
+        $stmt->bindValue(':selecao', $_SESSION['selecao']);
+        $run = $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function get_usuario_email($email)
+    {
+        $stmt = $this->pdo->prepare(
+            "select u.*, c.nome nome_cidade, s.nome nome_selecao, s.codigo codigo_selecao, s.ano ano_selecao, rm rm_selecao
+                from usuario u
+                left join cidade c on c.id = u.id_cidade
+                inner join selecao s on s.id = u.id_selecao
+                where mail = :email and id_selecao = :selecao and u.apagado = 0"
+        );
+        $stmt->bindValue(':email', $email);
         $stmt->bindValue(':selecao', $_SESSION['selecao']);
         $run = $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -3069,6 +3147,19 @@ class Conexao
                                     and u.apagado = 0 
                                     and u.id_selecao = :selecao
                                     order by u.nome_completo");
+        $stmt->bindValue(':selecao', $_SESSION['selecao']);
+        $run = $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function get_email_todos_candidatos()
+    {
+        $stmt = $this->pdo->prepare("select u.mail, u.nome_completo, u.cpf
+                                    from usuario u
+                                    where u.apagado = 0 
+                                    and u.id_selecao = :selecao
+                                    order by u.mail");
         $stmt->bindValue(':selecao', $_SESSION['selecao']);
         $run = $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -10412,7 +10503,7 @@ order by total_pontos_somados desc");
 
             $query->bindValue(":id_selecao", $id_selecao);
             $query->bindValue(":etapa", $etapa);
-             $query->bindValue(":id_especialidade", $id_especialidade);
+            $query->bindValue(":id_especialidade", $id_especialidade);
             $query->bindValue(":titulo", $titulo);
             $query->bindValue(":mensagem", $mensagem);
             $query->bindValue(":id_usuario_inseriu", $usuario);

@@ -58,7 +58,7 @@
                         <?php if (!isset($_SESSION['eipot']) || $_SESSION['eipot'] != "1") : ?>
                             <div class="col-md-4 mb-20">
                                 <label class="form-label fw-semibold">
-                                    <i class="fa fa-user-check me-1"></i>
+                                    <i class="fa fa-user me-1"></i>
                                     Para Avaliador?
                                 </label>
                                 <select name="avaliador" class="form-control">
@@ -70,7 +70,7 @@
                         <?php endif; ?>
 
                         <!-- Status -->
-                        <div class="col-md-4 mb-20" >
+                        <div class="col-md-4 mb-20">
                             <label class="form-label fw-semibold">
                                 <i class="fa fa-flag me-1"></i>
                                 Status
@@ -179,29 +179,27 @@
             // Arquivo
             $arquivo_add_candidato_recurso = null;
             if ($linha['arq_nome_arquivo'] != null) {
-                $arquivo_add_candidato_recurso = '<a href="arquivos_add_p_cand/recursos/' . $linha['arq_nome_arquivo'] . '" target="_blank" class="btn btn-outline-primary btn-sm">
-                    <i class="fa fa-file-pdf me-1"></i>Recurso do Candidato
+                $arquivo_add_candidato_recurso = '<a href="arquivos_add_p_cand/recursos/' . $linha['arq_nome_arquivo'] . '" target="_blank" class="btn btn-sm btn-success">
+                    <i class="fa fa-file-pdf-o"></i> Recurso do Candidato
                 </a>';
             }
         ?>
             <!-- Card de Recurso Individual -->
-            <div class="card dashboard-card mb-4">
-                <div class="card-header dashboard-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="card-title mb-0">
-                            <i class="fa fa-file-alt me-2"></i>
-                            Recurso Nº <?= $linha['id'] ?>
-                        </span>
-                        <div class="btn-group">
-                            <a href="mpdf/oficio_resposta_recurso.php?id_recurso=<?= $linha['id'] ?>&crip=<?= $crip ?>"
-                                target="_blank" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Gerar Ofício">
-                                <i class="fa fa-file-pdf"></i>
-                            </a>
-                            <a onclick="funcao_apagar('<?= $linha['id'] ?>', 'candidato_recurso','<?= $id_usuario ?>')"
-                                class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Apagar Recurso">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </div>
+            <div class="card dashboard-card">
+                <div class="card-header dashboard-header mb-20 d-flex justify-content-between align-items-center">
+                    <span class="card-title mb-0">
+                        <i class="fa fa-file-text me-2"></i>
+                        Recurso Nº <?= $linha['id'] ?>
+                    </span>
+                    <div class="btn-group">
+                        <a href="mpdf/oficio_resposta_recurso.php?id_recurso=<?= $linha['id'] ?>&crip=<?= $crip ?>"
+                            target="_blank" class="btn btn-sm btn-success mr-10" data-bs-toggle="tooltip" title="Gerar Ofício">
+                            <i class="fa fa-file-pdf-o"></i> OFÍCIO RESPOSTA
+                        </a>
+                        <a onclick="funcao_apagar('<?= $linha['id'] ?>', 'candidato_recurso','<?= $id_usuario ?>')"
+                            class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Apagar Recurso">
+                            <i class="fa fa-trash"></i> Apagar Recurso
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -211,42 +209,42 @@
                             <?= $arquivo_add_candidato_recurso ?>
                         </div>
 
-                        <div class="col-md-2 mb-2">
+                        <div class="col-md-2 mb-10">
                             <small class="text-muted">Etapa</small>
                             <div class="fw-medium"><?= $etapa ?></div>
                         </div>
 
                         <?php if ($linha['cidade_isgrec']): ?>
-                            <div class="col-md-2 mb-2">
+                            <div class="col-md-2 mb-10">
                                 <small class="text-muted">Cidade ISGRec</small>
                                 <div class="fw-medium"><?= $linha['cidade_isgrec'] ?></div>
                             </div>
                         <?php endif; ?>
 
-                        <div class="col-md-2 mb-2">
+                        <div class="col-md-2 mb-10">
                             <small class="text-muted">Data de Abertura</small>
                             <div class="fw-medium"><?= $data_de_abertura ?></div>
                         </div>
 
-                        <?php if (isset($_SESSION["eipot"])): ?>
-                            <div class="col-md-2 mb-2">
+                        <?php if (!isset($_SESSION["eipot"])): ?>
+                            <div class="col-md-2 mb-10">
                                 <small class="text-muted">Para Avaliador</small>
                                 <div class="fw-medium"><?= $para_avaliador ?></div>
                             </div>
                         <?php endif; ?>
 
-                        <div class="col-md-2 mb-2">
+                        <div class="col-md-2 mb-10">
                             <small class="text-muted">Status</small>
                             <div class="fw-medium"><?= $status ?></div>
                         </div>
 
-                        <div class="col-md-2 mb-2">
+                        <div class="col-md-2 mb-10">
                             <small class="text-muted">Especialidade</small>
                             <div class="fw-medium"><?= $linha['nome_especialidade'] ?></div>
                         </div>
 
                         <?php if ($linha['analise']): ?>
-                            <div class="col-12 mb-2">
+                            <div class="col-md-12 mb-10">
                                 <small class="text-muted">Análise</small>
                                 <div class="border rounded p-2 bg-light"><?= nl2br(htmlspecialchars($linha['analise'])) ?></div>
                             </div>
@@ -261,15 +259,15 @@
                         <input type="hidden" name="cpf_candidato" value="<?= $cpf ?>">
 
                         <div class="row">
-                            <div class="col-12">
-                                <h6 class="border-bottom pb-2 mb-20">
-                                    <i class="fa fa-edit me-2"></i>Geração de Ofício Resposta
-                                </h6>
+                            <div class="col-md-12">
+                                <h5 class="border-bottom pb-2 mb-20">
+                                    <i class="fa fa-gavel me-2"></i> Julgamento Final do Recurso
+                                </h5>
                             </div>
 
                             <?php if ($linha['arq_nome_arquivo'] != null && !isset($_SESSION["eipot"])): ?>
                                 <div class="col-md-3 mb-20">
-                                    <label class="form-label fw-semibold">Enviar para especialista</label>
+                                    <label class="form-label fw-semibold"><i class="fa fa-user"></i> Enviar para especialista</label>
                                     <select name="especialidade_recurso" class="form-control">
                                         <option value="">Não enviar</option>
                                         <?php foreach ($lista_especialidades as $especialidade): ?>
@@ -283,7 +281,7 @@
                             <?php endif; ?>
 
                             <div class="col-md-3 mb-20">
-                                <label class="form-label fw-semibold">Status Final</label>
+                                <label class="form-label fw-semibold"><i class="fa fa-info-circle"></i> Status Final</label>
                                 <select name="status_final" class="form-control">
                                     <option value="">Selecione</option>
                                     <option value="deferido" <?= ($linha['status_final'] == "deferido") ? 'selected' : '' ?>>Deferido</option>
@@ -293,44 +291,57 @@
                             </div>
 
                             <div class="col-md-3 mb-20">
-                                <label class="form-label fw-semibold">Cidade e Data</label>
+                                <label class="form-label fw-semibold"><i class="fa fa-map-marker"></i> Cidade e Data</label>
                                 <input name="cidade_dt" value="<?= $linha['cidade_data'] ?>" class="form-control">
                             </div>
 
                             <div class="col-md-3 mb-20 <?= (($linha['obs_etapa'] == '3 - IS' && $_SESSION['perfil'] != 'admin') ? 'd-none' : '') ?>">
-                                <label class="form-label fw-semibold">Presidente da Comissão</label>
+                                <label class="form-label fw-semibold"><i class="fa fa-user"></i> Presidente da Comissão</label>
                                 <input name="presidente" value="<?= $linha['presidente'] ?>" class="form-control">
                             </div>
 
                             <div class="col-md-6 mb-20">
-                                <label class="form-label fw-semibold">Parágrafo 1</label>
+                                <label class="form-label fw-semibold"><i class="fa fa-edit"></i> Parágrafo 1</label>
                                 <textarea name="paragrafo1" class="form-control" rows="3"><?= htmlspecialchars($linha['paragrafo1']) ?></textarea>
                             </div>
 
                             <div class="col-md-6 mb-20">
-                                <label class="form-label fw-semibold">Parágrafo 2</label>
+                                <label class="form-label fw-semibold"><i class="fa fa-edit"></i> Parágrafo 2</label>
                                 <textarea name="paragrafo2" class="form-control" rows="3"><?= htmlspecialchars($linha['paragrafo2']) ?></textarea>
                             </div>
 
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-success">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-save me-2"></i>
-                                    Salvar Ofício
+                                    Salvar
                                 </button>
                             </div>
                         </div>
                     </form>
 
+                    <!-- Aviso sobre o salvamento -->
+                    <div class="alert alert-warning mt-20">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-exclamation-triangle fa-2x me-3"></i>
+                            <div>
+                                <strong>Informação sobre o salvamento do Recurso:</strong>
+                                <ul class="mb-0 mt-1">
+                                    <li>Preencha todos os campos</li>
+                                    <li>Verifique as informações antes de salvar</li>
+                                    <li>As alterações serão registradas no SiSCanT e liberadas imediatamente para o candidato visualizar</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Rodapé com informações de auditoria -->
-                    <div class="row mt-4 pt-3 border-top">
+                    <div class="row mt-20 pt-3 border-top">
                         <div class="col-md-6">
-                            <small class="text-muted">
-                                <i class="fa fa-history me-1"></i>
-                                Última atualização em <?= $ultima_atualizacao ?> por
-                                <a href="usuario_visualiza.php?id_usuario=<?= $linha['_usuario_ultima_atualizacao'] ?>" class="text-decoration-none">
-                                    <?= $usuario_ultima_at ?>
-                                </a>
-                            </small>
+                            <i class="fa fa-history me-1"></i>
+                            Última atualização em <?= $ultima_atualizacao ?> por
+                            <a href="usuario_visualiza.php?id_usuario=<?= $linha['_usuario_ultima_atualizacao'] ?>" class="text-decoration-none text-muted">
+                                <?= $usuario_ultima_at ?>
+                            </a>
                         </div>
                         <?php if ($usuario_realizou_analise): ?>
                             <div class="col-md-6 text-end">
