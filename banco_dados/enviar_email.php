@@ -60,29 +60,27 @@ $datetime = date('Y-m-d H:i:s');
 $conexao = new Conexao();
 
 $destinatarios = $_POST['destinatarios'];
+
 $assunto = $_POST['assunto'];
 $mensagem = $_POST['mensagem'];
 
 foreach ($destinatarios as $destinatario) {
     $usuario = $conexao->get_usuario_email($destinatario);
 
-    if ($usuario != null && $usuario != null) {
+    if ($usuario) {
         $origem = "webmail";
-
-        $lista_emails = $conexao->get_emails_candidato($usuario['mail']);
 
         if ($_POST)
             $resultado = $conexao->insere_email_enviado(
-                $id_selecao,
-                $usuario['nome_completo'],
-                $usuario['mail'],
+                $_SESSION['selecao'],
+                $usuario[0]['nome_completo'],
+                $usuario[0]['mail'],
                 $assunto,
                 $mensagem,
                 $datetime,
                 $origem,
                 $_SESSION['id_usuario']
             );
-
         $alteracoes_detalhadas =  print_r($resultado, true);
 
         if ($resultado) {
@@ -119,7 +117,7 @@ foreach ($destinatarios as $destinatario) {
                         // Move arquivo para o diretório final
                         if (move_uploaded_file($tmp_name, $file_path)) {
                             // Insere no banco de dados
-                            $insere_anexo = $conexao->insere_email_arquivo($id_email, $file_name, 'resposta');
+                            $insere_anexo = $conexao->insere_email_arquivo($resultado['id_adicionado'], $file_name, 'resposta');
 
                             if ($insere_anexo) {
                                 $anexos_processados[] = $file_name;
@@ -135,7 +133,7 @@ foreach ($destinatarios as $destinatario) {
                 }
             }
 
-            $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $id_email, "16105", "suporte", "Update", "Enviou email para $remetente", $alteracoes_detalhadas);
+            $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $resultado['id_adicionado'], "16105", "suporte", "Update", "Enviou email para $remetente", $alteracoes_detalhadas);
 
             $dados_selecao = $conexao->get_selecao_id();
 
@@ -180,7 +178,7 @@ foreach ($destinatarios as $destinatario) {
                 $mail_envia->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente
                 //$mail->addAddress('siscant@3rm.eb.mil.br'); // Adiciona um destinatário
 
-                $mail_envia->AddAddress($mail, $nome_completo_requerente); // Vai enviar o e-mail, E-Mail e Nome
+                $mail_envia->AddAddress($usuario[0]['mail'], $usuario[0]['nome_completo']); // Vai enviar o e-mail, E-Mail e Nome
 
                 $mail_envia->IsHTML(true); // Define que o e-mail será enviado como HTML
                 $mail_envia->CharSet = 'utf-8'; // Charset da mensagem (opcional)
@@ -210,147 +208,149 @@ foreach ($destinatarios as $destinatario) {
 
                 // Conteúdo do e-mail
                 $mail_envia->Body = utf8_decode('        
-<head>
-    <meta charset="utf-8">
-    <title>Email - SiSCanT</title>
-    <!--[if mso]>
-    <style>
-        .container-table {
-            width: 600px;
-        }
-        .header-cell {
-            background-color: green !important;
-        }
-    </style>
-    <![endif]-->
-</head>
-<body style="margin: 0; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif; line-height: 1.4;">
-    <center>
-        <table class="container-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <!-- Header -->
-            <tr>
-                <td class="header-cell" style="background-color: green; padding: 25px 20px; text-align: center; color: #ffffff;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                            <td style="text-align: center;">
-                                <h1 style="font-size: 22px; margin: 0 0 5px 0; font-weight: bold;">EMAIL RECEBIDO</h1>
-                                <p style="font-size: 14px; margin: 0; opacity: 0.9;">Sistema de Seleção de Candidatos Temporários</p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            
-            <!-- Content -->
-            <tr>
-                <td style="padding: 30px 25px;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        <!-- Greeting -->
-                        <tr>
-                            <td style="padding-bottom: 20px;">
-                                <p style="font-size: 16px; color: #333333; margin: 0;">
-                                    Prezado(a) <strong>' . $usuario['nome_completo'] . '</strong>,
-                                </p>
-                            </td>
-                        </tr>
-                        
-                        <!-- Intro -->
-                        <tr>
-                            <td style="padding-bottom: 25px;">
-                                <p style="font-size: 14px; color: #555555; margin: 0;">
-                                    Você recebeu um e-mail da Comissão de Seleção Especial
-                                </p>
-                            </td>
-                        </tr>
-                        
-                        ' . $info_anexos . '
-                        
-                        <!-- Message Box -->
-                        <tr>
-                            <td style="padding-bottom: 25px;">
-                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #FFFFFF; border: 1px solid #e9ecef; border-radius: 4px;">
-                                    <tr>
-                                        <td style="padding: 20px;">
-                                            <!-- Título Mensagem -->
-                                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                                <tr>
-                                                    <td>
-                                                        <p style="font-size: 13px; color: green; font-weight: bold;">
-                                                            Mensagem:
-                                                        </p>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            
-                                            <!-- Conteúdo da Resposta -->
-                                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                                <tr>
-                                                    <td>
-                                                        <p style="font-size: 14px; color: #333333; line-height: 1.6; margin: 0; text-align: left;">
-                                                            ' . nl2br($mensagem) . '
-                                                        </p>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            
-            <!-- Footer -->
-            <tr>
-                <td style="background-color: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e9ecef;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                            <td>
-                                <p style="font-size: 13px; color: #6c757d; margin: 0;">
-                                    <strong style="color: green;">SiSCanT</strong><br>
-                                    Sistema de Seleção de Candidatos Temporários
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </center>
-</body>
-</html>
-');
+                <head>
+                    <meta charset="utf-8">
+                    <title>Email - SiSCanT</title>
+                    <!--[if mso]>
+                    <style>
+                        .container-table {
+                            width: 600px;
+                        }
+                        .header-cell {
+                            background-color: green !important;
+                        }
+                    </style>
+                    <![endif]-->
+                </head>
+                <body style="margin: 0; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif; line-height: 1.4;">
+                    <center>
+                        <table class="container-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <!-- Header -->
+                            <tr>
+                                <td class="header-cell" style="background-color: green; padding: 25px 20px; text-align: center; color: #ffffff;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <h1 style="font-size: 22px; margin: 0 0 5px 0; font-weight: bold;">EMAIL RECEBIDO</h1>
+                                                <p style="font-size: 14px; margin: 0; opacity: 0.9;">Sistema de Seleção de Candidatos Temporários</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <!-- Content -->
+                            <tr>
+                                <td style="padding: 30px 25px;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <!-- Greeting -->
+                                        <tr>
+                                            <td style="padding-bottom: 20px;">
+                                                <p style="font-size: 16px; color: #333333; margin: 0;">
+                                                    Prezado(a) <strong>' . $usuario[0]['nome_completo'] . '</strong>,
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Intro -->
+                                        <tr>
+                                            <td style="padding-bottom: 25px;">
+                                                <p style="font-size: 14px; color: #555555; margin: 0;">
+                                                    Você recebeu um e-mail da Comissão de Seleção Especial (CSE)
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        
+                                        ' . $info_anexos . '
+                                        
+                                        <!-- Message Box -->
+                                        <tr>
+                                            <td style="padding-bottom: 25px;">
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #FFFFFF; border: 1px solid #e9ecef; border-radius: 4px;">
+                                                    <tr>
+                                                        <td style="padding: 20px;">
+                                                            <!-- Título Mensagem -->
+                                                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                <tr>
+                                                                    <td>
+                                                                        <p style="font-size: 13px; color: green; font-weight: bold;">
+                                                                            Mensagem:
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            
+                                                            <!-- Conteúdo da Resposta -->
+                                                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                <tr>
+                                                                    <td>
+                                                                        <p style="font-size: 14px; color: #333333; line-height: 1.6; margin: 0; text-align: left;">
+                                                                            ' . nl2br($mensagem) . '
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <!-- Footer -->
+                            <tr>
+                                <td style="background-color: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e9ecef;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td>
+                                                <p style="font-size: 13px; color: #6c757d; margin: 0;">
+                                                    <strong style="color: green;">SiSCanT</strong><br>
+                                                    Sistema de Seleção de Candidatos Temporários
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </center>
+                </body>
+                </html>
+                ');
                 #Envio da Mensagem
                 $mail_envia->SMTPDebug = 0;
                 $enviado = $mail_envia->send(); // Envia o e-mail
 
                 if ($enviado) {
                     $mensagem_formatada = str_replace("'", "`", $mensagem);
-                    $alteracao = "E-Mail enviado para: $nome_completo_requerente e E-Mail: " . $mail;
+                    $alteracao = "E-Mail enviado para: " . $usuario[0]['nome_completo'] . " e E-Mail: " . $usuario[0]['mail'];
                     if (!empty($anexos_processados)) {
                         $alteracao .= " com " . count($anexos_processados) . " anexo(s)";
                     }
 
-                    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $nome_completo_requerente, $id_suporte, "14116", "mail", "Insert", $alteracao, $mensagem_formatada);
+                    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $usuario[0]['nome_completo'], $resultado['id_adicionado'], "14116", "mail", "Insert", $alteracao, $mensagem_formatada);
                 }
 
                 if (!$enviado) {
                     $detalhe_erro = print_r(error_get_last());
-                    $alteracao = "ERRO! E-Mail NÃO enviado para: $nome_completo_requerente e E-Mail: " . $mail;
-                    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $nome_completo_requerente, $id_suporte, "21102", "mail", "Insert", $alteracao, $detalhe_erro);
+                    $alteracao = "ERRO! E-Mail NÃO enviado para: " . $usuario[0]['nome_completo'] . " e E-Mail: " . $remetente_e;
+                    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $usuario[0]['nome_completo'], $resultado['id_adicionado'], "21102", "mail", "Insert", $alteracao, $detalhe_erro);
                 }
             } catch (Exception $e) {
                 echo "Erro ao enviar mensagem: {$mail->ErrorInfo}";
             }
         }
+
+        $lista_emails = $conexao->get_emails_candidato($usuario[0]['mail']);
+        
         foreach ($lista_emails as $email) {
-            if ($email['id'] != $id_email && $email['id_usuario_respondeu'] != $_SESSION['id_usuario'] && empty($email['resposta'])) {
+            if ($email['id'] != $resultado['id_adicionado'] && $email['id_usuario_respondeu'] != $_SESSION['id_usuario'] && empty($email['resposta'])) {
                 $resultado = $conexao->insere_resposta_email($email['id'], '');
             }
         }
-
-        $conexao = null;
-        header("Location: ../sistema/email_visualiza.php?criptografia=$criptografia&id_email=$id_email");
     }
 }
+
+header("Location: ../sistema/suporte_lista.php");

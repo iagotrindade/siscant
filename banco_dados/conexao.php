@@ -505,7 +505,7 @@ class Conexao
         $mensagem,
         $data_envio,
         $origem,
-        $id_usuario_enviou
+        $id_usuario_respondeu // nome corrigido para coincidir com a tabela
     ) {
         try {
             // Inicia a transação
@@ -513,9 +513,9 @@ class Conexao
 
             $sqlInsert = "
             INSERT INTO emails 
-            (id_selecao, remetente, email_remetente, assunto, mensagem, origem, id_usuario_enviou, data_criacao)
+            (id_selecao, remetente, email_remetente, assunto, mensagem, origem, id_usuario_respondeu, data_criacao)
             VALUES 
-            (:id_selecao, :remetente, :email_remetente, :assunto, :mensagem, :origem, :id_usuario_enviou, :data_criacao)
+            (:id_selecao, :remetente, :email_remetente, :assunto, :mensagem, :origem, :id_usuario_respondeu, :data_criacao)
         ";
 
             $query = $this->pdo->prepare($sqlInsert);
@@ -526,7 +526,7 @@ class Conexao
             $query->bindValue(':assunto', $assunto, PDO::PARAM_STR);
             $query->bindValue(':mensagem', $mensagem, PDO::PARAM_STR);
             $query->bindValue(':origem', $origem, PDO::PARAM_STR);
-            $query->bindValue(':id_usuario_enviou', $id_usuario_enviou, is_null($id_usuario_enviou) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+            $query->bindValue(':id_usuario_respondeu', $id_usuario_respondeu, is_null($id_usuario_respondeu) ? PDO::PARAM_NULL : PDO::PARAM_INT);
             $query->bindValue(':data_criacao', $data_envio, PDO::PARAM_STR);
 
             if ($query->execute()) {
@@ -538,15 +538,15 @@ class Conexao
                 $this->pdo->commit();
 
                 return [
-                    'id_adicionado'   => (int) $id_adicionado,
-                    'id_selecao'      => $id_selecao,
-                    'remetente'       => $remetente,
-                    'email_remetente' => $email_remetente,
-                    'assunto'         => $assunto,
-                    'mensagem'        => $mensagem,
-                    'origem'          => $origem,
-                    'id_usuario_enviou'     => $id_usuario_enviou,
-                    'data_criacao'    => $data_envio,
+                    'id_adicionado'         => (int) $id_adicionado,
+                    'id_selecao'            => $id_selecao,
+                    'remetente'             => $remetente,
+                    'email_remetente'       => $email_remetente,
+                    'assunto'               => $assunto,
+                    'mensagem'              => $mensagem,
+                    'origem'                => $origem,
+                    'id_usuario_respondeu'  => $id_usuario_respondeu,
+                    'data_criacao'          => $data_envio,
                 ];
             } else {
                 $this->pdo->rollBack();
@@ -554,7 +554,7 @@ class Conexao
             }
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            error_log('Erro em insere_email: ' . $e->getMessage());
+            error_log('Erro em insere_email_enviado: ' . $e->getMessage());
             return false;
         }
     }
