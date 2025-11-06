@@ -630,11 +630,6 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
             include_once 'codigos/admin_cadastra_docs_obrigatorios.php';
         }
 
-        //13 AGOSTO 2025 - IAGO SILVA
-        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consultor' || $_SESSION['perfil'] == 'chc' || $_SESSION['perfil'] == 'cr') {
-            include_once 'codigos/candidato_heteroidentificacao.php';
-        }
-
         if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'avaliador') {
             include_once 'codigos/candidato_especialidades_avaliador.php';
         } else {
@@ -681,6 +676,11 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
         if ($_SESSION['perfil'] != 'candidato' && $_SESSION['candidato'] != '1') {
             include_once 'codigos/arquivos_adicionados_para_candidato.php';
+        }
+
+        //13 AGOSTO 2025 - IAGO SILVA
+        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consultor' || $_SESSION['perfil'] == 'chc' || $_SESSION['perfil'] == 'cr') {
+            include_once 'codigos/candidato_heteroidentificacao.php';
         }
 
         if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consulta') {

@@ -1160,7 +1160,7 @@ $lista_especialidades = $conexao->get_especialidade();
                     </form>
                 </div>
 
-                <!-- Resultado Etapa III -->
+                <!-- Resultado Final Etapa III -->
                 <div class="alert alert-info">
                     <legend class="mb-3">
                         Resultado Final Etapa III
@@ -1234,6 +1234,77 @@ $lista_especialidades = $conexao->get_especialidade();
                                             </option>
                                         <?php } ?>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-file-export me-2"></i> GERAR
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Resultado da Análise de Recursos Etapa III - DOCUMENTAL -->
+                <div class="alert alert-info">
+                    <legend class="mb-3">
+                        Resultado da Análise de Recursos Etapa III - Documental
+                        <img src="imagens/pdf.png" height="30px">
+                    </legend>
+
+                    <div class="alert alert-danger mb-3">
+                        <h6 class="text-info mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                        <ul class="requisitos-list text-info">
+                            <li>Cadastrar e julgar todos os recursos da Etapa 3 - Documental  no SISCANT</li>
+                            <li>Serão considerados apenas recursos cadastrados com a Etapa 3 - Documental</li>
+                        </ul>
+                    </div>
+
+                    <form action="mpdf/relatorio_recursos_ott_stt_et_final_3.php" method="POST">
+                        <input type="hidden" name="etapa" value="3">
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="subtitulo" value="RESULTADO DA ANÁLISE DE RECURSOS FINAL ETAPA III" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o parecer da análise de recursos referente ao Resultado Final da Etapa III, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação Nr X-SSMR/X, de X de junho de 20XX.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="2">A presente relação NÃO está em ordem de classificação.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Inicial</label>
+                                    <input name="data_inicial" type="date" class="form-control" style="height: 40px;">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Data Final</label>
+                                    <input name="data_final" type="date" class="form-control" style="height: 40px;">
                                 </div>
                             </div>
 
@@ -1480,49 +1551,49 @@ $lista_especialidades = $conexao->get_especialidade();
                         <div class="row">
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
-                                    <input name="titulo_1" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
                                 </div>
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
-                                    <input name="titulo_2" value="CONVOCAÇÃO PARA O EXAME DE APTIDÃO FÍSICA (EAF)" class="form-control">
+                                    <input name="subtitulo" value="CONVOCAÇÃO PARA O EXAME DE APTIDÃO FÍSICA (EAF)" class="form-control">
                                 </div>
                             </div>
 
                             <div class="col-lg-4 mb-3">
                                 <div class="form-group">
-                                    <input name="cidade_dt" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_1" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da 3ª Região Militar divulga a chamada dos candidatos selecionados para a Etapa IV – EXAME DE APTIDÃO FÍSICA, conforme anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da 3ª Região Militar divulga a chamada dos candidatos selecionados para a Etapa IV – EXAME DE APTIDÃO FÍSICA, conforme anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_2" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">Informo que será ELIMINADO o candidato CONVOCADO que NÃO COMPARECER à Etapa IV.</textarea>
+                                    <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">Informo que será ELIMINADO o candidato CONVOCADO que NÃO COMPARECER à Etapa IV.</textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_3" placeholder="3º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">Todos os candidatos deverão utilizar trajes desportivos para realização dos exames de aptidão física.</textarea>
+                                    <textarea name="paragrafo_tres" placeholder="3º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">Todos os candidatos deverão utilizar trajes desportivos para realização dos exames de aptidão física.</textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_4" placeholder="4º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">O candidato deverá apresentar, obrigatoriamente, documento de identificação com foto e atestado médico emitido por profissional da área de cardiologia, inscrito no CRM, assinado e carimbado, com data de até 20 (vinte) dias antes do início da Etapa IV, atestando que o candidato está apto a realizar o EAF. A não entrega de atestado médico, quando da apresentação do candidato, conforme acima descrito, inviabiliza sua participação no EAF, tendo por objetivo preservar sua saúde.</textarea>
+                                    <textarea name="paragrafo_quatro" placeholder="4º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">O candidato deverá apresentar, obrigatoriamente, documento de identificação com foto e atestado médico emitido por profissional da área de cardiologia, inscrito no CRM, assinado e carimbado, com data de até 20 (vinte) dias antes do início da Etapa IV, atestando que o candidato está apto a realizar o EAF. A não entrega de atestado médico, quando da apresentação do candidato, conforme acima descrito, inviabiliza sua participação no EAF, tendo por objetivo preservar sua saúde.</textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_5" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">A presente relação NÃO está em ordem de classificação.</textarea>
+                                    <textarea name="paragrafo_cinco" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">A presente relação NÃO está em ordem de classificação.</textarea>
                                 </div>
                             </div>
 
@@ -1552,7 +1623,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
                                     <label>Texto Grupo Dois</label>
-                                    <textarea name="grupo_um_texto" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">XX NOV XX às 1300 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
+                                    <textarea name="grupo_dois_texto" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">XX NOV XX às 1300 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
                                 </div>
                             </div>
 

@@ -1,17 +1,17 @@
 <?php
 $dados = $conexao->get_selecao_id();
 
-$imapHost = $dados[0]['mail_imap'] ?? 'imap.webmail.eb.mil.br';
-$imapPort = $dados[0]['porta_imap'] ?? '993';
+$imapHost = $dados[0]['mail_imap'];
+$imapPort = $dados[0]['porta_imap'];
 $hostname = sprintf('{%s:%s/imap/ssl}INBOX', $imapHost, $imapPort);
 
-$username = $dados[0]['usuario_email'] ?? 'siscant@3rm.eb.mil.br';
+$username = $dados[0]['usuario_email'];
 $password = $dados[0]['senha_email'];
 
 $inbox = imap_open($hostname, $username, $password);
 
 if (!$inbox) {
-    error_log('Falha ao conectar no IMAP: ' . imap_last_error());
+    $erroImap = true;
 } else {
     $emails = imap_search($inbox, 'UNSEEN');
 

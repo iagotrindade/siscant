@@ -11,15 +11,16 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != "ouvidor" && $_SESS
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
 
-$lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
-
-$lista_suporte_inicial = $conexao->get_suporte();
-
 $criptografia = $_POST['criptografia'];
 
+$erroImap = false;
 if ($_GET['update_emails']) {
     include '../banco_dados/captura_emails.php';
 }
+
+$lista_suporte = $conexao->get_lista_suporte_todos_candidatos();
+
+$lista_suporte_inicial = $conexao->get_suporte();
 
 $lista_emails = $conexao->get_lista_emails();
 ?>
@@ -850,7 +851,7 @@ $lista_emails = $conexao->get_lista_emails();
     .attachments-dropzone {
         border: 2px dashed #007bff;
         border-radius: 8px;
-        padding: 20px;
+        padding: 10px;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -870,7 +871,6 @@ $lista_emails = $conexao->get_lista_emails();
     .dropzone-content i {
         font-size: 48px;
         color: #6c757d;
-        margin-bottom: 10px;
     }
 
     .dropzone-content p {
@@ -1287,192 +1287,205 @@ $lista_emails = $conexao->get_lista_emails();
                         <i class="fa fa-envelope"></i> E-mails
                     </span>
 
-                    <a href="suporte_lista.php?update_emails=true" class="btn btn-success btn-sm" data-bs-toggle="tooltip" title="Exportar para Excel">
-                        <i class="fa fa-refresh"></i> Sincronizar
-                    </a>
+                    <?php if (!$erroImap): ?>
+                        <a href="suporte_lista.php?update_emails=true" class="btn btn-success btn-sm" data-bs-toggle="tooltip" title="Exportar para Excel">
+                            <i class="fa fa-refresh"></i> Sincronizar
+                        </a>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
-                    <form class="mb-20" action="../banco_dados/enviar_email.php" method="POST" id="suporte" enctype="multipart/form-data">
-                        <input hidden type="text" name='criptografia' value="<?= $criptografia ?>">
+                    <?php if (!$erroImap): ?>
+                        <form class="mb-20" action="../banco_dados/enviar_email.php" method="POST" id="suporte" enctype="multipart/form-data">
+                            <input hidden type="text" name='criptografia' value="<?= $criptografia ?>">
 
-                        <?php if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'ouvidor'): ?>
-                            <div class="chat-input">
-                                <select name="destinatarios[]" class="form-control select2" style="width: 100%;" multiple>
-                                    <?php
-                                    $lista_emails_candidatos = $conexao->get_email_todos_candidatos();
+                            <?php if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'ouvidor'): ?>
+                                <div class="chat-input">
+                                    <select name="destinatarios[]" class="form-control select2" style="width: 100%;" multiple>
+                                        <?php
+                                        $lista_emails_candidatos = $conexao->get_email_todos_candidatos();
 
-                                    $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
-                                    foreach ($lista_emails_candidatos as $value) { ?>
-                                        <option value="<?php echo htmlspecialchars($value['mail']); ?>"
-                                            <?php echo in_array($value['mail'], $ids_selecionados) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($value['mail'] . ' - ' . $value['nome_completo']) . " (" . $value['cpf'] . ")"; ?>
-                                        </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-
-                            <div class="chat-input">
-                                <input type="text"
-                                    placeholder="Digite o Assunto..."
-                                    autocomplete="off"
-                                    name="assunto">
-                            </div>
-
-                            <div class="chat-input">
-                                <textarea
-                                    placeholder="Digite sua mensagem..."
-                                    autocomplete="off"
-                                    name="mensagem"></textarea>
-                            </div>
-
-                            <!-- Área de Anexos da Resposta -->
-                            <div class="attachments-upload-area">
-                                <div class="attachments-header">
-                                    <i class="fa fa-paperclip"></i>
-                                    <span>Anexos</span>
-                                    <small>(Opcional)</small>
+                                        $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
+                                        foreach ($lista_emails_candidatos as $value) { ?>
+                                            <option value="<?php echo htmlspecialchars($value['mail']); ?>"
+                                                <?php echo in_array($value['mail'], $ids_selecionados) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($value['mail'] . ' - ' . $value['nome_completo']) . " (" . $value['cpf'] . ")"; ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
 
-                                <div class="attachments-dropzone" id="attachmentsDropzone">
-                                    <div class="dropzone-content">
-                                        <i class="fa fa-cloud-upload-alt"></i>
-                                        <p>Arraste arquivos aqui ou clique para selecionar</p>
-                                        <small>Formatos permitidos: PDF, Word, Excel, Imagens, etc.</small>
+                                <div class="chat-input">
+                                    <input type="text"
+                                        placeholder="Digite o Assunto..."
+                                        autocomplete="off"
+                                        name="assunto">
+                                </div>
+
+                                <div class="chat-input">
+                                    <textarea
+                                        placeholder="Digite sua mensagem..."
+                                        autocomplete="off"
+                                        name="mensagem"></textarea>
+                                </div>
+
+                                <!-- Área de Anexos da Resposta -->
+                                <div class="attachments-upload-area">
+                                    <div class="attachments-header">
+                                        <i class="fa fa-paperclip"></i>
+                                        <span>Anexos</span>
+                                        <small>(Opcional)</small>
                                     </div>
-                                    <input type="file"
-                                        name="anexos[]"
-                                        id="anexosInput"
-                                        multiple
-                                        style="display: none;"
-                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.txt,.zip,.rar">
+
+                                    <div class="attachments-dropzone" id="attachmentsDropzone">
+                                        <div class="dropzone-content">
+                                            <i class="fa fa-cloud-upload"></i>
+                                            <p>Arraste arquivos aqui ou clique para selecionar</p>
+                                            <small>Formatos permitidos: PDF, Word, Excel, Imagens, etc.</small>
+                                        </div>
+                                        <input type="file"
+                                            name="anexos[]"
+                                            id="anexosInput"
+                                            multiple
+                                            style="display: none;"
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.txt,.zip,.rar">
+                                    </div>
+
+                                    <div class="attachments-preview" id="attachmentsPreview">
+                                        <!-- Os arquivos selecionados aparecerão aqui -->
+                                    </div>
+
+                                    <div class="attachments-limits">
+                                        <small>
+                                            <i class="fa fa-info-circle"></i>
+                                            Tamanho máximo por arquivo: 10MB | Máximo de 50 arquivos
+                                        </small>
+                                    </div>
                                 </div>
 
-                                <div class="attachments-preview" id="attachmentsPreview">
-                                    <!-- Os arquivos selecionados aparecerão aqui -->
+                                <div style="text-align: right; margin-top: 20px;">
+                                    <button class="send-mail-button" style="font-weight:600; width: 20%; padding: 10px; border-radius: 6px" type="submit">
+                                        Enviar <i class="bi bi-send"></i>
+                                    </button>
                                 </div>
 
-                                <div class="attachments-limits">
-                                    <small>
-                                        <i class="fa fa-info-circle"></i>
-                                        Tamanho máximo por arquivo: 10MB | Máximo de 50 arquivos
-                                    </small>
-                                </div>
-                            </div>
-
-                            <div style="text-align: right; margin-top: 20px;">
-                                <button class="send-mail-button" style="font-weight:600; width: 20%; padding: 10px; border-radius: 6px" type="submit">
-                                    Enviar <i class="bi bi-send"></i>
-                                </button>
-                            </div>
-
-                        <?php endif; ?>
-                    </form>
-                    <div class="table-responsive mb-20">
-                        <table class="table table-hover table-striped" id="tabela_emails">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th><i class="fa fa-hashtag me-1"></i> ID</th>
-                                    <th><i class="fa fa-user me-1"></i> Remetente</th>
-                                    <th><i class="fa fa-id-card me-1"></i> Email</th>
-                                    <th><i class="fa fa-question-circle me-1"></i> Assunto</th>
-                                    <th><i class="fa fa-comment me-1"></i> Mensagem</th>
-                                    <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
-                                    <th><i class="fa fa-server me-1"></i> Respondido</th>
-                                    <th><i class="fa fa-cogs me-1"></i> Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $respondidos_ni = 0;
-                                $nao_respondidos_ni = 0;
-                                $somatorio_dias_resposta_ni = 0;
-                                $maior_tempo_ni = 0;
-
-                                foreach ($lista_emails as $linha) {
-                                    $dias_resposta = "";
-                                    $usuario_respondeu = "_" . mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
-                                    $respondido = "_Não";
-                                    $status_class = "status-pendente";
-
-                                    if ($linha['resposta'] != null || $linha['respondido']) {
-                                        $respondido = "_Sim";
-                                        $respondidos_ni++;
-                                        $status_class = "status-respondido";
-
-                                        $dias_resposta = 0;
-                                        $data_enviado = new DateTime($linha['data_criacao']);
-                                        $data_respondido = new DateTime($linha['data_resposta']);
-                                        $intervalo = $data_enviado->diff($data_respondido);
-                                        $tempo_total = $intervalo->d + $intervalo->h / 24;
-                                        $tempo_total = $tempo_total + $intervalo->i / 1440;
-                                        $tempo_total = $tempo_total + $intervalo->s / 86400;
-
-                                        if ($intervalo->m > 0) $tempo_total = $tempo_total + (30 * $intervalo->m);
-                                        if ($tempo_total > $maior_tempo_ni) $maior_tempo_ni = $tempo_total;
-                                        $somatorio_dias_resposta_ni = $somatorio_dias_resposta_ni + $tempo_total;
-                                        $dias_resposta = ", em " . round($tempo_total, 2) . " dias por $usuario_respondeu ";
-                                    } else {
-                                        $nao_respondidos_ni++;
-                                    }
-
-                                    echo '
+                            <?php endif; ?>
+                        </form>
+                        <div class="table-responsive mb-20">
+                            <table class="table table-hover table-striped" id="tabela_emails">
+                                <thead class="table-dark">
                                     <tr>
-                                        <td>' . $linha['id'] . '</td>
-                                        <td>' . $linha['email_remetente'] . '</td>
-                                        <td>' . $linha['remetente'] . '</td>
-                                        <td><span class="badge bg-primary text-truncate" style="max-width: 200px;">' . $linha['assunto'] . '</span></td>
-                                        <td class="text-truncate" style="max-width: 200px;" title="' . htmlspecialchars($linha['mensagem']) . '">' . $linha['mensagem'] . '</td>
-                                        <td>' . trata_data_hora($linha['data_criacao' ?? date('Y-m-d H:i:s')]) . '</td>
-                                        <td class="' . $status_class . '">' . $respondido . $dias_resposta . '</td>
-                                        <td>
-                                            <a target="_blank" href="email_visualiza.php?criptografia=' . hash('sha256', $linha['id']) . '&id_email=' . $linha['id'] . '" class="btn btn-sm btn-primary" title="Visualizar">
-                                                <i class="fa fa-search"></i>
-                                            </a>
-                                        </td>
-                                    </tr>';
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Estatísticas -->
-                    <div class="row mt-4">
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="stat-card bg-success text-white p-2 rounded text-center">
-                                <h5 class="mb-1">Respondidos</h5>
-                                <h4 class="mb-0"><?php echo $respondidos_ni ?></h4>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="stat-card bg-danger text-white p-2 rounded text-center">
-                                <h5 class="mb-1">Não Respondidos</h5>
-                                <h4 class="mb-0">
+                                        <th><i class="fa fa-hashtag me-1"></i> ID</th>
+                                        <th><i class="fa fa-user me-1"></i> Remetente</th>
+                                        <th><i class="fa fa-id-card me-1"></i> Email</th>
+                                        <th><i class="fa fa-question-circle me-1"></i> Assunto</th>
+                                        <th><i class="fa fa-comment me-1"></i> Mensagem</th>
+                                        <th><i class="fa fa-calendar me-1"></i> Data Enviado</th>
+                                        <th><i class="fa fa-server me-1"></i> Respondido</th>
+                                        <th><i class="fa fa-cogs me-1"></i> Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     <?php
-                                    if ($respondidos_ni > 0 || $nao_respondidos_ni > 0)
-                                        $porcentagem_ni = round(($nao_respondidos_ni / ($nao_respondidos_ni + $respondidos_ni)) * 100, 2);
+                                    $respondidos_ni = 0;
+                                    $nao_respondidos_ni = 0;
+                                    $somatorio_dias_resposta_ni = 0;
+                                    $maior_tempo_ni = 0;
 
-                                    if ($nao_respondidos_ni > 0)
-                                        echo $nao_respondidos_ni . " <small>($porcentagem_ni%)</small>";
-                                    else echo '0';
+                                    foreach ($lista_emails as $linha) {
+                                        $dias_resposta = "";
+                                        $usuario_respondeu = "_" . mb_strtoupper($linha['posto_grad']) . " " . $linha['nome_guerra'];
+                                        $respondido = "_Não";
+                                        $status_class = "status-pendente";
+
+                                        if ($linha['resposta'] != null || $linha['respondido']) {
+                                            $respondido = "_Sim";
+                                            $respondidos_ni++;
+                                            $status_class = "status-respondido";
+
+                                            $dias_resposta = 0;
+                                            $data_enviado = new DateTime($linha['data_criacao']);
+                                            $data_respondido = new DateTime($linha['data_resposta']);
+                                            $intervalo = $data_enviado->diff($data_respondido);
+                                            $tempo_total = $intervalo->d + $intervalo->h / 24;
+                                            $tempo_total = $tempo_total + $intervalo->i / 1440;
+                                            $tempo_total = $tempo_total + $intervalo->s / 86400;
+
+                                            if ($intervalo->m > 0) $tempo_total = $tempo_total + (30 * $intervalo->m);
+                                            if ($tempo_total > $maior_tempo_ni) $maior_tempo_ni = $tempo_total;
+                                            $somatorio_dias_resposta_ni = $somatorio_dias_resposta_ni + $tempo_total;
+                                            $dias_resposta = ", em " . round($tempo_total, 2) . " dias por $usuario_respondeu ";
+                                        } else {
+                                            $nao_respondidos_ni++;
+                                        }
+
+                                        echo '
+                                        <tr>
+                                            <td>' . $linha['id'] . '</td>
+                                            <td>' . $linha['email_remetente'] . '</td>
+                                            <td>' . $linha['remetente'] . '</td>
+                                            <td><span class="badge bg-primary text-truncate" style="max-width: 200px;">' . $linha['assunto'] . '</span></td>
+                                            <td class="text-truncate" style="max-width: 200px;" title="' . htmlspecialchars($linha['mensagem']) . '">' . $linha['mensagem'] . '</td>
+                                            <td>' . trata_data_hora($linha['data_criacao' ?? date('Y-m-d H:i:s')]) . '</td>
+                                            <td class="' . $status_class . '">' . $respondido . $dias_resposta . '</td>
+                                            <td>
+                                                <a target="_blank" href="email_visualiza.php?criptografia=' . hash('sha256', $linha['id']) . '&id_email=' . $linha['id'] . '" class="btn btn-sm btn-primary" title="Visualizar">
+                                                    <i class="fa fa-search"></i>
+                                                </a>
+                                            </td>
+                                        </tr>';
+                                    }
                                     ?>
-                                </h4>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <!-- Estatísticas -->
+                        <div class="row mt-4">
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="stat-card bg-success text-white p-2 rounded text-center">
+                                    <h5 class="mb-1">Respondidos</h5>
+                                    <h4 class="mb-0"><?php echo $respondidos_ni ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="stat-card bg-danger text-white p-2 rounded text-center">
+                                    <h5 class="mb-1">Não Respondidos</h5>
+                                    <h4 class="mb-0">
+                                        <?php
+                                        if ($respondidos_ni > 0 || $nao_respondidos_ni > 0)
+                                            $porcentagem_ni = round(($nao_respondidos_ni / ($nao_respondidos_ni + $respondidos_ni)) * 100, 2);
+
+                                        if ($nao_respondidos_ni > 0)
+                                            echo $nao_respondidos_ni . " <small>($porcentagem_ni%)</small>";
+                                        else echo '0';
+                                        ?>
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="stat-card bg-info text-white p-2 rounded text-center">
+                                    <h5 class="mb-1">Média de Resp</h5>
+                                    <h4 class="mb-0"><?php if ($respondidos_ni > 0 && $somatorio_dias_resposta_ni > 0) echo round($somatorio_dias_resposta_ni / $respondidos_ni, 2) . " dias";
+                                                        else echo "0"; ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="stat-card bg-warning text-dark p-2 rounded text-center">
+                                    <h5 class="mb-1">Maior Tempo</h5>
+                                    <h4 class="mb-0"><?php echo round($maior_tempo_ni, 2) . " dias"; ?></h4>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="stat-card bg-info text-white p-2 rounded text-center">
-                                <h5 class="mb-1">Média de Resp</h5>
-                                <h4 class="mb-0"><?php if ($respondidos_ni > 0 && $somatorio_dias_resposta_ni > 0) echo round($somatorio_dias_resposta_ni / $respondidos_ni, 2) . " dias";
-                                                    else echo "0"; ?></h4>
-                            </div>
+
+                    <?php else: ?>
+                        <div class="text-center text-muted py-4 border rounded bg-light mb-20 text-danger">
+                            <i class="fa fa-exclamation-circle fa-2x mb-2 opacity-50"></i><br>
+                            Erro na Conexão com o E-mail!
+                            <br>
+                            Verifique as Configurações de E-mail dentro de "Configurações da Seleção"
                         </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="stat-card bg-warning text-dark p-2 rounded text-center">
-                                <h5 class="mb-1">Maior Tempo</h5>
-                                <h4 class="mb-0"><?php echo round($maior_tempo_ni, 2) . " dias"; ?></h4>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -2034,7 +2047,13 @@ $lista_emails = $conexao->get_lista_emails();
         $('.select2').select2({
             allowClear: true,
             width: '100%',
-            placeholder: "Selecione os Destinatários"
+            placeholder: "Selecione os Destinatários (Máximo 10)",
+            maximumSelectionLength: 10,
+            language: {
+                maximumSelected: function(e) {
+                    return 'Você só pode selecionar no máximo ' + e.maximum + ' itens.';
+                }
+            }
         });
     })
 </script>

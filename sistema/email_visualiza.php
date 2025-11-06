@@ -16,6 +16,7 @@ if ($_GET['criptografia'] != hash('sha256', $id_email)) {
 }
 
 $get_email_id = $conexao->get_email_id($id_email);
+$dados_usuario = $conexao->get_usuario_email(htmlspecialchars($get_email_id['email_remetente']));
 
 $nome_completo = null;
 $mail = null;
@@ -170,6 +171,10 @@ if ($data_enviado != null)
         font-size: 16px;
     }
 
+    .message-content {
+        max-width: 85%;
+    }
+
     .main-message-content {
         padding: 1rem;
         background-color: #f8f9fa;
@@ -206,7 +211,6 @@ if ($data_enviado != null)
 
     .attachment-item {
         display: flex;
-        align-items: center;
     }
 
     .attachment-link {
@@ -221,6 +225,9 @@ if ($data_enviado != null)
         color: #495057;
         font-size: 14px;
         transition: all 0.2s ease;
+        align-items: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .attachment-link:hover {
@@ -669,7 +676,13 @@ if ($data_enviado != null)
                     <div class="support-request">
                         <div class="user-info-section">
                             <div class="user-avatar">
-                                <img src="./imagens/user.jpg" alt="<?php echo $get_email_id['remetente'] ?>" class="user-image">
+                                <?php if (!empty($dados_usuario[0])) : ?>
+                                    <a href="usuario_visualiza.php?<?=$dados_usuario[0]['id']?>">
+                                        <img src="./imagens/user.jpg" alt="<?php echo $get_email_id['remetente'] ?>" class="user-image">
+                                    </a>
+                                <?php else: ?>
+                                    <img src="./imagens/user.jpg" alt="<?php echo $get_email_id['remetente'] ?>" class="user-image">
+                                <?php endif; ?>
                             </div>
                             <div class="user-details">
                                 <h4><?= $get_email_id['remetente'] ?></h4>
@@ -714,7 +727,7 @@ if ($data_enviado != null)
                                             <?php foreach ($get_email_id['arquivos'] as $arquivo): ?>
                                                 <a href="./arquivos/arquivos_email/<?php echo htmlspecialchars($arquivo['nome_arquivo']); ?>"
                                                     target="_blank"
-                                                    class="arquivo-item">
+                                                    class="arquivo-item" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                                     <i class="fa fa-file"></i>
                                                     <?php echo htmlspecialchars($arquivo['nome_arquivo']); ?>
                                                 </a>
@@ -887,7 +900,7 @@ if ($data_enviado != null)
 
                                 <div class="attachments-dropzone" id="attachmentsDropzone">
                                     <div class="dropzone-content">
-                                        <i class="fa fa-cloud-upload-alt"></i>
+                                        <i class="fa fa-cloud-upload"></i>
                                         <p>Arraste arquivos aqui ou clique para selecionar</p>
                                         <small>Formatos permitidos: PDF, Word, Excel, Imagens, etc.</small>
                                     </div>
