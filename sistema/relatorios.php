@@ -399,7 +399,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" style="height: 80px;">O Comandante da Xª Região Militar convoca os candidatos classificados para a realização da Entrevista e Teste Prático, nas especialidades para CABO ESPECIALISTA TEMPORÁRIO, conforme anexo "A" (Calendário Geral de Atividades), do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" style="height: 80px;">O Comandante da XX convoca os candidatos classificados para a realização da Entrevista e Teste Prático, nas especialidades para CABO ESPECIALISTA TEMPORÁRIO, conforme anexo "A" (Calendário Geral de Atividades), do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
                                 </div>
                             </div>
 

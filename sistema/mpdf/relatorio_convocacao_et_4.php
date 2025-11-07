@@ -59,7 +59,9 @@ if (is_array($id_especialidade_um) && !empty($id_especialidade_um)) {
 
         // Adiciona cada candidato, evitando duplicados
         foreach ($candidatos as $cand) {
-            $candidatos_grupo_um[$cand['id']] = $cand;
+            if ($cand['etapa_candidato'] == 4) {
+                $candidatos_grupo_um[$cand['id']] = $cand;
+            }
         }
     }
 
@@ -84,14 +86,15 @@ if (is_array($id_especialidade_dois) && !empty($id_especialidade_dois)) {
 
         foreach ($candidatos as $cand) {
             // Evita duplicar candidatos que aparecem em mais de uma especialidade
-            $candidatos_grupo_dois[$cand['id']] = $cand;
+            if ($cand['etapa_candidato'] == 4) {
+                $candidatos_grupo_dois[$cand['id']] = $cand;
+            }
         }
     }
 
     // Reindexa o array se desejar um índice sequencial (0, 1, 2, ...)
     $candidatos_grupo_dois = array_values($candidatos_grupo_dois);
 }
-
 
 $id_usuario = $_SESSION['id_usuario'];
 $rm_usuario = $conexao->rm_usuario($id_usuario);
@@ -150,13 +153,9 @@ $contadorParagrafo = 1;
 if (!empty($candidatos_grupo_um)) {
     $html = "";
 
-    // Filtra apenas candidatos com etapa == 4
-    $candidatos_filtrados_um = array_filter($candidatos_grupo_um, function ($cand) {
-        return $cand['etapa'] >= 4 && $cand['etapa_candidato'] >= 4;
-    });
 
-    if (!empty($candidatos_filtrados_um)) {
-        $html .= "
+
+    $html .= "
             <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
                 {$contadorParagrafo}. {$grupo_um_texto}
             </p>
@@ -169,40 +168,32 @@ if (!empty($candidatos_grupo_um)) {
                 </tr>
         ";
 
-        $contador = 1;
-        foreach ($candidatos_filtrados_um as $candidato) {
-            // Máscara do CPF
-            $cpf = preg_replace('/\D/', '', $candidato['cpf']);
-            $cpf_mascarado = substr($cpf, 0, 6) . "*****";
+    $contador = 1;
+    foreach ($candidatos_grupo_um as $candidato) {
+        // Máscara do CPF
+        $cpf = preg_replace('/\D/', '', $candidato['cpf']);
+        $cpf_mascarado = substr($cpf, 0, 6) . "*****";
 
-            $html .= "
+        $html .= "
                 <tr>
                     <td style='text-align: center;'>{$contador}</td>
                     <td style='text-align: center;'>{$cpf_mascarado}</td>
                     <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
                 </tr>
             ";
-            $contador++;
-        }
-
-        $html .= "</table>";
-        $mpdf->WriteHTML($html);
-        $contadorParagrafo++;
+        $contador++;
     }
-}
 
+    $html .= "</table>";
+    $mpdf->WriteHTML($html);
+    $contadorParagrafo++;
+}
 
 // =============== GRUPO DOIS ===============
 if (!empty($candidatos_grupo_dois)) {
     $html = "";
 
-    // Filtra apenas candidatos com etapa == 4
-    $candidatos_filtrados_dois = array_filter($candidatos_grupo_dois, function ($cand) {
-        return $cand['etapa'] >= 4 && $cand['etapa_candidato'] >= 4;
-    });
-
-    if (!empty($candidatos_filtrados_dois)) {
-        $html .= "
+    $html .= "
             <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
                 {$contadorParagrafo}. {$grupo_dois_texto}
             </p>
@@ -215,26 +206,25 @@ if (!empty($candidatos_grupo_dois)) {
                 </tr>
         ";
 
-        $contador = 1;
-        foreach ($candidatos_filtrados_dois as $candidato) {
-            // Máscara do CPF
-            $cpf = preg_replace('/\D/', '', $candidato['cpf']);
-            $cpf_mascarado = substr($cpf, 0, 6) . "*****";
+    $contador = 1;
+    foreach ($candidatos_grupo_dois as $candidato) {
+        // Máscara do CPF
+        $cpf = preg_replace('/\D/', '', $candidato['cpf']);
+        $cpf_mascarado = substr($cpf, 0, 6) . "*****";
 
-            $html .= "
+        $html .= "
                 <tr>
                     <td style='text-align: center;'>{$contador}</td>
                     <td style='text-align: center;'>{$cpf_mascarado}</td>
                     <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
                 </tr>
             ";
-            $contador++;
-        }
-
-        $html .= "</table>";
-        $mpdf->WriteHTML($html);
-        $contadorParagrafo++;
+        $contador++;
     }
+
+    $html .= "</table>";
+    $mpdf->WriteHTML($html);
+    $contadorParagrafo++;
 }
 
 $mpdf->Output("Convocação Etapa IV - Teste de Aptidão Física (EAF).pdf", 'D');

@@ -16,7 +16,6 @@ if ($_GET['criptografia'] != hash('sha256', $id_email)) {
 }
 
 $get_email_id = $conexao->get_email_id($id_email);
-$dados_usuario = $conexao->get_usuario_email(htmlspecialchars($get_email_id['email_remetente']));
 
 $nome_completo = null;
 $mail = null;
@@ -53,6 +52,9 @@ if ($data_resposta != null)
     $data_resposta = trata_data_hora($data_resposta);
 if ($data_enviado != null)
     $data_enviado = trata_data_hora($data_enviado);
+
+$dados_usuario = $conexao->get_usuario_email($get_email_id['email_remetente']) ?? [];
+
 ?>
 
 <style>
@@ -674,30 +676,28 @@ if ($data_enviado != null)
                 </div>
                 <div class="card-body-modern">
                     <div class="support-request">
-                        <div class="user-info-section">
-                            <div class="user-avatar">
-                                <?php if (!empty($dados_usuario[0])) : ?>
-                                    <a href="usuario_visualiza.php?<?=$dados_usuario[0]['id']?>">
-                                        <img src="./imagens/user.jpg" alt="<?php echo $get_email_id['remetente'] ?>" class="user-image">
-                                    </a>
-                                <?php else: ?>
+                        <a href="usuario_visualiza.php?id_usuario=<?= $dados_usuario[0]['id'] ?>">
+                            <div class="user-info-section">
+                                <div class="user-avatar">
+
                                     <img src="./imagens/user.jpg" alt="<?php echo $get_email_id['remetente'] ?>" class="user-image">
-                                <?php endif; ?>
-                            </div>
-                            <div class="user-details">
-                                <h4><?= $get_email_id['remetente'] ?></h4>
-                                <div class="user-meta">
-                                    <span class="user-email">
-                                        <i class="fa fa-envelope"></i>
-                                        <?= $get_email_id['email_remetente'] ?>
-                                    </span>
-                                    <span class="request-date">
-                                        <i class="fa fa-calendar"></i>
-                                        <?= trata_data_hora($get_email_id['data_criacao']) ?>
-                                    </span>
+
+                                </div>
+                                <div class="user-details">
+                                    <h4><?= $get_email_id['remetente'] ?></h4>
+                                    <div class="user-meta">
+                                        <span class="user-email">
+                                            <i class="fa fa-envelope"></i>
+                                            <?= $get_email_id['email_remetente'] ?>
+                                        </span>
+                                        <span class="request-date">
+                                            <i class="fa fa-calendar"></i>
+                                            <?= trata_data_hora($get_email_id['data_criacao']) ?>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
 
                         <div class="divider"></div>
 
