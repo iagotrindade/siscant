@@ -1525,7 +1525,7 @@ $lista_especialidades = $conexao->get_especialidade();
                     </div>
                 </div>
 
-                <!-- Convocação EAF -->
+                <!-- Lista de Presença EAF -->
                 <div class="alert alert-info">
                     <legend class="mb-3">
                         Convocação para o Exame de Aptidão Física (EAF)
@@ -1601,6 +1601,103 @@ $lista_especialidades = $conexao->get_especialidade();
                                 <div class="form-group">
                                     <label>Texto Grupo Um</label>
                                     <textarea name="grupo_um_texto" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">XX NOV XX às 0700 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group" style="display: flex; flex-direction: column;">
+                                    <label class="form-label">Selecione as Especialidades (deixe em branco para todas):</label>
+                                    <select name="grupo_um_especialidades[]" class="form-control select2" style="width: 100%;" multiple>
+                                        <?php
+                                        $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
+                                        foreach ($lista_especialidades as $value) { ?>
+                                            <option value="<?php echo htmlspecialchars($value['id']); ?>"
+                                                <?php echo in_array($value['id'], $ids_selecionados) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($value['nome']); ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <label>Texto Grupo Dois</label>
+                                    <textarea name="grupo_dois_texto" placeholder="5º Parágrafo do relatório (Caso Necessário)" class="form-control" rows="3">XX NOV XX às 1300 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group" style="display: flex; flex-direction: column;">
+                                    <label class="form-label">Selecione as Especialidades (deixe em branco para todas):</label>
+                                    <select name="grupo_dois_especialidades[]" class="form-control select2" style="width: 100%;" multiple>
+                                        <?php
+                                        $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
+                                        foreach ($lista_especialidades as $value) { ?>
+                                            <option value="<?php echo htmlspecialchars($value['id']); ?>"
+                                                <?php echo in_array($value['id'], $ids_selecionados) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($value['nome']); ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-file-export me-2"></i> GERAR
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Convocação EAF -->
+                <div class="alert alert-info">
+                    <legend class="mb-3">
+                        Lista de Presença para o Exame de Aptidão Física (EAF)
+                        <img src="imagens/pdf.png" height="30px">
+                    </legend>
+
+                    <div class="alert alert-danger mb-3">
+                        <h6 class="text-info mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                        <ul class="requisitos-list text-info">
+                            <li>A lista irá considerar somente os candidatos que estão CONCORRENDO na Etapa IV</li>
+                            <li>Passar o SISCANT para Etapa IV</li>
+                        </ul>
+                    </div>
+
+                    <form action="mpdf/relatorio_lista_presenca_et_4.php" method="POST">
+                        <input name="tipo_relatorio" type="hidden" value="classificacao">
+                        <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                        <input name="etapa" type="hidden" value="<?php echo ($etapa_atual); ?>">
+                        <input name="orientacao" type="hidden" value="retrato">
+                        <input name="tipo_especialdiade" type="hidden" value="todas">
+                        <input name="cabecalho" type="hidden" value="sim">
+
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="subtitulo" value="LISTA DE PRESENÇA PARA O EXAME DE APTIDÃO FÍSICA (EAF)" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <label>Texto Grupo Um</label>
+                                    <textarea name="grupo_um_texto"  class="form-control" rows="3">XX NOV XX às 0700 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
                                 </div>
                             </div>
 

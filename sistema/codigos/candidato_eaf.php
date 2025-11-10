@@ -49,6 +49,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == '1') {
                         <option value="1" <?= $resultado_eaf == 1 ? 'selected' : '' ?>>Apto</option>
                         <option value="0" <?= $resultado_eaf == 0 ? 'selected' : '' ?>>Inapto</option>
                         <option value="2" <?= $resultado_eaf == 2 ? 'selected' : '' ?>>Não compareceu</option>
+                        <option value="" <?= $resultado_eaf == null ? 'selected' : '' ?>>Selecione uma opção</option>
                     </select>
                 </div>
             </div>
