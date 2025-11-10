@@ -1256,7 +1256,7 @@ $lista_especialidades = $conexao->get_especialidade();
                     <div class="alert alert-danger mb-3">
                         <h6 class="text-info mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
                         <ul class="requisitos-list text-info">
-                            <li>Cadastrar e julgar todos os recursos da Etapa 3 - Documental  no SISCANT</li>
+                            <li>Cadastrar e julgar todos os recursos da Etapa 3 - Documental no SISCANT</li>
                             <li>Serão considerados apenas recursos cadastrados com a Etapa 3 - Documental</li>
                         </ul>
                     </div>
@@ -1525,7 +1525,7 @@ $lista_especialidades = $conexao->get_especialidade();
                     </div>
                 </div>
 
-                <!-- Lista de Presença EAF -->
+                <!-- Convocação EAF -->
                 <div class="alert alert-info">
                     <legend class="mb-3">
                         Convocação para o Exame de Aptidão Física (EAF)
@@ -1652,7 +1652,7 @@ $lista_especialidades = $conexao->get_especialidade();
                     </form>
                 </div>
 
-                <!-- Convocação EAF -->
+                <!-- Lista de Presença EAF -->
                 <div class="alert alert-info">
                     <legend class="mb-3">
                         Lista de Presença para o Exame de Aptidão Física (EAF)
@@ -1697,7 +1697,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             <div class="col-lg-12 mb-3">
                                 <div class="form-group">
                                     <label>Texto Grupo Um</label>
-                                    <textarea name="grupo_um_texto"  class="form-control" rows="3">XX NOV XX às 0700 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
+                                    <textarea name="grupo_um_texto" class="form-control" rows="3">XX NOV XX às 0700 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
                                 </div>
                             </div>
 
@@ -1728,6 +1728,98 @@ $lista_especialidades = $conexao->get_especialidade();
                                 <div class="form-group" style="display: flex; flex-direction: column;">
                                     <label class="form-label">Selecione as Especialidades (deixe em branco para todas):</label>
                                     <select name="grupo_dois_especialidades[]" class="form-control select2" style="width: 100%;" multiple>
+                                        <?php
+                                        $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
+                                        foreach ($lista_especialidades as $value) { ?>
+                                            <option value="<?php echo htmlspecialchars($value['id']); ?>"
+                                                <?php echo in_array($value['id'], $ids_selecionados) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($value['nome']); ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-file-export me-2"></i> GERAR
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Resultado EAF -->
+                <div class="alert alert-info">
+                    <legend class="mb-3">
+                        Resultado do Exame de Aptidão Física (EAF)
+                        <img src="imagens/pdf.png" height="30px">
+                    </legend>
+
+                    <div class="alert alert-danger mb-3">
+                        <h6 class="text-info mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                        <ul class="requisitos-list text-info">
+                            <li>A publicação irá considerar somente os candidatos que estão CONCORRENDO na Etapa IV</li>
+                            <li>Lançar os resultados do EAF</li>
+                            <li>Não desclassificar nenhum candidato que esteja na Etapa IV</li>
+                        </ul>
+                    </div>
+
+                    <form action="mpdf/relatorio_resultado_et_4_eaf.php" method="POST">
+                        <input name="tipo_relatorio" type="hidden" value="classificacao">
+                        <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                        <input name="etapa" type="hidden" value="<?php echo ($etapa_atual); ?>">
+                        <input name="orientacao" type="hidden" value="retrato">
+                        <input name="tipo_especialdiade" type="hidden" value="todas">
+                        <input name="cabecalho" type="hidden" value="sim">
+
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="subtitulo" value="RESULTADO EXAME DE APTIDÃO FÍSICA (EAF)" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mb-3">
+                                <div class="form-group">
+                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da 3ª Região Militar divulga o resultado da Etapa IV – EXAME DE APTIDÃO FÍSICA, conforme anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_dois" class="form-control" rows="3">O período para interposição de Recursos será nos dias XX NOV XX e XX DEZ XX das 0830h às 1130h, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_tres"class="form-control" rows="3">O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial, não serão aceitos recursos entregues fora do prazo ou no local errado.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group">
+                                    <textarea name="paragrafo_quatro" class="form-control" rows="3">A presente relação NÃO está em ordem de classificação.</textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="form-group" style="display: flex; flex-direction: column;">
+                                    <label class="form-label">Selecione as Especialidades (deixe em branco para todas):</label>
+                                    <select name="especialidades[]" class="form-control select2" style="width: 100%;" multiple>
                                         <?php
                                         $ids_selecionados = isset($id_especialidade) && is_array($id_especialidade) ? $id_especialidade : [];
                                         foreach ($lista_especialidades as $value) { ?>
