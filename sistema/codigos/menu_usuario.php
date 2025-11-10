@@ -153,7 +153,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 </li>
 
 <div class="d-flex flex-column">
-    <a href="#topo" class="botao-ajuda" title="Precisa de Ajuda?">
+    <a href="#topo" class="botao-ajuda" title="Ir para o Topo">
         <i class="fa fa-arrow-up"></i>
     </a>
 

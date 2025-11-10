@@ -645,6 +645,10 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
         }
 
         if ($_SESSION['perfil'] == 'admin') {
+            include_once 'codigos/candidato_eaf.php';
+        }
+
+        if ($_SESSION['perfil'] == 'admin') {
             include_once 'codigos/candidato_distribuicao.php';
         }
 

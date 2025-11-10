@@ -272,6 +272,20 @@ if ($perfil == "ouvidor") {
             </div>
 
             <div class="col-xl-4 col-md-6" <?php if ($perfil == "avaliador") echo "hidden"; ?>>
+              <a href="relatorio_quantidade_segmento.php" class="card-link">
+                <div class="dashboard-card card-hover">
+                  <div class="card-icon bg-primary">
+                    <i class="fa fa-venus-mars"></i>
+                  </div>
+                  <div class="card-content">
+                    <h5>Candidatos por Segmento</h5>
+                    <p>Informações dos candidatos divididos por segmento</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="col-xl-4 col-md-6" <?php if ($perfil == "avaliador") echo "hidden"; ?>>
               <a href="usuario_lista.php" class="card-link">
                 <div class="dashboard-card card-hover">
                   <div class="card-icon bg-primary">

@@ -674,6 +674,38 @@ class Conexao
             return false;
         }
     }
+
+    public function altera_eaf_candidato($id_candidato, $resultado)
+    {
+        try {
+            $sqlInsert = "UPDATE usuario SET resultado_eaf = :resultado WHERE id = :id_candidato";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_candidato", $id_candidato);
+            $query->bindValue(":resultado", $resultado);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'id_candidato' => $id_candidato,
+                        'resultado' => $resultado,
+                    ];
+
+                $this->pdo->commit();
+                return $data;
+            } else {
+                echo ('nops');
+                exit;
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Cidade UF">

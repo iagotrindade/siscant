@@ -103,6 +103,8 @@ $cid_saude_recurso = $usuario_visualiza[0]['cid_saude_recurso'];
 $observacao_exame_saude_recurso = $usuario_visualiza[0]['observacao_exame_saude_recurso'];
 $ata_is_recurso = $usuario_visualiza[0]['ata_is_recurso'];
 
+$resultado_eaf = $usuario_visualiza[0]['resultado_eaf'];
+
 $transferencia_fisemi = $usuario_visualiza[0]['transferencia_fisemi'];
 $fisemi_rm_origem = $usuario_visualiza[0]['fisemi_rm_origem'];
 $fisemi_rm_destino = $usuario_visualiza[0]['fisemi_rm_destino'];

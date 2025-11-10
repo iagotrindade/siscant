@@ -2,16 +2,8 @@
 include_once 'menu.php';
 include_once 'codigos/funcao_apagar.php';
 
-$id_usuario = $_SESSION['id_usuario'];
-$rm_usuario = $conexao->rm_usuario($id_usuario);
-
-if ($candidato == 1 || $perfil == 'candidato' || $_SESSION['candidato'] == 1) {
+if ($candidato == 1 || $perfil == 'candidato' || $_SESSION['candidato'] == 1 || $perfil == 'avaliador' || $perfil == 'ouvidor') {
     erro("Erro 23543! Página não encontrada!");
-    exit();
-}
-
-if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'jise') {
-    erro("Erro 632457437! Página não encontrada!");
     exit();
 }
 
@@ -53,20 +45,62 @@ else
     .table-hover tbody tr:hover {
         background-color: rgba(0, 100, 0, 0.03);
     }
+
+    .summary-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        height: 100%;
+    }
+
+    .summary-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        color: white;
+        font-size: 2rem;
+    }
+
+    .summary-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .summary-label {
+        font-size: 1.2rem;
+        color: #6c757d;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+    }
+
+    .summary-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2d3748;
+    }
 </style>
+
 <div class="content-wrapper">
     <div class="page-title">
         <div>
-            <h1>Candidatos Autodeclarados Cotistas <i class="fa fa-users"></i></h1>
+            <h1>Relatório de candidatos por Segmento <i class="fa fa-venus-mars"></i></h1>
         </div>
         <div>
             <ul class="breadcrumb">
                 <li><i class="fa fa-home fa-lg"></i></li>
                 <li><a href="index.php">Página Inicial</a></li>
-                <li>Candidatos Autodeclarados Cotistas</li>
+                <li>Candidatos por Segmento</li>
             </ul>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <!-- Filtro de Especialidade -->
@@ -78,7 +112,7 @@ else
                     </span>
                 </div>
                 <div class="card-body">
-                    <form name="fomulario" action="relatorio_cotistas.php" method="get">
+                    <form name="fomulario" action="relatorio_quantidade_segmento.php" method="get">
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">
@@ -86,7 +120,7 @@ else
                                     Selecione a especialidade desejada
                                 </label>
                                 <select onchange="fomulario.submit()" name="id_especialidade" class="form-control form-control-lg">
-                                    <option value="">Selecione a especialidade</option>
+                                    <option value="">Todas</option>
                                     <?php
                                     if ($avaliador) {
                                         foreach ($lista_especialidade_avaliador as $value) {
@@ -110,13 +144,13 @@ else
                 </div>
             </div>
 
-            <!-- Tabela de Autodeclarados Cotistas -->
+            <!-- Tabela de Avaliação -->
             <div class="card dashboard-card mb-4">
                 <div class="card-header dashboard-header mb-20">
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="card-title mb-0">
-                            <i class="fa fa-users me-2"></i>
-                            Candidatos Autodeclarados Cotistas
+                            <i class="fa fa-venus-mars me-2"></i>
+                            Candidatos por Segmento
                         </span>
                     </div>
                 </div>
@@ -127,31 +161,29 @@ else
                                 <tr>
                                     <th><i class="fa fa-id-card"></i> CPF</th>
                                     <th><i class="fa fa-user"></i> Candidato</th>
-                                    <th><i class="fa fa-pencil-square-o"></i> Autodeclaração</th>
-                                    <th class="text-center"><i class="fa fa-list"></i> Etapa</th>
                                     <th class="text-center"><i class="fa fa-graduation-cap"></i> Especialidades</th>
+                                    <th class="text-center"><i class="fa fa-list"></i> Etapa</th>
+                                    <th class="text-center"><i class="fa fa-venus-mars"></i> Segmento</th>
                                     <th class="text-center"><i class="fa fa-cogs"></i> Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    $total_docs_adicionados = 0;
-                                    $total_docs_avaliados = 0;
+                                $total_docs_adicionados = 0;
+                                $total_docs_avaliados = 0;
 
-                                    foreach ($lista_candidatos as $linha):
-                                        if ($linha['vaga_reservada']) {
-                                            continue;
-                                        }
-                                        $especialidades_cadastradas = "";
-                                        $especialidades_do_candidato = $conexao->get_especialidade_candidato($linha['id']);
+                                foreach ($lista_candidatos as $linha):
+                                    $especialidades_cadastradas = "";
+                                    $especialidades_do_candidato = $conexao->get_especialidade_candidato($linha['id']);
 
-                                        foreach ($especialidades_do_candidato as $esp) {
-                                            if ($esp['ott_stt'] == 'ott') $tem_ott = true;
-                                            if ($esp['ott_stt'] == 'stt') $tem_stt = true;
-                                            $especialidades_cadastradas .= '<span class="badge text-dark mr-10 mb-1" style="background-color: var(--primary-color);">' . strtoupper($esp['ott_stt']) . ' - ' . htmlspecialchars($esp['especialidade']) . '</span>';
-                                        }
-                                    ?>
+                                    foreach ($especialidades_do_candidato as $esp) {
+                                        if ($esp['ott_stt'] == 'ott') $tem_ott = true;
+                                        if ($esp['ott_stt'] == 'stt') $tem_stt = true;
+                                        $especialidades_cadastradas .= '<span class="badge text-dark mr-10 mb-1" style="background-color: var(--primary-color);">' . strtoupper($esp['ott_stt']) . ' - ' . htmlspecialchars($esp['especialidade'] . ' (et_ ' . $esp['etapa'] . ')') . '</span>';
+                                    }
+                                ?>
                                     <tr>
+
                                         <!-- CPF -->
                                         <td>
                                             <?= $linha['cpf'] ?>
@@ -160,13 +192,16 @@ else
                                         <!-- Nome -->
                                         <td>
                                             <div class="candidate-info">
-                                                <div class="fw-semibold candidate-name"><?= htmlspecialchars($linha['nome_completo']) ?></div>
+                                                <div class="fw-semibold candidate-name">
+                                                    <?= htmlspecialchars($linha['nome_completo']) ?>
+                                                </div>
                                             </div>
                                         </td>
 
-                                        <td>
-                                            <div class="candidate-info">
-                                                <div class="fw-semibold candidate-name"><?= htmlspecialchars(strtoupper($linha['autodeclaracao'])) ?></div>
+                                        <!-- Especialidade -->
+                                        <td class="text-center">
+                                            <div class="especialidades-list">
+                                                <?= $especialidades_cadastradas ?>
                                             </div>
                                         </td>
 
@@ -175,11 +210,9 @@ else
                                             et_<?= $linha['etapa'] ?>
                                         </td>
 
-                                        <!-- Especialidades -->
+                                        <!-- Segmento -->
                                         <td class="text-center">
-                                            <div class="especialidades-list">
-                                                <?= $especialidades_cadastradas ?>
-                                            </div>
+                                            <?= mb_strtoupper($linha['sexo']) ?>
                                         </td>
 
                                         <!-- Ações -->
@@ -205,10 +238,12 @@ else
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
-    $('#tabela_dinamica').DataTable();
-</script>
-<script type="text/javascript">
-    $('#tabela_dinamica2').DataTable();
+    $('#tabela_dinamica').DataTable({
+        "pageLength": 50,
+        "order": [
+            [0, "asc"]
+        ]
+    });
 </script>
 </body>
 

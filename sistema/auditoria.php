@@ -770,6 +770,12 @@ if (isset($_GET['codigo'])) {
                                         </tr>
 
                                         <tr>
+                                            <td>INSERT</td>
+                                            <td>Alterou o Resultado do EAF do candidato</td>
+                                            <td>161512</td>
+                                        </tr>
+
+                                        <tr>
                                             <td>UPDATE</td>
                                             <td>Alterou a etapa da especialidade do candidato</td>
                                             <td>161509</td>
