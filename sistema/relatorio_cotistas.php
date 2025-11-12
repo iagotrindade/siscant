@@ -139,7 +139,7 @@ else
                                     $total_docs_avaliados = 0;
 
                                     foreach ($lista_candidatos as $linha):
-                                        if ($linha['vaga_reservada']) {
+                                        if (!$linha['vaga_reservada']) {
                                             continue;
                                         }
                                         $especialidades_cadastradas = "";
