@@ -229,61 +229,135 @@ foreach ($especialidades as $esp_id => $dados_esp) {
     }
 }
 
-// GETA A TABELA COM O TOTAL POR ESPECIALIDADES DE CONVOCADOS NO CRITÉRIO AMPLA CONCORRÊNCIA
-$html = "<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'><strong>1. AMPLA CONCORRÊNCIA POR ESPECIALIDADE</strong></p>
+$html  = "<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
+            <strong>1. AMPLA CONCORRÊNCIA POR ESPECIALIDADE</strong>
+         </p>";
 
-<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>Além das quantidades de candidatos de ampla concorrência abaixo informadas, serão convocados todos os candidatos cotistas independente de sua classificação.</p>";
+$html .= "<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
+            Além das quantidades de candidatos de ampla concorrência abaixo informadas, serão convocados todos os candidatos cotistas independente de sua classificação.
+         </p>";
 
 $html .= "
    <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
-    <tr>
-        <th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>QUANTIDADE DE CANDIDATOS CONVOCADOS NO CRITÉRIO AMPLA CONCORRÊNCIA</th>
-    </tr>
-    <tr>
-        <th style='text-align: center; width: 10%;'>Nº</th>
-        <th style='text-align: center; width: 20%;'>ESPECIALIDADE</th>
-        <th style='text-align: center; width: 50%;'>QUANTIDADE</th>
-    </tr>
-    ";
+        <tr>
+            <th colspan='3' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>
+                QUANTIDADE DE CANDIDATOS CONVOCADOS NO CRITÉRIO AMPLA CONCORRÊNCIA
+            </th>
+        </tr>
+        <tr>
+            <th style='text-align: center; width: 10%;'>Nº</th>
+            <th style='text-align: center; width: 20%;'>ESPECIALIDADE</th>
+            <th style='text-align: center; width: 50%;'>QUANTIDADE</th>
+        </tr>
+";
 
 $contador = 1;
 
 foreach ($lista_especialidades as $especialidade) {
     if (isset($qtd_especialidade[$especialidade['id']])) {
+
         $qtd_txt = $qtd_especialidade[$especialidade['id']];
+        $nome_esp = mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome'], 'UTF-8');
 
         $html .= "
             <tr>
                 <td style='text-align: center;'>$contador</td>
-                <td style='text-align: center;'>" . mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['nome']) . "</td>
-                <td style='text-align: center;'>" . $qtd_txt . "</td>
-            </tr>";
+                <td style='text-align: center;'>$nome_esp</td>
+                <td style='text-align: center;'>$qtd_txt</td>
+            </tr>
+        ";
     }
-    $contador++; 
+    $contador++;
 }
+
 $html .= "</table>";
+
+// IMPRIME A PRIMEIRA PARTE
 $mpdf->WriteHTML($html);
 
-$html = "<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'><strong>2. CONVOCAÇÃO ETAPA III</strong></p>";
 
-// GERAR TABELAS POR ESPECIALIDADE E TURNO 
+// =========================================
+// 2. CONVOCAÇÃO ETAPA III  (IMPRESSO UMA ÚNICA VEZ!)
+// =========================================
+
+$html = "<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
+            <strong>2. CONVOCAÇÃO ETAPA III</strong>
+         </p>";
+
+// imprime apenas o título
+$mpdf->WriteHTML($html);
+
+
+// =========================================
+// 3. TABELAS DOS TURNOS POR ESPECIALIDADE
+// =========================================
+
 foreach ($turnos_agendados as $data => $turnos_dia) {
+
     $data_formatada = formatarDataPortugues($data);
+
+    // manhã e tarde
     foreach (['manha', 'tarde'] as $turno) {
-        if (empty($turnos_dia[$turno]['especialidades'])) continue;
+
+        if (empty($turnos_dia[$turno]['especialidades'])) {
+            continue;
+        }
+
         $hora_turno = ($turno === 'manha') ? '0800h' : '1300h';
+
         foreach ($turnos_dia[$turno]['especialidades'] as $esp_id => $candidatos_ids) {
-            if (empty($candidatos_ids)) continue;
+
+            if (empty($candidatos_ids)) {
+                continue;
+            }
+
+            // INÍCIO DA TABELA — LIMPA HTML
+            $html = "";
+
             $nome_especialidade = $especialidades[$esp_id]['nome_especialidade'];
-            $html .= "<table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'> <tr><th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'> " . mb_strtoupper($nome_especialidade, 'UTF-8') . "<br> {$data_formatada} ÀS {$hora_turno} </th></tr> <tr> <th style='text-align: center; width: 10%;'>Nº</th> <th style='text-align: center; width: 20%;'>CPF</th> <th style='text-align: center; width: 60%;'>NOME</th><th style='text-align: center; width: 10%;'>AUTODECLARAÇÃO</th> </tr>";
+            $nome_especialidade_upper = mb_strtoupper($nome_especialidade, 'UTF-8');
+
+            $html .= "
+                <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
+                    <tr>
+                        <th colspan='4' 
+                            style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>
+                            {$nome_especialidade_upper}<br> 
+                            {$data_formatada} ÀS {$hora_turno}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style='text-align: center; width: 10%;'>Nº</th>
+                        <th style='text-align: center; width: 20%;'>CPF</th>
+                        <th style='text-align: center; width: 60%;'>NOME</th>
+                        <th style='text-align: center; width: 10%;'>AUTODECLARAÇÃO</th>
+                    </tr>
+            ";
+
             $contador = 1;
+
             foreach ($candidatos_ids as $candidato_id) {
+
                 $candidato = $todos_candidatos[$candidato_id]['dados'];
-                $cpf = substr($candidato['cpf'], 0, -5) . "*****";
-                $html .= "<tr> <td style='text-align: center;'>{$contador}</td> <td style='text-align: center;'>{$cpf}</td> <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td> <td style='text-align: center;'>" . mb_strtoupper($candidato['autodeclaracao']) . "</td> </tr>";
+
+                // máscara CPF
+                $cpf = $candidato['cpf'];
+                $cpf_mascarado = substr($cpf, 0, -5) . "*****";
+
+                $html .= "
+                    <tr>
+                        <td style='text-align: center;'>{$contador}</td>
+                        <td style='text-align: center;'>{$cpf_mascarado}</td>
+                        <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
+                        <td style='text-align: center;'>" . mb_strtoupper($candidato['autodeclaracao']) . "</td>
+                    </tr>
+                ";
                 $contador++;
             }
+
             $html .= "</table>";
+
+            // IMPRIME APENAS A TABELA ATUAL
             $mpdf->WriteHTML($html);
         }
     }
