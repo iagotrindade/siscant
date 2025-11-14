@@ -53,7 +53,7 @@ if ($data_resposta != null)
 if ($data_enviado != null)
     $data_enviado = trata_data_hora($data_enviado);
 
-$dados_usuario = $conexao->get_usuario_email(trim($get_email_id['email_remetente'])) ?? [];
+$dados_usuario = $conexao->get_usuario_email(trim($get_email_id['email_remetente']));
 
 ?>
 

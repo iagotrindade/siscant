@@ -508,7 +508,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <textarea name="paragrafo_1" placeholder="1º Parágrafo do relatório" class="form-control" rows="3"></textarea>
+                                    <textarea name="paragrafo_1" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da XX divulga a relação dos candidatos inscritos, por ordem de classificação nas especialidades para XX, após análise de recursos da Etapa II conforme anexo “A” (Calendário Geral de Atividades), do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
@@ -580,7 +580,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o parecer da análise de recursos referente à Etapa II, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação Nr X-SSMR/X, de X de junho de 20XX.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da XX divulga o parecer da análise de recursos referente à Etapa II, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação Nr X-SSMR/X, de X de junho de 20XX.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
@@ -648,12 +648,12 @@ $lista_especialidades = $conexao->get_especialidade();
                             <div class="row">
                                 <div class="col-lg-4 mb-20">
                                     <label class="form-label fw-semibold">Título</label>
-                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O XX 20XX/20XX" class="form-control">
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
                                     <label class="form-label fw-semibold">Subtítulo</label>
-                                    <input name="subtitulo" value="CONVOCAÇÃO PARA ETAPA III - CONFERÊNCIA PRESENCIAL DE DOCUMENTAÇÃO, ENTREVISTA E INSPEÇÃO DE SAÚDE" class="form-control">
+                                    <input name="subtitulo" value="CONVOCAÇÃO PARA ETAPA III - INSPEÇÃO DE SAÚDE" class="form-control">
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
@@ -693,7 +693,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">De acordo com o Aviso de Convocação Nr XX-SSMR/X, de X de junho de 20XX, CONVOCO os candidatos abaixo relacionados, para comparecimento presencial à Comissão de Seleção Especial para Serviço Técnico Temporário (CSE/SvTT), localizada na Rua Bento Martins Nº 45 - Centro - Porto Alegre-RS, nas DATAS e HORÁRIOS abaixo, munidos da documentação conforme inserida no SISCANT e exames de saúde previstos para a Etapa III do processo seletivo, todas as certidões solicitadas no "Anexo C" deverão estar atualizadas.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">De acordo com o Aviso de Convocação Nr XX-SSMR/X, de X de junho de 20XX, CONVOCO os candidatos abaixo relacionados, para comparecimento presencial à Comissão de Seleção Especial para Serviço Técnico Temporário (CSE/SvTT), localizada na Rua Bento Martins Nº 45 - Centro - Porto Alegre-RS, nas DATAS e HORÁRIOS abaixo, munidos da documentação conforme inserida no SISCANT e exames de saúde previstos para a Etapa III do processo seletivo, todas as certidões solicitadas no "Anexo X" deverão estar atualizadas.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
@@ -708,7 +708,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">4º Parágrafo</label>
-                                    <textarea name="paragrafo_quatro" placeholder="4º Parágrafo do relatório" class="form-control" rows="2">Informo, também, que os candidatos NÃO CONVOCADOS nesta lista poderão ser chamados para convocações posteriores, caso haja necessidade na área da 3ª Região Militar.</textarea>
+                                    <textarea name="paragrafo_quatro" placeholder="4º Parágrafo do relatório" class="form-control" rows="2">Informo, também, que os candidatos NÃO CONVOCADOS nesta lista poderão ser chamados para convocações posteriores.</textarea>
                                 </div>
 
                                 <?php foreach ($lista_especialidades as $especialidade):

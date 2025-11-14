@@ -91,6 +91,7 @@ foreach ($inscricoes as $valor) {
         $justificativa_especialidade        = $resultado_verificacao[0]['justificativa'];
         $id_usuario_alterou_concorrendo_especialidade     = $resultado_verificacao[0]['id_usuario_alterou_concorrendo'];
         $nota_prova_teorico_pratico     = (float)$resultado_verificacao[0]['nota_prova_teorico_pratico'];
+        $resultado_prova_teorico_pratico     = (int)$resultado_verificacao[0]['apto_prova_teorico_pratico'];
         $prova_pratica_musica           = (float)$resultado_verificacao[0]['prova_pratica_musica'];
         $prova_teorica_musica           = (float)$resultado_verificacao[0]['prova_teorica_musica'];
         $prova_oral_musica              = (float)$resultado_verificacao[0]['prova_oral_musica'];
@@ -367,15 +368,17 @@ foreach ($inscricoes as $valor) {
                             </span>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="../banco_dados/nota_teorico_pratica.php" enctype="multipart/form-data">
-                                <?php
-                                $id_cand_esp = $conexao->get_id_candidato_x_especialidade($id_usuario, $id_especialidade);
-                                $nota = (float) $nota_prova_teorico_pratico;
-                                $nota_formatada = number_format($nota, 2, '.', '');
-                                if ($nota < 10) {
-                                    $nota_formatada = '0' . $nota_formatada;
-                                }
-                                ?>
+                            <?php
+                            $id_cand_esp = $conexao->get_id_candidato_x_especialidade($id_usuario, $id_especialidade);
+                            $nota = (float) $nota_prova_teorico_pratico;
+                            $nota_formatada = number_format($nota, 2, '.', '');
+                            if ($nota < 10) {
+                                $nota_formatada = '0' . $nota_formatada;
+                            }
+
+
+                            ?>
+                            <form method="post" action="../banco_dados/resultado_prova_cadastra.php">
                                 <input type="hidden" value="<?= $id_usuario ?>" name="id_usuario">
                                 <input type="hidden" value="<?= $crip ?>" name="criptografia">
                                 <input type="hidden" value="<?= $id_especialidade ?>" name="id_especialidade">
@@ -383,6 +386,44 @@ foreach ($inscricoes as $valor) {
                                 <input type="hidden" value="<?= $id_cand_esp[0]['id'] ?>" name="id_candidato_x_especialidade">
 
                                 <div class="row">
+                                    <!-- Apto/Inapto -->
+                                    <div class="col-md-12 mb-20">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fa fa-pencil-square-o me-1"></i>
+                                            Resultado
+                                        </label>
+                                        <select
+                                            name="resultado_teorico_pratica"
+                                            class="form-control"
+                                            required>
+                                            <option value="" disabled selected>Selecione a Situação da Prova</option>
+                                            <option value="1" <?= $resultado_prova_teorico_pratico == 1 ? 'selected' : '' ?>>Apto</option>
+                                            <option value="0" <?= $resultado_prova_teorico_pratico == 0 ? 'selected' : '' ?>>Inapto</option>
+                                            <option value="2" <?= $resultado_prova_teorico_pratico == 2 ? 'selected' : '' ?>>Não compareceu</option>
+                                            <option value="" <?= $resultado_prova_teorico_pratico == null ? 'selected' : '' ?>>Selecione uma opção</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Botão de Submit -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary w-100 py-2 fs-5">
+                                            <i class="fa fa-sync-alt me-2"></i>
+                                            ATUALIZAR RESULTADO
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <form method="post" action="../banco_dados/nota_teorico_pratica.php" enctype="multipart/form-data">
+                                <input type="hidden" value="<?= $id_usuario ?>" name="id_usuario">
+                                <input type="hidden" value="<?= $crip ?>" name="criptografia">
+                                <input type="hidden" value="<?= $id_especialidade ?>" name="id_especialidade">
+                                <input type="hidden" value="<?= $linha['id_especialidade_curriculo'] ?>" name="id_especialidade_curriculo">
+                                <input type="hidden" value="<?= $id_cand_esp[0]['id'] ?>" name="id_candidato_x_especialidade">
+
+                                <div class="row mt-20">
                                     <div class="col-md-12 mb-20">
                                         <label class="form-label fw-semibold">
                                             <i class="fa fa-edit me-1"></i>
@@ -604,7 +645,7 @@ foreach ($inscricoes as $valor) {
                             <?php endif; ?>
 
                             <!-- Cidade de Serviço -->
-                             <?php if($etapa >= 4 && $concorrendo_especialidade): ?>
+                            <?php if ($etapa >= 4 && $concorrendo_especialidade): ?>
                                 <div class="card">
                                     <div class="card-header mb-20">
                                         <span class="mb-0">
@@ -639,7 +680,7 @@ foreach ($inscricoes as $valor) {
                                         </form>
                                     </div>
                                 </div>
-                            <?php endif;?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

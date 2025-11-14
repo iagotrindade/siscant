@@ -7223,7 +7223,7 @@ order by total_pontos_somados desc");
         $stmt = $this->pdo->prepare(
             "
                     select ce.id id_candidato_x_especialidade, cidade.nome nome_cidade, ce._data_ultima_atualizacao, e.id id_especialidade, u.nome_completo, u.cpf, e.nome especialidade, e.ott_stt,
-                    ce.prova_pratica_musica, ce.nota_prova_teorico_pratico, ce.prova_teorica_musica ,ce.prova_oral_musica, ce.usuario_avaliou_provas_musica, ce.concorrendo, ce.justificativa, ce.id_usuario_alterou_concorrendo
+                    ce.prova_pratica_musica, ce.nota_prova_teorico_pratico, ce.apto_prova_teorico_pratico, ce.prova_teorica_musica ,ce.prova_oral_musica, ce.usuario_avaliou_provas_musica, ce.concorrendo, ce.justificativa, ce.id_usuario_alterou_concorrendo
                     from candidato_x_especialidade ce
                     left join cidade on cidade.id = ce.cidade_escolheu_servir
                     inner join usuario u on u.id = ce.id_candidato
@@ -10398,6 +10398,53 @@ order by total_pontos_somados desc");
                     [
                         'id_candidato_x_especialidade' => $id_candidato_x_especialidade,
                         'pontuacao_teorico_pratica' => $pontuacao_teorico_pratica,
+                        'usuario_avaliou' => $usuario,
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        return true;
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Avalia Provas Música">
+    public function adiciona_resultado_teorico_pratico($id_candidato_x_especialidade, $apto_teorico_pratica)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+        $id_selecao = $_SESSION['selecao'];
+
+        try {
+            $sqlInsert = "UPDATE candidato_x_especialidade SET apto_prova_teorico_pratico=:apto_teorico_pratica, 
+                           usuario_add_nota_prova_teorico_pratica = :usuario_avaliou,
+                           _data_ultima_atualizacao=:data_atualizacao, _usuario_ultima_atualizacao=:usuario_avaliou
+                           WHERE id=:id_candidato_x_especialidade";
+
+
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_candidato_x_especialidade", $id_candidato_x_especialidade);
+            $query->bindValue(":apto_teorico_pratica", $apto_teorico_pratica);
+            $query->bindValue(":usuario_avaliou", $usuario);
+            $query->bindValue(":data_atualizacao", $datetime);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'id_candidato_x_especialidade' => $id_candidato_x_especialidade,
+                        'pontuacao_teorico_pratica' => $apto_teorico_pratica,
                         'usuario_avaliou' => $usuario,
                         '_data_ultima_atualizacao' => $datetime,
                         '_usuario_ultima_atualizacao' => $usuario,
