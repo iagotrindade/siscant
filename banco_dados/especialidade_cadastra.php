@@ -49,6 +49,9 @@ $ott_stt = $_POST['ott_stt'];
 if(isset($_POST['teste_pratico'])) $teste_pratico = 1;
 else $teste_pratico = 0;
 
+if(isset($_POST['nota_av'])) $nota_av = 1;
+else $nota_av = 0;
+
 if(isset($_POST['musica'])) $musica = 1;
 else $musica = 0;
 
@@ -91,9 +94,8 @@ if(count($verifica_nome) > 0)
     exit();
 }
 
-
 if($_POST)
-    $resultado = $conexao->insere_especialidade($nome_especialidade, $teste_pratico, $ott_stt, $musica);
+    $resultado = $conexao->insere_especialidade($nome_especialidade, $teste_pratico, $nota_av, $ott_stt, $musica);
 $id_especialidade_adicionada = (int)$resultado['id_adicionado'];
 
 $alteracoes_detalhadas =  print_r($resultado, true);

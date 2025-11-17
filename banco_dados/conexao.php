@@ -2305,6 +2305,7 @@ class Conexao
             u.etapa AS etapa_candidato,
             c.nome AS cidade_escolheu_servir, 
             ce.id AS id_ce, 
+            ce.apto_prova_teorico_pratico,
             ce.nota_prova_teorico_pratico,
             ce.prova_pratica_musica,
             ce.prova_teorica_musica,
@@ -6685,7 +6686,7 @@ order by total_pontos_somados desc");
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Insere Especialidade">
-    public function insere_especialidade($nome, $teste, $ott_stt, $musica)
+    public function insere_especialidade($nome, $teste, $nota_av, $ott_stt, $musica)
     {
         $datetime = date('Y-m-d H:i:s');
         $usuario_cadastrou = $_SESSION['id_usuario'];
@@ -6694,9 +6695,9 @@ order by total_pontos_somados desc");
 
         try {
             $sqlInsert = "INSERT INTO especialidade
-            (id_selecao, nome, teste_pratico, ott_stt, musica, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao)
+            (id_selecao, nome, teste_pratico, nota_av, ott_stt, musica, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao)
             VALUES
-            (:id_selecao, :nome, :teste, :ott_stt, :musica, :zero, :datetime, :usuario_cadastrou)";
+            (:id_selecao, :nome, :teste, :nota_av, :ott_stt, :musica, :zero, :datetime, :usuario_cadastrou)";
 
             $this->pdo->beginTransaction();
 
@@ -6705,6 +6706,7 @@ order by total_pontos_somados desc");
             $query->bindValue(":id_selecao", $id_selecao);
             $query->bindValue(":nome", $nome);
             $query->bindValue(":teste", $teste);
+            $query->bindValue(":nota_av", $nota_av);
             $query->bindValue(":ott_stt", $ott_stt);
             $query->bindValue(":musica", $musica);
             $query->bindValue(":datetime", $datetime);
@@ -6718,6 +6720,7 @@ order by total_pontos_somados desc");
                         'id_selecao' => $id_selecao,
                         'nome' => $nome,
                         'teste' => $teste,
+                        'nota_av' => $nota_av,
                         'ott_stt' => $ott_stt,
                         '_data_ultima_atualizacao' => $datetime,
                         '_usuario_ultima_atualizacao' => $usuario_cadastrou,

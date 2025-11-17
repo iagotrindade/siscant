@@ -1429,7 +1429,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da 3ª Região Militar divulga a chamada dos candidatos selecionados para a Etapa IV – EXAME DE APTIDÃO FÍSICA, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga a chamada dos candidatos selecionados para a Etapa IV – EXAME DE APTIDÃO FÍSICA, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
@@ -1622,7 +1622,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da 3ª Região Militar divulga o resultado da Etapa IV – EXAME DE APTIDÃO FÍSICA, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o resultado da Etapa IV – EXAME DE APTIDÃO FÍSICA, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
@@ -1661,12 +1661,12 @@ $lista_especialidades = $conexao->get_especialidade();
                     </div>
                 </div>
 
-                <!-- Resultado Teste Práticos -->
+                <!-- Resultado Teste Práticos (APTO/INAPTO/NÃO COMPARECEU) -->
                 <div class="card border-info mb-20">
                     <div class="card-header mb-20 bg-info text-white">
                         <span class="fw-semibold">
                             <i class="fa fa-pencil-square-o me-2"></i>
-                            Resultado dos Testes Teóricos/Práticos
+                            Resultado dos Testes Teóricos/Práticos (APTO/INAPTO/NÃO COMPARECEU)
                         </span>
                     </div>
                     <div class="card-body">
@@ -1705,7 +1705,87 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da 3ª Região Militar divulga o resultado da Etapa IV – Teste Teórico/Prático, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de XX de Junho de 20XX.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o resultado da Etapa IV – Teste Teórico/Prático, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de XX de Junho de 20XX.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">2º Parágrafo</label>
+                                    <textarea name="paragrafo_dois" class="form-control" rows="3">O período para interposição de Recursos será nos dias XX NOV XX e XX DEZ XX das 0830h às 1130h, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">3º Parágrafo</label>
+                                    <textarea name="paragrafo_tres" class="form-control" rows="3">O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial, não serão aceitos recursos entregues fora do prazo ou no local errado.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">4º Parágrafo</label>
+                                    <textarea name="paragrafo_quatro" class="form-control" rows="3">A presente relação NÃO está em ordem de classificação.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Selecione as Especialidades</label>
+                                    <select name="especialidades[]" class="form-control select2" multiple>
+                                        <?php foreach ($lista_especialidades as $value): ?>
+                                            <option value="<?= htmlspecialchars($value['id']) ?>">
+                                                <?= htmlspecialchars($value['nome']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Resultado Teste Práticos (NOTA) -->
+                <div class="card border-info mb-20">
+                    <div class="card-header mb-20 bg-info text-white">
+                        <span class="fw-semibold">
+                            <i class="fa fa-pencil-square-o me-2"></i>
+                            Resultado dos Testes Teóricos/Práticos (NOTA)
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning mb-20">
+                            <h6 class="text-dark mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                            <ul class="requisitos-list text-dark">
+                                <li>A publicação irá considerar somente os candidatos que estão CONCORRENDO na Etapa IV</li>
+                                <li>Lançar os resultados dos Testes</li>
+                                <li>Não desclassificar nenhum candidato que esteja na Etapa IV</li>
+                            </ul>
+                        </div>
+
+                        <form action="mpdf/relatorio_resultado_et_4_testes_notas.php" method="POST">
+                            <input name="tipo_relatorio" type="hidden" value="classificacao">
+                            <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                            <input name="etapa" type="hidden" value="<?= $etapa_atual ?>">
+
+                            <div class="row">
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Título</label>
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Subtítulo</label>
+                                    <input name="subtitulo" value="RESULTADO TESTE PRÁTICO/TEÓRICO" class="form-control">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Cidade e Data</label>
+                                    <input name="data" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">1º Parágrafo</label>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o resultado da Etapa IV – Teste Teórico/Prático, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de XX de Junho de 20XX.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">

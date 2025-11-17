@@ -115,19 +115,14 @@ foreach ($lista_especialidades as $especialidade) {
             ? substr($candidato['cpf'], 0, -5) . "******"
             : "******";
 
-        $statusMap = [
-            '1' => 'APTO',
-            '0' => 'INAPTO',
-            '2' => 'NÃO COMPARECEU'
-        ];
-        $resultado = $statusMap[$candidato['apto_prova_teorico_pratico']] ?? 'DESCONHECIDO';
+        $nota = $candidato['nota_prova_teorico_pratico'] ?? 'DESCONHECIDO';
 
         $linhasCandidatos .= "
             <tr>
                 <td style='text-align: center;'>$contador</td>
                 <td style='text-align: center;'>$cpf</td>
                 <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
-                <td style='text-align: center;'>$resultado</td>
+                <td style='text-align: center;'>$nota</td>
             </tr>";
         $contador++;
     }
