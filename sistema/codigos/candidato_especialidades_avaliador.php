@@ -90,8 +90,10 @@ foreach ($inscricoes as $valor) {
         $concorrendo_especialidade          = $resultado_verificacao[0]['concorrendo'];
         $justificativa_especialidade        = $resultado_verificacao[0]['justificativa'];
         $id_usuario_alterou_concorrendo_especialidade     = $resultado_verificacao[0]['id_usuario_alterou_concorrendo'];
+        $teste_pratico     = $resultado_verificacao[0]['teste_pratico'];
+        $nota_av     = $resultado_verificacao[0]['nota_av'];
         $nota_prova_teorico_pratico     = (float)$resultado_verificacao[0]['nota_prova_teorico_pratico'];
-        $resultado_prova_teorico_pratico     = (int)$resultado_verificacao[0]['apto_prova_teorico_pratico'];
+        $resultado_prova_teorico_pratico     = $resultado_verificacao[0]['apto_prova_teorico_pratico'];
         $prova_pratica_musica           = (float)$resultado_verificacao[0]['prova_pratica_musica'];
         $prova_teorica_musica           = (float)$resultado_verificacao[0]['prova_teorica_musica'];
         $prova_oral_musica              = (float)$resultado_verificacao[0]['prova_oral_musica'];
@@ -281,9 +283,11 @@ foreach ($inscricoes as $valor) {
                                     } elseif (!empty($_SESSION['selecao_codigo']) && $_SESSION['selecao_codigo'] === 'cet') {
                                         $nota_calculada = (((float)$nota_prova_teorico_pratico * 2) + (float)$pontuacao_total) / 3;
                                         echo number_format($nota_calculada, 2, '.', '');
-                                    } else {
+                                    } elseif ($teste_pratico == '1' && $nota_av == '1') {
                                         $total = (float)$pontuacao_total + (float)$nota_prova_teorico_pratico;
                                         echo number_format($total, 2, '.', '');
+                                    } else {
+                                        echo number_format($pontuacao_total, 2, '.', '');
                                     }
                                     ?>
                                 </p>
@@ -396,11 +400,10 @@ foreach ($inscricoes as $valor) {
                                             name="resultado_teorico_pratica"
                                             class="form-control"
                                             required>
-                                            <option value="" disabled selected>Selecione a Situação da Prova</option>
-                                            <option value="1" <?= $resultado_prova_teorico_pratico == 1 ? 'selected' : '' ?>>Apto</option>
-                                            <option value="0" <?= $resultado_prova_teorico_pratico == 0 ? 'selected' : '' ?>>Inapto</option>
-                                            <option value="2" <?= $resultado_prova_teorico_pratico == 2 ? 'selected' : '' ?>>Não compareceu</option>
-                                            <option value="" <?= $resultado_prova_teorico_pratico == null ? 'selected' : '' ?>>Selecione uma opção</option>
+                                            <option value="" <?= $resultado_prova_teorico_pratico == null ? 'selected' : '' ?>>Selecione a Situação da Prova</option>
+                                            <option value="1" <?= $resultado_prova_teorico_pratico == "1" ? 'selected' : '' ?>>Apto</option>
+                                            <option value="0" <?= $resultado_prova_teorico_pratico == "0" ? 'selected' : '' ?>>Inapto</option>
+                                            <option value="2" <?= $resultado_prova_teorico_pratico == "2" ? 'selected' : '' ?>>Não compareceu</option>
                                         </select>
                                     </div>
                                 </div>

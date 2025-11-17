@@ -1,102 +1,162 @@
+
 <?php
+/**
+ * @author Asp Volpato
+ * 2.0v - 08/06/2022 - recuperação de senha da vpn
+ */
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 
 $resultado_selecao = $conexao->get_selecao_id();
-
-
-//Funcionava até 24/02/2023
-//include_once '../PHPMailer/PHPMailerAutoload.php';
-
-// Antigo Funciona na 1º versão que foi utilizado
-//include_once '../PHPMailer_old/class.phpmailer.php';
-
 
 include_once '../envia_carta/src/Exception.php';
 include_once '../envia_carta/src/PHPMailer.php';
 include_once '../envia_carta/src/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
+$randomString = 'r@nd0m$tring';
 
-#########################################
-#Inicia a classe PHPMailer
-$mail_envia = new PHPMailer();
+//Create a new PHPMailer instance
+$mail = new PHPMailer();
+//Tell PHPMailer to use SMTP
+$mail->SMTPDebug = 0;
 
-////////////////////////////////////////////////////////////////////////////
-// Desabilita SSL para que a nova versão do PHPMailer possa enviar o E-Mail
-$mail_envia->SMTPOptions = array(
-'ssl' => array(
-    'verify_peer' => false,
-    'verify_peer_name' => false,
-    'allow_self_signed' => true
-));
-////////////////////////////////////////////////////////////////////////////
+$mail->SMTPOptions = array(
+    'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => true,
+        'allow_self_signed' => true
+    )
+);
 
-#Define os dados do servidor e tipo de conexão
-$mail_envia->IsSMTP(); // Define que a mensagem será SMTP
+try {
+    $mail->isSMTP();
+    $mail->Host = 'smtp.webmail.eb.mil.br'; // Servidor SMTP
+    $mail->SMTPAuth = true;
+    $mail->Username = 'siscant@3rm.eb.mil.br'; // Seu usuário SMTP
+    $mail->Password = 'EMHFXQMNPYQMAWYD'; // Sua senha SMTP
+    $mail->SMTPSecure = 'tls';  //'tls' Define o tipo de criptografia para TLS
+    $mail->Port = 587; // Porta TCP para TLS
 
-//$mail_envia->Host = "smtp.1cta.eb.mil.br"; // Endereço do servidor SMTP --- Funcionando até 30/11/2021
-$mail_envia->Host = "10.25.111.80"; // Endereço do servidor SMTP
+    $mail->From = 'siscant@3rm.eb.mil.br'; //Set who the message is to be sent from
+    $mail->FromName = utf8_decode('Não responda - Comando 3ª RM'); //Nome do Remetente
+    $mail->Subject = 'SiSCanT - Cadastro no Sistema de Seleção de Candidatos Temporários (SiSCanT)';                       // Assunto do e-mail
 
-$mail_envia->SMTPAuth = false; // Autenticação
-// $mail_envia->Username = 'usuario@3rm.eb.mil.br'; // Usuário do servidor SMTP
-$mail_envia->Password = ''; // Senha da caixa postal utilizada
-#Define o remetente
-$mail_envia->From = "siscant@3rm.eb.mil.br"; // Endereço de quem enviou o e-mail
-$mail_envia->FromName = "Serviço Militar";// E-MAIL Recebido de quem
-#Define os destinatário(s)
-$mail_envia->AddAddress($mail, $nome_completo);// Vai enviar o e-mail, E-Mail e Nome
+    // Configurações do remetente e destinatário    
 
-//$mail_envia->SMTPDebug  = 1; 
-//$mail_envia->addReplyTo('noreply@servico_militar', 'First Last'); // Aqui define um endereço(email) alternativo para resposta.
+    $mail->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente
+    //$mail->addAddress('siscant@3rm.eb.mil.br'); // Adiciona um destinatário
 
-//$mail_envia->AddBCC('gfreitas@3rm.eb.mil.br', 'Ten Freitas'); // Cópia Oculta
-#Define os dados técnicos da Mensagem
-$mail_envia->IsHTML(true); // Define que o e-mail será enviado como HTML
-$mail_envia->CharSet = 'utf-8'; // Charset da mensagem (opcional)
+    $mail->AddAddress($mail, $nome_completo);
 
+    // Definir como HTML
+    $mail->isHTML(true);
 
-$mail_envia->Subject = "Serviço Técnico Temporário"; // Assunto da mensagem
-$mensagem = 
-"
-<b>".  mb_strtoupper($resultado_selecao[0]['nome'], 'UTF-8'). " - ".$resultado_selecao[0]['ano']."</b><br><br>
-    
-".$nome_completo.", seu cadastro no SiSCanT (Sistema de Seleção de Candidatos Temporários) foi realizado com sucesso!<br><br>
+    // Conteúdo do e-mail
+    $mail->Body = utf8_decode('        
+        <!doctype html>
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+            </head>
+            <body style="background-color: #bdc3c7; font-family:Arial, Helvetica, sans-serif;">
+                <table class="container-table" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <!-- Header -->
+                        <tr>
+                            <td class="header-cell" style="background-color: green; padding: 25px 20px; text-align: center; color: #ffffff;">
+                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                        <td style="text-align: center;">
+                                                 <h1 style="font-size: 22px; margin: 0 0 5px 0; font-weight: bold;">ALTERAÇÃO DE SENHA</h1>
+                                            <p style="font-size: 14px; margin: 0; opacity: 0.9;">Sistema de Seleção de Candidatos Temporários</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
 
-O seu usuário é: <u>".$cpf."</u> <br>
-E a sua senha é: <u> ".$senha."</u> <br><br>
+                        <tr>
+                        <td style="padding: 30px 25px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <!-- Greeting -->
+                                <tr>
+                                    <td style="padding-bottom: 20px;">
+                                        <p style="font-size: 16px; color: #333333; margin: 0;">
+                                            Prezado(a) <strong>' . $nome_completo . '</strong>,
+                                        </p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Intro -->
+                                <tr>
+                                    <td style="padding-bottom: 25px;">
+                                        <p style="font-size: 14px; color: #555555; margin: 0;">
+                                            Seu cadastro foi realizado com sucesso, mas ainda não acabou!:
+                                        </p>
+                                    </td>
+                                </tr>
 
-<font color='red'>IMPORTANTE!</font> Você deve seguir os passos do sistema para terminar a inscrição no processo seletivo!
-<br>
-Qualquer dúvida, utilize o suporte que estará disponível ao se logar no sistema. <br><br>
+                                <tr>
+                                    <td style="padding-bottom: 25px;">
+                                        <center>
+                                            <p style="width: 25%; background-color: green; font-size: 20px; color: white; padding: 10px; border-radius: 10px; text-align: center;">
+                                                <b>
+                                                    O seu usuário é: <u>' . $cpf . '</u> <br>
+                                                    E a sua senha é: <u> ' . $senha . '</u>
+                                                </b>
+                                            </p>
+                                        </center>
+                                    </td>
+                                </tr>
 
-<i> Este é um e-mail automático, por favor não responda!</i>";
+                                <tr>
+                                    <td style="padding-bottom: 25px;">
+                                        <p style="font-size: 14px; color: #555555; margin: 0;">
+                                            Lembre-se que você deve acessar o SiSCanT e realizar os procedimentos lá descritos para concluir sua Inscrição!
+                                        </p>
+                                    </td>
+                                </tr>
 
-$mail_envia->Body = $mensagem;
-#Envio da Mensagem
-$enviado = $mail_envia->Send();
-#Limpa os destinatários e os anexos
-$mail_envia->ClearAllRecipients();
-$mail_envia->ClearAttachments();
-#Exibe uma mensagem de resultado
+                                <!-- Warning -->
+                                <tr>
+                                    <td>
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+                                            <tr>
+                                                <td style="padding: 15px; text-align: center;">
+                                                    <p style="font-size: 13px; color: #856404; margin: 0;">
+                                                        <strong>IMPORTANTE:</strong> Não responda a este email, pois sua mensagem não será visualizada. 
+                                                        A comunicação deve ser feita exclusivamente através do SiSCanT.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </body>
+        </html>
+    ');
 
+    $mail->SMTPDebug = 0;
+    $enviado = $mail->send();
 
+    if (!$enviado) {
+        echo 'Erro ao enviar o email: ' . $mail->ErrorInfo;
+    } else {
+        echo 'Email enviado com sucesso!';
+    }
 
-$_SESSION['cadastro_candidato_email_enviado'] = false;    
-if($enviado)
-{
-    $_SESSION['cadastro_candidato_email_enviado'] = true;    
-    $mensagem_formatada = str_replace("'","`",$mensagem);
-    $alteracao = "E-Mail de cadastro enviado para:".$mail;
-    
-    $insere_log = $conexao->insere_log(null, $cpf, $last_id, "14102", "mail", "Insert", $alteracao, $mensagem_formatada);
-    
+    if ($enviado) {
+        $foi_enviado_email = true;
+    } else {
+        echo 'Falha ao enviar mensagem: ' . $mail->ErrorInfo;
+    }
+} catch (Exception $e) {
+    echo "Erro ao enaviar mensagem: {$mail->ErrorInfo}";
 }
-if(!$enviado)
-{
-    $detalhe_erro = print_r(error_get_last());
-    $alteracao = "ERRO! E-Mail de cadastro de candidato NÃO enviado para:".$mail;
-    $insere_log = $conexao->insere_log(null, $cpf, $last_id, "21100", "mail", "Insert", $alteracao, $detalhe_erro);
-}
-
-?>

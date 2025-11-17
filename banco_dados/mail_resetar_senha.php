@@ -8,7 +8,6 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-
 $resultado_selecao = $conexao->get_selecao_id();
 
 include_once '../envia_carta/src/Exception.php';

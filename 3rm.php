@@ -334,6 +334,10 @@
                                 <i class="bi bi-mortarboard"></i> Eng. Minas e Biblioteconomia
                             </a>
 
+                            <a href="3rm_ott_stt_2025_3.php" class="btn-link">
+                                <i class="bi bi-mortarboard"></i> Cozinha
+                            </a>
+
                             <a href="eipot_brasil_2025.php" class="btn-link">
                                 <i class="bi bi-shield-shaded"></i> EIPOT Brasil
                             </a>

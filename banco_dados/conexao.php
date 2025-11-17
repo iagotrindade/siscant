@@ -7225,7 +7225,7 @@ order by total_pontos_somados desc");
     {
         $stmt = $this->pdo->prepare(
             "
-                    select ce.id id_candidato_x_especialidade, cidade.nome nome_cidade, ce._data_ultima_atualizacao, e.id id_especialidade, u.nome_completo, u.cpf, e.nome especialidade, e.ott_stt,
+                    select ce.id id_candidato_x_especialidade, cidade.nome nome_cidade, ce._data_ultima_atualizacao, e.id id_especialidade, u.nome_completo, u.cpf, e.nome especialidade, e.ott_stt, e.teste_pratico, e.nota_av,
                     ce.prova_pratica_musica, ce.nota_prova_teorico_pratico, ce.apto_prova_teorico_pratico, ce.prova_teorica_musica ,ce.prova_oral_musica, ce.usuario_avaliou_provas_musica, ce.concorrendo, ce.justificativa, ce.id_usuario_alterou_concorrendo
                     from candidato_x_especialidade ce
                     left join cidade on cidade.id = ce.cidade_escolheu_servir
