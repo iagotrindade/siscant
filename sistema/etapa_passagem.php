@@ -222,11 +222,12 @@ $especialidades = $conexao->get_especialidade();
                                 <option value="aptos_jise">2 - Passar para Etapa IV todos candidatos APTOS em JISE</option>
                                 <option value="inaptos_jise">3 - Eliminar os candidatos que foram INAPTOS ou NÃO compareceram a IS</option>
                                 <option value="aptos_jisr">4 - Retornar ao Processo os candidatos que foram APTOS na JISR</option>
+                                <option value="inaptos_et_iv">5 - Eliminar os candidatos que foram INAPTOS ou NÃO compareceram ao EAF e Teste Prático</option>
 
                                 <?php
                                 if ($pagamento_obrigatorio == '1') {
-                                    echo '<option value="pagamento">5 - Desclassificação dos candidatos que não realizaram o pagamento da GRU</option>';
-                                    echo '<option value="isentos">6 - Desclassificação dos candidatos que foram considerados NÃO ISENTOS e não realizaram pagamento</option>';
+                                    echo '<option value="pagamento">6 - Desclassificação dos candidatos que não realizaram o pagamento da GRU</option>';
+                                    echo '<option value="isentos">7 - Desclassificação dos candidatos que foram considerados NÃO ISENTOS e não realizaram pagamento</option>';
                                 }
                                 ?>
                                 <option value="ctrl_z">Ctrl + Z | Classifica todos os desclassificados</option>

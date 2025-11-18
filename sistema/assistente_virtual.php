@@ -293,7 +293,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
                                     $etapa = '';
                                     if ($linha['etapa'] == 0) {
-                                        $etapa = '<span class="badge badge-all">TODAS</span>';
+                                        $etapa = '<span class="badge badge-etapa">TODAS</span>';
                                     } else {
                                         $etapa = '<span class="badge badge-etapa">et_' . $linha['etapa'] . '</span>';
                                     }

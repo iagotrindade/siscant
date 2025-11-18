@@ -229,7 +229,7 @@ if (count($selecao_candidato) == 1) {
                                     <div class="info-box text-center">
                                         <i class="fa fa-paper-plane success-icon"></i>
                                         <h5 class="text-success">E-mail enviado com sucesso!</h5>
-                                        <p>Foi enviado um e-mail para: <br><strong>' . $resultado[0]['mail'] . '</strong></p>
+                                        <p>Foi enviado um e-mail de confirmação para: <br><strong>' . $resultado[0]['mail'] . '</strong></p>
                                         <img src="imagens/mail.png" width="100" alt="Ícone de e-mail" class="img-fluid mt-2">
                                     </div>';
                                 } else {

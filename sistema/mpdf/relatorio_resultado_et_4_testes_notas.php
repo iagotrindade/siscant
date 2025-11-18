@@ -107,6 +107,7 @@ foreach ($lista_especialidades as $especialidade) {
     $contador = 1;
 
     foreach ($lista_candidatos as $candidato) {
+
         if ($candidato['etapa'] < 4) {
             continue;
         }
@@ -117,12 +118,18 @@ foreach ($lista_especialidades as $especialidade) {
 
         $nota = $candidato['nota_prova_teorico_pratico'] ?? 'DESCONHECIDO';
 
+        if ($nota == 0 || $nota == null) {
+            $nota = 'NÃO COMPARECEU';
+        } else {
+            $nota = number_format($nota / 2, 2, '.', '');
+        }
+
         $linhasCandidatos .= "
             <tr>
                 <td style='text-align: center;'>$contador</td>
                 <td style='text-align: center;'>$cpf</td>
                 <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
-                <td style='text-align: center;'>$nota</td>
+                <td style='text-align: center;'>" . $nota . "</td>
             </tr>";
         $contador++;
     }
@@ -138,8 +145,8 @@ foreach ($lista_especialidades as $especialidade) {
                 <tr>
                     <th style='text-align: center; width: 5%;'>Nº</th>
                     <th style='text-align: center; width: 15%;'>CPF</th>
-                    <th style='text-align: center; width: 45%;'>NOME</th>
-                    <th style='text-align: center; width: 35%;'>RESULTADO</th>
+                    <th style='text-align: center; width: 55%;'>NOME</th>
+                    <th style='text-align: center; width: 25%;'>RESULTADO</th>
                 </tr>
                 $linhasCandidatos
             </table>";
@@ -148,6 +155,6 @@ foreach ($lista_especialidades as $especialidade) {
     }
 }
 
-$mpdf->Output("Resultado Etapa IV - Teste Teórico/Prático.pdf", 'D');
+$mpdf->Output("Resultado Etapa IV - Notas Teste Teórico/Prático.pdf", 'D');
 ob_end_flush();
 exit();

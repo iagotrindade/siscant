@@ -174,9 +174,9 @@ $lista_usuarios_perfil_om = $conexao->get_usuarios_perfil_om();
 
                                     // Determinar cor do perfil
                                     $perfil_class = 'badge bg-secondary';
-                                    if ($linha['perfil'] == 'admin') $perfil_class = 'badge bg-danger';
-                                    if ($linha['perfil'] == 'avaliador') $perfil_class = 'badge bg-warning text-dark';
-                                    if ($linha['perfil'] == 'consulta') $perfil_class = 'badge bg-info';
+                                    if ($linha['perfil'] == 'admin') $perfil_class = 'badge bg-primary';
+                                    if ($linha['perfil'] == 'avaliador') $perfil_class = 'badge bg-primary text-dark';
+                                    if ($linha['perfil'] == 'consulta') $perfil_class = 'badge bg-primary';
 
                                     echo '
                         <tr class="table-row-custom">

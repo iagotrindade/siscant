@@ -148,6 +148,6 @@ if (!empty($candidatos)) {
 }
 
 // Saída do PDF
-$mpdf->Output("Resultado_Etapa_IV_EAF.pdf", 'D');
+$mpdf->Output("Resultado Etapa IV Exame de Aptidão Física (EAF).pdf", 'D');
 ob_end_flush();
 exit;

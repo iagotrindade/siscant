@@ -432,6 +432,153 @@ if ($script == 'aptos_jisr') {
     exit();
 }
 
+if ($script == 'inaptos_et_iv') {
+
+    $lista_candidatos = $conexao->get_candidatos_concorrendo();
+
+    foreach ($lista_candidatos as $candidato) {
+
+        // pula quem não está na etapa 4
+        if ((int)$candidato['etapa'] !== 4) {
+            continue;
+        }
+
+        // Carrega especialidades
+        $candidato['especialidades'] = $conexao->get_especialidade_candidato($candidato['id']);
+        if (!is_array($candidato['especialidades'])) {
+            $candidato['especialidades'] = [];
+        }
+
+        // carrega dados do usuário
+        $get_candidato = $conexao->get_usuario_id($candidato['id']);
+        $usuario_concorrendo = (
+            isset($get_candidato[0]['concorrendo']) &&
+            (int)$get_candidato[0]['concorrendo'] === 1
+        );
+
+        foreach ($candidato['especialidades'] as $especialidade) {
+
+            // Pula candidatos que não est]ao concorrendo ou não estão na Etapa 4
+            if ((int)$especialidade['etapa'] !== 4 || (int)$especialidade['concorrendo'] === 0) {
+                continue;
+            }
+
+            // monta justificativa (por especialidade)
+            $justificativa = '';
+
+            // nome da especialidade
+            $nome_especialidade = "";
+            if (!empty($especialidade['id_especialidade'])) {
+                $get_especialidade_id = $conexao->get_especialidade_id($especialidade['id_especialidade']);
+                $nome_especialidade = $get_especialidade_id[0]['nome'] ?? "";
+            }
+
+            // se inapto no EAF OU na prova, marca como não concorrendo
+            if ($especialidade['teste_pratico'] && $especialidade['apto_prova_teorico_pratico'] != 1) {
+                if ($especialidade['apto_prova_teorico_pratico'] == 0) {
+                    $justificativa .= 'Candidato INAPTO na Prova Teórico-Prática.';
+                } elseif ($especialidade['apto_prova_teorico_pratico'] == 2) {
+                    $justificativa .= 'Candidato NÃO COMPARECEU à Prova Teórico-Prática.';
+                }
+
+                $resultado_concorrendo = $conexao->status_concorrendo_especialidade(
+                    $especialidade['id_candidato_x_especialidade'],
+                    0,
+                    $justificativa
+                );
+
+                if ($resultado_concorrendo) {
+                    $conexao->insere_log(
+                        $_SESSION['id_usuario'],
+                        $_SESSION['cpf'],
+                        $candidato['id'],
+                        "16120",
+                        "candidato_x_especialidade",
+                        "Update",
+                        "Alterou o status do candidato " . ($get_candidato[0]['cpf'] ?? $candidato['cpf']) .
+                            " para DESCLASSIFICADO na especialidade $nome_especialidade! Justificativa: $justificativa",
+                        print_r($resultado_concorrendo, true)
+                    );
+                }
+            }
+        }
+
+        // se não está concorrendo em nenhuma, atualiza status do usuário
+        if ($candidato['resultado_eaf'] != 1) {
+            if ($candidato['resultado_eaf'] == 0) {
+                $justificativa = 'Candidato INAPTO no Exame de Aptidão Física (EAF).';
+            } elseif ($candidato['apto_saude'] == 2) {
+                $justificativa = 'Candidato NÃO COMPARECEU ao Exame de Aptidão Física (EAF).';
+            }
+
+            $observacao = "Não está concorrendo em nenhuma especialidade! Justificativa: $justificativa";
+
+            $resultado_concorrendo_usuario = $conexao->status_concorrendo(
+                $candidato['id'],
+                0,
+                $observacao
+            );
+
+            foreach ($candidato['especialidades'] as $especialidade) {
+                // Pula candidatos que não est]ao concorrendo ou não estão na Etapa 4
+                if ((int)$especialidade['etapa'] !== 4 || (int)$especialidade['concorrendo'] === 0) {
+                    continue;
+                }
+
+                // nome da especialidade
+                $nome_especialidade = "";
+                if (!empty($especialidade['id_especialidade'])) {
+                    $get_especialidade_id = $conexao->get_especialidade_id($especialidade['id_especialidade']);
+                    $nome_especialidade = $get_especialidade_id[0]['nome'] ?? "";
+                }
+
+                // se inapto no EAF OU na prova, marca como não concorrendo
+                if ($especialidade['teste_pratico'] && $especialidade['apto_prova_teorico_pratico'] != 1) {
+                    $resultado_concorrendo = $conexao->status_concorrendo_especialidade(
+                        $especialidade['id_candidato_x_especialidade'],
+                        0,
+                        $justificativa
+                    );
+
+                    if ($resultado_concorrendo) {
+                        $conexao->insere_log(
+                            $_SESSION['id_usuario'],
+                            $_SESSION['cpf'],
+                            $candidato['id'],
+                            "16120",
+                            "candidato_x_especialidade",
+                            "Update",
+                            "Alterou o status do candidato " . ($get_candidato[0]['cpf'] ?? $candidato['cpf']) .
+                                " para DESCLASSIFICADO na especialidade $nome_especialidade! Justificativa: $justificativa",
+                            print_r($resultado_concorrendo, true)
+                        );
+                    }
+                }
+            }
+
+            if ($resultado_concorrendo_usuario) {
+
+                $conexao->insere_log(
+                    $_SESSION['id_usuario'],
+                    $_SESSION['cpf'],
+                    $candidato['id'],
+                    "16116",
+                    "usuario",
+                    "Update",
+                    "Alterou o status do candidato " . ($get_candidato[0]['cpf'] ?? $candidato['cpf']) .
+                        " para DESCLASSIFICADO no processo seletivo! Justificativa: $observacao",
+                    print_r($resultado_concorrendo_usuario, true)
+                );
+            } else {
+                // não conseguiu atualizar o usuário → passa para a próxima especialidade
+                continue;
+            }
+        }
+    }
+
+    header("Location: ../sistema/etapa_passagem.php?sucesso=1");
+    exit();
+}
 
 if ($script == 'pagamento' && $_SESSION['selecao_pagamento']) {
     $usuarios_desclassificados = array("Lista de CPFs desclassificados pelo script de Pagamento");

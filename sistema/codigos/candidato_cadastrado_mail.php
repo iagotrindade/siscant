@@ -20,11 +20,11 @@ use PHPMailer\PHPMailer\SMTP;
 $randomString = 'r@nd0m$tring';
 
 //Create a new PHPMailer instance
-$mail = new PHPMailer();
+$mail_envia = new PHPMailer();
 //Tell PHPMailer to use SMTP
-$mail->SMTPDebug = 0;
+$mail_envia->SMTPDebug = 0;
 
-$mail->SMTPOptions = array(
+$mail_envia->SMTPOptions = array(
     'ssl' => array(
         'verify_peer' => false,
         'verify_peer_name' => true,
@@ -33,30 +33,30 @@ $mail->SMTPOptions = array(
 );
 
 try {
-    $mail->isSMTP();
-    $mail->Host = 'smtp.webmail.eb.mil.br'; // Servidor SMTP
-    $mail->SMTPAuth = true;
-    $mail->Username = 'siscant@3rm.eb.mil.br'; // Seu usuário SMTP
-    $mail->Password = 'EMHFXQMNPYQMAWYD'; // Sua senha SMTP
-    $mail->SMTPSecure = 'tls';  //'tls' Define o tipo de criptografia para TLS
-    $mail->Port = 587; // Porta TCP para TLS
+    $mail_envia->isSMTP();
+    $mail_envia->Host = 'smtp.webmail.eb.mil.br'; // Servidor SMTP
+    $mail_envia->SMTPAuth = true;
+    $mail_envia->Username = 'siscant@3rm.eb.mil.br'; // Seu usuário SMTP
+    $mail_envia->Password = 'EMHFXQMNPYQMAWYD'; // Sua senha SMTP
+    $mail_envia->SMTPSecure = 'tls';  //'tls' Define o tipo de criptografia para TLS
+    $mail_envia->Port = 587; // Porta TCP para TLS
 
-    $mail->From = 'siscant@3rm.eb.mil.br'; //Set who the message is to be sent from
-    $mail->FromName = utf8_decode('Não responda - Comando 3ª RM'); //Nome do Remetente
-    $mail->Subject = 'SiSCanT - Cadastro no Sistema de Seleção de Candidatos Temporários (SiSCanT)';                       // Assunto do e-mail
+    $mail_envia->From = 'siscant@3rm.eb.mil.br'; //Set who the message is to be sent from
+    $mail_envia->FromName = utf8_decode('Não responda - Comando 3ª RM'); //Nome do Remetente
+    $mail_envia->Subject = 'SiSCanT - Cadastro no Sistema de Seleção de Candidatos Temporários';                       // Assunto do e-mail
 
     // Configurações do remetente e destinatário    
 
-    $mail->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente
-    //$mail->addAddress('siscant@3rm.eb.mil.br'); // Adiciona um destinatário
+    $mail_envia->setFrom('siscant@3rm.eb.mil.br', 'Servico Militar');        // Remetente
+    //$mail_envia->addAddress('siscant@3rm.eb.mil.br'); // Adiciona um destinatário
 
-    $mail->AddAddress($mail, $nome_completo);
+    $mail_envia->AddAddress($mail, $nome_completo);
 
     // Definir como HTML
-    $mail->isHTML(true);
+    $mail_envia->isHTML(true);
 
     // Conteúdo do e-mail
-    $mail->Body = utf8_decode('        
+    $mail_envia->Body = utf8_decode('        
         <!doctype html>
         <html lang="en">
             <head>
@@ -94,7 +94,7 @@ try {
                                 <tr>
                                     <td style="padding-bottom: 25px;">
                                         <p style="font-size: 14px; color: #555555; margin: 0;">
-                                            Seu cadastro foi realizado com sucesso, mas ainda não acabou!:
+                                            Seu cadastro foi realizado com sucesso, mas ainda não acabou!
                                         </p>
                                     </td>
                                 </tr>
@@ -102,7 +102,7 @@ try {
                                 <tr>
                                     <td style="padding-bottom: 25px;">
                                         <center>
-                                            <p style="width: 25%; background-color: green; font-size: 20px; color: white; padding: 10px; border-radius: 10px; text-align: center;">
+                                            <p style="width: 100%; background-color: green; font-size: 20px; color: white; padding: 10px; border-radius: 10px; text-align: center;">
                                                 <b>
                                                     O seu usuário é: <u>' . $cpf . '</u> <br>
                                                     E a sua senha é: <u> ' . $senha . '</u>
@@ -143,20 +143,22 @@ try {
         </html>
     ');
 
-    $mail->SMTPDebug = 0;
-    $enviado = $mail->send();
+    $mail_envia->SMTPDebug = 0;
+    $enviado = $mail_envia->send();
 
-    if (!$enviado) {
-        echo 'Erro ao enviar o email: ' . $mail->ErrorInfo;
-    } else {
-        echo 'Email enviado com sucesso!';
-    }
+    $_SESSION['cadastro_candidato_email_enviado'] = false;
 
     if ($enviado) {
-        $foi_enviado_email = true;
+        $_SESSION['cadastro_candidato_email_enviado'] = true;
+        $mensagem_formatada = str_replace("'", "`", $mensagem);
+        $alteracao = "E-Mail de cadastro enviado para:" . $mail;
+
+        $insere_log = $conexao->insere_log(null, $cpf, $last_id, "14102", "mail", "Insert", $alteracao, $mensagem_formatada);
     } else {
-        echo 'Falha ao enviar mensagem: ' . $mail->ErrorInfo;
+        $detalhe_erro = print_r(error_get_last());
+        $alteracao = "ERRO! E-Mail de cadastro de candidato NÃO enviado para:" . $mail;
+        $insere_log = $conexao->insere_log(null, $cpf, $last_id, "21100", "mail", "Insert", $alteracao, $detalhe_erro);
     }
 } catch (Exception $e) {
-    echo "Erro ao enaviar mensagem: {$mail->ErrorInfo}";
+    echo "Erro ao e enviar mensagem: {$mail_envia->ErrorInfo}";
 }

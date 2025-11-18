@@ -238,14 +238,14 @@ include_once 'codigos/funcao_apagar.php';
                   $pontuacao = $linha['pontuacao'] / 1000;
                   $carga = $linha['carga_horaria_obrigatoria'] == 1 ?
                     "<span class='badge bg-success'><i class='fa fa-check'></i> Sim</span>" :
-                    "<span class='badge bg-secondary'><i class='fa fa-times'></i> Não</span>";
+                    "<span class='badge bg-danger'><i class='fa fa-times'></i> Não</span>";
 
-                  $multiplicacao = "Não";
+                  $multiplicacao = "<span class='badge bg-danger'><i class='fa fa-times'></i> Não</span>";
                   if ($linha['multiplicacao'] == '1') {
                     $multiplicacao = "<span class='badge bg-info'><i class='fa fa-check'></i> Sim</span>";
                   }
                   if ($linha['quantidade_multiplicacao'] != null) {
-                    $multiplicacao = "<span class='badge bg-warning text-dark'>" . $linha['quantidade_multiplicacao'] . "x</span>";
+                    $multiplicacao = "<span class='badge bg-primary text-dark'>" . $linha['quantidade_multiplicacao'] . "x</span>";
                   }
 
                   echo '

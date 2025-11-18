@@ -141,7 +141,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                         <tr>
                             <td>
                                 <label class="fw-semibold"><i class="fa fa-heart me-1 text-primary"></i> Estado Civil:</label><br>
-                                <span class="ms-3"><?= htmlspecialchars($estado_civil) ?>
+                                <span class="ms-3"><?= htmlspecialchars(ucfirst($estado_civil)) ?>
                                     <?php if ($companheiro != null): ?>
                                         <br><small class="text-muted">Com <?= htmlspecialchars($companheiro) ?></small>
                                     <?php endif; ?>
@@ -155,7 +155,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
                             <td>
                                 <label class="fw-semibold"><i class="fa fa-venus-mars me-1 text-primary"></i> Sexo:</label><br>
-                                <span class="ms-3"><?= htmlspecialchars($sexo) ?></span>
+                                <span class="ms-3"><?= htmlspecialchars(ucfirst($sexo)) ?></span>
                             </td>
 
                             <td>
@@ -164,7 +164,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                                 if ($vaga_reservada == 1) $vaga_reservada = "Sim";
                                 ?>
                                 <label class="fw-semibold"><i class="fa fa-check me-1 text-primary"></i> Autodeclaração/Vaga Reservada - Lei 12.990:</label><br>
-                                <span class="ms-3"><?= htmlspecialchars($autodeclaracao . ' / ' . $vaga_reservada) ?></span>
+                                <span class="ms-3"><?= htmlspecialchars(ucfirst($autodeclaracao) . ' / ' . $vaga_reservada) ?></span>
                             </td>
                         </tr>
 
@@ -313,7 +313,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                         <tr>
                             <td>
                                 <label class="fw-semibold"><i class="fa fa-certificate me-1 text-primary"></i> Certificado:</label><br>
-                                <span class="ms-3"><?= htmlspecialchars($certificado) ?></span>
+                                <span class="ms-3"><?= htmlspecialchars(mb_strtoupper($certificado)) ?></span>
                             </td>
                             <td>
                                 <label class="fw-semibold"><i class="fa fa-file me-1 text-primary"></i> Nº do Documento:</label><br>
