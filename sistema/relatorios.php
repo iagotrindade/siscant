@@ -1882,15 +1882,24 @@ $lista_especialidades = $conexao->get_especialidade();
                                     <div class="form-text">Máximo de candidatos por turno</div>
                                 </div>
 
-                                <div class="col-lg-4 mb-20">
+                                <div class="col-lg-2 mb-20">
                                     <label class="form-label fw-semibold">Data de Início</label>
-                                    <input name="data_inicio" type="date" class="form-control" value="<?= date('Y-m-d', strtotime('next monday')) ?>">
+                                    <input name="data_inicio" type="date" class="form-control" value="<?= date('Y-m-d', strtotime('next monday')) ?>" style="height: 42px;">
                                 </div>
 
-                                <div class="col-lg-4 mb-20">
+                                <div class="col-lg-2 mb-20">
                                     <label class="form-label fw-semibold">Data Final</label>
-                                    <input name="data_final" type="date" class="form-control" value="<?= date('Y-m-d', strtotime('+2 weeks')) ?>">
-                                    <div class="form-text">Período para distribuir os agendamentos</div>
+                                    <input name="data_final" type="date" class="form-control" value="<?= date('Y-m-d', strtotime('+2 weeks')) ?>" style="height: 42px;">
+                                </div>
+
+                                <div class="col-lg-2 mb-20">
+                                    <label class="form-label fw-semibold">Início do Turno da Manhã</label>
+                                    <input name="inicio_manha" type="text" class="form-control" value="0800h">
+                                </div>
+
+                                <div class="col-lg-2 mb-20">
+                                    <label class="form-label fw-semibold">Início do Turno da Tarde</label>
+                                    <input name="inicio_tarde" type="text" class="form-control" value="1300h">
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
@@ -1936,18 +1945,26 @@ $lista_especialidades = $conexao->get_especialidade();
                     </div>
                 </div>
 
-                <!-- Resultado Teste de Conhecimento -->
+                <!-- Resultado Heteroidentificação -->
                 <div class="card border-info mb-20">
                     <div class="card-header mb-20 bg-info text-white">
                         <span class="fw-semibold">
                             <i class="fa fa-pencil-square-o me-2"></i>
-                            Resultado Teste de Conhecimento OTT Informática e STT Instrumento Musical
-                            
+                            Resultado Etapa V - Heteroidentificação Complementar
                         </span>
                     </div>
                     <div class="card-body">
-                        <form action="mpdf/relatorio_resultado_teste_informatica_musica.php" method="POST">
-                            <input name="etapa" type="hidden" value="<?= $etapa_atual ?>">
+                        <div class="alert alert-warning mb-20">
+                            <h6 class="text-dark mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                            <ul class="requisitos-list text-dark">
+                                <li>A publicação irá considerar somente os candidatos que estão CONCORRENDO na Etapa V</li>
+                                <li>A Comissão deve lançar os 5 pareceres</li>
+                                <li>Não desclassificar nenhum candidato que esteja na Etapa V</li>
+                            </ul>
+                        </div>
+
+                        <form action="mpdf/relatorio_resultado_et_5_heteroidentificacao.php" method="POST">
+                            <input name="fase" type="hidden" value="1">
                             <div class="row">
                                 <div class="col-lg-4 mb-20">
                                     <label class="form-label fw-semibold">Título</label>
@@ -1956,7 +1973,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-4 mb-20">
                                     <label class="form-label fw-semibold">Subtítulo</label>
-                                    <input name="subtitulo" value="RESULTADO DO TESTE DE CONHECIMENTO OTT - INFORMÁTICA E STT - INSTRUMENTO MUSICAL" class="form-control">
+                                    <input name="subtitulo" value="RESULTADO ETAPA V - HETEROIDENTIFICAÇÃO COMPLEMENTAR" class="form-control">
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
@@ -1966,30 +1983,28 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <textarea name="paragrafo_um" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o resultado do Teste de Conhecimento Teórico, Prático e Oral, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação Nr XX - SSMR/X, de X de junho de 20XX.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o resultado da Etapa V – HETEROIDENTIFICAÇÃO COMPLEMENTAR, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">2º Parágrafo</label>
-                                    <textarea name="paragrafo_dois" class="form-control" rows="3">O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial, não serão aceitos recursos entregues fora do prazo ou no local errado.</textarea>
+                                    <textarea name="paragrafo_dois" class="form-control" rows="3">O período para interposição de Recursos será nos dias XX NOV XX e XX DEZ XX das 0830h às 1130h, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">3º Parágrafo</label>
-                                    <textarea name="paragrafo_tres" class="form-control" rows="3">A interposição de recursos será nos dias XX and XX de julho de 20XX, das 0930 às 1130 horas and das 1300 às 1630 horas, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre.</textarea>
+                                    <textarea name="paragrafo_tres" class="form-control" rows="3">O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial, não serão aceitos recursos entregues fora do prazo ou no local errado.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">4º Parágrafo</label>
-                                    <textarea name="paragrafo_quatro" class="form-control" rows="2">A presente relação NÃO está em ordem de classificação.</textarea>
+                                    <textarea name="paragrafo_quatro" class="form-control" rows="3">A presente relação NÃO está em ordem de classificação.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">Selecione as Especialidades</label>
-                                    <select name="especialidades[]" class="form-control select2" multiple required>
-                                        <?php foreach ($lista_especialidades as $value):
-                                            if (!$value['teste_pratico']) continue;
-                                        ?>
+                                    <select name="especialidades[]" class="form-control select2" multiple>
+                                        <?php foreach ($lista_especialidades as $value): ?>
                                             <option value="<?= htmlspecialchars($value['id']) ?>">
                                                 <?= htmlspecialchars($value['nome']) ?>
                                             </option>
@@ -2007,32 +2022,26 @@ $lista_especialidades = $conexao->get_especialidade();
                     </div>
                 </div>
 
-                <!-- Lista de Presença EAF -->
+                <!-- Resultado Heteroidentificação Revisora -->
                 <div class="card border-info mb-20">
                     <div class="card-header mb-20 bg-info text-white">
                         <span class="fw-semibold">
-                            <i class="fa fa-clipboard me-2"></i>
-                            Lista de Presença para o Exame de Aptidão Física (EAF)
-                            
+                            <i class="fa fa-pencil-square-o me-2"></i>
+                            Resultado Etapa V - Heteroidentificação Revisora
                         </span>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-warning mb-20">
                             <h6 class="text-dark mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
                             <ul class="requisitos-list text-dark">
-                                <li>A lista irá considerar somente os candidatos que estão CONCORRENDO na Etapa IV</li>
-                                <li>Passar o SISCANT para Etapa IV</li>
+                                <li>A publicação irá considerar somente os candidatos que estão CONCORRENDO na Etapa V</li>
+                                <li>A Comissão Revisora deve lançar os 3 pareceres</li>
+                                <li>Não desclassificar nenhum candidato que esteja na Etapa V</li>
                             </ul>
                         </div>
 
-                        <form action="mpdf/relatorio_lista_presenca_et_4.php" method="POST">
-                            <input name="tipo_relatorio" type="hidden" value="classificacao">
-                            <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
-                            <input name="etapa" type="hidden" value="<?= $etapa_atual ?>">
-                            <input name="orientacao" type="hidden" value="retrato">
-                            <input name="tipo_especialdiade" type="hidden" value="todas">
-                            <input name="cabecalho" type="hidden" value="sim">
-
+                        <form action="mpdf/relatorio_resultado_et_5_heteroidentificacao.php" method="POST">
+                            <input name="fase" type="hidden" value="2">
                             <div class="row">
                                 <div class="col-lg-4 mb-20">
                                     <label class="form-label fw-semibold">Título</label>
@@ -2041,7 +2050,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-4 mb-20">
                                     <label class="form-label fw-semibold">Subtítulo</label>
-                                    <input name="subtitulo" value="LISTA DE PRESENÇA PARA O EXAME DE APTIDÃO FÍSICA (EAF)" class="form-control">
+                                    <input name="subtitulo" value="RESULTADO ETAPA V - HETEROIDENTIFICAÇÃO REVISORA" class="form-control">
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
@@ -2050,29 +2059,28 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">Texto Grupo Um</label>
-                                    <textarea name="grupo_um_texto" class="form-control" rows="3">XX NOV XX às 0700 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
+                                    <label class="form-label fw-semibold">1º Parágrafo</label>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga o resultado da Etapa V – HETEROIDENTIFICAÇÃO REVISORA, conforme anexo "A" (Calendário Geral de Atividades) do Aviso de Convocação para Seleção Nr 03 –SSMR/3, de 03 de Junho de 2024.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">Especialidades Grupo Um</label>
-                                    <select name="grupo_um_especialidades[]" class="form-control select2" multiple>
-                                        <?php foreach ($lista_especialidades as $value): ?>
-                                            <option value="<?= htmlspecialchars($value['id']) ?>">
-                                                <?= htmlspecialchars($value['nome']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <label class="form-label fw-semibold">2º Parágrafo</label>
+                                    <textarea name="paragrafo_dois" class="form-control" rows="3">O período para interposição de Recursos será nos dias XX NOV XX e XX DEZ XX das 0830h às 1130h, na Comissão de Seleção Especial – Rua dos Andradas 551, Centro Histórico, Porto Alegre.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">Texto Grupo Dois</label>
-                                    <textarea name="grupo_dois_texto" class="form-control" rows="3">XX NOV XX às 1300 h –Rua Corrêa Lima, 140 –Menino Deus, Porto Alegre –RS –Centro de Preparação de Oficiais da Reserva</textarea>
+                                    <label class="form-label fw-semibold">3º Parágrafo</label>
+                                    <textarea name="paragrafo_tres" class="form-control" rows="3">O recurso deverá ser entregue presencialmente pelo candidato ou seu procurador devidamente constituído, para um dos militares integrantes da Comissão de Seleção Especial, não serão aceitos recursos entregues fora do prazo ou no local errado.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">Especialidades Grupo Dois</label>
-                                    <select name="grupo_dois_especialidades[]" class="form-control select2" multiple>
+                                    <label class="form-label fw-semibold">4º Parágrafo</label>
+                                    <textarea name="paragrafo_quatro" class="form-control" rows="3">A presente relação NÃO está em ordem de classificação.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Selecione as Especialidades</label>
+                                    <select name="especialidades[]" class="form-control select2" multiple>
                                         <?php foreach ($lista_especialidades as $value): ?>
                                             <option value="<?= htmlspecialchars($value['id']) ?>">
                                                 <?= htmlspecialchars($value['nome']) ?>
@@ -2111,7 +2119,6 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-users me-2"></i>
                             Candidatos na Seleção
-                            
                         </span>
                     </div>
                     <div class="card-body">

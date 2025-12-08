@@ -10,7 +10,7 @@ if ($candidato == 1 || $perfil == 'candidato' || $_SESSION['candidato'] == 1) {
     exit();
 }
 
-if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'jise') {
+if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'consulta' && $_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'chc' && $_SESSION['perfil'] != 'cr') {
     erro("Erro 632457437! Página não encontrada!");
     exit();
 }
@@ -78,7 +78,7 @@ else
                     </span>
                 </div>
                 <div class="card-body">
-                    <form name="fomulario" action="relatorio_cotistas.php" method="get">
+                    <form name="fomulario" action="relatorio_heteroidentificacao.php" method="get">
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">
@@ -130,24 +130,79 @@ else
                                     <th><i class="fa fa-pencil-square-o"></i> Autodeclaração</th>
                                     <th class="text-center"><i class="fa fa-list"></i> Etapa</th>
                                     <th class="text-center"><i class="fa fa-graduation-cap"></i> Especialidades</th>
+                                    <th class="text-center"><i class="fa fa-circle"></i> Heteroidentificação</th>
+                                    <th class="text-center"><i class="fa fa-circle"></i> Heteroidentificação Revisora</th>
+                                    <th class="text-center"><i class="fa fa-circle"></i> Recurso Heteroidentificação</th>
                                     <th class="text-center"><i class="fa fa-cogs"></i> Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    foreach ($lista_candidatos as $linha):
-                                        if (!$linha['vaga_reservada']) {
-                                            continue;
-                                        }
-                                        $especialidades_cadastradas = "";
-                                        $especialidades_do_candidato = $conexao->get_especialidade_candidato($linha['id']);
+                                $recursos = $conexao->get_recursos();
 
-                                        foreach ($especialidades_do_candidato as $esp) {
-                                            if ($esp['ott_stt'] == 'ott') $tem_ott = true;
-                                            if ($esp['ott_stt'] == 'stt') $tem_stt = true;
-                                            $especialidades_cadastradas .= '<span class="badge text-dark mr-10 mb-1" style="background-color: var(--primary-color);">' . strtoupper($esp['ott_stt']) . ' - ' . htmlspecialchars($esp['especialidade']) . '</span>';
+                                foreach ($lista_candidatos as $linha):
+                                    if ($_SESSION['selecao_codigo'] == 'ott_stt' && !$linha['vaga_reservada'] || $linha['etapa'] < 5) {
+                                        continue;
+                                    }
+
+                                    if ($_SESSION['selecao_codigo'] == 'mfdv' && !$linha['vaga_reservada'] || $linha['etapa'] < 4) {
+                                        continue;
+                                    }
+
+                                    $pareceres = $conexao->get_pareceres_heteroidentificacao($linha['id']);
+
+                                    $parecerHc = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 1);
+                                    $parecerRevisora = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 2);
+
+                                    $pareceresFase1 = array_filter($pareceres, function ($parecer) {
+                                        return $parecer['fase'] == 1;
+                                    });
+
+                                    $pareceresFase2 = array_filter($pareceres, function ($parecer) {
+                                        return $parecer['fase'] == 2;
+                                    });
+
+                                    if (count($pareceresFase1) < 5) {
+                                        $parecerHc = 'PENDENTE';
+                                    }
+
+                                    if (count($pareceresFase2) < 3) {
+                                        $parecerRevisora = 'PENDENTE';
+                                    }
+
+                                    $aparece = true;
+
+                                    if ($aparece == false) continue;
+
+                                    if ($linha['id_selecao'] != $_SESSION['selecao']) continue;
+
+                                    $hc = '';
+
+
+                                    // Recurso Etapa 3
+                                    $recursoEtapa5 = 'NÃO';
+                                    $recurso_class = 'secondary';
+
+                                    foreach ($recursos as $recurso) {
+                                        if ($recurso['etapa'] == 5) {
+                                            $recursoEtapa5 = 'SIM';
+                                            $recurso_class = 'primary';
+                                            break;
+                                        } else {
+                                            $recursoEtapa5 = 'NÃO';
+                                            $recurso_class = 'primary';
                                         }
-                                    ?>
+                                    }
+
+                                    $especialidades_cadastradas = "";
+                                    $especialidades_do_candidato = $conexao->get_especialidade_candidato($linha['id']);
+
+                                    foreach ($especialidades_do_candidato as $esp) {
+                                        if ($esp['ott_stt'] == 'ott') $tem_ott = true;
+                                        if ($esp['ott_stt'] == 'stt') $tem_stt = true;
+                                        $especialidades_cadastradas .= '<span class="badge text-dark mr-10 mb-1" style="background-color: var(--primary-color);">' . strtoupper($esp['ott_stt']) . ' - ' . htmlspecialchars($esp['especialidade']) . '</span>';
+                                    }
+                                ?>
                                     <tr>
                                         <!-- CPF -->
                                         <td>
@@ -177,6 +232,18 @@ else
                                             <div class="especialidades-list">
                                                 <?= $especialidades_cadastradas ?>
                                             </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="badge bg-primary"><?= $parecerHc ?></span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="badge bg-primary"><?= $parecerRevisora ?></span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="badge bg-<?= $recurso_class ?>"><?= $recursoEtapa5 ?></span>
                                         </td>
 
                                         <!-- Ações -->

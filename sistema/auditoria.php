@@ -971,6 +971,60 @@ if (isset($_GET['codigo'])) {
                                             <td>Excluiu uma notificação para os candidatos</td>
                                             <td>22106</td>
                                         </tr>
+
+                                        <tr>
+                                            <td>Questionário Inscrição</td>
+                                            <td>Adicionou uma pergunta e resposta a base de dados do Questionário Inscrição</td>
+                                            <td>22107</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Questionário Inscrição</td>
+                                            <td>Apagou uma pergunta e resposta a base de dados do Questionário Inscrição</td>
+                                            <td>22108</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Questionário Inscrição</td>
+                                            <td>Editou uma pergunta e resposta a base de dados do Questionário Inscrição</td>
+                                            <td>22109</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>FeedBack</td>
+                                            <td>Adicionou um FeedBack</td>
+                                            <td>22110</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>FeedBack</td>
+                                            <td>Apagou um FeedBack</td>
+                                            <td>22111</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>FeedBack</td>
+                                            <td>Editou um FeedBack</td>
+                                            <td>22112</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>FeedBack</td>
+                                            <td>Baniu um usuário da área de FeedBack</td>
+                                            <td>22113</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>FeedBack</td>
+                                            <td>Removeu o banimento de um usuário da área de FeedBack</td>
+                                            <td>22114</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Checlist</td>
+                                            <td>Atualizou o Checlist de um candidato</td>
+                                            <td>22115</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

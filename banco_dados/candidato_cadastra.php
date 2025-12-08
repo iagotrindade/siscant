@@ -9,7 +9,6 @@ if (!$_POST) {
     exit();
 }
 
-
 $nome_completo = null;
 $cpf = null;
 $identidade = null;
@@ -64,7 +63,6 @@ if (!isset($_POST['declaracao'])) {
     erro_mensagem("Erro 454236! Declaração de veracidade não preenchida!");
     exit();
 }
-
 
 if (
     trim($_POST['nome_completo']) == null ||
@@ -567,8 +565,25 @@ if (!isset($_SESSION['chave'])) {
     exit();
 }
 
-
 $selecao = $conexao->get_selecao_id();
+
+// QUESTIONÁRIO
+if ($selecao[0]['rm'] == 3) {
+
+    // Verifica se o campo existe e é array
+    if (!isset($_POST['resposta']) || !is_array($_POST['resposta'])) {
+        erro_mensagem("Erro 454236! Questionário não preenchido!");
+        exit();
+    }
+
+    // Verifica se todas as respostas foram preenchidas
+    foreach ($_POST['resposta'] as $idPergunta => $resposta) {
+        if (trim($resposta) === '') {
+            erro_mensagem("Erro 454237! Todas as perguntas do questionário devem ser respondidas!");
+            exit();
+        }
+    }
+}
 
 if (count($selecao) == 0) {
     erro_mensagem("Erro 1563245!");
@@ -734,6 +749,13 @@ if ($resultado) {
 
     $_SESSION['id_candidato_cadastrado'] = $last_id;
     $_SESSION['cpf_usuario_cadastrado'] = $cpf;
+
+    $idUsuario = $id_candidato; // O ID que você já usa no cadastro
+    $dataHora = date('Y-m-d H:i:s');
+
+    foreach ($_POST['resposta'] as $idPergunta => $resposta) {
+        $conexao->insere_resposta_questionario($last_id, $idPergunta, htmlspecialchars(trim($resposta)), $dataHora);
+    }
 
     if ($resultado)
         $insere_log = $conexao->insere_log($last_id, $cpf, null, "14101", "usuario", "Insert", "Candidato se cadastrou", $alteracoes_detalhadas);

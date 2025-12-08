@@ -101,7 +101,7 @@ if ($_SESSION['perfil'] == "avaliador") {
         left: 0;
         right: 0;
         text-align: center;
-        font-size: 1rem;
+        font-size: 1.3rem;
         font-weight: 600;
         color: #495057;
     }
@@ -372,7 +372,7 @@ if ($_SESSION['perfil'] == "avaliador") {
                             <thead class="table-light">
                                 <tr>
                                     <th width="100px"><i class="fa fa-tag"></i> Categoria</th>
-                                    <th><i class="fa fa-book"></i> Nome da Especialidade</th>
+                                    <th><i class="fa fa-graduation-cap"></i> Especialidade</th>
                                     <th width="120px"><i class="fa fa-users"></i> Total Inscritos</th>
                                     <th width="100px"><i class="fa fa-percent"></i> Ampla</th>
                                     <th width="100px"><i class="fa fa-percent"></i> Cotas</th>
@@ -440,20 +440,6 @@ if ($_SESSION['perfil'] == "avaliador") {
                                             $vagas_restantes += (int)$linha8['vagas'];
                                         }
 
-                                        // Status das vagas
-                                        $status_vagas = 'available';
-                                        $status_text = 'Disponível';
-                                        if ($vagas_disponibilizadas > 0 && $vagas_restantes == 0) {
-                                            $status_vagas = 'filled';
-                                            $status_text = 'Preenchida';
-                                        } elseif ($vagas_disponibilizadas > 0 && $vagas_restantes > 0) {
-                                            $status_vagas = 'partial';
-                                            $status_text = 'Parcial';
-                                        } elseif ($vagas_disponibilizadas > 0 && $vagas_restantes == $vagas_disponibilizadas) {
-                                            $status_vagas = 'empty';
-                                            $status_text = 'Vazia';
-                                        }
-
                                         $quantidade_candidatos = 0;
                                         $get_quantidade = $conexao->get_quantidade_candidatos_especialidade($linha['id']);
                                         if (count($get_quantidade) > 0)
@@ -480,9 +466,39 @@ if ($_SESSION['perfil'] == "avaliador") {
                                                 <span class="fw-semibold"><?= $vagas_disponibilizadas ?></span>
                                             </td>
                                             <td>
-                                                <span class="badge badge-vagas badge-<?= $status_vagas ?>">
-                                                    <?= $vagas_restantes . ' ' . $status_text ?>
-                                                </span>
+                                                <?php
+                                                // Calcular porcentagem de vagas preenchidas
+                                                $porcentagem_preenchida = 0;
+                                                $vagas_preenchidas = 0;
+                                                if ($vagas_disponibilizadas > 0) {
+                                                    $vagas_preenchidas = $vagas_disponibilizadas - $vagas_restantes;
+                                                    $porcentagem_preenchida = ($vagas_preenchidas / $vagas_disponibilizadas) * 100;
+                                                }
+
+                                                // Definir cor baseada na porcentagem
+                                                $cor_barra = 'bg-danger'; // Verde
+                                                if ($porcentagem_preenchida >= 100) {
+                                                    $cor_barra = 'bg-success'; // Verde - totalmente preenchido
+                                                } elseif ($porcentagem_preenchida >= 50) {
+                                                    $cor_barra = 'bg-warning'; // Amarelo - 75% ou mais
+                                                } elseif ($porcentagem_preenchida >= 25) {
+                                                    $cor_barra = 'bg-danger'; // Vermelho - 25% ou mais
+                                                }
+                                                ?>
+
+                                                <div class="progress-container">
+                                                    <div class="progress-text"><?= $vagas_restantes ?></div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar <?= $cor_barra ?>"
+                                                            title="<?= number_format($porcentagem_preenchida, 1) ?>% preenchido (<?= $vagas_preenchidas ?? 0 ?>/<?= $vagas_disponibilizadas ?>)"
+                                                            role="progressbar"
+                                                            style="width: <?= min($porcentagem_preenchida, 100) ?>%"
+                                                            aria-valuenow="<?= $porcentagem_preenchida ?>"
+                                                            aria-valuemin="0"
+                                                            aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td class="text-center">
                                                 <a href="relatorio_especialidade_candidato.php?id_especialidade=<?= $linha['id'] ?>"

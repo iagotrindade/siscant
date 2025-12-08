@@ -19,6 +19,8 @@ $etapa = $_POST['etapa'];
 $capacidade_turno = isset($_POST['capacidade_turno']) ? (int)$_POST['capacidade_turno'] : 50;
 $data_inicio = isset($_POST['data_inicio']) ? $_POST['data_inicio'] : date('Y-m-d', strtotime('next monday'));
 $data_final = isset($_POST['data_final']) ? $_POST['data_final'] : date('Y-m-d', strtotime('+2 weeks'));
+$inicio_manha = isset($_POST['inicio_manha']) ? $_POST['inicio_manha'] : '08:00';
+$inicio_tarde = isset($_POST['inicio_tarde']) ? $_POST['inicio_tarde'] : '13:00';
 
 $qtd_especialidade = $_POST['qtd_especialidade'];
 
@@ -303,7 +305,7 @@ foreach ($turnos_agendados as $data => $turnos_dia) {
             continue;
         }
 
-        $hora_turno = ($turno === 'manha') ? '0800h' : '1300h';
+        $hora_turno = ($turno === 'manha') ? $inicio_manha : $inicio_tarde;
 
         foreach ($turnos_dia[$turno]['especialidades'] as $esp_id => $candidatos_ids) {
 

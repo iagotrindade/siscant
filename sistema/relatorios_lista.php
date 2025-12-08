@@ -216,7 +216,7 @@ if ($perfil == "ouvidor") {
               </a>
             </div>
             <div class="col-xl-4 col-md-6" <?php if ($perfil == "avaliador") echo "hidden"; ?>>
-              <a href="relatorio_etapa_III.php" class="card-link">
+              <a href="relatorio_inspecao_saude.php" class="card-link">
                 <div class="dashboard-card card-hover">
                   <div class="card-icon bg-primary">
                     <i class="fa fa-stethoscope"></i>
@@ -224,6 +224,20 @@ if ($perfil == "ouvidor") {
                   <div class="card-content">
                     <h5>Inspeção de Saúde</h5>
                     <p>Status atual das Inspeções de Saúde</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="col-xl-4 col-md-6" <?php if ($perfil == "avaliador") echo "hidden"; ?>>
+              <a href="relatorio_heteroidentificacao.php" class="card-link">
+                <div class="dashboard-card card-hover">
+                  <div class="card-icon bg-primary">
+                    <i class="fa fa-circle"></i>
+                  </div>
+                  <div class="card-content">
+                    <h5>Heteroidentificação</h5>
+                    <p>Status atual da Heteroidentificação</p>
                   </div>
                 </div>
               </a>

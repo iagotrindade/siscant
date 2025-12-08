@@ -333,7 +333,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                                 <input type="text" class="form-control" id="porta_imap" name="porta_imap" value="<?php if ($porta_imap != null) echo $porta_imap; ?>">
                             </div>
 
-                             <div class="col-md-6 mb-10">
+                            <div class="col-md-6 mb-10">
                                 <label for="usuario_email" class="form-label">E-mail</label>
                                 <input type="text" class="form-control" id="usuario_email" name="usuario_email" value="<?php if ($email != null) echo $email; ?>">
                             </div>
@@ -894,6 +894,97 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
             </div>
         </div>
 
+        <!-- Questionário da Inscrições -->
+        <div class="col-md-12">
+            <h3 class="section-title"><i class="fa fa-question-circle"></i> Questionário de Inscrição</h3>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-plus-circle"></i> Cadastrar Nova Pergunta
+                </div>
+                <div class="card-body">
+                    <form action="../banco_dados/pergunta_questionario_cadastra.php" method="post">
+                        <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
+                        <input hidden name="cod" value="<?php echo $_SESSION['selecao'] ?>">
+
+                        <div class="row">
+                            <div class="col-md-12 mb-20">
+                                <label for="pergunta" class="form-label">Pergunta</label>
+                                <textarea class="form-control" id="pergunta" name="pergunta" required></textarea>
+                            </div>
+                            <div class="col-md-6 mb-20">
+                                <label for="tipo_campo" class="form-label">Tipo de Campo</label>
+                                <select class="form-control" id="tipo_campo" name="tipo_campo" required>
+                                    <option value="texto">Texto</option>
+                                    <option value="numero">Número</option>
+                                    <option value="booleano">Sim/Não</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-20">
+                                <label for="ativo" class="form-label">Ativo</label>
+                                <select class="form-control" id="ativo" name="ativo" required>
+                                    <option value="1">Sim</option>
+                                    <option value="0">Não</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-plus-circle"></i> CADASTRAR
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-20">
+                        <h5><i class="fa fa-list"></i> Perguntas Cadastradas</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped" id="tabela_dinamica">
+                                <thead class="">
+                                    <tr>
+                                        <th>Pergunta</th>
+                                        <th>Tipo</th>
+                                        <th>Ativo</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $perguntas = $conexao->get_perguntas_questionario($_SESSION['selecao']);
+                                    ?>
+
+                                    <?php foreach ($perguntas as $linha): ?>
+                                        <tr>
+                                            <td><?= nl2br(htmlspecialchars($linha['texto_pergunta'])); ?></td>
+                                            <td><?= ($linha['tipo_campo'] == 'booleano') ? 'SIM/NÃO' : mb_strtoupper($linha['tipo_campo']); ?></td>
+                                            <td><span class="badge bg-<?= $linha['ativo'] == 1 ? "primary" : "danger"; ?>"><?= $linha['ativo'] == 1 ? "Sim" : "Não"; ?></span></td>
+                                            <td>
+                                                <?php if ($linha['ativo'] == 1): ?>
+                                                    <a href="../banco_dados/alterar_status_pergunta_questionario.php?id=<?= $linha['id']; ?>&status=2" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Desativar">
+                                                        <i class="fa fa-ban"></i>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <a href="../banco_dados/alterar_status_pergunta_questionario.php?id=<?= $linha['id']; ?>&status=1" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Ativar">
+                                                        <i class="fa fa-check"></i>
+                                                    </a>
+                                                <?php endif; ?>
+
+                                                <a onclick="funcao_apagar('<?= $linha['id']; ?>', 'pergunta_questionario')" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Excluir">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Exame Médico -->
         <div class="col-md-12">
             <h3 class="section-title"><i class="fa fa-stethoscope"></i> Exame Médico</h3>
@@ -994,6 +1085,8 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 </div>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script>
     // Função para mostrar/ocultar campos de pagamento
     function pagamento_para_selecao() {
@@ -1014,13 +1107,14 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
     document.addEventListener('DOMContentLoaded', function() {
         pagamento_para_selecao();
     });
+
+    $('#tabela_dinamica').DataTable({
+        "order": [
+            [0, "desc"]
+        ]
+    });
 </script>
 </div>
-<script type="text/javascript">
-    //$('#om').select2();
-    //$('#secao').select2();
-</script>
-
 </body>
 
 </html>

@@ -7,6 +7,7 @@ $conexao = new Conexao();
 
 $selecao = $conexao->get_selecao_id(); // Seleção
 $libera_suporte_inicial = $selecao[0]['liberacao_suporte_inicial'];
+$questionario = $conexao->get_perguntas_questionario($selecao[0]['id']); // Perguntas do questionário de inscrição
 ?>
 
 <!-- 31/08/2025 - Iago Silva Pequenos ajustes e melhorias no Layout -->
@@ -1035,6 +1036,49 @@ $libera_suporte_inicial = $selecao[0]['liberacao_suporte_inicial'];
                         </div>
                     </div>
                 </div>
+
+                <!-- QUESTIONÁRIO -->
+                 <?php if (!empty($questionario) && $selecao[0]['rm'] == 3): ?>
+                    <div class="card mb-4 fade-in" id="outras-informacoes-section">
+                        <h5 class="section-header"><i class="fa fa-info-circle me-2"></i>Questionário Obrigatório</h5>
+                        <div class="form-section">
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <?php foreach ($questionario as $p): ?>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">
+                                                <?= htmlspecialchars($p['texto_pergunta']); ?>
+                                            </label>
+
+                                            <?php if ($p['tipo_campo'] === 'texto'): ?>
+
+                                                <input type="text"
+                                                    name="resposta[<?= $p['id']; ?>]"
+                                                    class="form-control" required>
+
+                                            <?php elseif ($p['tipo_campo'] === 'numero'): ?>
+
+                                                <input type="number"
+                                                    name="resposta[<?= $p['id']; ?>]"
+                                                    class="form-control" required>
+
+                                            <?php elseif ($p['tipo_campo'] === 'booleano'): ?>
+
+                                                <select name="resposta[<?= $p['id']; ?>]" class="form-control" required>
+                                                    <option value="Sim">Sim</option>
+                                                    <option value="Não">Não</option>
+                                                </select>
+
+                                            <?php endif; ?>
+                                        </div>
+
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <!-- DECLARAÇÃO E ENVIO -->
                 <div class="card mb-4">

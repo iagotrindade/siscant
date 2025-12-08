@@ -342,7 +342,7 @@ foreach ($notificacoes as $notificacao) {
                         <li>
                             <form action="pesquisa_cpf.php" method="POST">
                                 <div class="input-group" style="margin-left: 14px;margin-right: 8px;">
-                                    <input type="text" name="pesquisa" class="form-control" maxlength="25" placeholder="Parte do CPF/Nome" style="height: 40px;;">
+                                    <input type="text" name="pesquisa" class="form-control" maxlength="25" placeholder="CPF/Nome/Email" style="height: 40px;;">
                                     <input type="text" name="criptografia" hidden value="<?php echo hash('sha256', $_SESSION['chave'] . "pesquisa")  ?>">
                                     <span class="input-group-btn">
                                         <button class="btn btn-pesquisa">
@@ -366,7 +366,6 @@ foreach ($notificacoes as $notificacao) {
                         include_once 'codigos/menu_usuario.php';
 
                     ?>
-
                 </ul>
             </section>
         </aside>

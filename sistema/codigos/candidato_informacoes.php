@@ -547,7 +547,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
         // 14 MAIO 2024 
         if ($_SESSION['perfil'] == 'admin') {
-            include_once 'codigos/candidato_altera_email_admin.php';
+            include_once 'codigos/admin_altera_contatos.php';
         }
 
         if ($_SESSION['perfil'] == 'admin' && isset($_SESSION["eipot"]) == 1) {
@@ -564,7 +564,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
         }
 
         //Excluido o perfil jise da avaliação de recurso do candidato ||  $_SESSION['perfil'] == 'jise' Em 28 de Maio de 2025
-        if (isset($_SESSION['eipot']) == 1 && $_SESSION['perfil'] == 'avaliador' || $_SESSION['perfil'] == 'admin') {
+        if ($_SESSION['perfil'] == 'avaliador' || $_SESSION['perfil'] == 'admin') {
             include_once 'codigos/avaliador_recurso_candidato.php';
         }
 
@@ -617,9 +617,13 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
             include_once 'codigos/candidato_concorrendo.php';
         }
 
+        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'documentos' || $_SESSION['perfil'] == 'avaliador') {
+            include_once 'codigos/candidato_questionario_inscricao.php';
+        }
+
         // 14 MAIO 2025 
         if ($_SESSION['perfil'] == 'admin') {
-            include_once 'codigos/candidato_altera_email_admin.php';
+            include_once 'codigos/admin_altera_contatos.php';
         }
 
         if ($resultado_selecao[0]['codigo'] == 'cet' && $_SESSION['perfil'] == 'admin') {
@@ -640,12 +644,21 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
             include_once 'codigos/candidato_especialidades_visualiza.php';
         }
 
-        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'saude') {
+        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'avaliador') {
+            include_once 'codigos/candidato_checklist_documentos.php';
+        }
+
+        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'saude' || $_SESSION['perfil'] == 'jise') {
             include_once 'codigos/candidato_inspecao_saude.php';
         }
 
         if ($_SESSION['perfil'] == 'admin') {
             include_once 'codigos/candidato_eaf.php';
+        }
+
+        //13 AGOSTO 2025 - IAGO SILVA
+        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consultor' || $_SESSION['perfil'] == 'chc' || $_SESSION['perfil'] == 'cr') {
+            include_once 'codigos/candidato_heteroidentificacao.php';
         }
 
         if ($_SESSION['perfil'] == 'admin') {
@@ -680,11 +693,6 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
         if ($_SESSION['perfil'] != 'candidato' && $_SESSION['candidato'] != '1') {
             include_once 'codigos/arquivos_adicionados_para_candidato.php';
-        }
-
-        //13 AGOSTO 2025 - IAGO SILVA
-        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consultor' || $_SESSION['perfil'] == 'chc' || $_SESSION['perfil'] == 'cr') {
-            include_once 'codigos/candidato_heteroidentificacao.php';
         }
 
         if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consulta') {

@@ -35,7 +35,8 @@ if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'documentos') {
                 </thead>
                 <tbody>
                     <?php
-                    $lista_docs_obrigatorios = $conexao->get_docs_obrigatorios_inseridos_candidato($id_usuario);
+                    // Já criado no candidato_checklist_documentos.php
+                    //$lista_docs_obrigatorios = $conexao->get_docs_obrigatorios_inseridos_candidato($id_usuario);
 
                     foreach ($lista_docs_obrigatorios as $linha):
                         $crip = hash('sha256', $_SESSION['chave'] . "freitas" . $linha['id']);

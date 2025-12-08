@@ -19,6 +19,8 @@ $etapa = $_POST['etapa'];
 $capacidade_turno = isset($_POST['capacidade_turno']) ? (int)$_POST['capacidade_turno'] : 50;
 $data_inicio = isset($_POST['data_inicio']) ? $_POST['data_inicio'] : date('Y-m-d', strtotime('next monday'));
 $data_final = isset($_POST['data_final']) ? $_POST['data_final'] : date('Y-m-d', strtotime('+2 weeks'));
+$inicio_manha = isset($_POST['inicio_manha']) ? $_POST['inicio_manha'] : '08:00';
+$inicio_tarde = isset($_POST['inicio_tarde']) ? $_POST['inicio_tarde'] : '13:00';
 
 $qtd_especialidade = $_POST['qtd_especialidade'];
 
@@ -147,7 +149,7 @@ foreach ($lista_especialidades as $especialidade) {
     $candidatos = $conexao->get_candidatos_especialidade($id_esp);
     $especialidades[$id_esp] = ['nome_especialidade' => $especialidade['ott_stt'] . ' - ' . $especialidade['nome'], 'candidatos' => []];
     foreach ($candidatos as $candidato) {
-        if ($candidato['etapa'] < 4 || !$candidato['vaga_reservada']) continue;
+        if ($candidato['etapa'] < 5 || !$candidato['vaga_reservada']) continue;
         $id = $candidato['id'];
         $especialidades[$id_esp]['candidatos'][$id] = $candidato;
         $total_candidatos++;
@@ -230,77 +232,61 @@ foreach ($especialidades as $esp_id => $dados_esp) {
 }
 
 // =========================================
-// TABELAS DOS TURNOS POR ESPECIALIDADE
+// TABELAS ÚNICAS POR DATA E TURNO (SEM ESPECIALIDADE)
 // =========================================
 
 foreach ($turnos_agendados as $data => $turnos_dia) {
 
     $data_formatada = formatarDataPortugues($data);
 
-    // manhã e tarde
     foreach (['manha', 'tarde'] as $turno) {
 
-        if (empty($turnos_dia[$turno]['especialidades'])) {
+        if (empty($turnos_dia[$turno]['candidatos'])) {
             continue;
         }
 
-        $hora_turno = ($turno === 'manha') ? '0800h' : '1300h';
+        $hora_turno = ($turno === 'manha') ? $inicio_manha : $inicio_tarde;
 
-        foreach ($turnos_dia[$turno]['especialidades'] as $esp_id => $candidatos_ids) {
+        // Início da tabela
+        $html = "
+            <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
+                <tr>
+                    <th colspan='4'
+                        style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>
+                        {$data_formatada} ÀS {$hora_turno}
+                    </th>
+                </tr>
+                <tr>
+                    <th style='text-align: center; width: 5%;'>Nº</th>
+                    <th style='text-align: center; width: 15%;'>CPF</th>
+                    <th style='text-align: center; width: 60%;'>NOME</th>
+                    <th style='text-align: center; width: 20%;'>AUTODECLARAÇÃO</th>
+                </tr>
+        ";
 
-            if (empty($candidatos_ids)) {
-                continue;
-            }
+        $contador = 1;
 
-            // INÍCIO DA TABELA — LIMPA HTML
-            $html = "";
+        foreach ($turnos_dia[$turno]['candidatos'] as $candidato_id => $candidato) {
 
-            $nome_especialidade = $especialidades[$esp_id]['nome_especialidade'];
-            $nome_especialidade_upper = mb_strtoupper($nome_especialidade, 'UTF-8');
+            // máscara CPF
+            $cpf = $candidato['cpf'];
+            $cpf_mascarado = substr($cpf, 0, -5) . "*****";
 
             $html .= "
-                <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
-                    <tr>
-                        <th colspan='4' 
-                            style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>
-                            {$nome_especialidade_upper}<br> 
-                            {$data_formatada} ÀS {$hora_turno}
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style='text-align: center; width: 10%;'>Nº</th>
-                        <th style='text-align: center; width: 20%;'>CPF</th>
-                        <th style='text-align: center; width: 60%;'>NOME</th>
-                        <th style='text-align: center; width: 10%;'>AUTODECLARAÇÃO</th>
-                    </tr>
+                <tr>
+                    <td style='text-align: center;'>{$contador}</td>
+                    <td style='text-align: center;'>{$cpf_mascarado}</td>
+                    <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
+                    <td style='text-align: center;'>" . mb_strtoupper($candidato['autodeclaracao']) . "</td>
+                </tr>
             ";
 
-            $contador = 1;
-
-            foreach ($candidatos_ids as $candidato_id) {
-
-                $candidato = $todos_candidatos[$candidato_id]['dados'];
-
-                // máscara CPF
-                $cpf = $candidato['cpf'];
-                $cpf_mascarado = substr($cpf, 0, -5) . "*****";
-
-                $html .= "
-                    <tr>
-                        <td style='text-align: center;'>{$contador}</td>
-                        <td style='text-align: center;'>{$cpf_mascarado}</td>
-                        <td style='text-align: center;'>" . mb_strtoupper($candidato['nome_completo']) . "</td>
-                        <td style='text-align: center;'>" . mb_strtoupper($candidato['autodeclaracao']) . "</td>
-                    </tr>
-                ";
-                $contador++;
-            }
-
-            $html .= "</table>";
-
-            // IMPRIME APENAS A TABELA ATUAL
-            $mpdf->WriteHTML($html);
+            $contador++;
         }
+
+        $html .= "</table>";
+
+        $mpdf->WriteHTML($html);
     }
 }
 
@@ -322,6 +308,6 @@ foreach ($especialidades as $esp_id => $dados) {
         $mpdf->WriteHTML($html);
     }
 }
-$mpdf->Output("Cronograma de Convocação Etapa III.pdf", 'D');
+$mpdf->Output("Convocação Etapa IV - Heteroidentificação Complementar.pdf", 'D');
 ob_end_flush();
 exit();

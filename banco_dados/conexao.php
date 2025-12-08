@@ -634,43 +634,52 @@ class Conexao
 
 
     // 14 MAIO 2024 -> IAGO SILVA
-    public function altera_email_candidato($id_candidato, $novo_email, $id_admin, $admin_password)
+    public function altera_contatos_candidato($id_usuario, $novo_email, $novo_residencial, $novo_celular, $id_admin, $admin_password)
     {
         try {
-            $stmt = $this->pdo->prepare(
-                "select senha from usuario where id = :id_admin"
-            );
-            $stmt->bindValue(':id_admin', $id_admin);
-            $run = $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Verifica senha do admin
+            $stmt = $this->pdo->prepare("SELECT senha FROM usuario WHERE id = :id_admin");
+            $stmt->bindValue(':id_admin', $id_admin, PDO::PARAM_INT);
+            $stmt->execute();
 
-            if ($admin_password == $result[0]['senha']) {
-                $sqlInsert = "UPDATE usuario SET mail = :novo_email WHERE id = :id_candidato";
+            $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                $this->pdo->beginTransaction();
-
-                $query = $this->pdo->prepare($sqlInsert);
-
-                $query->bindValue(":id_candidato", $id_candidato);
-                $query->bindValue(":novo_email", $novo_email);
-
-                if ($query->execute()) {
-                    $data =
-                        [
-                            'id_candidato' => $id_candidato,
-                            'novo_email' => $novo_email,
-                        ];
-
-                    $this->pdo->commit();
-                    return $data;
-                } else {
-                    echo ('nops');
-                    exit;
-                    $this->pdo->rollBack();
-                    return false;
-                }
+            // Admin não encontrado ou senha errada
+            if (!$admin || $admin_password !== $admin['senha']) {
+                return false;
             }
+
+            // Atualiza contatos
+            $sql = "UPDATE usuario 
+                SET mail = :novo_email, 
+                    tel_residencial = :novo_residencial, 
+                    tel_celular = :novo_celular 
+                WHERE id = :id_usuario";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sql);
+            $query->bindValue(":id_usuario", $id_usuario, PDO::PARAM_INT);
+            $query->bindValue(":novo_email", $novo_email);
+            $query->bindValue(":novo_residencial", $novo_residencial);
+            $query->bindValue(":novo_celular", $novo_celular);
+
+            if ($query->execute()) {
+                $data = [
+                    'id_usuario'       => $id_usuario,
+                    'novo_email'       => $novo_email,
+                    'novo_residencial' => $novo_residencial,
+                    'novo_celular'     => $novo_celular
+                ];
+
+                $this->pdo->commit();
+                return $data;
+            }
+
+            $this->pdo->rollBack();
+            return false;
         } catch (Exception $e) {
+            $this->pdo->rollBack();
             return false;
         }
     }
@@ -828,7 +837,7 @@ class Conexao
         $stmt = $this->pdo->prepare(
             "select *
                 from usuario u
-                where (cpf like :cpf or nome_completo like :cpf) and id_selecao = :selecao and u.apagado = 0"
+                where (cpf like :cpf or nome_completo like :cpf or mail like :cpf) and id_selecao = :selecao and u.apagado = 0"
         );
         $stmt->bindValue(':cpf', "%$cpf%", PDO::PARAM_STR);
         $stmt->bindValue(':selecao', $_SESSION['selecao']);
@@ -1123,6 +1132,202 @@ class Conexao
 
         // Retorna os dados apagados (ou null se não existir)
         return $dados ?: null;
+    }
+
+    // 15 AGO 25 -> Iago Silva Adicionando função para buscar as perguntas do Assistente Virtual
+    public function get_perguntas_questionario($id_selecao)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM questionario_inscricao WHERE id_selecao = :id_selecao
+        ");
+
+        $stmt->bindValue(':id_selecao', $id_selecao);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    public function get_pergunta_questionario_id($id)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM questionario_inscricao WHERE id = :id
+        ");
+
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function insere_pergunta_questionario($pergunta, $tipo_campo, $ativo, $usuario_id)
+    {
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $selecao = $_SESSION['selecao'];
+        try {
+            $dataHora = date('Y-m-d H:i:s');
+
+            // Inicia transação
+            $this->pdo->beginTransaction();
+
+            $stmt = $this->pdo->prepare("
+            INSERT INTO questionario_inscricao
+                (id_selecao, texto_pergunta, tipo_campo, ativo, id_usuario_ultima_alteracao, data_ultima_alteracao) 
+            VALUES 
+                (:selecao, :pergunta, :tipo_campo, :ativo, :id_usuario_ultima_alteracao, :data_ultima_alteracao)
+        ");
+
+            $stmt->bindValue(':selecao', $selecao);
+            $stmt->bindValue(':pergunta', $pergunta);
+            $stmt->bindValue(':tipo_campo', $tipo_campo);
+            $stmt->bindValue(':ativo', $ativo);
+            $stmt->bindValue(':id_usuario_ultima_alteracao', $usuario_id);
+            $stmt->bindValue(':data_ultima_alteracao', $dataHora);
+
+            $stmt->execute();
+
+            // Confirma a transação
+            $this->pdo->commit();
+
+            return [
+                'id' => $this->pdo->lastInsertId(),
+                'id_selecao' => $selecao,
+                'pergunta' => $pergunta,
+                'tipo_campo' => $tipo_campo,
+                'ativo' => $ativo,
+                'id_usuario_ultima_alteracao' => $usuario_id,
+                'data_ultima_alteracao' => $dataHora
+            ];
+        } catch (PDOException $e) {
+            // Desfaz transação se der erro
+            $this->pdo->rollBack();
+            throw new Exception("Erro ao inserir pergunta: " . $e->getMessage());
+        }
+    }
+
+    public function alterar_status_pergunta_questionario($id_pergunta, $ativo, $usuario_id)
+    {
+        try {
+            $dataHora = date('Y-m-d H:i:s');
+
+            $this->pdo->beginTransaction();
+
+            $sql = "UPDATE questionario_inscricao SET 
+                    ativo = :ativo,
+                    id_usuario_ultima_alteracao = :usuario_id,
+                    data_ultima_alteracao = :data_ultima_alteracao
+                WHERE id = :id_pergunta";
+
+            $query = $this->pdo->prepare($sql);
+
+            $query->bindValue(":id_pergunta", $id_pergunta, PDO::PARAM_INT);
+            $query->bindValue(":ativo", $ativo, PDO::PARAM_INT);
+            $query->bindValue(":usuario_id", $usuario_id, PDO::PARAM_INT);
+            $query->bindValue(":data_ultima_alteracao", $dataHora);
+
+            if ($query->execute()) {
+                $this->pdo->commit();
+
+                return [
+                    'id' => $id_pergunta,
+                    'ativo' => $ativo,
+                    'id_usuario_ultima_alteracao' => $usuario_id,
+                    'data_ultima_alteracao' => $dataHora
+                ];
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            return false;
+        }
+    }
+
+    public function apaga_pergunta_questionario($id_pergunta)
+    {
+        // Busca os dados antes de apagar
+        $stmt = $this->pdo->prepare("
+        SELECT * 
+        FROM questionario_inscricao 
+        WHERE id = :id_pergunta
+    ");
+        $stmt->bindValue(':id_pergunta', $id_pergunta, PDO::PARAM_INT);
+        $stmt->execute();
+        $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Se existir, apaga
+        if ($dados) {
+            $stmt = $this->pdo->prepare("
+            DELETE FROM questionario_inscricao 
+            WHERE id = :id_pergunta
+        ");
+            $stmt->bindValue(':id_pergunta', $id_pergunta, PDO::PARAM_INT);
+            $stmt->execute();
+        }
+
+        // Retorna os dados apagados (ou null se não existir)
+        return $dados ?: null;
+    }
+
+    public function insere_resposta_questionario($id_candidato, $id_pergunta, $resposta)
+    {
+        try {
+            $dataHora = date('Y-m-d H:i:s');
+
+            // Inicia transação
+            $this->pdo->beginTransaction();
+
+            $stmt = $this->pdo->prepare("
+            INSERT INTO respostas_questionario 
+                (id_candidato, id_pergunta, resposta, data_resposta) 
+            VALUES 
+                (:id_candidato, :id_pergunta, :resposta, :data_resposta)
+        ");
+
+            $stmt->bindValue(':id_candidato', $id_candidato);
+            $stmt->bindValue(':id_pergunta', $id_pergunta);
+            $stmt->bindValue(':resposta', $resposta);
+            $stmt->bindValue(':data_resposta', $dataHora);
+
+            $stmt->execute();
+
+            // Confirma a transação
+            $this->pdo->commit();
+
+            return [
+                'id' => $this->pdo->lastInsertId(),
+                'id_candidato' => $id_candidato,
+                'id_pergunta' => $id_pergunta,
+                'resposta' => $resposta,
+                'data_resposta' => $dataHora
+            ];
+        } catch (PDOException $e) {
+            // Desfaz transação se der erro
+            $this->pdo->rollBack();
+            throw new Exception("Erro ao inserir resposta: " . $e->getMessage());
+        }
+    }
+
+    public function get_respostas_questionario_candidato($id_candidato)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT rq.*, qi.texto_pergunta 
+            FROM respostas_questionario rq
+            INNER JOIN questionario_inscricao qi ON qi.id = rq.id_pergunta
+            WHERE rq.id_candidato = :id_candidato
+        ");
+
+        $stmt->bindValue(':id_candidato', $id_candidato);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
     }
 
     // </editor-fold>
@@ -2312,9 +2517,11 @@ class Conexao
             ce.prova_oral_musica,
             ce.etapa AS etapa,
             ce.rm_escolheu_servir,
-            ce.ordem_escolha_guarnicao
+            ce.ordem_escolha_guarnicao,
+            e.nota_av
         FROM candidato_x_especialidade ce
         INNER JOIN usuario u ON u.id = ce.id_candidato
+        INNER JOIN especialidade e ON e.id = ce.id_especialidade
         LEFT JOIN cidade c ON c.id = ce.cidade_escolheu_servir
         WHERE ce.id_especialidade = :id_especialidade
             AND ce.apagado = 0
@@ -3387,7 +3594,7 @@ order by total_pontos_somados desc");
     {
         $stmt = $this->pdo->prepare(
             "
-                    select e.teste_pratico, ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, ce.id_especialidade, u.nome_completo, u.cpf, 
+                    select e.teste_pratico, e.nota_av, ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, ce.id_especialidade, u.nome_completo, u.cpf, 
                     e.nome especialidade, e.musica, e.ott_stt, ce.registro_conselho, ce.data_habilitacao, ce.etapa, ce.apto_prova_teorico_pratico
                     from candidato_x_especialidade ce
                     inner join usuario u on u.id = ce.id_candidato
@@ -3635,6 +3842,180 @@ order by total_pontos_somados desc");
         return $result;
     }
     // </editor-fold>
+
+    public function get_docs_checklist($id_usuario, $tipo)
+    {
+        // Garantir que o tipo sempre resulte em uma tabela segura
+        $tabela_join = ($tipo === 'obrigatorio')
+            ? 'documentacao_obrigatoria'
+            : 'curriculo';
+
+        $sql = "
+        SELECT 
+            c.*,
+            d.id   AS doc_id,
+            d.nome AS doc_nome,
+            u.nome_guerra,
+            u.posto_grad,
+            u.nome_completo AS nome_avaliador
+
+        FROM checklist_documentacao c
+
+        LEFT JOIN {$tabela_join} d
+               ON d.id = c.id_documento
+
+        LEFT JOIN usuario u
+               ON u.id = c.id_usuario_avaliou
+
+        WHERE c.id_candidato = :id_usuario
+          AND c.id_selecao   = :id_selecao
+          AND c.tipo_documento = :tipo_documento
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $stmt->bindValue(':id_selecao', $_SESSION['selecao'], PDO::PARAM_INT);
+        $stmt->bindValue(':tipo_documento', $tipo, PDO::PARAM_STR);
+
+        if (!$stmt->execute()) {
+            throw new Exception('Erro ao executar consulta do checklist');
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function atualiza_checklist_documentos($id_candidato, $id_especialidade, $id_usuario_avaliador, $id_documento, $tipo_documento, $entregue, $id_checklist_existente = null)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            $datetime = date('Y-m-d H:i:s');
+            $id_selecao = $_SESSION['selecao'];
+
+            // CORREÇÃO: Garantir que $entregue é sempre 0 ou 1
+            $status = ($entregue == 1 || $entregue === true || $entregue == '1') ? 1 : 0;
+
+            echo "DEBUG: id_candidato=$id_candidato, id_especialidade=$id_especialidade, id_documento=$id_documento, tipo=$tipo_documento, entregue=$entregue, status=$status<br>";
+
+            // Se temos um ID existente, tentamos atualizar
+            if ($id_checklist_existente) {
+                $sqlUpdate = "
+            UPDATE checklist_documentacao 
+            SET status = :status,
+                data_entrega = :datetime,
+                id_usuario_avaliou = :id_usuario_avaliador
+            WHERE id = :id_checklist
+            ";
+
+                $stmt = $this->pdo->prepare($sqlUpdate);
+                $stmt->bindValue(':status', $status);
+                $stmt->bindValue(':datetime', $datetime);
+                $stmt->bindValue(':id_usuario_avaliador', $id_usuario_avaliador);
+                $stmt->bindValue(':id_checklist', $id_checklist_existente);
+                $stmt->execute();
+
+                $this->pdo->commit();
+                return true;
+            }
+
+            // Verificar se já existe um registro
+            $sqlCheck = "
+        SELECT id FROM checklist_documentacao 
+        WHERE id_candidato = :id_candidato
+          AND id_especialidade = :id_especialidade 
+          AND id_selecao = :id_selecao
+          AND tipo_documento = :tipo_documento
+          AND id_documento = :id_documento
+        ";
+
+            $checkStmt = $this->pdo->prepare($sqlCheck);
+            $checkStmt->bindValue(':id_candidato', $id_candidato);
+            $checkStmt->bindValue(':id_especialidade', $id_especialidade);
+            $checkStmt->bindValue(':id_selecao', $id_selecao);
+            $checkStmt->bindValue(':tipo_documento', $tipo_documento);
+            $checkStmt->bindValue(':id_documento', $id_documento);
+            $checkStmt->execute();
+
+            $existingRecord = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existingRecord) {
+                // Atualizar registro existente
+                $sqlUpdate = "
+            UPDATE checklist_documentacao 
+            SET status = :status,
+                data_entrega = :datetime,
+                id_usuario_avaliou = :id_usuario_avaliador
+            WHERE id = :id
+            ";
+
+                $stmt = $this->pdo->prepare($sqlUpdate);
+                $stmt->bindValue(':status', $status);
+                $stmt->bindValue(':datetime', $datetime);
+                $stmt->bindValue(':id_usuario_avaliador', $id_usuario_avaliador);
+                $stmt->bindValue(':id', $existingRecord['id']);
+                $stmt->execute();
+            } else {
+                // CORREÇÃO: SEMPRE inserir novo registro, independente do status
+                $sqlInsert = "
+            INSERT INTO checklist_documentacao 
+            (id_candidato, id_especialidade, id_selecao, id_documento, tipo_documento, status, data_entrega, id_usuario_avaliou)
+            VALUES 
+            (:id_candidato, :id_especialidade, :id_selecao, :id_documento, :tipo_documento, :status, :datetime, :id_usuario_avaliador)
+            ";
+
+                $insert = $this->pdo->prepare($sqlInsert);
+                $insert->bindValue(':id_candidato', $id_candidato);
+                $insert->bindValue(':id_especialidade', $id_especialidade);
+                $insert->bindValue(':id_selecao', $id_selecao);
+                $insert->bindValue(':id_documento', $id_documento);
+                $insert->bindValue(':tipo_documento', $tipo_documento);
+                $insert->bindValue(':status', $status);
+                $insert->bindValue(':datetime', $datetime);
+                $insert->bindValue(':id_usuario_avaliador', $id_usuario_avaliador);
+                $insert->execute();
+            }
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            error_log("Erro ao atualizar checklist_documentacao: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function get_checklist_por_especialidade($id_candidato, $id_especialidade)
+    {
+        $sql = "
+        SELECT 
+            c.id,
+            c.id_selecao,
+            c.id_candidato,
+            c.id_especialidade,
+            c.id_documento,
+            c.tipo_documento,
+            c.status,
+            c.data_entrega,
+            c.id_usuario_avaliou,
+            
+            u.nome_completo AS avaliador_nome,
+            u.nome_guerra   AS avaliador_nome_guerra,
+            u.posto_grad    AS avaliador_posto_grad
+
+        FROM checklist_documentacao c
+        LEFT JOIN usuario u 
+               ON c.id_usuario_avaliou = u.id
+
+        WHERE c.id_candidato = ?
+          AND c.id_especialidade = ?
+          AND c.id_selecao = ?
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id_candidato, $id_especialidade, $_SESSION['selecao']]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Get Vagas Especialidade">
 
@@ -10631,6 +11012,401 @@ order by total_pontos_somados desc");
                 return false;
             }
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function get_feedbacks($id_selecao)
+    {
+        try {
+            // 1. Buscar todos os feedbacks
+            $sqlFeedbacks = "SELECT 
+                f.*, 
+                f.id AS id_feedback,
+                u.id AS id_usuario,
+                u.nome_completo,
+                u.nome_guerra,
+                u.posto_grad,
+                u.mail AS email_usuario
+            FROM feedbacks AS f
+            LEFT JOIN usuario AS u ON f.id_usuario = u.id
+            WHERE f.id_selecao = :id_selecao
+            ORDER BY f.criado_em DESC";
+
+            $query = $this->pdo->prepare($sqlFeedbacks);
+            $query->bindValue(':id_selecao', $id_selecao, PDO::PARAM_INT);
+            $query->execute();
+
+            $feedbacks = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!$feedbacks) {
+                return [];
+            }
+
+            // Extrair todos os IDs
+            $ids = array_column($feedbacks, "id_feedback");
+            $idList = implode(",", $ids);
+
+            // 2. Buscar todos os votos dos feedbacks
+            $sqlLikes = "SELECT 
+                        fv.id_feedback,
+                        fv.id_usuario,
+                        fv.criado_em,
+                        u.nome_completo,
+                        u.nome_guerra,
+                        u.posto_grad
+                    FROM feedback_votos fv
+                    LEFT JOIN usuario u ON fv.id_usuario = u.id
+                    WHERE fv.id_feedback IN ($idList)";
+
+            $query2 = $this->pdo->query($sqlLikes);
+            $likes = $query2->fetchAll(PDO::FETCH_ASSOC);
+
+            // 3. Agrupar likes por feedback
+            $likesPorFeedback = [];
+            foreach ($likes as $voto) {
+                $likesPorFeedback[$voto['id_feedback']][] = $voto;
+            }
+
+            // 4. Inserir no array final
+            foreach ($feedbacks as &$f) {
+                $f['likes'] = $likesPorFeedback[$f['id_feedback']] ?? [];
+            }
+
+            return $feedbacks;
+        } catch (Exception $e) {
+            error_log("Erro ao buscar feedbacks: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function get_feedback_id($id_feedback)
+    {
+        try {
+
+            // 1. Buscar o feedback
+            $sql = "SELECT 
+                    f.*, 
+                    u.id AS id_usuario,
+                    u.nome_completo AS nome_usuario,
+                    u.nome_completo,
+                    u.nome_guerra,
+                    u.posto_grad,
+                    u.mail AS email_usuario
+                FROM feedbacks AS f
+                LEFT JOIN usuario AS u ON f.id_usuario = u.id
+                WHERE f.id = :id_feedback
+                LIMIT 1";
+
+            $query = $this->pdo->prepare($sql);
+            $query->bindValue(':id_feedback', $id_feedback);
+            $query->execute();
+
+            $feedback = $query->fetch(PDO::FETCH_ASSOC);
+
+            if (!$feedback) {
+                return false;
+            }
+
+            // 2. Buscar todos os likes do feedback
+            $sqlLikes = "SELECT 
+                        fv.id_usuario,
+                        fv.criado_em,
+                        u.nome_completo,
+                        u.nome_guerra,
+                        u.posto_grad
+                    FROM feedback_votos fv
+                    LEFT JOIN usuario u ON fv.id_usuario = u.id
+                    WHERE fv.id_feedback = :id_feedback";
+
+            $query2 = $this->pdo->prepare($sqlLikes);
+            $query2->bindValue(':id_feedback', $id_feedback);
+            $query2->execute();
+
+            $feedback['likes'] = $query2->fetchAll(PDO::FETCH_ASSOC);
+
+            return $feedback;
+        } catch (Exception $e) {
+            error_log("Erro ao buscar feedback: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function get_usuarios_banidos_feedbacks()
+    {
+        try {
+            $sql = "
+            SELECT 
+                fb.id              AS id,
+                fb.id_feedback     AS ban_feedback_id,
+                fb.motivo          AS motivo,
+                fb.criado_em       AS criado_em,
+
+                u.id               AS id_usuario,
+                u.nome_completo,
+                u.nome_guerra,
+                u.cpf,
+                u.posto_grad,
+                u.mail             AS usuario_email,
+
+                f.id               AS feedback_id,
+                f.titulo           AS feedback_titulo,
+                f.descricao        AS feedback_descricao
+            FROM feedback_ban fb
+            LEFT JOIN usuario u 
+                   ON fb.id_usuario = u.id
+            LEFT JOIN feedbacks f 
+                   ON fb.id_feedback = f.id
+            ORDER BY fb.criado_em DESC
+        ";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Erro ao buscar usuários banidos de feedbacks: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    // 25/07/2025 - Iago Silva - Adicionando função para inserir uma nova notificação
+    public function insere_feedback($titulo, $descricao, $tipo)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+        $id_selecao = $_SESSION['selecao'];
+
+        try {
+            $sqlInsert = "INSERT INTO feedbacks 
+            (id_selecao, id_usuario, titulo, descricao, tipo, status, votos, criado_em, atualizado_em) 
+            VALUES 
+            (:id_selecao, :id_usuario, :titulo, :descricao, :tipo, :status, 0, :criado_em, :atualizado_em)";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id_selecao", $id_selecao);
+            $query->bindValue(":id_usuario", $usuario);
+            $query->bindValue(":titulo", $titulo);
+            $query->bindValue(":descricao", $descricao);
+            $query->bindValue(":tipo", $tipo);
+            $query->bindValue(":status", 'analise');
+            $query->bindValue(":criado_em", $datetime);
+            $query->bindValue(":atualizado_em", $datetime);
+
+            if ($query->execute()) {
+                $this->pdo->commit();
+
+                return [
+                    'id_selecao'    => $id_selecao,
+                    'id_usuario'    => $usuario,
+                    'titulo'        => $titulo,
+                    'descricao'     => $descricao,
+                    'tipo'          => $tipo,
+                    'status'        => 'analise',
+                    'votos'         => 0,
+                    'criado_em'     => $datetime,
+                    'atualizado_em' => $datetime,
+                ];
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    public function atualiza_status_feedback($id_feedback, $novo_status)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        try {
+            $sqlUpdate = "UPDATE feedbacks 
+                          SET status = :novo_status, atualizado_em = :atualizado_em 
+                          WHERE id = :id_feedback";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlUpdate);
+            $query->bindValue(":novo_status", $novo_status);
+            $query->bindValue(":atualizado_em", $datetime);
+            $query->bindValue(":id_feedback", $id_feedback);
+
+            if ($query->execute()) {
+                $this->pdo->commit();
+                return true;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    public function feedback_like($id_feedback, $action, $usuario)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            // Verifica se o usuário já votou
+            $sqlCheck = "SELECT id FROM feedback_votos 
+                     WHERE id_feedback = :id_feedback 
+                     AND id_usuario = :id_usuario";
+
+            $check = $this->pdo->prepare($sqlCheck);
+            $check->bindValue(':id_feedback', $id_feedback, PDO::PARAM_INT);
+            $check->bindValue(':id_usuario', $usuario, PDO::PARAM_INT);
+            $check->execute();
+
+            $jaVotou = $check->fetch(PDO::FETCH_ASSOC);
+
+            /*
+        ==================================================
+        LIKE
+        ==================================================
+        */
+            if ($action === 'like') {
+
+                // Impede like duplicado
+                if ($jaVotou) {
+                    $this->pdo->rollBack();
+                    return ['erro' => 'Você já votou neste feedback'];
+                }
+
+                // Insere registro na tabela feedback_votos
+                $sqlInsert = "INSERT INTO feedback_votos 
+                          (id_feedback, id_usuario, criado_em) 
+                          VALUES (:id_feedback, :id_usuario, NOW())";
+
+                $insert = $this->pdo->prepare($sqlInsert);
+                $insert->bindValue(':id_feedback', $id_feedback);
+                $insert->bindValue(':id_usuario', $usuario);
+
+                if (!$insert->execute()) {
+                    $this->pdo->rollBack();
+                    return false;
+                }
+
+                // Atualiza contador de votos
+                $sqlUpdate = "UPDATE feedbacks 
+                          SET votos = votos + 1 
+                          WHERE id = :id_feedback";
+
+                $update = $this->pdo->prepare($sqlUpdate);
+                $update->bindValue(':id_feedback', $id_feedback);
+                $update->execute();
+
+                $this->pdo->commit();
+                return true;
+            }
+
+            /*
+        ==================================================
+        DISLIKE
+        ==================================================
+        */ elseif ($action === 'dislike') {
+
+                // Só remove se o usuário realmente votou
+                if (!$jaVotou) {
+                    $this->pdo->rollBack();
+                    return ['erro' => 'Você não votou neste feedback'];
+                }
+
+                // Remove registro da feedback_votos
+                $sqlDelete = "DELETE FROM feedback_votos 
+                          WHERE id_feedback = :id_feedback 
+                          AND id_usuario = :id_usuario";
+
+                $delete = $this->pdo->prepare($sqlDelete);
+                $delete->bindValue(':id_feedback', $id_feedback);
+                $delete->bindValue(':id_usuario', $usuario);
+                $delete->execute();
+
+                // Decrementa contador
+                $sqlUpdate = "UPDATE feedbacks 
+                          SET votos = votos - 1 
+                          WHERE id = :id_feedback AND votos > 0";
+
+                $update = $this->pdo->prepare($sqlUpdate);
+                $update->bindValue(':id_feedback', $id_feedback);
+                $update->execute();
+
+                $this->pdo->commit();
+                return true;
+            } else {
+                throw new Exception("Ação inválida");
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    public function apaga_feedback($id_feedback)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            // 1. Apaga todos os likes vinculados ao feedback
+            $sqlLikes = "DELETE FROM feedback_votos WHERE id_feedback = :id_feedback";
+            $queryLikes = $this->pdo->prepare($sqlLikes);
+            $queryLikes->bindValue(":id_feedback", $id_feedback, PDO::PARAM_INT);
+            $queryLikes->execute();
+
+            // 2. Apaga o próprio feedback
+            $sqlFeedback = "DELETE FROM feedbacks WHERE id = :id_feedback";
+            $queryFeedback = $this->pdo->prepare($sqlFeedback);
+            $queryFeedback->bindValue(":id_feedback", $id_feedback, PDO::PARAM_INT);
+            $queryFeedback->execute();
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            error_log("Erro ao apagar feedback: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function insere_feedback_ban($id_usuario, $motivo_banimento, $id_feedback)
+    {
+        try {
+            $datetime = date('Y-m-d H:i:s');
+            $sql = "INSERT INTO feedback_ban (id_usuario, motivo, id_feedback, criado_em) 
+                VALUES (:id_usuario, :motivo_banimento, :id_feedback, :criado_em)";
+
+            $stmt = $this->pdo->prepare($sql);
+
+            $stmt->bindValue(':id_usuario', $id_usuario);
+            $stmt->bindValue(':motivo_banimento', $motivo_banimento);
+            $stmt->bindValue(':id_feedback', $id_feedback);
+            $stmt->bindValue(':criado_em', $datetime);
+
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erro ao inserir banimento de feedback: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function apaga_feedback_ban($id)
+    {
+        try {
+            $sql = "DELETE FROM feedback_ban WHERE id = :id";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Erro ao apagar banimento de feedback: " . $e->getMessage());
             return false;
         }
     }

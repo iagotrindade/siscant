@@ -51,3 +51,6 @@ if ($_SESSION['perfil'] != 'candidato' || $_SESSION['candidato'] != 1) {
 <li><a href="candidato_recurso.php"><i class="fa fa-file-text"></i><span>Recursos</span></a></li>
 <!-- 22/06/2025 -> Iago Silva Alterado o ícone -->
 <li <?php if ($_SESSION['selecao_regiao'] == 7) echo "hidden" ?>><a href="suporte.php"><i class="fa fa-comments"></i><span>Fale conosco</span></a></li>
+
+
+<li class="treeview"><a href="feedbacks.php"><i class="fa fa-commenting"></i><span>FeedBacks</span></a></li>

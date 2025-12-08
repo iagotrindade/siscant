@@ -91,7 +91,13 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
 <?php if ($perfil == "jise"): ?>
     <li>
-        <a href="relatorio_etapa_III.php"><i class="fa fa-stethoscope"></i><span>Inspeção de Saúde</span></a>
+        <a href="relatorio_inspecao_saude.php"><i class="fa fa-stethoscope"></i><span>Inspeção de Saúde</span></a>
+    </li>
+<?php endif; ?>
+
+<?php if ($perfil == "chc" || $perfil == "cr"): ?>
+    <li>
+        <a href="relatorio_heteroidentificacao.php"><i class="fa fa-circle"></i><span>Heteroidentificação</span></a>
     </li>
 <?php endif; ?>
 
@@ -108,7 +114,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
     </ul>
 </li>
 
-<li <?php if ($perfil == "ouvidor" || $perfil == "om" || $perfil == "jise" || isset($_SESSION['eipot'])) echo " hidden " ?>><a href="relatorios_lista.php"><i class="fa fa-file-text-o"></i><span>Relatórios</span></a></li>
+<li <?php if ($perfil == "ouvidor" || $perfil == "om" || $perfil == "jise" || $perfil == "chc" || $perfil == "cr" || isset($_SESSION['eipot'])) echo " hidden " ?>><a href="relatorios_lista.php"><i class="fa fa-file-text-o"></i><span>Relatórios</span></a></li>
 
 <!-- <li <?php if ($perfil != "avaliador" && $perfil != "admin") echo "hidden" ?>><a href="candidato_lista_avaliador.php"><i class="fa fa-check-square-o"></i><span>Avaliação</span></a></li>                         
 -->
@@ -123,6 +129,11 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 <li <?php if ($perfil != "admin" && $perfil != "ouvidor" && $perfil != "consulta") echo "hidden" ?>><a href="suporte_lista.php"><i class="fa fa-comments"></i><span>Fale conosco</span></a></li>
 
 <li <?php if ($perfil != "admin" && $perfil != "consulta") echo "hidden" ?>><a href="auditoria.php"><i class="fa fa-eye"></i><span>Auditoria</span></a></li>
+
+<?php if ($perfil == "admin"): ?>
+    <li class="treeview"><a href="feedbacks.php"><i class="fa fa-commenting"></i><span>FeedBacks</span></a></li>
+<?php endif; ?>
+
 
 <li <?php if ($perfil != "admin") echo " hidden " ?> class="treeview">
     <a href="#">

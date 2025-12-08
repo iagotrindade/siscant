@@ -126,7 +126,7 @@ if (isset($_GET['sucesso']) && $_GET['sucesso'] == 1) {
 
                                         <div class="col-md-4">
                                             <div class="form-check">
-                                                <input disabled name="teste_pratico" <?= $nota_av== 1 ? 'checked' : '' ?> type="checkbox" class="form-check-input" id="teste_pratico">
+                                                <input disabled name="teste_pratico" <?= $nota_av == 1 ? 'checked' : '' ?> type="checkbox" class="form-check-input" id="teste_pratico">
                                                 <label class="form-check-label fw-semibold" for="teste_pratico">
                                                     <i class="fa fa-percent me-1"></i>
                                                     Considerar NOTA na Avaliação Curricular
@@ -303,9 +303,7 @@ if (isset($_GET['sucesso']) && $_GET['sucesso'] == 1) {
                                                 <span class="cidade-text"><?= htmlspecialchars($linha['nome']) ?></span>
                                             </td>
                                             <td class="text-center">
-                                                <span class="vagas-badge badge <?= $linha['numero_vagas'] > 0 ? 'bg-success' : 'bg-secondary' ?> fs-6">
-                                                    <?= $linha['numero_vagas'] ?>
-                                                </span>
+                                                <?= $linha['numero_vagas'] ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

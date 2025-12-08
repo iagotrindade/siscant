@@ -28,23 +28,6 @@ $notificacoes = $conexao->get_notificacoes($_SESSION['selecao']);
 ?>
 
 <style>
-    :root {
-        --primary-color: #006400;
-        /* Verde escuro como cor primária */
-        --secondary-color: #228B22;
-        /* Verde mar como cor de sucesso */
-        --text-color: #333333;
-        /* Cor do texto principal */
-        --border-color: #D3D3D3;
-        /* Cor das bordas */
-    }
-
-    .form-label {
-        font-weight: 500;
-        margin-bottom: 5px;
-        color: var(--text-color);
-    }
-
     .section-title {
         color: var(--primary-color);
         border-bottom: 2px solid var(--secondary-color);

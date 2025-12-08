@@ -37,7 +37,6 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
                 Comissão de Heteroidentificação
 
                 <span class="badge bg-primary me-3">
-                    <i class="fa fa-file-alt me-1"></i>
                     Pareceres: <?= count($pareceresFase1) ?>
                 </span>
             </span>
@@ -256,19 +255,22 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
     <div class="card dashboard-card mb-20">
         <div class="card-header dashboard-header mb-20 d-flex justify-content-between align-items-center">
             <span class="card-title mb-0">
-                <i class="fa fa-user-shield me-2"></i>
+                <i class="fa fa-users me-2"></i>
                 Comissão Revisora
+                <span class="badge bg-primary me-3">
+                    Pareceres: <?= count($pareceresFase2) ?>
+                </span>
             </span>
 
             <span class="badge bg-primary me-3">
-                <i class="fa fa-file-alt me-1"></i>
+                <i class="fa fa-file me-1"></i>
                 Pareceres: <?= count($pareceresFase2) ?>
             </span>
             <div class="d-flex align-items-center">
-                <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?= $id_usuario ?>&fase=2"
-                    class="btn btn-sm btn-success"
+                <a href="mpdf/relatorio_heteroidentificacao_candidato.php?id=<?= $id_usuario ?>&fase=2"
+                    class="btn btn-success btn-sm"
                     data-bs-toggle="tooltip"
-                    title="Baixar Relatório de Pareceres Revisores">
+                    title="Baixar Relatório de Pareceres">
                     <i class="fa fa-file-pdf-o me-1"></i> GERAR ATA
                 </a>
             </div>
