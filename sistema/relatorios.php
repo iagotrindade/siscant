@@ -169,7 +169,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-list me-2"></i>
                             Relação Inicial/Final de Inscritos
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -249,7 +249,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-gavel me-2"></i>
                             Resultado da Análise de Recursos Etapa I
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -330,7 +330,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             <span class="fw-semibold">
                                 <i class="fa fa-user-check me-2"></i>
                                 Convocação Etapa II - Entrevista e Teste Prático
-                                
+
                             </span>
                         </div>
                         <div class="card-body">
@@ -410,7 +410,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             <span class="fw-semibold">
                                 <i class="fa fa-clipboard-list me-2"></i>
                                 Lista de Presença Etapa II - Entrevista e Teste Prático
-                                
+
                             </span>
                         </div>
                         <div class="card-body">
@@ -467,7 +467,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-bar-chart me-2"></i>
                             Resultado Inicial/Final Etapa II - Avaliação Curricular
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -548,7 +548,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-gavel me-2"></i>
                             Resultado da Análise de Recursos Etapa II
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -628,7 +628,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-calendar me-2"></i>
                             Cronograma de Convocação Etapa III
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -742,7 +742,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-tags me-2"></i>
                             Etiquetas Envelopes Etapa III
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -775,7 +775,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-stethoscope me-2"></i>
                             Dados dos Candidatos para Cadastro no SIPMED
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -805,7 +805,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-heartbeat me-2"></i>
                             Resultado Etapa III - Inspeção de Saúde
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -876,7 +876,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-gavel me-2"></i>
                             Resultado da Análise de Recursos Etapa III
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -998,7 +998,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-stethoscope me-2"></i>
                             Resultado da Inspeção de Saúde em Grau de Recurso
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -1064,7 +1064,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-flag-checkered me-2"></i>
                             Resultado Final Etapa III
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -1143,7 +1143,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-gavel me-2"></i>
                             Resultado da Análise de Recursos Etapa III - Documental
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -1321,7 +1321,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-pencil-square-o me-2"></i>
                             Resultado Teste de Conhecimento OTT Informática e STT Instrumento Musical
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -1391,7 +1391,7 @@ $lista_especialidades = $conexao->get_especialidade();
                     <div class="card-header mb-20 bg-info text-white">
                         <span class="fw-semibold">
                             <i class="fa fa-pencil-square-o me-2"></i>
-                            Convocação para o Exame de Aptidão Física (EAF)   
+                            Convocação para o Exame de Aptidão Física (EAF)
                         </span>
                     </div>
                     <div class="card-body">
@@ -1500,7 +1500,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-clipboard me-2"></i>
                             Lista de Presença para o Exame de Aptidão Física (EAF)
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -2098,6 +2098,65 @@ $lista_especialidades = $conexao->get_especialidade();
                         </form>
                     </div>
                 </div>
+
+                <!-- Geração da Ata Geral-->
+                <div class="card border-info mb-20">
+                    <div class="card-header mb-20 bg-info text-white">
+                        <span class="fw-semibold">
+                            <i class="fa fa-file-pdf-o me-2"></i>
+                            Gerar Ata Heteroidentificação Complementar
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning mb-20">
+                            <h6 class="text-dark mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                            <ul class="requisitos-list text-dark">
+                                <li>A publicação irá considerar somente os candidatos que estão CONCORRENDO na Etapa V</li>
+                                <li>As Comissões devem ter finalizado suas avaliações</li>
+                                <li>Não desclassificar nenhum candidato que esteja na Etapa V</li>
+                            </ul>
+                        </div>
+
+                        <form action="mpdf/relatorio_ata_heteroidentificacao.php" method="POST">
+                            <input name="fase" type="hidden" value="2">
+                            <div class="row">
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Título</label>
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO 20XX/20XX" class="form-control">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Subtítulo</label>
+                                    <input name="subtitulo" value="ATA HETEROIDENTIFICAÇÃO Xª RM" class="form-control">
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">1º Parágrafo</label>
+                                    <input name="paragrafo_um" class="form-control" placeholder="Cidade - Data" value="No dia XX DEZ XX reuniram-se os integrantes da Comissão de Heteroidentificação Complementar com o intuito de inspecionar os candidatos abaixo relacionados.">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Fase</label>
+                                    <select name="fase" class="form-control" value="08/12/2025">
+                                        <option value="1">Heteroidentificação Complementar</option>
+                                        <option value="2">Heteroidentificação Revisora</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Data da Inspeção</label>
+                                    <input type="datetime" name="data_inspecao" class="form-control" value="08/12/2025">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2239,7 +2298,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-stethoscope me-2"></i>
                             Quem realizou o exame de saúde em determinada data
-                            
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -2286,7 +2345,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             <span class="fw-semibold">
                                 <i class="fa fa-user-md me-2"></i>
                                 Quem realizou o exame de saúde em determinada data - SOMENTE MÉDICOS OBRIGATÓRIOS
-                                
+
                             </span>
                         </div>
                         <div class="card-body">
