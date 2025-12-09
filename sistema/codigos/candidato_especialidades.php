@@ -179,13 +179,13 @@ foreach ($inscricoes as $valor):
             <!-- Pontuação Total -->
             <?php if ($pontuacao_total > 0): ?>
                 <div class="row mt-4 pt-3 border-top">
-                    <div class="col-12">
+                    <div class="col-md-12">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="fw-semibold text-dark">
                                 <i class="fa fa-chart-line me-2"></i>
                                 Pontuação Total da Especialidade
                             </span>
-                            <span class="badge bg-success fs-6">
+                            <span class="badge bg-primary fs-6">
                                 <?= number_format($pontuacao_total, 2, ',', '.') ?> pontos
                             </span>
                         </div>

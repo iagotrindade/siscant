@@ -141,14 +141,13 @@ else
                                 $recursos = $conexao->get_recursos();
 
                                 foreach ($lista_candidatos as $linha):
-                                    if ($_SESSION['selecao_codigo'] == 'ott_stt' && !$linha['vaga_reservada'] || $linha['etapa'] < 5) {
+
+                                    $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 4 : 5;
+                                    
+                                    if (!$linha['vaga_reservada'] || $linha['etapa'] < $etapa) {
                                         continue;
                                     }
-
-                                    if ($_SESSION['selecao_codigo'] == 'mfdv' && !$linha['vaga_reservada'] || $linha['etapa'] < 4) {
-                                        continue;
-                                    }
-
+                                    
                                     $pareceres = $conexao->get_pareceres_heteroidentificacao($linha['id']);
 
                                     $parecerHc = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 1);

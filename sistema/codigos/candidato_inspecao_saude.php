@@ -53,7 +53,7 @@ include_once '../sistema/codigos/funcao_apagar.php';
                             <i class="fa fa-users me-1"></i>
                             Grupo
                         </label>
-                        <select name="grupo_saude" class="form-control" required>
+                        <select name="grupo_saude" class="form-control">
                             <option value="">Selecione a opção</option>
                             <option value="a" <?= $grupo_saude == 'a' ? 'selected' : '' ?>>A</option>
                             <option value="b1" <?= $grupo_saude == 'b1' ? 'selected' : '' ?>>B1</option>
@@ -193,7 +193,7 @@ include_once '../sistema/codigos/funcao_apagar.php';
                             <i class="fa fa-users me-1"></i>
                             Grupo
                         </label>
-                        <select name="grupo_saude_recurso" class="form-control" required>
+                        <select name="grupo_saude_recurso" class="form-control">
                             <option value="">Selecione a opção</option>
                             <option value="a" <?= $grupo_saude_recurso == 'a' ? 'selected' : '' ?>>A</option>
                             <option value="b1" <?= $grupo_saude_recurso == 'b1' ? 'selected' : '' ?>>B1</option>

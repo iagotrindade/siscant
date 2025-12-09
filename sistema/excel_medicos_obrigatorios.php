@@ -80,6 +80,7 @@ $html[0] .= "<table>";
     $html[0] .= "<tr>";
         $html[0] .= "<td><b>NOME COMPLETO</b></td>";    
         $html[0] .= "<td><b>CPF</b></td>";
+        $html[0] .= "<td><b>RA</b></td>";
         $html[0] .= "<td><b>IDENTIDADE</b></td>";
         $html[0] .= "<td><b>E-MAIL</b></td>";
         $html[0] .= "<td><b>MÉDICO OBRIGATÓRIO</b></td>";
@@ -313,6 +314,7 @@ foreach($lista_candidatos as $linha)
         $html[$contador] .= "<tr>";
         $html[$contador] .= "<td>".$linha['nome_completo']."</td>";
         $html[$contador] .= "<td>_".$linha['cpf']."</td>";
+        $html[$contador] .= "<td>_".$linha['num_ducumento']."</td>";
         $html[$contador] .= "<td>_".$linha['identidade']."</td>";
         $html[$contador] .= "<td>".$linha['mail']."</td>";
         $html[$contador] .= "<td>".$medico_obri."</td>";

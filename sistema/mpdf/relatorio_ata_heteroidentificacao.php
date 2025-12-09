@@ -107,9 +107,9 @@ foreach ($lista_candidatos as $candidato) {
         continue;
     }
 
-    // Contagem dos pareceres válidos da fase
     $qConfirmados = 0;
     $qNaoConfirmados = 0;
+    $qNaoCompareceu = 0;
 
     foreach ($pareceres as $parecer) {
         if ($parecer['fase'] != $fase) continue;
@@ -118,24 +118,37 @@ foreach ($lista_candidatos as $candidato) {
             $qConfirmados++;
         } elseif ($parecer['parecer'] === 'nao_confirmada') {
             $qNaoConfirmados++;
+        } elseif ($parecer['parecer'] === 'nao_compareceu') {
+            $qNaoCompareceu++;
         }
     }
 
-    $totalPareceres = $qConfirmados + $qNaoConfirmados;
+    // Total de pareceres (inclui todos os 3 tipos)
+    $totalPareceres = $qConfirmados + $qNaoConfirmados + $qNaoCompareceu;
 
     // Regras por fase
     $minConfirmados = $fase === 1 ? 3 : 2;
     $minTotal = $fase === 1 ? 5 : 3;
 
+    // VERIFICAÇÃO PRINCIPAL: Atingiu o número total de pareceres necessários?
     if ($totalPareceres === $minTotal) {
+
+        // Se sim, verifica qual o resultado majoritário:
+
         if ($qConfirmados >= $minConfirmados) {
             $resultado = 'CONFIRMADA';
         } elseif ($qNaoConfirmados >= $minConfirmados) {
             $resultado = 'NÃO CONFIRMADA';
+        }
+        // >>> NOVO: Se todos os pareceres foram 'nao_compareceu', define o resultado específico
+        elseif ($qNaoCompareceu === $minTotal) {
+            $resultado = 'NÃO COMPARECEU';
         } else {
+            // Caso atinja o total, mas a distribuição não seja clara (ex: 1 sim, 1 nao, 1 nao compareceu, minTotal=3)
             $resultado = 'PENDENTE';
         }
     } else {
+        // Se o total mínimo de pareceres ainda não foi atingido
         $resultado = 'PENDENTE';
     }
 
@@ -157,7 +170,7 @@ if (!empty($linhasHtml)) {
     <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
         <tr>
             <th colspan='4' style='text-align: center; background-color: #D8D8D8; font-size: 14px;'>
-                RESULTADO DA INSPEÇÃO
+                RESULTADO
             </th>
         </tr>
 
@@ -187,10 +200,10 @@ if ($numero_membros === 5) {
             <th>___________________________________________</th>
         </tr>
         <tr>
-            <td style='text-align:center;'>Membro</td>
-            <td style='text-align:center;'>Membro</td>
-            <td style='text-align:center;'>Membro</td>
-            <td style='text-align:center;'>Membro</td>
+            <td style='text-align:center;'>1º Membro</td>
+            <td style='text-align:center;'>2º Membro</td>
+            <td style='text-align:center;'>3º Membro</td>
+            <td style='text-align:center;'>4º Membro</td>
         </tr>
     </table>
 
@@ -211,8 +224,8 @@ if ($numero_membros === 5) {
             <th>___________________________________________</th>
         </tr>
         <tr>
-            <td style='text-align:center;'>Membro</td>
-            <td style='text-align:center;'>Membro</td>
+            <td style='text-align:center;'>1º Membro</td>
+            <td style='text-align:center;'>2º Membro</td>
             <td style='text-align:center;'>Presidente da Comissão</td>
         </tr>
     </table>";

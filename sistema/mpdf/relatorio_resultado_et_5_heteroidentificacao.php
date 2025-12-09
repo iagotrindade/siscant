@@ -41,7 +41,7 @@ if (!empty($_SESSION['candidato']) && $_SESSION['candidato'] == '1') {
 // Instância da conexão
 $conexao = new Conexao();
 
-// 🔍 Recupera especialidades
+// Recupera especialidades
 if (is_array($id_especialidades) && !empty($id_especialidades)) {
     $lista_especialidades = [];
     foreach ($id_especialidades as $id) {
@@ -59,7 +59,9 @@ $candidatos = [];
 foreach ($lista_especialidades as $especialidade) {
     $cands = $conexao->get_candidatos_especialidade($especialidade['id']);
     foreach ($cands as $cand) {
-        if (!empty($cand['etapa_candidato']) && $cand['etapa_candidato'] == 5 && $cand['vaga_reservada'] == 1) {
+        $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 4 : 5;
+
+        if (!empty($cand['etapa_candidato']) && $cand['etapa_candidato'] == $etapa && $cand['vaga_reservada'] == 1) {
             $candidatos[$cand['id']] = $cand; // evita duplicados
         }
     }
@@ -186,6 +188,6 @@ if (!empty($candidatos)) {
 }
 
 // Saída do PDF
-$mpdf->Output("Resultado Etapa IV Exame de Aptidão Física (EAF).pdf", 'D');
+$mpdf->Output("Resultado Etapa V - Heteroidentificação.pdf", 'D');
 ob_end_flush();
 exit;

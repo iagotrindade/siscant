@@ -1963,7 +1963,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             </ul>
                         </div>
 
-                        <form action="mpdf/relatorio_resultado_et_5_heteroidentificacao.php" method="POST">
+                        <form action="mpdf/relatorio_resultado_heteroidentificacao.php" method="POST">
                             <input name="fase" type="hidden" value="1">
                             <div class="row">
                                 <div class="col-lg-4 mb-20">
@@ -2040,7 +2040,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             </ul>
                         </div>
 
-                        <form action="mpdf/relatorio_resultado_et_5_heteroidentificacao.php" method="POST">
+                        <form action="mpdf/relatorio_resultado_heteroidentificacao.php" method="POST">
                             <input name="fase" type="hidden" value="2">
                             <div class="row">
                                 <div class="col-lg-4 mb-20">
@@ -2132,7 +2132,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <input name="paragrafo_um" class="form-control" placeholder="Cidade - Data" value="No dia XX DEZ XX reuniram-se os integrantes da Comissão de Heteroidentificação Complementar com o intuito de inspecionar os candidatos abaixo relacionados.">
+                                    <input name="paragrafo_um" class="form-control" placeholder="Cidade - Data" value="No dia XX DEZ XX reuniram-se os integrantes da Comissão de Heteroidentificação Complementar com o intuito de realizar a confirmação da autodecalração dos candidatos abaixo relacionados.">
                                 </div>
 
                                 <div class="col-lg-6 mb-20">
