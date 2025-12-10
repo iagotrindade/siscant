@@ -58,7 +58,7 @@ $html = "
 </p>
 <table border='0' style='width:100%; margin-top: 5px; margin-bottom: 5px;'>
     <tr>
-        <th align='center'><strong>Parecer Comissão $tipo_inspecao - EIPOT/" . date('Y') . "</strong></th>
+        <th align='center'><strong>Parecer Comissão " . $tipo_inspecao . " - " . $_SESSION['apresentacao_candidato'] . "</strong></th>
     </tr>
 </table>
 
@@ -71,6 +71,13 @@ $mpdf->WriteHTML($html);
 
 $candidato = $conexao->get_usuario_id($id_candidato);
 $pareceres = $conexao->get_pareceres_heteroidentificacao($candidato[0]['id']);
+$especialidades_do_candidato = $conexao->get_especialidade_candidato($id_candidato);
+
+$vaga_reservada = $candidato[0]['vaga_reservada'] == 1 ? 'SIM' : 'NÃO';
+
+foreach($especialidades_do_candidato as $index => $especialidade) {
+    $especialidades = mb_strtoupper($especialidade['ott_stt'] . ' - ' . $especialidade['especialidade'] . '|');
+}
 
 // Contagem dos pareceres válidos da fase
 $quantidadePareceresConfirmados = 0;
@@ -122,41 +129,16 @@ $linhasHtml .= "
         <td><b>Nome Completo: </b> " . $candidato[0]['nome_completo'] . " </td>
         <td><b>CPF: </b> " . $candidato[0]['cpf'] . "</td>
     </tr>
+    
     <tr>
-        <td><b>Naturalidade: </b> " . $candidato[0]['naturalidade'] . " </td>
-        <td><b>Data de Nascimento: </b> " . $candidato[0]['data_nascimento'] . " </td>
+        <td><b>Autodeclaração: </b> " . mb_strtoupper($candidato[0]['autodeclaracao']) . " </td>
+        <td><b>Especialidades: </b> " . $especialidades . " </td>
+    </tr>
+    
+    <tr>
+        <td colspan=\"2\"><b>Concorrendo Cotas: </b>$vaga_reservada</td>
     </tr>";
 
-if (!isset($_SESSION['eipot'])) {
-    $linhasHtml = $linhasHtml . "<tr style='background-color: #D8D8D8'>
-            <td colspan=\"2\"> <center><b>CIVIL/MILTAR</b></center></td>
-        </tr>
-
-        <tr>
-            <td><b>Ativa/Reserva: </b>" . $candidato[0]['ativa_reserva'] . "</td>
-            <td><b>Certificado: </b>" . $candidato[0]['certificado'] . "</td>
-        </tr>
-
-        <tr>
-            <td><b>Nº do Documento: </b>" . $candidato[0]['num_documento'] . "</td>
-            <td><b>Data da Expedição: </b>" . $candidato[0]['data_expedicao'] . "</td>
-        </tr>
-
-        <tr>
-            <td><b>Situação Militar: </b>" . $candidato[0]['situacao_militar'] . "</td>
-            <td><b>Posto/Graduação: </b>" . $candidato[0]['posto_grad'] . "</td>
-        </tr>
-
-        <tr>
-            <td><b>Força: </b>" . $candidato[0]['forca'] . "</td>
-            <td><b>Ano de incorporação: </b>" . $candidato[0]['ano_incorporacao'] . "</td>
-        </tr>
-
-        <tr>
-            <td><b>Arma/Quadro/Serviço: </b>" . $candidato[0]['arma_quadro_servico'] . "</td>
-            <td><b>Licenciamento: </b>" . $candidato[0]['licensiamento'] . "</td>
-        </tr>";
-}
 
 $linhasHtml = $linhasHtml . "
     <tr style='background-color: #D8D8D8'>
@@ -167,21 +149,21 @@ $linhasHtml = $linhasHtml . "
 foreach ($pareceresFase as $index => $parecer) {
     $linhasHtml .= "
 
-    <div style='margin-bottom: 20px;'>
-    <h5 style='margin: 0 0 5px; font-size: 10px;'>
-        <b>Parecer " . ($index + 1) . ":</b> Análise realizada pelo(a) " . $parecer['graduacao_avaliador'] . " " . $parecer['nome_avaliador'] . " em " . trata_data($parecer['data_avaliacao']) . "
-    </h5>
+    <div style='margin-bottom: 10px;'>
+        <h5 style='margin: 0 0 5px; font-size: 10px;'>
+            <b>Parecer " . ($index + 1) . ":</b> Análise realizada em " . trata_data($parecer['data_avaliacao']) . "
+        </h5>
 
-    <p style='font-size: 10px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
-        " . $parecer['justificativa'] . "
-    </p>
+        <p style='font-size: 10px; text-align: justify; margin: 5px 0; text-indent: 2em;'>
+            " . $parecer['justificativa'] . "
+        </p>
 
-    <p style='margin: 5px 0; font-size: 10px;'>
-        <b>Parecer:</b> " . mb_strtoupper($parecer['parecer']) . "
-    </p>
+        <p style='margin: 5px 0; font-size: 10px;'>
+            <b>Parecer:</b> " . mb_strtoupper($parecer['parecer']) . "
+        </p>
 
-    <hr style='border: 0; border-top: 1px solid #ccc; margin: 10px 0;'>
-</div>";
+        <hr style='border: 0; border-top: 1px solid #ccc; margin: 10px 0;'>
+    </div>";
 }
 
 $linhasHtml .= "

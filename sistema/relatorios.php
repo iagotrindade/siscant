@@ -2161,6 +2161,162 @@ $lista_especialidades = $conexao->get_especialidade();
         </div>
     </div>
 
+    <!-- Etapa Final -->
+    <div class="card dashboard-card mb-20">
+        <div class="card-header mb-20 dashboard-header" data-bs-toggle="collapse" href="#et_final" role="button" aria-expanded="false" aria-controls="et_5">
+            <span class="card-title mb-0">
+                <i class="fa fa-chevron-down me-2"></i>
+                PUBLICAÇÕES E DOCUMENTOS → FINAL DA SELEÇÃO
+            </span>
+        </div>
+
+        <div class="collapse" id="et_final">
+            <div class="card-body">
+                <!-- Resultado Final - Ampla Concorrência -->
+                <div class="card border-info mb-20">
+                    <div class="card-header mb-20 bg-info text-white">
+                        <span class="fw-semibold">
+                            <i class="fa fa-flag-checkered me-2"></i>
+                            Resultado Final - Ampla Concorrência
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning mb-20">
+                            <h6 class="text-dark mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                            <ul class="requisitos-list text-dark">
+                                <li>A publicação irá considerar somente os candidatos que estão CONCORRENDO na ETAPA que o SisCanT está</li>
+                            </ul>
+                        </div>
+
+                        <form action="mpdf/relatorio_resultado_final.php" method="POST">
+                            <input name="tipo_relatorio" type="hidden" value="classificacao">
+                            <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                            <input name="etapa" type="hidden" value="<?= $etapa_atual ?>">
+                            <input name="orientacao" type="hidden" value="retrato">
+                            <input name="tipo_especialdiade" type="hidden" value="todas">
+                            <input name="cabecalho" type="hidden" value="sim">
+
+                            <div class="row">
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Título Principal</label>
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO XX 20XX/20XX" class="form-control">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Título Secundário</label>
+                                    <input name="subtitulo" value="RESULTADO FINAL - AMPLA CONCORRÊNCIA" class="form-control">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Cidade e Data</label>
+                                    <input name="cidade_dt" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">1º Parágrafo</label>
+                                    <textarea name="paragrafo_1" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga a divulga o Resultado Final - Ampla Concorrência da Seleção dos candidatos aptos a escolherem Guarnição por ordem de classificação nas especialidades de OTT e STT abaixo listadas, após a realização das Etapas I, II, III, IV e V conforme anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">2º Parágrafo</label>
+                                    <textarea name="paragrafo_2" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">Outrossim, os candidatos deverão acompanhar as próximas publicações no site, referente à ETAPA VI, conforme previsto no Anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação Nr 03-SSMR/3, de 03 de junho de 20XX.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Selecione as Especialidades</label>
+                                    <select name="especialidades[]" class="form-control select2" multiple>
+                                        <?php foreach ($lista_especialidades as $value): ?>
+                                            <option value="<?= htmlspecialchars($value['id']) ?>">
+                                                <?= htmlspecialchars($value['nome']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Resultado Final - Cotistas -->
+                <div class="card border-info mb-20">
+                    <div class="card-header mb-20 bg-info text-white">
+                        <span class="fw-semibold">
+                            <i class="fa fa-flag-checkered me-2"></i>
+                            Resultado Final - Cotas
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning mb-20">
+                            <h6 class="text-dark mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                            <ul class="requisitos-list text-dark">
+                                <li>A publicação irá considerar somente os candidatos COTISTAS que estão CONCORRENDO na ETAPA que o SisCanT está</li>
+                            </ul>
+                        </div>
+
+                        <form action="mpdf/relatorio_resultado_final_cotistas.php" method="POST">
+                            <input name="tipo_relatorio" type="hidden" value="classificacao">
+                            <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                            <input name="etapa" type="hidden" value="<?= $etapa_atual ?>">
+                            <input name="orientacao" type="hidden" value="retrato">
+                            <input name="tipo_especialdiade" type="hidden" value="todas">
+                            <input name="cabecalho" type="hidden" value="sim">
+
+                            <div class="row">
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Título Principal</label>
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO XX 20XX/20XX" class="form-control">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Título Secundário</label>
+                                    <input name="subtitulo" value="RESULTADO FINAL - COTAS" class="form-control">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Cidade e Data</label>
+                                    <input name="cidade_dt" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">1º Parágrafo</label>
+                                    <textarea name="paragrafo_1" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">O Comandante da Xª Região Militar divulga a divulga o Resultado Final - Cotas da Seleção dos candidatos aptos a escolherem Guarnição por ordem de classificação nas especialidades de OTT e STT abaixo listadas, após a realização das Etapas I, II, III, IV e V conforme anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação Nr XX-SSMR/X, de XX de junho de 20XX.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">2º Parágrafo</label>
+                                    <textarea name="paragrafo_2" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">Outrossim, os candidatos deverão acompanhar as próximas publicações no site, referente à ETAPA VI, conforme previsto no Anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação Nr 03-SSMR/3, de 03 de junho de 20XX.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Selecione as Especialidades</label>
+                                    <select name="especialidades[]" class="form-control select2" multiple>
+                                        <?php foreach ($lista_especialidades as $value): ?>
+                                            <option value="<?= htmlspecialchars($value['id']) ?>">
+                                                <?= htmlspecialchars($value['nome']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Publicações Personalizadas -->
     <div class="card dashboard-card mb-20">
         <div class="card-header mb-20 dashboard-header" data-bs-toggle="collapse" href="#et_personalizada" role="button" aria-expanded="false" aria-controls="et_personalizada">

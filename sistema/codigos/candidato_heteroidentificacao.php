@@ -41,7 +41,7 @@ if (in_array($_SESSION['id_usuario'], array_column($pareceresFase2, 'id_avaliado
                 </span>
             </span>
             <div class="d-flex align-items-center">
-                <a href="mpdf/relatorio_heteroidentificacao_candidato_eipot.php?id=<?= $id_usuario ?>&fase=1"
+                <a href="mpdf/relatorio_heteroidentificacao_candidato.php?id=<?= $id_usuario ?>&fase=1"
                     class="btn btn-success btn-sm"
                     data-bs-toggle="tooltip"
                     title="Baixar Relatório de Pareceres">
