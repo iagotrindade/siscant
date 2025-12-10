@@ -320,9 +320,9 @@ $datetime = date('d/m/Y H:i:s');
                                                     if ($get_cidade_escolhida[0]['nome'] != null) :
                                                     ?>
                                                         <div class="alert alert-success d-flex align-items-center">
-                                                            <i class="fa fa-check-circle fa-2x me-3"></i>
+                                                            <i class="fa fa-check-circle fa-2x mr-10"></i>
                                                             <div>
-                                                                <h6 class="alert-heading mb-1">Guarnição Selecionada</h6>
+                                                                <h5 class="alert-heading mb-0">Guarnição Selecionada</h5>
                                                                 <p class="mb-0 fw-bold fs-5"><?= $get_cidade_escolhida[0]['nome'] ?></p>
                                                                 <small class="text-muted">Sua escolha foi registrada no sistema</small>
                                                             </div>
