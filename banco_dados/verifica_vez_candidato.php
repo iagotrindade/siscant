@@ -1,126 +1,105 @@
 <?php
-
-/**
- * candidato_cidade_escolheu_servir.php
- * Versão FINAL: Funciona para qualquer quantidade de vagas (0 até N)
- */
+// Arquivo: verifica_vez_candidato.php
+// Local: ../banco_dados/verifica_vez_candidato.php
 
 include_once '../sistema/funcoes.php';
 session_start();
 include_once 'conexao.php';
-$conexao = new Conexao();
 
-// ---------------------------
-// Validações iniciais
-// ---------------------------
-if (!$_POST) {
-    erro_mensagem("Erro 54437457457!");
+if (!isset($_POST['verificar_vez'])) {
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Requisição inválida', 'proximoCandidato' => '']);
     exit();
 }
 
 if (!isset($_SESSION['chave']) || !isset($_SESSION['selecao'])) {
-    erro("Erro 236234646!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Sessão inválida', 'proximoCandidato' => '']);
     exit();
 }
 
 if (($_SESSION['perfil'] != 'candidato')) {
-    erro("Erro 243624747457! Permissão Negada!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Permissão negada', 'proximoCandidato' => '']);
     exit();
 }
+
+$id_especialidade = (int)$_POST['id_especialidade'];
+$user_id = (int)$_POST['user_id'];
+
+if (!$id_especialidade || !$user_id) {
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Dados inválidos', 'proximoCandidato' => '']);
+    exit();
+}
+
+$conexao = new Conexao();
 
 // Carrega seleção atual
 $selecao = $conexao->get_selecao_id();
 if (count($selecao) == 0) {
-    erro_mensagem("Erro 86484658!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Erro ao carregar seleção', 'proximoCandidato' => '']);
     exit();
 }
 
 // Verifica janelas de escolha
 if ($selecao[0]['data_fim_cidade'] == null) {
-    erro("Erro 347858548! Não está permitido fazer a escolha ainda!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Não está permitido fazer a escolha ainda!', 'proximoCandidato' => '']);
     exit();
 }
 if (strtotime(date("Y-m-d")) > strtotime($selecao[0]['data_fim_cidade'])) {
-    erro("Erro 23463474357! O período de escolha já passou!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'O período de escolha já passou!', 'proximoCandidato' => '']);
     exit();
 }
 if (strtotime(date("Y-m-d")) < strtotime($selecao[0]['data_inicio_cidade'])) {
-    erro("Erro 57357567! Ainda não está permitido para fazer a escolha!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Ainda não está permitido para fazer a escolha!', 'proximoCandidato' => '']);
     exit();
 }
 
-if (!isset($_POST['declaracao'])) {
-    erro("Erro 23573458387! Você deve declarar que leu o aviso de ORIENTAÇÕES PARA A ESCOLHA DE GUARNIÇÃO!");
-    exit();
-}
-
-// Recebe inputs
-$id_especialidade = (int)$_POST['id_especialidade'];
-$cidade_escolheu_servir = (int)$_POST['cidade_escolheu_servir'];
-$crip = htmlspecialchars($_POST['crip']);
-
-if ($crip == "" || $crip == null || $id_especialidade == "" || $id_especialidade == null || $id_especialidade == 0) {
-    erro("Erro 48948456444444!");
-    exit();
-}
-
-if ($crip != hash('sha256', $id_especialidade . "escolhe_cidade")) {
-    erro("Erro 2437358745865!");
-    exit();
-}
-
-if ($cidade_escolheu_servir == '' || $cidade_escolheu_servir == null) {
-    erro("Você deve selecionar a cidade em que deseja servir!");
-    exit();
-}
-
-$id_usuario = $_SESSION['id_usuario'];
-
-$get_candidato = $conexao->get_usuario_id($id_usuario);
+$get_candidato = $conexao->get_usuario_id($user_id);
 if (count($get_candidato) != 1) {
-    erro("Erro 236536346!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Candidato não encontrado', 'proximoCandidato' => '']);
     exit();
 }
 if ($get_candidato[0]['concorrendo'] == '0') {
-    erro("Erro 23476437457!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Candidato desclassificado', 'proximoCandidato' => '']);
     exit();
 }
 
 // Regras de etapa por seleção
 if ($selecao[0]['codigo'] == 'ott_stt' && $get_candidato[0]['etapa'] < 6) {
-    erro("Erro 984946515! Você deve estar pelo menos na Etapa 6 para escolher a cidade!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Você deve estar pelo menos na Etapa 6 para escolher a cidade!', 'proximoCandidato' => '']);
     exit();
 }
 if ($selecao[0]['codigo'] == 'mfdv' && $get_candidato[0]['etapa'] < 5) {
-    erro("Erro 32738568! Você deve estar pelo menos na Etapa 5 para escolher a cidade!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Você deve estar pelo menos na Etapa 5 para escolher a cidade!', 'proximoCandidato' => '']);
     exit();
 }
 
-// ---------------------------
 // Verifica se a cidade tem vaga (validação simples)
-// ---------------------------
 $get_vagas_especialidade = $conexao->get_vagas_especialidade($id_especialidade);
+$tem_vaga = false;
 foreach ($get_vagas_especialidade as $vaga) {
-    if ($vaga['id_cidade'] == $cidade_escolheu_servir && $vaga['vagas'] == 0) {
-        erro("Erro 85673476547! Faça o cadastro da cidade novamente!");
-        exit();
+    if ($vaga['vagas'] > 0) {
+        $tem_vaga = true;
+        break;
     }
+}
+if (!$tem_vaga) {
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Não há vagas disponíveis para esta especialidade!', 'proximoCandidato' => '']);
+    exit();
 }
 
 // Verifica vinculo candidato-especialidade
 $nome_especialidade = null;
-$get_especialidade_candidato = $conexao->get_especialidade_candidato($id_usuario);
 $id_candidato_x_especialidade = null;
+$get_especialidade_candidato = $conexao->get_especialidade_candidato($user_id);
 foreach ($get_especialidade_candidato as $especialidade) {
     if ($id_especialidade == $especialidade['id_especialidade']) {
         $id_candidato_x_especialidade = $especialidade['id_candidato_x_especialidade'];
         $nome_especialidade = $especialidade['especialidade'];
         if ($especialidade['concorrendo'] == '0') {
-            erro("Erro 237647457! Candidato desclassificado da especialidade");
+            echo json_encode(['podeEscolher' => false, 'mensagem' => 'Candidato desclassificado da especialidade', 'proximoCandidato' => '']);
             exit();
         }
         if ($especialidade['cidade_escolheu_servir'] != null && $especialidade['cidade_escolheu_servir'] != '') {
-            erro("Erro 2473478458! A Cidade só pode ser escolhida uma vez!");
+            echo json_encode(['podeEscolher' => false, 'mensagem' => 'A Cidade só pode ser escolhida uma vez!', 'proximoCandidato' => '']);
             exit();
         }
     }
@@ -141,7 +120,7 @@ foreach ($lista_candidatos as $linha) {
 
     $get_pontuacao_provas = $conexao->verifica_especialidade_candidato($linha['id'], $id_especialidade);
     $nota_prova_teorico_pratico = 0;
-    if (count($get_pontuacao_provas) > 0 && isset($get_pontuacao_provas['nota_av']) && $get_pontuacao_provas['nota_av'] == '1') {
+    if (count($get_pontuacao_provas) > 0 && isset($get_pontuacao_provas[0]['nota_av']) && $get_pontuacao_provas[0]['nota_av'] == '1') {
         $nota_prova_teorico_pratico = (float)$get_pontuacao_provas[0]['nota_prova_teorico_pratico'];
         $pontuacao_curriculo = round($pontuacao_curriculo + $nota_prova_teorico_pratico, 2);
     }
@@ -294,7 +273,7 @@ $mapa_vagas = gerar_mapa_vagas_corrigido($total_vagas);
 
 // 1. Se não há vagas, erro
 if ($total_vagas == 0) {
-    erro("Erro 23462346! Não há vagas disponíveis para esta especialidade!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Não há vagas disponíveis para esta especialidade!', 'proximoCandidato' => '']);
     exit();
 }
 
@@ -316,7 +295,7 @@ for ($i = 0; $i < count($vetor_ordenado_candidatos); $i++) {
 
 // 3. Verifica se todas as vagas já foram preenchidas
 if ($escolheram >= $total_vagas) {
-    erro("Erro 2346346! Todas as vagas já foram preenchidas!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Todas as vagas já foram preenchidas!', 'proximoCandidato' => '']);
     exit();
 }
 
@@ -325,7 +304,7 @@ $proxima_vaga_numero = $escolheram + 1;
 
 // Segurança: verifica se existe essa vaga no mapa
 if ($proxima_vaga_numero > count($mapa_vagas)) {
-    erro("Erro 23462347! Erro no cálculo da próxima vaga!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Erro no cálculo da próxima vaga!', 'proximoCandidato' => '']);
     exit();
 }
 
@@ -333,6 +312,7 @@ $tipo_proxima_vaga = $mapa_vagas[$proxima_vaga_numero - 1];
 
 // 5. Determina quem deve escolher agora - ALGORITMO PARA QUALQUER QUANTIDADE
 $candidato_deve_escolher_id = null;
+$candidato_deve_escolher_nome = '';
 
 // Primeiro: encontra todos os candidatos que ainda não escolheram
 $candidatos_nao_escolheram = [];
@@ -344,35 +324,31 @@ foreach ($vetor_ordenado_candidatos as $cand) {
 
 // Se não há candidatos para escolher, erro
 if (empty($candidatos_nao_escolheram)) {
-    erro("Erro 34624373457! Não há candidatos elegíveis para escolher!");
+    echo json_encode(['podeEscolher' => false, 'mensagem' => 'Não há candidatos elegíveis para escolher!', 'proximoCandidato' => '']);
     exit();
 }
-
-
 
 // Se a próxima vaga é AC: primeiro candidato na fila
 if ($tipo_proxima_vaga === 'AC') {
     $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
+    $candidato_deve_escolher_nome = $candidatos_nao_escolheram[0]['nome'];
 } else { // $tipo_proxima_vaga === 'CN'
     // PARA VAGA CN: lógica especial para OTT/STT
     if ($selecao[0]['codigo'] == 'ott_stt') {
-        // =============================================
-        // CORREÇÃO CRÍTICA: Contar apenas cotistas que
-        // realmente ocuparam vagas CN até agora
-        // =============================================
-        
+
+        // Contar apenas cotistas que realmente ocuparam vagas CN até agora
         $cotistas_que_ocuparam_cn = 0;
-        
+
         // Percorre todas as vagas já preenchidas
         for ($i = 0; $i < $escolheram; $i++) {
             if (isset($vetor_ordenado_candidatos[$i])) {
                 $cand = $vetor_ordenado_candidatos[$i];
-                
+
                 // Se o candidato é cotista
                 if ($cand['vaga_reservada'] == 1) {
                     // QUAL VAGA ELE OCUPOU? Precisamos saber o tipo da vaga na posição $i
                     $tipo_vaga_ocupada = $mapa_vagas[$i]; // AC ou CN
-                    
+
                     if ($tipo_vaga_ocupada === 'CN') {
                         // Cotista ocupou vaga CN → conta
                         $cotistas_que_ocuparam_cn++;
@@ -381,162 +357,118 @@ if ($tipo_proxima_vaga === 'AC') {
                 }
             }
         }
-        
+
         // Conta quantas vagas CN existem até a próxima vaga
         $cns_ate_proxima = 0;
         for ($i = 0; $i < $proxima_vaga_numero; $i++) {
             if ($mapa_vagas[$i] === 'CN') $cns_ate_proxima++;
         }
-        
-        // DEBUG (remover depois)
-        //echo "DEBUG: CNs até $proxima_vaga_numeroª: $cns_ate_proxima<br>";
-        //echo "DEBUG: Cotistas que ocuparam CN: $cotistas_que_ocuparam_cn<br>";
-        
+
         // Se faltam cotistas para preencher as vagas CN
         if ($cotistas_que_ocuparam_cn < $cns_ate_proxima) {
             // PRECISA DE COTISTA: busca o próximo cotista na fila
             foreach ($candidatos_nao_escolheram as $cand) {
                 if ($cand['vaga_reservada'] == 1) {
                     $candidato_deve_escolher_id = $cand['id'];
+                    $candidato_deve_escolher_nome = $cand['nome'];
                     break;
                 }
             }
-            
+
             // Se não encontrou cotista (todos já escolheram)
             if ($candidato_deve_escolher_id === null) {
                 // Não há mais cotistas → pode ser qualquer candidato
                 $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
+                $candidato_deve_escolher_nome = $candidatos_nao_escolheram[0]['nome'];
             }
         } else {
             // NÃO PRECISA DE COTISTA: primeiro candidato na fila
             $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
+            $candidato_deve_escolher_nome = $candidatos_nao_escolheram[0]['nome'];
         }
     } else {
         // Para outras seleções (não OTT/STT): primeiro candidato na fila
         $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
+        $candidato_deve_escolher_nome = $candidatos_nao_escolheram[0]['nome'];
     }
 }
 
-// 6. Verifica se o usuário atual é quem deve escolher
-if ($candidato_deve_escolher_id != $id_usuario) {
-    // Encontra o nome do candidato que deve escolher
-    $nome_candidato_deve_escolher = '';
-    foreach ($vetor_ordenado_candidatos as $cand) {
-        if ($cand['id'] == $candidato_deve_escolher_id) {
-            $nome_candidato_deve_escolher = $cand['nome'];
-            break;
-        }
-    }
-
-    $conexao = null;
-    erro("Erro 4575384323523! Não é sua vez de escolher. O próximo candidato a escolher é: $nome_candidato_deve_escolher");
-    exit();
-}
-
-// 7. Verifica se usuário é cotista (para logging)
-$usuario_eh_cotista = false;
+// 6. Determinar a condição do candidato logado (Ampla ou Cota)
+$condicao_candidato = 'AMPLA CONCORRÊNCIA';
 foreach ($vetor_ordenado_candidatos as $cand) {
-    if ($cand['id'] == $id_usuario) {
-        $usuario_eh_cotista = $cand['vaga_reservada'] == 1;
+    if ($cand['id'] == $user_id) {
+        if ($cand['vaga_reservada'] == 1) {
+            $condicao_candidato = 'COTISTA';
+        }
         break;
     }
 }
 
-// ---------------------------
-// AGORA PODE GRAVAR A ESCOLHA
-// ---------------------------
-
-// GRAVA ESCOLHA (inclui tratamento de desistência)
-if ($cidade_escolheu_servir == 754809) {
-    if ($id_candidato_x_especialidade == null) {
-        erro("Erro 2473568469659! Não foi possível registrar a sua opção");
-        exit();
-    }
-
-    $justificativa = 'Cod 754809 - NÃO OPTOU pelas guarnições oferecidas. Caso não sejam oferecidas novas vagas no futuro, você não será incorporado(a) como militar temporário.';
-    $resultado_concorrendo = $conexao->status_concorrendo_especialidade($id_candidato_x_especialidade, 0, $justificativa);
-    $alteracoes_detalhadas = print_r($resultado_concorrendo, true);
-    if ($resultado_concorrendo)
-        $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], "$id_candidato_x_especialidade", "16150", "candidato_x_especialidade", "Update", "Candidato escolheu NENHUMA DAS OPÇÕES ao selecionar a cidade de destino da especialidade $nome_especialidade", "$alteracoes_detalhadas");
-
-    // verifica se concorre em outra especialidade
-    $get_especialidade_candidato = $conexao->get_especialidade_candidato($id_usuario);
-    $esta_concorrendo_em_outa_especialidade = false;
-    foreach ($get_especialidade_candidato as $especialidade) {
-        if ($especialidade['concorrendo'] === '1') {
-            $esta_concorrendo_em_outa_especialidade = true;
+// 7. Verifica se o usuário atual é quem deve escolher
+if ($candidato_deve_escolher_id == $user_id) {
+    echo json_encode([
+        'podeEscolher' => true,
+        'mensagem' => 'É sua vez de escolher! Você pode selecionar uma guarnição.',
+        'proximoCandidato' => '',
+        'informacoesAdicionais' => [
+            'condicao_candidato' => $condicao_candidato,
+            'total_vagas' => $total_vagas,
+            'vagas_preenchidas' => $escolheram,
+            'vagas_restantes' => $total_vagas - $escolheram,
+            'proxima_vaga_numero' => $proxima_vaga_numero,
+            'tipo_proxima_vaga' => $tipo_proxima_vaga == 'CN' ? 'COTA' : 'AMPLA CONCORRÊNCIA',
+            'sua_posicao' => array_search($user_id, array_column($vetor_ordenado_candidatos, 'id')) + 1
+        ]
+    ]);
+} else {
+    // Encontra a posição do usuário na fila
+    $posicao_usuario = null;
+    foreach ($vetor_ordenado_candidatos as $index => $cand) {
+        if ($cand['id'] == $user_id) {
+            $posicao_usuario = $index + 1;
             break;
         }
     }
 
-    if ($esta_concorrendo_em_outa_especialidade == false) {
-        $observacao = "Não está concorrendo em nenhuma especialidade! $justificativa";
-        $resultado_concorrendo = $conexao->status_concorrendo($id_usuario, 0, $observacao);
-        $alteracoes_detalhadas = print_r($resultado_concorrendo, true);
-        if ($resultado_concorrendo) {
-            $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], "$id_usuario", "161501", "usuario", "Update", "Foi mudado o status para DESCLASSIFICADO pois não está participando de nenhuma especialidade", "$alteracoes_detalhadas");
-            if ($_SESSION['selecao_regiao'] == '3') include_once '../sistema/codigos/candidato_escolhe_cidade_mail.php';
-        } else {
-            $conexao = null;
-            erro("Erro 423345634 Não mudou o status!");
-            exit();
+    // Encontra quantos estão na frente do usuário
+    $candidatos_na_frente = 0;
+    $posicao_do_proximo = null;
+    foreach ($candidatos_nao_escolheram as $index => $cand) {
+        if ($cand['id'] == $candidato_deve_escolher_id) {
+            $posicao_do_proximo = $index + 1;
         }
+        if ($cand['id'] == $user_id) {
+            break;
+        }
+        $candidatos_na_frente++;
     }
 
-    header("Location: ../sistema/candidato_escolha_cidade.php");
-    exit();
+    $mensagem = "Não é sua vez de escolher ainda. ";
+    if ($posicao_usuario) {
+        $mensagem .= "Sua posição na fila: " . $posicao_usuario . "º. ";
+    }
+    if ($candidatos_na_frente > 0) {
+        $mensagem .= "Há $candidatos_na_frente candidato(s) na sua frente. ";
+    }
+
+    echo json_encode([
+        'podeEscolher' => false,
+        'mensagem' => $mensagem,
+        'proximoCandidato' => $candidato_deve_escolher_nome,
+        'id_candidato' => $user_id,
+        'informacoesAdicionais' => [
+            'condicao_candidato' => $condicao_candidato,
+            'total_vagas' => $total_vagas,
+            'vagas_preenchidas' => $escolheram,
+            'vagas_restantes' => $total_vagas - $escolheram,
+            'proxima_vaga_numero' => $proxima_vaga_numero,
+            'tipo_proxima_vaga' => $tipo_proxima_vaga == 'CN' ? 'COTA' : 'AMPLA CONCORRÊNCIA',
+            'posicao_usuario' => $posicao_usuario,
+            'candidatos_na_frente' => $candidatos_na_frente,
+            'posicao_do_proximo' => $posicao_do_proximo
+        ]
+    ]);
 }
 
-// grava cidade escolhida
-$get_cidade_id = $conexao->get_cidade_id($cidade_escolheu_servir);
-$nome_cidade_escolheu = isset($get_cidade_id[0]['nome']) ? $get_cidade_id[0]['nome'] : '';
-
-// Chamada à função de persistência existente
-$cadastra_cidade_vai_servir = $conexao->cadastra_cidade_candidato_vai_servir($id_usuario, $id_especialidade, $cidade_escolheu_servir);
-$alteracoes_detalhadas = print_r($cadastra_cidade_vai_servir, true);
-
-if ($cadastra_cidade_vai_servir) {
-    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], "$id_usuario", "16149", "candidato_x_especialidade", "Update", "Candidato(a) escolheu a cidade $nome_cidade_escolheu ID: $cidade_escolheu_servir na especialidade $nome_especialidade ID: $id_especialidade " . $get_candidato[0]['cpf'], "$alteracoes_detalhadas");
-
-    // Registra se cotista escolheu em CN (para logging apenas)
-    if ($selecao[0]['codigo'] == 'ott_stt' && $usuario_eh_cotista && $tipo_proxima_vaga === 'CN') {
-        $insere_log = $conexao->insere_log(
-            $_SESSION['id_usuario'],
-            $_SESSION['cpf'],
-            "$id_usuario",
-            "16201",
-            "candidato_x_especialidade",
-            "System",
-            "Cotista escolheu em vaga CN. Vaga número: $proxima_vaga_numero",
-            "Tipo vaga: $tipo_proxima_vaga"
-        );
-    }
-
-    // desclassifica de outras especialidades se aplicável
-    $get_especialidade_candidato = $conexao->get_especialidade_candidato($id_usuario);
-    foreach ($get_especialidade_candidato as $especialidade) {
-        if ($especialidade['concorrendo'] === '1' && $especialidade['etapa'] == 6) {
-            if ($especialidade['id'] != $id_especialidade) {
-                $justificativa = 'Cod 754809 - Candidato(a) optou por escolher Guarnição em outra Especialidade.';
-                $resultado_concorrendo = $conexao->status_concorrendo_especialidade($especialidade['id'], 0, $justificativa);
-                $alteracoes_detalhadas = print_r($resultado_concorrendo, true);
-                if ($resultado_concorrendo)
-                    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], "$especialidade[id]", "16150", "candidato_x_especialidade", "Update", "Candidato(a) optou por escolher Guarnição em outra Especialidade.", "$alteracoes_detalhadas");
-                else {
-                    $conexao = null;
-                    erro("Erro 263475475! Não foi possível salvar a escolha!");
-                    exit();
-                }
-            }
-        }
-    }
-
-    if ($_SESSION['selecao_regiao'] == '3') include_once '../sistema/codigos/candidato_escolhe_cidade_mail.php';
-} else {
-    $conexao = null;
-    erro("Erro 263475475! Não foi possível salvar a escolha!");
-    exit();
-}
-
-header("Location: ../sistema/candidato_escolha_cidade.php");
+$conexao = null;
 exit();

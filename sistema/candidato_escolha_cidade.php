@@ -163,7 +163,7 @@ $datetime = date('d/m/Y H:i:s');
             </div>
 
             <!-- Card de Inscrições - Melhorado -->
-            <div class="card border-warning mb-4">
+            <div class="card">
                 <div class="card-header mb-20">
                     <div class="d-flex align-items-center">
                         <span class="card-title mb-0">
@@ -173,6 +173,7 @@ $datetime = date('d/m/Y H:i:s');
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="mb-20 col-md-6 p-0" id="timer-area"></div>
                     <div class="row">
                         <div class="col-lg-12">
                             <?php if (empty($lista_inscricoes)) : ?>
@@ -343,8 +344,8 @@ $datetime = date('d/m/Y H:i:s');
                                                 <?php if ($value['concorrendo'] == 1 && $value['cidade_escolheu_servir'] == null && $tem_vaga_ && $pode_selecionar) : ?>
                                                     <?php $crip = hash('sha256', $value['id_especialidade'] . "escolhe_cidade"); ?>
 
-                                                    <div class="selecao-guarnicao border-top pt-4 mt-3">
-                                                        <form action="../banco_dados/candidato_cidade_escolheu_servir.php" method="post">
+                                                    <div class="selecao-guarnicao border-top pt-4 mt-3" id="form-container-<?= $value['id_especialidade'] ?>">
+                                                        <form action="../banco_dados/candidato_cidade_escolheu_servir.php" method="post" id="form-escolha-<?= $value['id_especialidade'] ?>">
                                                             <div class="row mb-20">
                                                                 <div class="col-md-12">
                                                                     <div class="mb-3">
@@ -384,8 +385,7 @@ $datetime = date('d/m/Y H:i:s');
 
                                                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                                                 <button type="submit" class="btn btn-primary btn-lg px-4">
-                                                                    <i class="fa fa-paper-plane me-2"></i>
-                                                                    CONFIRMAR ESCOLHA DA GUARNIÇÃO
+                                                                    <i class="fa fa-paper-plane me-2"></i> CONFIRMAR ESCOLHA DA GUARNIÇÃO
                                                                 </button>
                                                             </div>
                                                         </form>
@@ -405,6 +405,500 @@ $datetime = date('d/m/Y H:i:s');
         </div>
     </div>
 </div>
+
+<script>
+    // Variáveis globais para controle do timer
+    let timerInterval = null;
+    let tempoRestante = 30; // segundos
+    let verificacaoEmAndamento = false;
+
+    // Função principal para verificar se é a vez do candidato
+    async function verificarVezEscolha(idEspecialidade, userId) {
+        try {
+            // Verificar no servidor se é a vez do candidato
+            const resultado = await verificarVezNoServidor(idEspecialidade, userId);
+
+            if (!resultado.podeEscolher) {
+                // Exibir mensagem de quem é a vez
+                exibirMensagemNaoVezParaForm(resultado.mensagem, resultado.proximoCandidato, resultado.informacoesAdicionais);
+                return false;
+            } else {
+                // Exibir mensagem que pode escolher
+                exibirMensagemPodeEscolherParaForm(resultado.mensagem, resultado.informacoesAdicionais);
+                return true;
+            }
+        } catch (error) {
+            console.error('Erro ao verificar vez:', error);
+            exibirMensagemErro('Erro ao verificar se é sua vez. Tente novamente.');
+            return false;
+        }
+    }
+
+    // Função para verificar no servidor a ordem dos candidatos
+    async function verificarVezNoServidor(idEspecialidade, userId) {
+        const formData = new FormData();
+        formData.append('id_especialidade', idEspecialidade);
+        formData.append('user_id', userId);
+        formData.append('verificar_vez', 'true');
+
+        const response = await fetch('../banco_dados/verifica_vez_candidato.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro na requisição');
+        }
+
+        const data = await response.json();
+
+        // Verificar se a resposta tem o formato esperado
+        if (typeof data.podeEscolher === 'undefined') {
+            throw new Error('Resposta do servidor inválida');
+        }
+
+        return data;
+    }
+
+    // Função para exibir mensagem de "não é sua vez" para um formulário específico
+    function exibirMensagemNaoVezParaForm(form, mensagem, proximoCandidato, informacoesAdicionais = null) {
+        // Remover mensagens anteriores deste formulário específico
+        const existingAlert = form.parentNode.querySelector('.alert-vez-container');
+        if (existingAlert) existingAlert.remove();
+
+        // Criar mensagem de alerta
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-warning alert-vez-container';
+        alertDiv.dataset.formId = form.id || form.dataset.especialidadeId;
+
+        let html = `<h4 class="alert-heading"><i class="fa fa-clock-o me-2"></i> Aguarde sua vez!</h4>`;
+        html += `<p>${mensagem}</p>`;
+
+        if (proximoCandidato) {
+            html += `<p class="mb-1"><strong>Próximo a escolher:</strong> ${proximoCandidato}</p>`;
+        }
+
+        // Adicionar informações detalhadas se disponíveis
+        if (informacoesAdicionais) {
+            html += `<hr class="my-2">`;
+            html += `<div class="text-muted">`;
+            if (informacoesAdicionais.condicao_candidato) {
+                html += `<p class="mb-1"><strong>Seu critério de Escolha:</strong> ${informacoesAdicionais.condicao_candidato}</p>`;
+            }
+            if (informacoesAdicionais.tipo_proxima_vaga) {
+                html += `<p class="mb-1"><strong>Critério da próxima vaga:</strong> ${informacoesAdicionais.tipo_proxima_vaga}</p>`;
+            }
+            if (informacoesAdicionais.posicao_usuario) {
+                html += `<p class="mb-1"><strong>Sua posição na fila:</strong> ${informacoesAdicionais.posicao_usuario}º</p>`;
+            }
+            if (informacoesAdicionais.candidatos_na_frente > 0) {
+                html += `<p class="mb-1"><strong>Candidatos na sua frente:</strong> ${informacoesAdicionais.candidatos_na_frente}</p>`;
+            }
+            if (informacoesAdicionais.vagas_restantes) {
+                html += `<p class="mb-1"><strong>Vagas restantes:</strong> ${informacoesAdicionais.vagas_restantes} de ${informacoesAdicionais.total_vagas}</p>`;
+            }
+            html += `</div>`;
+        }
+
+        alertDiv.innerHTML = html;
+
+        // Inserir antes do formulário
+        form.parentNode.insertBefore(alertDiv, form);
+
+        // Desabilitar botão de envio DESTE formulário específico
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fa fa-clock-o me-2"></i> Aguardando vez...';
+            submitButton.classList.remove('btn-primary');
+            submitButton.classList.add('btn-secondary');
+        }
+    }
+
+    // Função similar para "pode escolher" por formulário
+    function exibirMensagemPodeEscolherParaForm(form, mensagem, informacoesAdicionais = null) {
+        // Remover mensagens anteriores deste formulário específico
+        const existingAlert = form.parentNode.querySelector('.alert-vez-container');
+        if (existingAlert) existingAlert.remove();
+
+        // Criar mensagem de sucesso
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-vez-container';
+        alertDiv.dataset.formId = form.id || form.dataset.especialidadeId;
+
+        let html = `<h4 class="alert-heading"><i class="fa fa-check-circle me-2"></i> É sua vez! Recarregue/Atualize a página antes de realizar sua escolha</h4>`;
+        html += `<p>${mensagem}</p>`;
+
+        // Adicionar informações detalhadas se disponíveis
+        if (informacoesAdicionais) {
+            html += `<hr class="my-2">`;
+            html += `<div class="text-muted">`;
+            if (informacoesAdicionais.condicao_candidato) {
+                html += `<p class="mb-1"><strong>Sua condição:</strong> ${informacoesAdicionais.condicao_candidato}</p>`;
+            }
+            if (informacoesAdicionais.tipo_proxima_vaga) {
+                html += `<p class="mb-1"><strong>Critério da próxima vaga:</strong> ${informacoesAdicionais.tipo_proxima_vaga}</p>`;
+            }
+            if (informacoesAdicionais.sua_posicao) {
+                html += `<p class="mb-1"><strong>Sua posição na fila:</strong> ${informacoesAdicionais.sua_posicao}º</p>`;
+            }
+            if (informacoesAdicionais.vagas_restantes) {
+                html += `<p class="mb-1"><strong>Vagas restantes:</strong> ${informacoesAdicionais.vagas_restantes} de ${informacoesAdicionais.total_vagas}</p>`;
+            }
+            if (informacoesAdicionais.proxima_vaga_numero) {
+                html += `<p class="mb-1"><strong>Número da vaga:</strong> ${informacoesAdicionais.proxima_vaga_numero}ª vaga</p>`;
+            }
+            html += `</div>`;
+        }
+        alertDiv.innerHTML = html;
+
+        // Inserir antes do formulário
+        form.parentNode.insertBefore(alertDiv, form);
+
+        // Habilitar botão de envio DESTE formulário específico
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fa fa-paper-plane me-2"></i> CONFIRMAR ESCOLHA DA GUARNIÇÃO';
+            submitButton.classList.remove('btn-secondary');
+            submitButton.classList.add('btn-primary');
+        }
+    }
+
+    function exibirMensagemErro(mensagem) {
+        // Remover mensagens anteriores
+        const existingAlerts = document.querySelectorAll('.alert-vez-container');
+        existingAlerts.forEach(alert => alert.remove());
+
+        // Criar mensagem de erro
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-vez-container';
+        alertDiv.innerHTML = `
+            <h4 class="alert-heading"><i class="fa fa-exclamation-triangle me-2"></i>Não é possível escolher agora</h4>
+            <p class="mb-0">${mensagem}</p>
+        `;
+
+        // Inserir no início do content-wrapper
+        const contentWrapper = document.querySelector('.content-wrapper');
+        if (contentWrapper) {
+            contentWrapper.insertBefore(alertDiv, contentWrapper.firstChild);
+        }
+
+        // Desabilitar todos os botões de envio
+        document.querySelectorAll('form[action*="candidato_cidade_escolheu_servir.php"] button[type="submit"]').forEach(submitButton => {
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fa fa-clock-o"></i> Aguardando verificação...';
+            submitButton.classList.remove('btn-primary');
+            submitButton.classList.add('btn-warning');
+        });
+    }
+
+    function removerMensagens() {
+        const alerts = document.querySelectorAll('.alert-vez-container');
+        alerts.forEach(alert => alert.remove());
+    }
+
+    async function verificarFormularioEspecifico(form) {
+        const idEspecialidade = form.querySelector('input[name="id_especialidade"]').value;
+        const userId = <?= $_SESSION['id_usuario'] ?? 0 ?>;
+
+        if (!idEspecialidade || !userId) {
+            // Usar a função por formulário
+            exibirMensagemErroParaForm(form, 'Dados insuficientes para verificação.');
+            return false;
+        }
+
+        try {
+            const resultado = await verificarVezNoServidor(idEspecialidade, userId);
+
+            if (!resultado.podeEscolher) {
+                exibirMensagemNaoVezParaForm(form, resultado.mensagem, resultado.proximoCandidato, resultado.informacoesAdicionais);
+                return false;
+            } else {
+                exibirMensagemPodeEscolherParaForm(form, resultado.mensagem, resultado.informacoesAdicionais);
+                return true;
+            }
+        } catch (error) {
+            console.error('Erro ao verificar vez:', error);
+            exibirMensagemErroParaForm(form, 'Erro ao verificar se é sua vez. Tente novamente.');
+            return false;
+        }
+    }
+
+    // Função para verificar todos os formulários
+    async function verificarTodosFormularios() {
+        if (verificacaoEmAndamento) {
+            return;
+        }
+
+        verificacaoEmAndamento = true;
+        const forms = document.querySelectorAll('form[action*="candidato_cidade_escolheu_servir.php"]');
+
+        if (forms.length === 0) {
+            verificacaoEmAndamento = false;
+            return;
+        }
+
+        console.log(`[${new Date().toLocaleTimeString()}] Verificando ${forms.length} formulário(s)...`);
+
+        try {
+            // Verificar cada formulário em paralelo (Promise.all) ou sequencial
+            for (const form of forms) {
+                await verificarFormularioEspecifico(form);
+                await new Promise(resolve => setTimeout(resolve, 100)); // Pequeno delay entre verificações
+            }
+        } catch (error) {
+            console.error('Erro na verificação automática:', error);
+        } finally {
+            verificacaoEmAndamento = false;
+        }
+    }
+
+    // Função para criar e gerenciar o timer de atualização
+    function criarTimerAtualizacao() {
+        // Criar container do timer
+        const timerContainer = document.createElement('div');
+        timerContainer.id = 'timer-atualizacao-container';
+        timerContainer.className = 'timer-atualizacao';
+        timerContainer.innerHTML = `
+            <div class="d-flex align-items-center">
+                <span class="mr-10">Próxima verificação automática em:</span>
+                <span id="timer-contador" class="badge bg-primary">30s</span>
+            </div>
+        `;
+
+        // Adicionar ao header da página
+        const pageHeader = document.querySelector('.page-title');
+        if (pageHeader) {
+            const timerArea = document.querySelector('#timer-area');
+            if (timerArea) {
+                timerArea.appendChild(timerContainer);
+            } else {
+                timerArea.appendChild(timerContainer);
+            }
+        }
+
+        // Iniciar o timer
+        iniciarTimer();
+    }
+
+    // Função para iniciar o timer
+    function iniciarTimer() {
+        tempoRestante = 30; // Reset para 30 segundos
+
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+
+        timerInterval = setInterval(() => {
+            tempoRestante--;
+            atualizarContadorTimer();
+
+            if (tempoRestante <= 0) {
+                // Executar verificação
+                verificarTodosFormularios();
+
+                // Resetar timer
+                tempoRestante = 30;
+                atualizarContadorTimer();
+            }
+        }, 1000); // Atualizar a cada segundo
+    }
+
+    // Função para atualizar o contador do timer
+    function atualizarContadorTimer() {
+        const timerContador = document.getElementById('timer-contador');
+        if (timerContador) {
+            timerContador.textContent = `${tempoRestante}s`;
+
+            // Mudar cor baseado no tempo restante
+            if (tempoRestante <= 5) {
+                timerContador.className = 'badge bg-danger';
+            } else if (tempoRestante <= 10) {
+                timerContador.className = 'badge bg-warning';
+            } else {
+                timerContador.className = 'badge bg-primary';
+            }
+        }
+    }
+
+    // Função para atualizar status da verificação
+    function atualizarStatusVerificacao(verificando) {
+        const timerContador = document.getElementById('timer-contador');
+
+        if (verificando) {
+            if (timerContador) {
+                timerContador.textContent = 'Verificando...';
+                timerContador.className = 'badge bg-primary';
+            }
+        }
+    }
+
+    // Função para inicializar a verificação em todos os formulários
+    function inicializarVerificacaoVez() {
+        const forms = document.querySelectorAll('form[action*="candidato_cidade_escolheu_servir.php"]');
+
+        forms.forEach((form, index) => {
+            // Adicionar ID único ao formulário para referência
+            if (!form.id) {
+                form.id = `form-escolha-${index}`;
+            }
+
+            // Adicionar evento de submit
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Impedir envio imediato
+
+                const idEspecialidade = form.querySelector('input[name="id_especialidade"]').value;
+                const userId = <?= $_SESSION['id_usuario'] ?? 0 ?>;
+
+                // Verificar declaração
+                const declaracaoCheckbox = form.querySelector('input[name="declaracao"]');
+                if (!declaracaoCheckbox || !declaracaoCheckbox.checked) {
+                    exibirMensagemErro('Você deve declarar que leu o aviso de ORIENTAÇÕES PARA A ESCOLHA DE GUARNIÇÃO!');
+                    return;
+                }
+
+                // Verificar cidade selecionada
+                const cidadeSelect = form.querySelector('select[name="cidade_escolheu_servir"]');
+                if (!cidadeSelect || !cidadeSelect.value) {
+                    exibirMensagemErro('Você deve selecionar a cidade em que deseja servir!');
+                    return;
+                }
+
+                // Verificar se é a vez
+                const podeEscolher = await verificarVezEscolha(idEspecialidade, userId);
+
+                if (podeEscolher) {
+                    // Se pode escolher, submeter o formulário
+                    this.submit();
+                }
+            });
+        });
+
+        // Criar timer de atualização
+        criarTimerAtualizacao();
+
+        // Verificar todos os formulários imediatamente
+        setTimeout(() => {
+            verificarTodosFormularios();
+        }, 1000);
+    }
+
+    // Quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configurar cada formulário individualmente
+        const forms = document.querySelectorAll('form[action*="candidato_cidade_escolheu_servir.php"]');
+
+        forms.forEach((form) => {
+            // Adicionar evento de submit específico
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                // Verificar declaração
+                const declaracaoCheckbox = form.querySelector('input[name="declaracao"]');
+                if (!declaracaoCheckbox || !declaracaoCheckbox.checked) {
+                    exibirMensagemErroParaForm(form, 'Você deve declarar que leu o aviso de ORIENTAÇÕES PARA A ESCOLHA DE GUARNIÇÃO!');
+                    return;
+                }
+
+                // Verificar cidade selecionada
+                const cidadeSelect = form.querySelector('select[name="cidade_escolheu_servir"]');
+                if (!cidadeSelect || !cidadeSelect.value) {
+                    exibirMensagemErroParaForm(form, 'Você deve selecionar a cidade em que deseja servir!');
+                    return;
+                }
+
+                // Verificar se é a vez para ESTA especialidade
+                const podeEscolher = await verificarFormularioEspecifico(form);
+
+                if (podeEscolher) {
+                    // Se pode escolher, submeter ESTE formulário específico
+                    this.submit();
+                }
+            });
+
+            // Inicialmente desabilitar botão DESTE formulário
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fa fa-clock-o me-2"></i> Aguardando verificação...';
+                submitButton.classList.remove('btn-primary');
+                submitButton.classList.add('btn-secondary');
+            }
+        });
+
+        // Criar timer de atualização
+        criarTimerAtualizacao();
+
+        // Verificar todos os formulários imediatamente
+        setTimeout(() => {
+            verificarTodosFormularios();
+        }, 1000);
+    });
+
+    // Limpar intervalos quando a página for descarregada
+    window.addEventListener('beforeunload', function() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+    });
+
+    // Adicionar estilo para as mensagens e timer
+    const style = document.createElement('style');
+    style.textContent = `
+        .alert-vez-container {
+            animation: fadeIn 0.3s ease-in-out;
+            margin-bottom: 15px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alert-vez-container hr {
+            margin: 8px 0;
+            border-color: rgba(0,0,0,0.1);
+        }
+        .alert-vez-container .small {
+            font-size: 0.85rem;
+        }
+        button[disabled] {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .timer-atualizacao {
+            font-size: 1.4rem;
+            color: #6c757d;
+            padding: 5px 10px;
+            background: rgba(108, 117, 125, 0.1);
+            border-radius: 4px;
+            border-left: 3px solid #17a2b8;
+        }
+        .timer-atualizacao .badge {
+            font-size: 1.4rem;
+            padding: 3px 8px;
+            font-weight: 600;
+            min-width: 45px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+        }
+        @media (max-width: 768px) {
+            .timer-atualizacao {
+                margin-top: 10px;
+                font-size: 0.8rem;
+            }
+            .timer-atualizacao .badge {
+                font-size: 0.75rem;
+                min-width: 40px;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+</script>
 
 </body>
 
