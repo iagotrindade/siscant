@@ -102,7 +102,7 @@ try {
                                 <tr>
                                     <td style="padding-bottom: 25px;">
                                         <center>
-                                            <p style="width: 25%; background-color: green; font-size: 20px; color: white; padding: 10px; border-radius: 10px; text-align: center;">
+                                            <p style="width: 30%; background-color: green; font-size: 20px; color: white; padding: 10px; border-radius: 10px; text-align: center;">
                                                 <b>' . $nova_senha . '</b>
                                             </p>
                                         </center>

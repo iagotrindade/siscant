@@ -132,6 +132,26 @@ $datetime = date('d/m/Y H:i:s');
                                 </div>
                             </div>
                         </div>
+
+                        <div class="step-item mb-4 p-3 border-start border-success border-4">
+                            <div class="d-flex align-items-center">
+                                <span class="step-badge bg-primary text-white mr-10" style="border-radius: 90px;">5</span>
+                                <div>
+                                    <h6 class="fw-bold text-primary mb-1">VAGAS DE COTAS</h6>
+                                    <p class="mb-0">COMPREENDO que as vagas de COTAS não preenchidas serão revertidas para o critério da AMPLA CONCORRÊNCIA somente após o último candidato COTISTA, da referida especialidade, realizar a sua ESCOLHA DE GUARNIÇÃO.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-item mb-4 p-3 border-start border-success border-4">
+                            <div class="d-flex align-items-center">
+                                <span class="step-badge bg-primary text-white mr-10" style="border-radius: 90px;">6</span>
+                                <div>
+                                    <h6 class="fw-bold text-primary mb-1">OPÇÕES DE ESCOLHA</h6>
+                                    <p class="mb-0">COMPREENDO que caso esteja concorrendo a mais de uma especialidade, ao escolher vaga em uma especialidade, AUTOMATICAMENTE serei DESCLASSIFICADO das demais especialidades que por ventura estiver concorrendo SEM POSSIBILIDADE DE REVERSÃO DESSA ESCOLHA.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="declaration-signature p-10 rounded border">
@@ -173,7 +193,7 @@ $datetime = date('d/m/Y H:i:s');
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="mb-20 col-md-6 p-0" id="timer-area"></div>
+                    <div class="mb-20 p-0" id="timer-area"></div>
                     <div class="row">
                         <div class="col-lg-12">
                             <?php if (empty($lista_inscricoes)) : ?>
@@ -223,12 +243,12 @@ $datetime = date('d/m/Y H:i:s');
                                         }
 
                                         $card_class = "border-success";
-                                        $status_badge = "bg-success";
+                                        $status_badge = "bg-primary";
                                         $status_text = "Elegível para Seleção";
 
                                         if (!empty($value['cidade_escolheu_servir'])) {
-                                            $card_class = "border-info";
-                                            $status_badge = "bg-info";
+                                            $card_class = "border-primary";
+                                            $status_badge = "bg-primary";
                                             $status_text = "Guarnição Já Selecionada";
                                         }
 
@@ -241,22 +261,22 @@ $datetime = date('d/m/Y H:i:s');
 
                                         <div class="card <?= $card_class ?>">
                                             <div class="card-header <?= $status_badge ?> text-white mb-20">
-                                                <div class="d-flex justify-content-between align-items-center">
+                                                <div class="d-flex justify-content-between align-items-center" style="width: 100%">
                                                     <div class="d-flex align-items-center">
                                                         <i class="fa fa-graduation-cap me-2"></i>
                                                         <h5 class="card-title mb-0 me-3"><?= mb_strtoupper($value['especialidade'], 'UTF-8') ?></h5>
                                                         <span class="badge <?= $ott_stt_badge ?>"><?= $ott_stt ?></span>
                                                     </div>
-                                                    <span class="badge bg-light text-dark"><?= $status_text ?></span>
+                                                    <span class="badge <?=$status_badge?>"><?= $status_text ?></span>
                                                 </div>
                                             </div>
 
                                             <div class="card-body">
                                                 <?php if ($value['concorrendo'] == 0) : ?>
                                                     <div class="alert alert-danger d-flex align-items-center">
-                                                        <i class="fa fa-exclamation-triangle fa-2x me-3"></i>
+                                                        <i class="fa fa-exclamation-triangle fa-2x mr-10"></i>
                                                         <div>
-                                                            <h6 class="alert-heading mb-1">DESCLASSIFICADO</h6>
+                                                            <h5 class="alert-heading mb-0">DESCLASSIFICADO</h5>
                                                             <p class="mb-0"><?= $value['justificativa'] ?></p>
                                                         </div>
                                                     </div>
@@ -268,15 +288,11 @@ $datetime = date('d/m/Y H:i:s');
                                                 ?>
 
                                                 <div class="vagas-info mb-4">
-                                                    <h5 class="section-title border-bottom pb-2 mb-3">
-                                                        <i class="fa fa-pie-chart me-2"></i>
-                                                        Situação das Vagas
-                                                    </h5>
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="card">
                                                                 <div class="card-header mb-20">
-                                                                    <h5 class="mb-0"><i class="fa fa-list"></i> Total Disponibilizadas</h5>
+                                                                    <h5 class="mb-0"><i class="fa fa-list"></i> Total de vagas Disponibilizadas</h5>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <?php foreach ($lista_epecialidades as $linha) : ?>
@@ -295,7 +311,7 @@ $datetime = date('d/m/Y H:i:s');
                                                         <div class="col-md-6">
                                                             <div class="card">
                                                                 <div class="card-header mb-20">
-                                                                    <h5 class="mb-0"><i class="fa fa-check-circle"></i> Vagas Restantes</h5>
+                                                                    <h5 class="mb-0"><i class="fa fa-check-circle"></i> Total de vagas Restantes</h5>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <?php foreach ($get_vagas_especialidade as $vaga) : ?>
@@ -662,7 +678,7 @@ $datetime = date('d/m/Y H:i:s');
         timerContainer.className = 'timer-atualizacao';
         timerContainer.innerHTML = `
             <div class="d-flex align-items-center">
-                <span class="mr-10">Próxima verificação automática em:</span>
+                <span class="mr-10">Próxima atualização de vagas restantes em:</span>
                 <span id="timer-contador" class="badge bg-primary">30s</span>
             </div>
         `;
@@ -866,7 +882,7 @@ $datetime = date('d/m/Y H:i:s');
             opacity: 0.7;
         }
         .timer-atualizacao {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             color: #6c757d;
             padding: 5px 10px;
             background: rgba(108, 117, 125, 0.1);

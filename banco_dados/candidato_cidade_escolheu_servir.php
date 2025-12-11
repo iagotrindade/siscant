@@ -453,7 +453,7 @@ if ($cidade_escolheu_servir == 754809) {
         exit();
     }
 
-    $justificativa = 'Cod 754809 - NÃO OPTOU pelas guarnições oferecidas. Caso não sejam oferecidas novas vagas no futuro, você não será incorporado(a) como militar temporário.';
+    $justificativa = 'Cod 754809 - NÃO OPTOU pelas guarnições oferecidas. Caso não sejam oferecidas novas vagas no futuro, você não será incorporado(a) como militar temporário. Obs: o Status de desclassificado é apenas temporário para liberar a escolha dos demais candidatos.';
     $resultado_concorrendo = $conexao->status_concorrendo_especialidade($id_candidato_x_especialidade, 0, $justificativa);
     $alteracoes_detalhadas = print_r($resultado_concorrendo, true);
     if ($resultado_concorrendo)
@@ -515,13 +515,16 @@ if ($cadastra_cidade_vai_servir) {
     // desclassifica de outras especialidades se aplicável
     $get_especialidade_candidato = $conexao->get_especialidade_candidato($id_usuario);
     foreach ($get_especialidade_candidato as $especialidade) {
-        if ($especialidade['concorrendo'] === '1' && $especialidade['etapa'] == 6) {
-            if ($especialidade['id'] != $id_especialidade) {
+
+        $etapa = $selecao[0]['codigo'] == 'mfdv' ? 5 : 6;
+
+        if ($especialidade['concorrendo'] === '1' && $especialidade['etapa'] == $etapa) {
+            if ($especialidade['id_especialidade'] != $id_especialidade) {
                 $justificativa = 'Cod 754809 - Candidato(a) optou por escolher Guarnição em outra Especialidade.';
-                $resultado_concorrendo = $conexao->status_concorrendo_especialidade($especialidade['id'], 0, $justificativa);
+                $resultado_concorrendo = $conexao->status_concorrendo_especialidade($especialidade['id_candidato_x_especialidade'], 0, $justificativa);
                 $alteracoes_detalhadas = print_r($resultado_concorrendo, true);
                 if ($resultado_concorrendo)
-                    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], "$especialidade[id]", "16150", "candidato_x_especialidade", "Update", "Candidato(a) optou por escolher Guarnição em outra Especialidade.", "$alteracoes_detalhadas");
+                    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], "$especialidade[id_candidato_x_especialidade]", "16150", "candidato_x_especialidade", "Update", "Candidato(a) optou por escolher Guarnição em outra Especialidade.", "$alteracoes_detalhadas");
                 else {
                     $conexao = null;
                     erro("Erro 263475475! Não foi possível salvar a escolha!");

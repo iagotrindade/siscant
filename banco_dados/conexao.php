@@ -851,10 +851,8 @@ class Conexao
     public function get_usuario_cpf($cpf)
     {
         $stmt = $this->pdo->prepare(
-            "select u.*, c.nome nome_cidade, s.nome nome_selecao, s.codigo codigo_selecao, s.ano ano_selecao, rm rm_selecao
+            "select u.*
                 from usuario u
-                left join cidade c on c.id = u.id_cidade
-                inner join selecao s on s.id = u.id_selecao
                 where cpf = :cpf and id_selecao = :selecao and u.apagado = 0"
         );
         $stmt->bindValue(':cpf', $cpf);
@@ -867,10 +865,8 @@ class Conexao
     public function get_usuario_email($email)
     {
         $stmt = $this->pdo->prepare(
-            "select u.*, c.nome nome_cidade, s.nome nome_selecao, s.codigo codigo_selecao, s.ano ano_selecao, rm rm_selecao
+            "select u.*
                 from usuario u
-                left join cidade c on c.id = u.id_cidade
-                inner join selecao s on s.id = u.id_selecao
                 where mail = :email and id_selecao = :selecao and u.apagado = 0"
         );
         $stmt->bindValue(':email', $email);

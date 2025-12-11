@@ -21,6 +21,7 @@ if ($selecao[0]['codigo'] == 'cet') {
     exit();
 }
 
+
 $cpf_usuario = htmlspecialchars(trim($_POST['cpf']));
 $mail_usuario = htmlspecialchars(trim($_POST['mail']));
 
