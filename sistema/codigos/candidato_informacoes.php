@@ -642,7 +642,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
         if ($_SESSION['perfil'] == 'admin') {
             include_once 'codigos/candidato_especialidades.php';
-        } 
+        }
 
         if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'candidato' && $_SESSION['candidato'] != '0') {
             include_once 'codigos/candidato_especialidades_visualiza.php';
@@ -665,6 +665,14 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
             include_once 'codigos/candidato_heteroidentificacao.php';
         }
 
+        if ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'chc' || $_SESSION['perfil'] == 'cr') {
+            include_once 'codigos/candidato_recurso.php';
+        }
+
+        if ($_SESSION['perfil'] == 'avaliador') {
+            include_once 'codigos/avaliador_recurso_candidato.php';
+        }
+
         if ($_SESSION['perfil'] == 'admin') {
             include_once 'codigos/candidato_distribuicao.php';
         }
@@ -685,14 +693,6 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
 
         if ($_SESSION['perfil'] != 'candidato' && $_SESSION['candidato'] != '1') {
             include_once 'codigos/candidato_observacoes.php';
-        }
-
-        if ($_SESSION['perfil'] == 'admin') {
-            include_once 'codigos/candidato_recurso.php';
-        }
-
-        if ($_SESSION['perfil'] == 'avaliador') {
-            include_once 'codigos/avaliador_recurso_candidato.php';
         }
 
         if ($_SESSION['perfil'] != 'candidato' && $_SESSION['candidato'] != '1') {

@@ -179,16 +179,18 @@ else
 
 
                                     // Recurso Etapa 3
-                                    $recursoEtapa5 = 'NÃO';
+                                    $recursoHeteroidentificacao = 'NÃO';
                                     $recurso_class = 'secondary';
 
                                     foreach ($recursos as $recurso) {
-                                        if ($recurso['etapa'] == 5) {
-                                            $recursoEtapa5 = 'SIM';
+                                        $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 4 : 5;
+
+                                        if ($recurso['etapa'] == $etapa && $recurso['id_candidato'] == $linha['id']) {
+                                            $recursoHeteroidentificacao = 'SIM';
                                             $recurso_class = 'primary';
                                             break;
                                         } else {
-                                            $recursoEtapa5 = 'NÃO';
+                                            $recursoHeteroidentificacao = 'NÃO';
                                             $recurso_class = 'primary';
                                         }
                                     }
@@ -242,7 +244,7 @@ else
                                         </td>
 
                                         <td class="text-center">
-                                            <span class="badge bg-<?= $recurso_class ?>"><?= $recursoEtapa5 ?></span>
+                                            <span class="badge bg-<?= $recurso_class ?>"><?= $recursoHeteroidentificacao ?></span>
                                         </td>
 
                                         <!-- Ações -->

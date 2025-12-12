@@ -65,11 +65,9 @@ if (!isset($_SESSION['chave'])) {
     exit();
 }
 
-if ($_SESSION['perfil'] != 'admin') {
-    if ($_SESSION['perfil'] != 'jise') {
-        erro("Erro 4327347! Não é possivel fazer essa edição!");
-        exit();
-    }
+if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] && 'jise' && $_SESSION['perfil'] != 'cr') {
+    erro("Erro 4327347! Não é possivel fazer essa edição!");
+    exit();
 }
 
 
@@ -85,12 +83,6 @@ if ($get_candidato[0]['cpf'] != $cpf_candidato) {
 
 $get_recurso_id = $conexao->get_recurso_id($id_recurso);
 if ($get_recurso_id[0]['id_candidato'] != $id_candidato) {
-    erro("Erro 2473478! Não foi possível fazer a atualização dos dados!");
-    exit();
-}
-
-// 26/06/2025 -> Iago Silva Inlcuido a verificação do perfil admin
-if ($obs_etapa != '3' && $_SESSION['perfil'] != 'jise' && $_SESSION['perfil'] != 'admin') {
     erro("Erro 2473478! Não foi possível fazer a atualização dos dados!");
     exit();
 }
