@@ -267,7 +267,7 @@ $datetime = date('d/m/Y H:i:s');
                                                         <h5 class="card-title mb-0 me-3"><?= mb_strtoupper($value['especialidade'], 'UTF-8') ?></h5>
                                                         <span class="badge <?= $ott_stt_badge ?>"><?= $ott_stt ?></span>
                                                     </div>
-                                                    <span class="badge <?=$status_badge?>"><?= $status_text ?></span>
+                                                    <span class="badge <?= $status_badge ?>"><?= $status_text ?></span>
                                                 </div>
                                             </div>
 
@@ -436,7 +436,7 @@ $datetime = date('d/m/Y H:i:s');
 
             if (!resultado.podeEscolher) {
                 // Exibir mensagem de quem é a vez
-                exibirMensagemNaoVezParaForm(resultado.mensagem, resultado.proximoCandidato, resultado.informacoesAdicionais);
+                exibirMensagemNaoVezParaForm(resultado.mensagem, resultado.informacoesAdicionais);
                 return false;
             } else {
                 // Exibir mensagem que pode escolher
@@ -477,7 +477,7 @@ $datetime = date('d/m/Y H:i:s');
     }
 
     // Função para exibir mensagem de "não é sua vez" para um formulário específico
-    function exibirMensagemNaoVezParaForm(form, mensagem, proximoCandidato, informacoesAdicionais = null) {
+    function exibirMensagemNaoVezParaForm(form, mensagem, informacoesAdicionais = null) {
         // Remover mensagens anteriores deste formulário específico
         const existingAlert = form.parentNode.querySelector('.alert-vez-container');
         if (existingAlert) existingAlert.remove();
@@ -490,10 +490,6 @@ $datetime = date('d/m/Y H:i:s');
         let html = `<h4 class="alert-heading"><i class="fa fa-clock-o me-2"></i> Aguarde sua vez!</h4>`;
         html += `<p>${mensagem}</p>`;
 
-        if (proximoCandidato) {
-            html += `<p class="mb-1"><strong>Próximo a escolher:</strong> ${proximoCandidato}</p>`;
-        }
-
         // Adicionar informações detalhadas se disponíveis
         if (informacoesAdicionais) {
             html += `<hr class="my-2">`;
@@ -502,7 +498,7 @@ $datetime = date('d/m/Y H:i:s');
                 html += `<p class="mb-1"><strong>Seu critério de Escolha:</strong> ${informacoesAdicionais.condicao_candidato}</p>`;
             }
             if (informacoesAdicionais.tipo_proxima_vaga) {
-                html += `<p class="mb-1"><strong>Critério da próxima vaga:</strong> ${informacoesAdicionais.tipo_proxima_vaga}</p>`;
+                html += `<p class="mb-1"><strong>Critério da vaga atual:</strong> ${informacoesAdicionais.tipo_proxima_vaga} (${informacoesAdicionais.cota_revertida})</p>`;
             }
             if (informacoesAdicionais.posicao_usuario) {
                 html += `<p class="mb-1"><strong>Sua posição na fila:</strong> ${informacoesAdicionais.posicao_usuario}º</p>`;
@@ -553,7 +549,7 @@ $datetime = date('d/m/Y H:i:s');
                 html += `<p class="mb-1"><strong>Sua condição:</strong> ${informacoesAdicionais.condicao_candidato}</p>`;
             }
             if (informacoesAdicionais.tipo_proxima_vaga) {
-                html += `<p class="mb-1"><strong>Critério da próxima vaga:</strong> ${informacoesAdicionais.tipo_proxima_vaga}</p>`;
+                html += `<p class="mb-1"><strong>Critério da vaga atual:</strong> ${informacoesAdicionais.tipo_proxima_vaga} (${informacoesAdicionais.cota_revertida})</p>`;
             }
             if (informacoesAdicionais.sua_posicao) {
                 html += `<p class="mb-1"><strong>Sua posição na fila:</strong> ${informacoesAdicionais.sua_posicao}º</p>`;
@@ -628,7 +624,7 @@ $datetime = date('d/m/Y H:i:s');
             const resultado = await verificarVezNoServidor(idEspecialidade, userId);
 
             if (!resultado.podeEscolher) {
-                exibirMensagemNaoVezParaForm(form, resultado.mensagem, resultado.proximoCandidato, resultado.informacoesAdicionais);
+                exibirMensagemNaoVezParaForm(form, resultado.mensagem, resultado.informacoesAdicionais);
                 return false;
             } else {
                 exibirMensagemPodeEscolherParaForm(form, resultado.mensagem, resultado.informacoesAdicionais);
@@ -678,7 +674,7 @@ $datetime = date('d/m/Y H:i:s');
         timerContainer.className = 'timer-atualizacao';
         timerContainer.innerHTML = `
             <div class="d-flex align-items-center">
-                <span class="mr-10">Próxima atualização de vagas restantes em:</span>
+                <span class="mr-10">Próxima atualização de escolha em:</span>
                 <span id="timer-contador" class="badge bg-primary">30s</span>
             </div>
         `;

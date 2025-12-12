@@ -670,6 +670,82 @@ function envia_arquivo($id_processo, $nome_arquivo, $label)
         </form>';
 }
 
+function gerar_mapa_vagas($selecao, $total_vagas)
+{
+    if ($selecao == 'ott_stt') {
+        $mapa = [];
+        if ($total_vagas <= 0) return $mapa;
+        if ($total_vagas == 1) return ['AC'];
+        if ($total_vagas == 2) return ['AC', 'AC'];
+        if ($total_vagas == 3) return ['AC', 'AC', 'CN'];
+        if ($total_vagas == 4) return ['AC', 'AC', 'AC', 'CN'];
+
+        $padrao_ciclo = ['AC', 'AC', 'AC', 'AC', 'CN'];
+        $vagas_restantes = $total_vagas;
+
+        while ($vagas_restantes > 0) {
+            if ($vagas_restantes < 5) {
+                if ($vagas_restantes == 1) {
+                    $mapa[] = 'AC';
+                } elseif ($vagas_restantes == 2) {
+                    $mapa = array_merge($mapa, ['AC', 'AC']);
+                } elseif ($vagas_restantes == 3) {
+                    $mapa = array_merge($mapa, ['AC', 'AC', 'CN']);
+                } elseif ($vagas_restantes == 4) {
+                    $mapa = array_merge($mapa, ['AC', 'AC', 'AC', 'CN']);
+                }
+                $vagas_restantes = 0;
+            } else {
+                $mapa = array_merge($mapa, $padrao_ciclo);
+                $vagas_restantes -= 5;
+            }
+        }
+
+        return $mapa;
+    } else {
+        if ($total_vagas <= 0) return [];
+
+        // padrões especiais conforme sua especificação
+        $padroes_iniciais = [
+            1 => ['AC'],
+            2 => ['AC', 'CN'],
+            3 => ['AC', 'AC', 'CN'],
+            4 => ['AC', 'AC', 'AC', 'CN'],
+        ];
+
+        if (isset($padroes_iniciais[$total_vagas])) {
+            return $padroes_iniciais[$total_vagas];
+        }
+
+        // padrão especial para 5 vagas
+        if ($total_vagas == 5) {
+            return ['AC', 'AC', 'AC', 'CN', 'CN'];
+        }
+
+        // para 6 ou mais vagas
+        $mapa = [];
+
+        // Primeiro: adiciona as 5 primeiras vagas fixas
+        $mapa = array_merge($mapa, ['AC', 'AC', 'AC', 'CN', 'CN']);
+
+        // Restante das vagas (a partir da 6ª)
+        $vagas_restantes = $total_vagas - 5;
+        $indice_ciclo = 0;
+
+        // Ciclo para vagas adicionais: AC, AC, AC, CN, CN, AC, AC...
+        // A partir da 6ª vaga, o padrão repete começando do início
+        $ciclo_complementar = ['AC', 'AC', 'AC', 'CN', 'CN'];
+
+        while ($vagas_restantes > 0) {
+            $mapa[] = $ciclo_complementar[$indice_ciclo];
+            $indice_ciclo = ($indice_ciclo + 1) % 5;
+            $vagas_restantes--;
+        }
+
+        return $mapa;
+    }
+}
+
 function separa_vaga_rm($vagas)
 {
     // Separar as vagas da especialidade por regiao_militar

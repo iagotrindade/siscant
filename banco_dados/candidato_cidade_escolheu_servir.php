@@ -1,10 +1,4 @@
 <?php
-
-/**
- * candidato_cidade_escolheu_servir.php
- * Versão FINAL: Funciona para qualquer quantidade de vagas (0 até N)
- */
-
 include_once '../sistema/funcoes.php';
 session_start();
 include_once 'conexao.php';
@@ -253,40 +247,7 @@ if (count($vetor_ordenado_candidatos) > 0) {
 $total_vagas = 0;
 foreach ($get_vagas_especialidade as $vaga) $total_vagas += (int)$vaga['vagas'];
 
-function gerar_mapa_vagas_corrigido($total_vagas)
-{
-    $mapa = [];
-    if ($total_vagas <= 0) return $mapa;
-    if ($total_vagas == 1) return ['AC'];
-    if ($total_vagas == 2) return ['AC', 'AC'];
-    if ($total_vagas == 3) return ['AC', 'AC', 'CN'];
-    if ($total_vagas == 4) return ['AC', 'AC', 'AC', 'CN'];
-
-    $padrao_ciclo = ['AC', 'AC', 'AC', 'AC', 'CN'];
-    $vagas_restantes = $total_vagas;
-
-    while ($vagas_restantes > 0) {
-        if ($vagas_restantes < 5) {
-            if ($vagas_restantes == 1) {
-                $mapa[] = 'AC';
-            } elseif ($vagas_restantes == 2) {
-                $mapa = array_merge($mapa, ['AC', 'AC']);
-            } elseif ($vagas_restantes == 3) {
-                $mapa = array_merge($mapa, ['AC', 'AC', 'CN']);
-            } elseif ($vagas_restantes == 4) {
-                $mapa = array_merge($mapa, ['AC', 'AC', 'AC', 'CN']);
-            }
-            $vagas_restantes = 0;
-        } else {
-            $mapa = array_merge($mapa, $padrao_ciclo);
-            $vagas_restantes -= 5;
-        }
-    }
-
-    return $mapa;
-}
-
-$mapa_vagas = gerar_mapa_vagas_corrigido($total_vagas);
+$mapa_vagas = gerar_mapa_vagas($selecao[0]['codigo'], $total_vagas);
 
 // ---------------------------
 // LÓGICA PRINCIPAL: FUNCIONA PARA QUALQUER QUANTIDADE DE VAGAS
@@ -355,64 +316,60 @@ if ($tipo_proxima_vaga === 'AC') {
     $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
 } else { // $tipo_proxima_vaga === 'CN'
     // PARA VAGA CN: lógica especial para OTT/STT
-    if ($selecao[0]['codigo'] == 'ott_stt') {
-        // =============================================
-        // CORREÇÃO CRÍTICA: Contar apenas cotistas que
-        // realmente ocuparam vagas CN até agora
-        // =============================================
-        
-        $cotistas_que_ocuparam_cn = 0;
-        
-        // Percorre todas as vagas já preenchidas
-        for ($i = 0; $i < $escolheram; $i++) {
-            if (isset($vetor_ordenado_candidatos[$i])) {
-                $cand = $vetor_ordenado_candidatos[$i];
-                
-                // Se o candidato é cotista
-                if ($cand['vaga_reservada'] == 1) {
-                    // QUAL VAGA ELE OCUPOU? Precisamos saber o tipo da vaga na posição $i
-                    $tipo_vaga_ocupada = $mapa_vagas[$i]; // AC ou CN
-                    
-                    if ($tipo_vaga_ocupada === 'CN') {
-                        // Cotista ocupou vaga CN → conta
-                        $cotistas_que_ocuparam_cn++;
-                    }
-                    // Se ocupou AC → NÃO CONTA para preenchimento de CN
+
+    // =============================================
+    // CORREÇÃO CRÍTICA: Contar apenas cotistas que
+    // realmente ocuparam vagas CN até agora
+    // =============================================
+
+    $cotistas_que_ocuparam_cn = 0;
+
+    // Percorre todas as vagas já preenchidas
+    for ($i = 0; $i < $escolheram; $i++) {
+        if (isset($vetor_ordenado_candidatos[$i])) {
+            $cand = $vetor_ordenado_candidatos[$i];
+
+            // Se o candidato é cotista
+            if ($cand['vaga_reservada'] == 1) {
+                // QUAL VAGA ELE OCUPOU? Precisamos saber o tipo da vaga na posição $i
+                $tipo_vaga_ocupada = $mapa_vagas[$i]; // AC ou CN
+
+                if ($tipo_vaga_ocupada === 'CN') {
+                    // Cotista ocupou vaga CN → conta
+                    $cotistas_que_ocuparam_cn++;
                 }
+                // Se ocupou AC → NÃO CONTA para preenchimento de CN
             }
         }
-        
-        // Conta quantas vagas CN existem até a próxima vaga
-        $cns_ate_proxima = 0;
-        for ($i = 0; $i < $proxima_vaga_numero; $i++) {
-            if ($mapa_vagas[$i] === 'CN') $cns_ate_proxima++;
+    }
+
+    // Conta quantas vagas CN existem até a próxima vaga
+    $cns_ate_proxima = 0;
+    for ($i = 0; $i < $proxima_vaga_numero; $i++) {
+        if ($mapa_vagas[$i] === 'CN') $cns_ate_proxima++;
+    }
+
+    // DEBUG (remover depois)
+    //echo "DEBUG: CNs até $proxima_vaga_numeroª: $cns_ate_proxima<br>";
+    //echo "DEBUG: Cotistas que ocuparam CN: $cotistas_que_ocuparam_cn<br>";
+
+    // Se faltam cotistas para preencher as vagas CN
+    if ($cotistas_que_ocuparam_cn < $cns_ate_proxima) {
+        // PRECISA DE COTISTA: busca o próximo cotista na fila
+        foreach ($candidatos_nao_escolheram as $cand) {
+            if ($cand['vaga_reservada'] == 1) {
+                $candidato_deve_escolher_id = $cand['id'];
+                break;
+            }
         }
-        
-        // DEBUG (remover depois)
-        //echo "DEBUG: CNs até $proxima_vaga_numeroª: $cns_ate_proxima<br>";
-        //echo "DEBUG: Cotistas que ocuparam CN: $cotistas_que_ocuparam_cn<br>";
-        
-        // Se faltam cotistas para preencher as vagas CN
-        if ($cotistas_que_ocuparam_cn < $cns_ate_proxima) {
-            // PRECISA DE COTISTA: busca o próximo cotista na fila
-            foreach ($candidatos_nao_escolheram as $cand) {
-                if ($cand['vaga_reservada'] == 1) {
-                    $candidato_deve_escolher_id = $cand['id'];
-                    break;
-                }
-            }
-            
-            // Se não encontrou cotista (todos já escolheram)
-            if ($candidato_deve_escolher_id === null) {
-                // Não há mais cotistas → pode ser qualquer candidato
-                $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
-            }
-        } else {
-            // NÃO PRECISA DE COTISTA: primeiro candidato na fila
+
+        // Se não encontrou cotista (todos já escolheram)
+        if ($candidato_deve_escolher_id === null) {
+            // Não há mais cotistas → pode ser qualquer candidato
             $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
         }
     } else {
-        // Para outras seleções (não OTT/STT): primeiro candidato na fila
+        // NÃO PRECISA DE COTISTA: primeiro candidato na fila
         $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
     }
 }
