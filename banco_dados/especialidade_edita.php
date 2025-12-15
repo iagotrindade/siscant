@@ -12,7 +12,6 @@ if ($_SESSION['perfil'] != 'admin') {
     exit();
 }
 
-
 $lista_cidades_editar = array();
 if (isset($_POST['cidades']))
     $lista_cidades_editar = $_POST['cidades'];

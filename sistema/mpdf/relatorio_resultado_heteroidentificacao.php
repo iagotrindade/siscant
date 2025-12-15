@@ -19,6 +19,7 @@ $data           = trim($_POST['data'] ?? '');
 $paragrafo_um   = trim($_POST['paragrafo_um'] ?? '');
 $paragrafo_dois = trim($_POST['paragrafo_dois'] ?? '');
 $paragrafo_tres = trim($_POST['paragrafo_tres'] ?? '');
+$paragrafo_quatro = trim($_POST['paragrafo_quatro'] ?? '');
 $id_especialidades = $_POST['especialidades'] ?? [];
 $fase = $_POST['fase'];
 
@@ -105,6 +106,7 @@ $html = "
 <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>{$paragrafo_um}</p>
 <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>{$paragrafo_dois}</p>
 <p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>{$paragrafo_tres}</p>
+<p style='font-size: 12px; text-align: justify; margin: 5px 0; text-indent: 2em;'>{$paragrafo_quatro}</p>
 ";
 
 $mpdf->WriteHTML($html);

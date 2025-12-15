@@ -55,6 +55,9 @@ else $nota_av = 0;
 if(isset($_POST['musica'])) $musica = 1;
 else $musica = 0;
 
+if(isset($_POST['escolhe_guarnicao'])) $escolhe_guarnicao = 1;
+else $escolhe_guarnicao = 0;
+
 $lista_cidades = null;
 if(isset($_POST['cidades']))
     $lista_cidades = $_POST['cidades'];
@@ -68,9 +71,9 @@ if($ott_stt == "ott" && $musica == 1)
     exit();
 }
 
-if($nome_especialidade == null || $nome_especialidade == "" || count($lista_cidades) == 0 || $lista_cidades == null)
+if($nome_especialidade == null || $nome_especialidade == "")
 {
-    erro("O nome da especialidade e pelo menos uma cidade é obrigatório!");
+    erro("O nome da especialidade é obrigatório!");
     exit();
 }
 
@@ -95,7 +98,7 @@ if(count($verifica_nome) > 0)
 }
 
 if($_POST)
-    $resultado = $conexao->insere_especialidade($nome_especialidade, $teste_pratico, $nota_av, $ott_stt, $musica);
+    $resultado = $conexao->insere_especialidade($nome_especialidade, $teste_pratico, $nota_av, $ott_stt, $musica, $escolhe_guarnicao);
 $id_especialidade_adicionada = (int)$resultado['id_adicionado'];
 
 $alteracoes_detalhadas =  print_r($resultado, true);

@@ -21,6 +21,7 @@ $nome_esp = $get_especialidade[0]['nome'];
 $ott_stt = $get_especialidade[0]['ott_stt'];
 $teste_pratico = $get_especialidade[0]['teste_pratico'];
 $nota_av = $get_especialidade[0]['nota_av'];
+$escolhe_guarnicao = $get_especialidade[0]['escolhe_guarnicao'];
 $musica = $get_especialidade[0]['musica'];
 
 if (isset($_GET['sucesso']) && $_GET['sucesso'] == 1) {
@@ -105,7 +106,7 @@ if (isset($_GET['sucesso']) && $_GET['sucesso'] == 1) {
                                 <!-- Checkboxes -->
                                 <div class="col-lg-12 mb-20">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-check">
                                                 <input disabled name="musica" <?= $musica == 1 ? 'checked' : '' ?> type="checkbox" class="form-check-input" id="musica">
                                                 <label class="form-check-label fw-semibold" for="musica">
@@ -114,7 +115,7 @@ if (isset($_GET['sucesso']) && $_GET['sucesso'] == 1) {
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-check">
                                                 <input disabled name="teste_pratico" <?= $teste_pratico == 1 ? 'checked' : '' ?> type="checkbox" class="form-check-input" id="teste_pratico">
                                                 <label class="form-check-label fw-semibold" for="teste_pratico">
@@ -124,12 +125,22 @@ if (isset($_GET['sucesso']) && $_GET['sucesso'] == 1) {
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-check">
                                                 <input disabled name="teste_pratico" <?= $nota_av == 1 ? 'checked' : '' ?> type="checkbox" class="form-check-input" id="teste_pratico">
                                                 <label class="form-check-label fw-semibold" for="teste_pratico">
                                                     <i class="fa fa-percent me-1"></i>
                                                     Considerar NOTA na Avaliação Curricular
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-check">
+                                                <input disabled name="escolhe_guarnicao" <?= $escolhe_guarnicao == 1 ? 'checked' : '' ?> type="checkbox" class="form-check-input" id="teste_pratico">
+                                                <label class="form-check-label fw-semibold" for="escolhe_guarnicao">
+                                                    <i class="fa fa-percent me-1"></i>
+                                                    Pode Escolher Guarnição
                                                 </label>
                                             </div>
                                         </div>

@@ -3590,7 +3590,7 @@ order by total_pontos_somados desc");
     {
         $stmt = $this->pdo->prepare(
             "
-                    select e.teste_pratico, e.nota_av, ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, ce.id_especialidade, u.nome_completo, u.cpf, 
+                    select e.teste_pratico, e.nota_av, e.escolhe_guarnicao, ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, ce.id_especialidade, u.nome_completo, u.cpf, 
                     e.nome especialidade, e.musica, e.ott_stt, ce.registro_conselho, ce.data_habilitacao, ce.etapa, ce.apto_prova_teorico_pratico
                     from candidato_x_especialidade ce
                     inner join usuario u on u.id = ce.id_candidato
@@ -7063,7 +7063,7 @@ order by total_pontos_somados desc");
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Insere Especialidade">
-    public function insere_especialidade($nome, $teste, $nota_av, $ott_stt, $musica)
+    public function insere_especialidade($nome, $teste, $nota_av, $ott_stt, $musica, $escolhe_guarnicao)
     {
         $datetime = date('Y-m-d H:i:s');
         $usuario_cadastrou = $_SESSION['id_usuario'];
@@ -7072,9 +7072,9 @@ order by total_pontos_somados desc");
 
         try {
             $sqlInsert = "INSERT INTO especialidade
-            (id_selecao, nome, teste_pratico, nota_av, ott_stt, musica, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao)
+            (id_selecao, nome, teste_pratico, nota_av, escolhe_guarnicao, ott_stt, musica, apagado, _data_ultima_atualizacao, _usuario_ultima_atualizacao)
             VALUES
-            (:id_selecao, :nome, :teste, :nota_av, :ott_stt, :musica, :zero, :datetime, :usuario_cadastrou)";
+            (:id_selecao, :nome, :teste, :nota_av, :escolhe_guarnicao, :ott_stt, :musica, :zero, :datetime, :usuario_cadastrou)";
 
             $this->pdo->beginTransaction();
 
@@ -7084,6 +7084,7 @@ order by total_pontos_somados desc");
             $query->bindValue(":nome", $nome);
             $query->bindValue(":teste", $teste);
             $query->bindValue(":nota_av", $nota_av);
+            $query->bindValue(":escolhe_guarnicao", $escolhe_guarnicao);
             $query->bindValue(":ott_stt", $ott_stt);
             $query->bindValue(":musica", $musica);
             $query->bindValue(":datetime", $datetime);
@@ -7098,6 +7099,7 @@ order by total_pontos_somados desc");
                         'nome' => $nome,
                         'teste' => $teste,
                         'nota_av' => $nota_av,
+                        'escolhe_guarnicao' => $escolhe_guarnicao,
                         'ott_stt' => $ott_stt,
                         '_data_ultima_atualizacao' => $datetime,
                         '_usuario_ultima_atualizacao' => $usuario_cadastrou,

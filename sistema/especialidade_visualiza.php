@@ -195,7 +195,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
                             <div class="col-lg-12">
                                 <div class="row g-2">
-                                    <div class="col-lg-4" <?php if ($codigo_selecao != 'ott_stt') echo "hidden"; ?>>
+                                    <div class="col-lg-3" <?php if ($codigo_selecao != 'ott_stt') echo "hidden"; ?>>
                                         <div class="form-check card-checkbox">
                                             <input class="form-check-input" name="musica" type="checkbox" id="musica">
                                             <label class="form-check-label" for="musica">
@@ -204,7 +204,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-4" <?php if ($codigo_selecao == 'mfdv') echo "hidden"; ?>>
+                                    <div class="col-lg-3" <?php if ($codigo_selecao == 'mfdv') echo "hidden"; ?>>
                                         <div class="form-check card-checkbox">
                                             <input class="form-check-input" name="teste_pratico" type="checkbox" id="teste_pratico">
                                             <label class="form-check-label" for="teste_pratico">
@@ -213,11 +213,20 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-4" <?php if ($codigo_selecao == 'mfdv') echo "hidden"; ?>>
+                                    <div class="col-lg-3" <?php if ($codigo_selecao == 'mfdv') echo "hidden"; ?>>
                                         <div class="form-check card-checkbox">
                                             <input class="form-check-input" name="nota_av" type="checkbox" id="nota_av">
                                             <label class="form-check-label" for="nota_av">
                                                 <i class="fa fa-percent me-2"></i> Considerar NOTA na Avaliação Curricular
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3" <?php if ($codigo_selecao == 'mfdv') echo "hidden"; ?>>
+                                        <div class="form-check card-checkbox">
+                                            <input class="form-check-input" name="escolhe_guarnicao" type="checkbox" id="escolhe_guarnicao">
+                                            <label class="form-check-label" for="escolhe_guarnicao">
+                                                <i class="fa fa-map-marker me-2"></i> Pode Escolher Guarnição
                                             </label>
                                         </div>
                                     </div>
@@ -253,6 +262,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                         <th class="text-center"><i class="fa fa-music"></i> Música</th>
                                         <th class="text-center"><i class="fa fa-flask"></i> Teste Prático</th>
                                         <th class="text-center"><i class="fa fa-percent"></i> Condiserar Nota para AV</th>
+                                        <th class="text-center"><i class="fa fa-map-marker"></i> Pode Escolher Guarnição</th>
                                     <?php endif; ?>
                                     <th><i class="fa fa-map-marker"></i> Cidades</th>
                                     <th class="text-center"><i class="fa fa-cogs"></i> Ações</th>
@@ -271,6 +281,10 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                         "<span class='badge bg-secondary'><i class='fa fa-times'></i> Não</span>";
 
                                     $musica = $linha['musica'] == 1 ?
+                                        "<span class='badge bg-info'><i class='fa fa-check'></i> Sim</span>" :
+                                        "<span class='badge bg-secondary'><i class='fa fa-times'></i> Não</span>";
+
+                                    $escolhe_guarnicao = $linha['escolhe_guarnicao'] == 1 ?
                                         "<span class='badge bg-info'><i class='fa fa-check'></i> Sim</span>" :
                                         "<span class='badge bg-secondary'><i class='fa fa-times'></i> Não</span>";
 
@@ -300,7 +314,8 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                         echo '
                                     <td class="text-center">' . $musica . '</td>
                                     <td class="text-center">' . $teste . '</td>
-                                    <td class="text-center">' . $nota_av . '</td>';
+                                    <td class="text-center">' . $nota_av . '</td>
+                                    <td class="text-center">' . $escolhe_guarnicao . '</td>';
                                     }
 
                                     echo '

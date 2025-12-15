@@ -275,6 +275,40 @@ $especialidade_medico = false;
                 </div>
             </div>
 
+            <div class="card filter-card mb-4">
+                <div class="card-header filter-header mb-20">
+                    <span class="card-title mb-0">
+                        <i class="fa fa-map-marker me-2"></i>
+                        Liberar candidato para Escolher Guarnição
+                    </span>
+                </div>
+                <div class="card-body">
+                    <form name="fomulario" action="atualizar_candidato_escolhendo_guarnicao.php" method="POST" class="filter-form">
+                        <div class="row mb-20">
+                            <!-- Liberar candidato para Escolher Guarnição -->
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-graduation-cap me-1"></i>
+                                    Selecione o candidato
+                                </label>
+                                <select name="id_especialidade" class="form-control form-select-lg">
+                                    <option value="">Selecione a especialidade</option>
+                                    <?php foreach ($lista_candidatos as $candidato) : ?>
+                                        <option value=""><?=$candidato['nome_completo']?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-md btn-primary">Liberar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Includes dos Critérios de Desempate -->
             <?php if ($id_especialidade_selecionada != 0): ?>
                 <?php if (count($get_especialidade_selecionada) > 0 && ($_SESSION['perfil'] == 'admin' || $_SESSION['perfil'] == 'consulta')): ?>
@@ -328,7 +362,7 @@ $especialidade_medico = false;
                                     <th width="140px"><i class="fa fa-calendar"></i> Data Ex. Médico</th>
                                     <th width="120px"><i class="fa fa-pencil"></i> Nota Prova</th>
                                     <th width="120px"><i class="fa fa-percent"></i> AV. Currículo
-                                </th>
+                                    </th>
                                     <th width="80px" class="text-center"><i class="fa fa-cogs"></i> Ações</th>
                                 </tr>
                             </thead>

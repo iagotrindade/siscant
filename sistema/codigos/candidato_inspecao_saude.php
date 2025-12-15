@@ -66,11 +66,11 @@ include_once '../sistema/codigos/funcao_apagar.php';
                     <div class="col-lg-3 mb-20">
                         <label class="form-label fw-semibold">
                             <i class="fa fa-calendar me-1"></i>
-                            Data do Exame
+                            Data do Exame/Não Comparecimento
                         </label>
                         <input type="text"
                             name="data_exame_saude"
-                            value="<?= $data_exame_saude != null ? reverte_data($data_exame_saude) : '' ?>"
+                            value="<?= $data_exame_saude != null ? trata_data($data_exame_saude) : '' ?>"
                             class="form-control">
                     </div>
 
@@ -206,11 +206,12 @@ include_once '../sistema/codigos/funcao_apagar.php';
                     <div class="col-lg-3 mb-20">
                         <label class="form-label fw-semibold">
                             <i class="fa fa-calendar me-1"></i>
-                            Data do Exame
+                            Data do Exame/Não Comparecimento
                         </label>
                         <input type="text"
                             name="data_exame_saude_recurso"
-                            value="<?= $data_exame_saude_recurso != null ? reverte_data($data_exame_saude_recurso) : '' ?>"
+                            required
+                            value="<?= $data_exame_saude_recurso != null ? trata_data($data_exame_saude_recurso) : '' ?>"
                             class="form-control">
                     </div>
 

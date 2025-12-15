@@ -58,7 +58,7 @@ $html = "
 
         <tr>
             <td colspan='2' style='text-align:center; padding: 4px 0;'>
-                <div style='font-size: 14px; font-weight: 600; color: #2d5016; background: #e8f5e8; padding: 8px; border-radius: 6px; margin: 5px 0;'>
+                <div style='font-size: 14px; font-weight: 600; color: #2d5016; padding: 8px; border-radius: 6px; margin: 5px 0;'>
                     $nome_selecao
                 </div>
             </td>
@@ -66,7 +66,7 @@ $html = "
 
         <tr>
             <td style='padding: 15px 0 0 0; vertical-align: top;'>
-                <div style='background: white; padding: 12px; border-radius: 6px;'>
+                <div style='padding: 12px; border-radius: 6px;'>
                     <div style='font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #2d5016;'>
                         Candidato: <span style='font-weight: 700; color: #006400;'>" . mb_strtoupper($candidato[0]['nome_completo']) . "</span>
                     </div>

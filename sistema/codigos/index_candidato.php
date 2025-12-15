@@ -48,16 +48,19 @@ if (seleciona_cidade_vai_servir())
 
 // Verifica se ele foi desclassificado em alguma especialidade
 $get_especialidades_candidato = $conexao->get_especialidade_candidato($_SESSION['id_usuario']);
+
+$pode_escolher = false;
 $foi_desclassificado_em_especialida = false;
 foreach ($get_especialidades_candidato as $linha) {
     if ($linha['concorrendo'] == 0) $foi_desclassificado_em_especialida = true;
+    if ($linha['escolhe_guarnicao'] == 1) $pode_escolher = true;
 }
 ?>
 
 <!-- Escola de Guarnição OTT/STT/MFDV -->
 <?php $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 5 : 6; ?>
 
-<?php if ($concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] >= $etapa && !isset($_SESSION['eipot'])): ?>
+<?php if ($pode_escolher && $concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] >= $etapa && !isset($_SESSION['eipot'])): ?>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">

@@ -143,15 +143,16 @@ else
                                 foreach ($lista_candidatos as $linha):
 
                                     $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 4 : 5;
-                                    
+
                                     if (!$linha['vaga_reservada'] || $linha['etapa'] < $etapa) {
                                         continue;
                                     }
-                                    
+
                                     $pareceres = $conexao->get_pareceres_heteroidentificacao($linha['id']);
 
-                                    $parecerHc = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 1);
-                                    $parecerRevisora = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 2);
+                                    // Mantemos as chamadas de função originais para obter o texto completo
+                                    $parecerHcTexto = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 1);
+                                    $parecerRevisoraTexto = get_parecer_final_heteroidentificacao($linha['id'], $pareceres, 2);
 
                                     $pareceresFase1 = array_filter($pareceres, function ($parecer) {
                                         return $parecer['fase'] == 1;
@@ -161,37 +162,41 @@ else
                                         return $parecer['fase'] == 2;
                                     });
 
+                                    // Sobrescrevemos o texto caso esteja PENDENTE
                                     if (count($pareceresFase1) < 5) {
-                                        $parecerHc = 'PENDENTE';
-                                    }
-
-                                    if (count($pareceresFase2) < 3) {
-                                        $parecerRevisora = 'PENDENTE';
+                                        $parecerHcTexto = 'PENDENTE';
                                     }
 
                                     $aparece = true;
 
                                     if ($aparece == false) continue;
-
                                     if ($linha['id_selecao'] != $_SESSION['selecao']) continue;
 
                                     $hc = '';
-
 
                                     // Recurso Etapa 3
                                     $recursoHeteroidentificacao = 'NÃO';
                                     $recurso_class = 'secondary';
 
                                     foreach ($recursos as $recurso) {
-                                        $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 4 : 5;
+                                        $etapaLoop = $_SESSION['selecao_codigo'] == 'mfdv' ? 4 : 5;
 
-                                        if ($recurso['etapa'] == $etapa && $recurso['id_candidato'] == $linha['id']) {
+                                        if ($recurso['etapa'] == $etapaLoop && $recurso['id_candidato'] == $linha['id']) {
                                             $recursoHeteroidentificacao = 'SIM';
                                             $recurso_class = 'primary';
+
+                                            if (count($pareceresFase2) < 3) {
+                                                $parecerRevisoraTexto = 'PENDENTE'; // Usa a variável de texto simples
+                                            }
                                             break;
                                         } else {
+                                            // Este ELSE dentro do loop parece ter uma lógica confusa no original, 
+                                            // mas mantive a sobrescrita para resolver o seu problema:
                                             $recursoHeteroidentificacao = 'NÃO';
                                             $recurso_class = 'primary';
+                                            if (count($pareceresFase2) < 3) {
+                                                $parecerRevisoraTexto = 'NÃO HÁ RECURSO'; // Usa a variável de texto simples
+                                            }
                                         }
                                     }
 
@@ -235,12 +240,28 @@ else
                                             </div>
                                         </td>
 
+                                        <!-- PARECER HC (MODIFICADO AQUI) -->
                                         <td class="text-center">
-                                            <span class="badge bg-primary"><?= $parecerHc ?></span>
+                                            <span class="badge bg-primary">
+                                                <?php $partesHc = explode('(', $parecerHcTexto); ?>
+                                                <?= htmlspecialchars(trim($partesHc[0])) ?>
+                                                <?php if (isset($partesHc)): // Verifica se existe o índice 1 
+                                                ?>
+                                                    <br> <?= htmlspecialchars(trim($partesHc[1], ' )')) ?>
+                                                <?php endif; ?>
+                                            </span>
                                         </td>
 
+                                        <!-- PARECER REVISORA (MODIFICADO AQUI) -->
                                         <td class="text-center">
-                                            <span class="badge bg-primary"><?= $parecerRevisora ?></span>
+                                            <span class="badge bg-primary">
+                                                <?php $partesRevisora = explode('(', $parecerRevisoraTexto); ?>
+                                                <?= htmlspecialchars(trim($partesRevisora[0])) ?>
+                                                <?php if (isset($partesRevisora)): // Verifica se existe o índice 1 
+                                                ?>
+                                                    <br> <?= htmlspecialchars(trim($partesRevisora[1], ' )')) ?>
+                                                <?php endif; ?>
+                                            </span>
                                         </td>
 
                                         <td class="text-center">

@@ -123,7 +123,7 @@ foreach ($inscricoes as $valor) {
     }
 ?>
     <!-- Card da Especialidade -->
-    <div class="card dashboard-card mb-20" <?= isset($avaliador_pode_avaliar_id_especialidade) && !$avaliador_pode_avaliar_id_especialidade ? "hidden" : "" ?>>
+    <div class="card dashboard-card mb-20" <?= isset($avaliador_pode_avaliar_id_especialidade) && !$avaliador_pode_avaliar_id_especialidade && $_SESSION['perfil'] != 'admin' ? "hidden" : "" ?>>
         <div class="card-header dashboard-header d-flex justify-content-between align-items-center mb-20">
             <span class="card-title mb-0">
                 <i class="fa fa-graduation-cap me-2"></i>
