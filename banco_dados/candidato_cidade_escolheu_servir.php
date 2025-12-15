@@ -245,7 +245,9 @@ if (count($vetor_ordenado_candidatos) > 0) {
 // Mapa de vagas (AC/CN) - FUNCIONA PARA QUALQUER QUANTIDADE
 // ---------------------------
 $total_vagas = 0;
-foreach ($get_vagas_especialidade as $vaga) $total_vagas += (int)$vaga['vagas'];
+
+$vagas = $conexao->get_cidades_especialidade($id_especialidade);
+foreach ($vagas as $vaga) $total_vagas += (int)$vaga['numero_vagas'];
 
 $mapa_vagas = gerar_mapa_vagas($selecao[0]['codigo'], $total_vagas);
 

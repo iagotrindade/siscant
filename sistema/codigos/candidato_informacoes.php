@@ -640,10 +640,6 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
             include_once 'codigos/candidato_especialidades.php';
         }
 
-        if ($_SESSION['perfil'] == 'admin') {
-            include_once 'codigos/candidato_especialidades.php';
-        }
-
         if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'avaliador' && $_SESSION['perfil'] != 'candidato' && $_SESSION['candidato'] != '0') {
             include_once 'codigos/candidato_especialidades_visualiza.php';
         }

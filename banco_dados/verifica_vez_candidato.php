@@ -294,6 +294,7 @@ if (empty($candidatos_nao_escolheram)) {
     exit();
 }
 
+$vaga_revertida = ''; // Inicializa como não é vaga revertida
 
 // Se a próxima vaga é AC: primeiro candidato na fila
 if ($tipo_proxima_vaga === 'AC') {
@@ -342,6 +343,8 @@ if ($tipo_proxima_vaga === 'AC') {
 
         // Se não encontrou cotista (todos já escolheram)
         if ($candidato_deve_escolher_id === null) {
+            $vaga_revertida = '(Vaga de COTA revertida para AMPLA CONCORRÊNCIA por não haver mais COTISTAS elegíveis.)';
+            // PRECISA DE AMPLA CONCORRÊNCIA: busca o próximo candidato na fila
             // Não há mais cotistas → pode ser qualquer candidato
             $candidato_deve_escolher_id = $candidatos_nao_escolheram[0]['id'];
             $candidato_deve_escolher_nome = $candidatos_nao_escolheram[0]['nome'];
@@ -377,7 +380,7 @@ if ($candidato_deve_escolher_id == $user_id) {
             'vagas_restantes' => $total_vagas - $escolheram,
             'proxima_vaga_numero' => $proxima_vaga_numero,
             'tipo_proxima_vaga' => $tipo_proxima_vaga == 'CN' ? 'COTA' : 'AMPLA CONCORRÊNCIA',
-            'cota_revertida' => 'Vaga de COTA revertida para AMPLA CONCORRÊNCIA por não haver mais COTISTAS elegíveis.',
+            'cota_revertida' => $vaga_revertida,
             'sua_posicao' => array_search($user_id, array_column($vetor_ordenado_candidatos, 'id')) + 1
         ]
     ]);

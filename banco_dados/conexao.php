@@ -11023,6 +11023,7 @@ order by total_pontos_somados desc");
                 u.nome_completo,
                 u.nome_guerra,
                 u.posto_grad,
+                u.perfil,
                 u.mail AS email_usuario
             FROM feedbacks AS f
             LEFT JOIN usuario AS u ON f.id_usuario = u.id

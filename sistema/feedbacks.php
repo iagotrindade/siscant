@@ -472,7 +472,7 @@ foreach ($usuarios_banidos as $banido) {
                         <span class="fw-bold">
                             <i class="fa fa-comments me-2"></i> Feedbacks dos Usuários
                         </span>
-                        <button class="btn btn-sm btn-outline-light" id="toggleNotifications" style="background: transparent !important;">
+                        <button class="btn btn-sm btn-outline-light" id="toggleCards" style="background: transparent !important;">
                             <i class="fa fa-chevron-down"></i>
                         </button>
                     </div>
@@ -571,6 +571,8 @@ foreach ($usuarios_banidos as $banido) {
                                             $classBadge = $cores_tipo[$feedback['tipo']] ?? '';
                                             if (empty($classBadge)) continue;
 
+                                            if ($_SESSION['perfil'] != 'admin' && $feedback['perfil'] == 'admin') continue;
+
                                             $userLiked = false;
 
                                             if (!empty($feedback['likes']) && is_array($feedback['likes'])) {
@@ -620,53 +622,30 @@ foreach ($usuarios_banidos as $banido) {
 
                                                     <div class="card-footer bg-transparent mb-0" style="border: none;">
                                                         <div class="d-flex justify-content-between align-items-center mb-10">
-                                                            <small class="text-muted">
-                                                                <i class="fa fa-user me-1"></i>
-                                                                <?php if ($_SESSION['perfil'] == 'admin'): ?>
-                                                                    <?= $feedback['nome_completo'] ?>
-                                                                <?php else: ?>
-                                                                    <?php
-                                                                    $n = explode(' ', trim($feedback['nome_completo']));
-
-                                                                    if (count($n) > 1) {
-                                                                        // primeiro nome
-                                                                        $out = $n[0] . ' ';
-
-                                                                        // segundo nome mascarado
-                                                                        $out .= substr($n[1], 0, 3) . str_repeat('*', max(strlen($n[1]) - 3, 0));
-
-                                                                        // demais nomes totalmente mascarados
-                                                                        for ($i = 2; $i < count($n); $i++) {
-                                                                            $out .= ' ' . str_repeat('*', strlen($n[$i]));
-                                                                        }
-
-                                                                        echo $out;
-                                                                    } else {
-                                                                        echo $n[0];
-                                                                    } ?>
-                                                                <?php endif; ?>
-                                                            </small>
                                                             <?php if ($_SESSION['perfil'] == 'admin'): ?>
+                                                                <small class="text-muted">
+                                                                    <i class="fa fa-user me-1"></i>
+                                                                    <?= $feedback['nome_completo'] ?>
+                                                                </small>
+
                                                                 <small class="text-muted">
                                                                     <i class="fa fa-clock-o me-1"></i>
                                                                     <?= trata_data_hora($feedback['criado_em']) ?>
                                                                 </small>
+
+                                                                <form action="../banco_dados/feedback_atualiza_status.php" method="post" class="mt-2">
+                                                                    <input type="hidden" name="criptografia" value="<?= hash('sha256', $_SESSION['assinatura_sistema']) ?>">
+                                                                    <input type="hidden" name="id_feedback" value="<?= $feedback['id'] ?>">
+                                                                    <select name="status" onchange="this.form.submit()" class="form-select form-control">
+                                                                        <option value="analise" <?= $feedback['status'] == 'analise' ? 'selected' : '' ?>>Em análise</option>
+                                                                        <option value="rejeitado" <?= $feedback['status'] == 'rejeitado' ? 'selected' : '' ?>>Rejeitado</option>
+                                                                        <option value="aceito" <?= $feedback['status'] == 'aceito' ? 'selected' : '' ?>>Aceito</option>
+                                                                        <option value="desenvolvimento" <?= $feedback['status'] == 'desenvolvimento' ? 'selected' : '' ?>>Em desenvolvimento</option>
+                                                                        <option value="concluido" <?= $feedback['status'] == 'concluido' ? 'selected' : '' ?>>Concluído</option>
+                                                                    </select>
+                                                                </form>
                                                             <?php endif; ?>
                                                         </div>
-
-                                                        <?php if ($_SESSION['perfil'] == 'admin'): ?>
-                                                            <form action="../banco_dados/feedback_atualiza_status.php" method="post" class="mt-2">
-                                                                <input type="hidden" name="criptografia" value="<?= hash('sha256', $_SESSION['assinatura_sistema']) ?>">
-                                                                <input type="hidden" name="id_feedback" value="<?= $feedback['id'] ?>">
-                                                                <select name="status" onchange="this.form.submit()" class="form-select form-control">
-                                                                    <option value="analise" <?= $feedback['status'] == 'analise' ? 'selected' : '' ?>>Em análise</option>
-                                                                    <option value="rejeitado" <?= $feedback['status'] == 'rejeitado' ? 'selected' : '' ?>>Rejeitado</option>
-                                                                    <option value="aceito" <?= $feedback['status'] == 'aceito' ? 'selected' : '' ?>>Aceito</option>
-                                                                    <option value="desenvolvimento" <?= $feedback['status'] == 'desenvolvimento' ? 'selected' : '' ?>>Em desenvolvimento</option>
-                                                                    <option value="concluido" <?= $feedback['status'] == 'concluido' ? 'selected' : '' ?>>Concluído</option>
-                                                                </select>
-                                                            </form>
-                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -683,25 +662,25 @@ foreach ($usuarios_banidos as $banido) {
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/plugins/select2.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script>
     $('#tabela_banimentos').DataTable();
 
     // Contador de caracteres
-    document.getElementById('notificationMessage').addEventListener('input', function() {
+    document.getElementById('descricao').addEventListener('input', function() {
         const charCount = this.value.length;
         document.getElementById('charCount').textContent = charCount;
     });
 
     // Alternar visibilidade das notificações
-    document.getElementById('toggleNotifications').addEventListener('click', function() {
+    document.getElementById('toggleCards').addEventListener('click', function() {
         const feedbackList = document.getElementById('feedbackList');
         const icon = this.querySelector('i');
 
         if (feedbackList.style.display === 'none') {
-            feedbackList.style.display = 'block';
+            feedbackList.style.display = 'grid';
             icon.classList.remove('fa-chevron-down');
             icon.classList.add('fa-chevron-up');
         } else {
@@ -716,7 +695,7 @@ foreach ($usuarios_banidos as $banido) {
         const notificationMessage = document.getElementById('descricao');
         const charCount = document.getElementById('charCount');
         const feedbackList = document.getElementById('feedbackList');
-        const toggleNotifications = document.getElementById('toggleNotifications');
+        const toggleCards = document.getElementById('toggleCards');
 
         // Contador de caracteres
         notificationMessage.addEventListener('input', function() {
@@ -724,14 +703,14 @@ foreach ($usuarios_banidos as $banido) {
         });
 
         // Alternar visualização da lista de notificações
-        toggleNotifications.addEventListener('click', function() {
+        toggleCards.addEventListener('click', function() {
             const notificationsCardBody = feedbackList.parentElement;
             if (notificationsCardBody.style.display === 'none') {
                 notificationsCardBody.style.display = 'block';
-                toggleNotifications.innerHTML = '<i class="fa fa-chevron-down"></i>';
+                toggleCards.innerHTML = '<i class="fa fa-chevron-down"></i>';
             } else {
                 notificationsCardBody.style.display = 'none';
-                toggleNotifications.innerHTML = '<i class="fa fa-chevron-up"></i>';
+                toggleCards.innerHTML = '<i class="fa fa-chevron-up"></i>';
             }
         });
     });

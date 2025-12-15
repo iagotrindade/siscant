@@ -409,6 +409,13 @@ $datetime = date('d/m/Y H:i:s');
                                                 <?php endif; ?>
                                             </div>
                                         </div>
+
+                                        <?php if (!$tem_vaga_ && $value['cidade_escolheu_servir'] == null) : ?>
+                                            <div class="alert alert-warning alert-vez-container" role="status">
+                                                <h4 class="alert-heading mb-0"><i class="fa fa-ban me-2"></i> Não há mais vagas para esta Especialidade!</h4>
+                                                <p class="mb-1">Caso surjam novas vagas entraremos em contato com os candidatos que desistiram das vagas ofertadas ou que a escolha não tenha atingido, respeitando a ordem de classificação e o sistema de cotas.</p>
+                                            </div>
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
@@ -452,6 +459,7 @@ $datetime = date('d/m/Y H:i:s');
 
     // Função para verificar no servidor a ordem dos candidatos
     async function verificarVezNoServidor(idEspecialidade, userId) {
+        console.log("ok");
         const formData = new FormData();
         formData.append('id_especialidade', idEspecialidade);
         formData.append('user_id', userId);
@@ -498,7 +506,7 @@ $datetime = date('d/m/Y H:i:s');
                 html += `<p class="mb-1"><strong>Seu critério de Escolha:</strong> ${informacoesAdicionais.condicao_candidato}</p>`;
             }
             if (informacoesAdicionais.tipo_proxima_vaga) {
-                html += `<p class="mb-1"><strong>Critério da vaga atual:</strong> ${informacoesAdicionais.tipo_proxima_vaga} (${informacoesAdicionais.cota_revertida})</p>`;
+                html += `<p class="mb-1"><strong>Critério da vaga atual:</strong> ${informacoesAdicionais.tipo_proxima_vaga} ${informacoesAdicionais.cota_revertida}</p>`;
             }
             if (informacoesAdicionais.posicao_usuario) {
                 html += `<p class="mb-1"><strong>Sua posição na fila:</strong> ${informacoesAdicionais.posicao_usuario}º</p>`;
@@ -549,7 +557,7 @@ $datetime = date('d/m/Y H:i:s');
                 html += `<p class="mb-1"><strong>Sua condição:</strong> ${informacoesAdicionais.condicao_candidato}</p>`;
             }
             if (informacoesAdicionais.tipo_proxima_vaga) {
-                html += `<p class="mb-1"><strong>Critério da vaga atual:</strong> ${informacoesAdicionais.tipo_proxima_vaga} (${informacoesAdicionais.cota_revertida})</p>`;
+                html += `<p class="mb-1"><strong>Critério da vaga atual:</strong> ${informacoesAdicionais.tipo_proxima_vaga} ${informacoesAdicionais.cota_revertida}</p>`;
             }
             if (informacoesAdicionais.sua_posicao) {
                 html += `<p class="mb-1"><strong>Sua posição na fila:</strong> ${informacoesAdicionais.sua_posicao}º</p>`;
