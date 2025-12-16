@@ -283,18 +283,24 @@ $especialidade_medico = false;
                     </span>
                 </div>
                 <div class="card-body">
-                    <form name="fomulario" action="atualizar_candidato_escolhendo_guarnicao.php" method="POST" class="filter-form">
+                    <form name="fomulario" action="../banco_dados/atualizar_candidato_escolhendo_guarnicao.php" method="POST" class="filter-form">
+                        <input type="hidden" name="id_especialidade" value="<?= $id_especialidade_selecionada ?>">
                         <div class="row mb-20">
                             <!-- Liberar candidato para Escolher Guarnição -->
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">
                                     <i class="fa fa-graduation-cap me-1"></i>
-                                    Selecione o candidato
+                                    Selecione o candidato desejado
                                 </label>
                                 <select name="id_especialidade" class="form-control form-select-lg">
-                                    <option value="">Selecione a especialidade</option>
+                                    <option value="">Selecione o candidato</option>
+
                                     <?php foreach ($lista_candidatos as $candidato) : ?>
-                                        <option value=""><?=$candidato['nome_completo']?></option>
+                                        <?php
+                                        $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 5 : 6;
+                                        if ($candidato['etapa'] < $etapa) continue;
+                                        ?>
+                                        <option value="<?= $candidato['id'] ?>"><?= $candidato['nome_completo'] . " / CPF: " . mascara($candidato['cpf'], '###.###.###-##') ?> </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
