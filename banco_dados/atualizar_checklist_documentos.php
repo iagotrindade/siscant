@@ -72,8 +72,6 @@ if ($_POST) {
                 $tipo_documento_val = isset($dados['tipo_documento']) ? $dados['tipo_documento'] : $tipo_documento;
                 $id_checklist_existente = isset($dados['id_checklist']) ? $dados['id_checklist'] : null;
 
-                echo "Processando: ID Doc: $id_documento_val, Tipo: $tipo_documento_val, Entregue: $entregue<br>";
-
                 $resultado = $conexao->atualiza_checklist_documentos(
                     $id_candidato,
                     $id_especialidade,

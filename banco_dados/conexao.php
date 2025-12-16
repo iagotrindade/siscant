@@ -2502,7 +2502,7 @@ class Conexao
     {
         $stmt = $this->pdo->prepare("
         SELECT 
-            u.*, 
+            u.*,
             u.etapa AS etapa_candidato,
             c.nome AS cidade_escolheu_servir, 
             ce.id AS id_ce, 
@@ -7468,6 +7468,48 @@ order by total_pontos_somados desc");
             }
         }
         return $data;
+    }
+
+    public function atualiza_candidato_escolhendo($id_especialidade, $id_candidato)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        // Certifique-se de que a sessão foi iniciada e a variável existe
+        $usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : null;
+
+        try {
+            // CORREÇÃO AQUI: Removidas as aspas simples ao redor dos placeholders nomeados.
+            // Os placeholders do PDO (iniciados com :) não devem ter aspas na string SQL.
+            $sqlInsert = "UPDATE especialidade SET id_candidato_escolhendo_guarnicao = :id_candidato WHERE id = :id_especialidade";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            // Vinculando os valores
+            $query->bindValue(":id_especialidade", $id_especialidade);
+            $query->bindValue(":id_candidato", $id_candidato);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'id_especialidade' => $id_especialidade,
+                        'id_candidato' => $id_candidato,
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                // Opcional: logar $query->errorInfo() para depuração
+                return false;
+            }
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            // Opcional: logar $e->getMessage() para depuração
+            return false;
+        }
+        // Este retorno final é redundante, pois o catch já retorna false
     }
     // </editor-fold>
 

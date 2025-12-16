@@ -37,7 +37,7 @@
         <div class="card-header dashboard-header bg-primary text-white mb-20">
             <span class="card-title mb-0">
                 <i class="fa fa-clipboard me-2"></i>
-                Checklist de Documentos
+                Anexo "C" Conferência Presencial Documentos Inseridos na Inscrição 
             </span>
         </div>
         <div class="card-body">
@@ -103,11 +103,11 @@
 
                                 <div class="row">
                                     <!-- Documentos Pessoais -->
-                                    <div class="col-lg-6 mb-4">
-                                        <h5 class="fw-semibold border-bottom pb-2 mb-3">
+                                    <div class="col-lg-6">
+                                        <h4 class="fw-semibold border-bottom pb-2 mb-3">
                                             <i class="fa fa-id-card me-2 text-primary"></i>
-                                            Documentos Pessoais
-                                        </h5>
+                                            Documentos Obrigatórios
+                                        </h4>
 
                                         <div class="checklist-group">
                                             <?php
@@ -154,11 +154,11 @@
                                     </div>
 
                                     <!-- Documentos Curriculares -->
-                                    <div class="col-lg-6 mb-4">
-                                        <h5 class="fw-semibold border-bottom pb-2 mb-3">
+                                    <div class="col-lg-6">
+                                        <h4 class="fw-semibold border-bottom pb-2 mb-3">
                                             <i class="fa fa-graduation-cap me-2 text-success"></i>
                                             Documentos Curriculares
-                                        </h5>
+                                        </h4>
 
                                         <div class="checklist-group">
                                             <?php

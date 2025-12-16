@@ -85,6 +85,7 @@ foreach ($lista_especialidades as &$especialidade) {
                 $pontuacao_curriculo = round($pontuacao_curriculo + $nota_prova_teorico_pratico, 2);
             }
         }
+        
         ////////////////////////////////////////////
         // CASO SEJA DE MÚSICA
         if ($especialidade['musica'] == '1') {

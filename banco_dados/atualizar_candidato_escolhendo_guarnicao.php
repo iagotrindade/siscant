@@ -35,21 +35,21 @@ if ($especialidade_editar[0]['apagado'] == 1) {
 if ($id_especialidade && $id_candidato) {
     $resultado = $conexao->atualiza_candidato_escolhendo($id_especialidade, $id_candidato);
     $alteracoes_detalhadas =  print_r($resultado, true);
-    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $id_especialidade, "16111", "cidade_x_especialidade", "Update", "Atualizou as cidades da especialidade " . $especialidade_editar[0]['nome'], $alteracoes_detalhadas);
+    $insere_log = $conexao->insere_log($_SESSION['id_usuario'], $_SESSION['cpf'], $id_especialidade, "16111", "especialidade", "Update", "Atualizou o candidato que pode escolher Guarnição " . $especialidade_editar[0]['nome'], $alteracoes_detalhadas);
 
     $conexao = null;
 
     // 12/07/2025 -> Iago Silva -> Alteração para redirecionar para a página de edição da especialidade de acordo com a Seleção
     if (isset($_SESSION['eipot'])) {
-        header("Location: ../sistema/especialidade_eipot_editar.php?id_especialidade=$id_especialidade&sucesso=1");
+        header("Location: ../sistema/especialidade_eipot_editar.php?id_especialidade=$id_especialidade");
     } else {
-        header("Location: ../sistema/especialidade_editar.php?id_especialidade=$id_especialidade&sucesso=1");
+        header("Location: ../sistema/relatorio_especialidade_candidato.php?id_especialidade=$id_especialidade");
     }
 } else {
     $conexao = null;
     if (isset($_SESSION['eipot'])) {
-        header("Location: ../sistema/especialidade_eipot_editar.php?id_especialidade=$id_especialidade&sucesso=1");
+        header("Location: ../sistema/relatorio_especialidade_candidato.php?id_especialidade=$id_especialidade");
     } else {
-        header("Location: ../sistema/especialidade_editar.php?id_especialidade=$id_especialidade&sucesso=1");
+        header("Location: ../sistema/relatorio_especialidade_candidato.php?id_especialidade=$id_especialidade");
     }
 }
