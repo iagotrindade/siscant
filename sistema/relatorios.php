@@ -876,6 +876,7 @@ $lista_especialidades = $conexao->get_especialidade();
                         <span class="fw-semibold">
                             <i class="fa fa-gavel me-2"></i>
                             Resultado da Análise de Recursos Etapa III
+
                         </span>
                     </div>
                     <div class="card-body">
@@ -915,17 +916,106 @@ $lista_especialidades = $conexao->get_especialidade();
                                     <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="2">A presente relação NÃO está em ordem de classificação.</textarea>
                                 </div>
 
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Data e OM - ISGR</label>
+                                    <input name="data_grupo_um" type="text" class="form-control">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Endereço - ISGR</label>
+                                    <input name="endereco_grupo_um" type="text" class="form-control">
+                                </div>
+
+                                <?php
+                                $candidatos_recurso = [];
+
+                                $recursos = $conexao->get_recursos();
+
+                                foreach ($recursos as $recurso) {
+                                    if ($recurso['etapa'] == 3 && $recurso['obs_etapa'] == '3 - IS' && $recurso['id_selecao'] == $_SESSION['selecao']) {
+                                        $candidatos_recurso[] = $recurso;
+                                    }
+                                }
+                                ?>
+
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">1ª Guarnição - ISGR</label>
-                                    <input name="guarnicao_um" type="text" class="form-control" value="27 OUT 25 ÀS 0800h – POLICLÍNICA MILITAR DE PORTO ALEGRE">
+                                    <label class="form-label fw-semibold">1º Dia</label>
+
+                                    <select name="candidatos[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <option value="<?= htmlspecialchars($candidato['id']) ?>">
+                                                <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">Endereço - ISGR</label>
-                                    <input name="endereco_um" type="text" class="form-control" value="Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS">
+                                    <label class="form-label fw-semibold">2º Dia</label>
+
+                                    <select name="candidatos[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <option value="<?= htmlspecialchars($candidato['id']) ?>">
+                                                <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
-                                
-                                
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">3º Dia</label>
+
+                                    <select name="candidatos[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <option value="<?= htmlspecialchars($candidato['id']) ?>">
+                                                <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Data Inicial - Primeiro Local</label>
+                                    <input name="data_inicial_primeiro_local" type="text" class="form-control" value="27/10/2025">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Data Final - Primeiro Local</label>
+                                    <input name="data_final_primeiro_local" type="text" class="form-control" value="29/10/2025">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Horário - Primeiro Local</label>
+                                    <input name="horario_primeiro_local" type="text" class="form-control" value="0800h">
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">2ª OM</label>
+                                    <select name="segunda_om" class="form-control">
+                                        <option value="">Selecione a opção</option>
+                                        <?php
+                                        $oms = $conexao->get_oms($rm_usuario);
+                                        foreach ($oms as $value) {
+                                            echo '<option value="' . $value['id'] . '">' . $value['nome'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Data Inicial - Segundo Local</label>
+                                    <input name="data_inicial_segundo_local" type="text" class="form-control" value="27/10/2025">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Data Final - Segundo Local</label>
+                                    <input name="data_final_segundo_local" type="text" class="form-control" value="29/10/2025">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Horário - Segundo Local</label>
+                                    <input name="horario_segundo_local" type="text" class="form-control" value="0800h">
+                                </div>
 
                                 <div class="col-md-12">
                                     <button type="submit" class="btn btn-primary w-100">
