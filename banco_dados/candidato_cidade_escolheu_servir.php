@@ -388,7 +388,7 @@ if ($candidato_deve_escolher_id != $id_usuario) {
     }
 
     $conexao = null;
-    erro("Erro 4575384323523! Não é sua vez de escolher. O próximo candidato a escolher é: $nome_candidato_deve_escolher");
+    erro("Erro 4575384323523! Não é sua vez de escolher.");
     exit();
 }
 
