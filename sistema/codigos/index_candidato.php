@@ -60,7 +60,7 @@ foreach ($get_especialidades_candidato as $linha) {
 <!-- Escola de Guarnição OTT/STT/MFDV -->
 <?php $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 5 : 6; ?>
 
-<?php if ($pode_escolher && $concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] >= $etapa && !isset($_SESSION['eipot'])): ?>
+<?php if ($pode_escolher = true && $concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] >= $etapa && !isset($_SESSION['eipot'])): ?>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">

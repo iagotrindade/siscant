@@ -135,7 +135,7 @@ foreach ($lista_candidatos as $linha) {
 
     $get_pontuacao_provas = $conexao->verifica_especialidade_candidato($linha['id'], $id_especialidade);
     $nota_prova_teorico_pratico = 0;
-    if (count($get_pontuacao_provas) > 0 && isset($get_pontuacao_provas['nota_av']) && $get_pontuacao_provas['nota_av'] == '1') {
+    if (count($get_pontuacao_provas) > 0 && isset($get_pontuacao_provas[0]['nota_av']) && $get_pontuacao_provas[0]['nota_av'] == '1') {
         $nota_prova_teorico_pratico = (float)$get_pontuacao_provas[0]['nota_prova_teorico_pratico'];
         $pontuacao_curriculo = round($pontuacao_curriculo + $nota_prova_teorico_pratico, 2);
     }
