@@ -916,16 +916,6 @@ $lista_especialidades = $conexao->get_especialidade();
                                     <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="2">A presente relação NÃO está em ordem de classificação.</textarea>
                                 </div>
 
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">Data e OM - ISGR</label>
-                                    <input name="data_grupo_um" type="text" class="form-control">
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">Endereço - ISGR</label>
-                                    <input name="endereco_grupo_um" type="text" class="form-control">
-                                </div>
-
                                 <?php
                                 $candidatos_recurso = [];
 
@@ -938,83 +928,224 @@ $lista_especialidades = $conexao->get_especialidade();
                                 }
                                 ?>
 
-                                <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">1º Dia</label>
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Data Inicial do Recurso</label>
+                                    <input name="data_inicial" style="height: 44px;" type="date" class="form-control">
+                                </div>
 
-                                    <select name="candidatos[]" class="form-control select2" multiple>
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Data Final do Recurso</label>
+                                    <input name="data_final" style="height: 44px;" type="date" class="form-control">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold" for="om_grupo_um">OM - ISGR</label>
+                                    <input name="om_grupo_um" type="text" class="form-control" value="POLICLÍNICA MILITAR DE PORTO ALEGRE">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">1º Endereço - ISGR</label>
+                                    <input name="endereco_grupo_um" type="text" class="form-control" value="Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 1º Dia - ISGR</label>
+                                    <input name="data_grupo_um_dia_um" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 2º Dia - ISGR</label>
+                                    <input name="data_grupo_um_dia_dois" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 3º Dia - ISGR</label>
+                                    <input name="data_grupo_um_dia_tres" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Candidatos 1º Dia</label>
+
+                                    <select name="candidatos_grupo_um_dia_um[]" class="form-control select2" multiple>
                                         <?php foreach ($candidatos_recurso as $candidato): ?>
-                                            <option value="<?= htmlspecialchars($candidato['id']) ?>">
-                                                <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
-                                            </option>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
 
-                                <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">2º Dia</label>
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Candidatos 2º Dia</label>
 
-                                    <select name="candidatos[]" class="form-control select2" multiple>
+                                    <select name="candidatos_grupo_um_dia_dois[]" class="form-control select2" multiple>
                                         <?php foreach ($candidatos_recurso as $candidato): ?>
-                                            <option value="<?= htmlspecialchars($candidato['id']) ?>">
-                                                <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">3º Dia</label>
-
-                                    <select name="candidatos[]" class="form-control select2" multiple>
-                                        <?php foreach ($candidatos_recurso as $candidato): ?>
-                                            <option value="<?= htmlspecialchars($candidato['id']) ?>">
-                                                <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
-                                            </option>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
-                                    <label class="form-label fw-semibold">Data Inicial - Primeiro Local</label>
-                                    <input name="data_inicial_primeiro_local" type="text" class="form-control" value="27/10/2025">
+                                    <label class="form-label fw-semibold">Candidatos 3º Dia</label>
+
+                                    <select name="candidatos_grupo_um_dia_tres[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">2ª Data e OM - ISGR</label>
+                                    <input name="om_grupo_dois" type="text" class="form-control" value="HOSPITAL GERAL DE SANTA MARIA">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">2º Endereço - ISGR</label>
+                                    <input name="endereco_grupo_dois" type="text" class="form-control" value="R Mal Hermes, 190 – Passo D'areia, Santa Maria/RS">
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
-                                    <label class="form-label fw-semibold">Data Final - Primeiro Local</label>
-                                    <input name="data_final_primeiro_local" type="text" class="form-control" value="29/10/2025">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 1º Dia - ISGR</label>
+                                    <input name="data_grupo_dois_dia_um" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
-                                    <label class="form-label fw-semibold">Horário - Primeiro Local</label>
-                                    <input name="horario_primeiro_local" type="text" class="form-control" value="0800h">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 2º Dia - ISGR</label>
+                                    <input name="data_grupo_dois_dia_dois" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
                                 </div>
 
-                                <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">2ª OM</label>
-                                    <select name="segunda_om" class="form-control">
-                                        <option value="">Selecione a opção</option>
-                                        <?php
-                                        $oms = $conexao->get_oms($rm_usuario);
-                                        foreach ($oms as $value) {
-                                            echo '<option value="' . $value['id'] . '">' . $value['nome'] . '</option>';
-                                        }
-                                        ?>
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 3º Dia - ISGR</label>
+                                    <input name="data_grupo_dois_dia_tres" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Candidatos 1º Dia</label>
+
+                                    <select name="candidatos_grupo_dois_dia_um[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
-                                    <label class="form-label fw-semibold">Data Inicial - Segundo Local</label>
-                                    <input name="data_inicial_segundo_local" type="text" class="form-control" value="27/10/2025">
+                                    <label class="form-label fw-semibold">Candidatos 2º Dia</label>
+
+                                    <select name="candidatos_grupo_dois_dia_dois[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
-                                    <label class="form-label fw-semibold">Data Final - Segundo Local</label>
-                                    <input name="data_final_segundo_local" type="text" class="form-control" value="29/10/2025">
+                                    <label class="form-label fw-semibold">Candidatos 3º Dia</label>
+
+                                    <select name="candidatos_grupo_dois_dia_tres[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">3ª Data e OM - ISGR</label>
+                                    <input name="om_grupo_tres" type="text" class="form-control" value="POLICLÍNICA MILITAR DE PORTO ALEGRE">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">3º Endereço - ISGR</label>
+                                    <input name="endereco_grupo_tres" type="text" class="form-control" value="Avenida João Pessoa, 651 – Cidade Baixa, Porto Alegre/RS">
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
-                                    <label class="form-label fw-semibold">Horário - Segundo Local</label>
-                                    <input name="horario_segundo_local" type="text" class="form-control" value="0800h">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 1º Dia - ISGR</label>
+                                    <input name="data_grupo_tres_dia_um" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 2º Dia - ISGR</label>
+                                    <input name="data_grupo_tres_dia_dois" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold" for="data_grupo_um">DATA/HORA 3º Dia - ISGR</label>
+                                    <input name="data_grupo_tres_dia_tres" type="text" class="form-control" value="27 OUT 25 ÀS 0800h">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Candidatos 1º Dia</label>
+
+                                    <select name="candidatos_grupo_tres_dia_um[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Candidatos 2º Dia</label>
+
+                                    <select name="candidatos_grupo_tres_dia_dois[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Candidatos 3º Dia</label>
+
+                                    <select name="candidatos_grupo_tres_dia_tres[]" class="form-control select2" multiple>
+                                        <?php foreach ($candidatos_recurso as $candidato): ?>
+                                            <?php if ($candidato['status_final'] == 'indeferido' || $candidato['status_final'] == null || $candidato['status_final'] == '') continue; ?>
+                                            <?php if ($candidato['etapa'] == 3 && $candidato['obs_etapa'] == '3 - IS' && $candidato['id_selecao'] == $_SESSION['selecao']): ?>
+                                                <option value="<?= htmlspecialchars($candidato['id_candidato']) ?>">
+                                                    <?= htmlspecialchars($candidato['nome_completo'] . ' / ' . 'CPF: ' . mascara($candidato['cpf'], '###.###.###-##')) ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <div class="col-md-12">
@@ -2666,6 +2797,8 @@ $lista_especialidades = $conexao->get_especialidade();
             $('#capacidade-value').text($(this).val());
         });
     });
+
+
 
     document.addEventListener('DOMContentLoaded', function() {
         // Selecionar todos os headers de acordeão
