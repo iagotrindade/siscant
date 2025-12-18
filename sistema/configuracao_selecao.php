@@ -525,7 +525,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                             <label class="form-label fw-semibold">Selecione as Especialidades</label>
                             <select name="especialidades[]" class="form-control select2" multiple>
                                 <?php foreach ($lista_especialidades as $value): ?>
-                                    <option value="<?= htmlspecialchars($value['id']) ?>">
+                                    <option value="<?= htmlspecialchars($value['id']) ?>" <?php if($value['escolhe_guarnicao']) echo("selected");?>>
                                         <?= htmlspecialchars($value['nome']) ?>
                                     </option>
                                 <?php endforeach; ?>
