@@ -50,17 +50,25 @@ if (seleciona_cidade_vai_servir())
 $get_especialidades_candidato = $conexao->get_especialidade_candidato($_SESSION['id_usuario']);
 
 $pode_escolher = false;
+$pode_escolher_admin = false;
+
 $foi_desclassificado_em_especialida = false;
 foreach ($get_especialidades_candidato as $linha) {
     if ($linha['concorrendo'] == 0) $foi_desclassificado_em_especialida = true;
-    if ($linha['escolhe_guarnicao'] == 1) $pode_escolher = true;
+    if ($linha['escolhe_guarnicao'] == 1) {
+        $pode_escolher = true;
+    }
+
+    if ($linha['id_candidato_escolhendo_guarnicao'] == $_SESSION['id_usuario']) {
+        $pode_escolher_admin = true;
+    }
 }
 ?>
 
-<!-- Escola de Guarnição OTT/STT/MFDV -->
+<!-- Escola de Guarnição automática OTT/STT/MFDV -->
 <?php $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 5 : 6; ?>
 
-<?php if ($pode_escolher = true && $concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] >= $etapa && !isset($_SESSION['eipot'])): ?>
+<?php if ($pode_escolher == true && $concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] >= $etapa && !isset($_SESSION['eipot'])): ?>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -72,6 +80,36 @@ foreach ($get_especialidades_candidato as $linha) {
                 </div>
                 <div class="card-body text-center py-4">
                     <a href="candidato_escolha_cidade.php" class="text-decoration-none">
+                        <div class="documento-info" style="justify-content: center;">
+                            <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="mr-3">
+                            <h4 class="fw-bold text-dark mb-0">
+                                Selecione a Guarnição na qual deseja servir
+                            </h4>
+                            <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="ml-3">
+                        </div>
+                        <p class="text-muted mt-2 mb-0">Clique aqui para fazer sua escolha</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?=$pode_escolher?>
+<!-- Escola de Guarnição liberada pelo Admin OTT/STT/MFDV -->
+
+<?php if ($pode_escolher_admin == true && $concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] >= $etapa && !isset($_SESSION['eipot'])): ?>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark mb-20">
+                    <div class="documento-info">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        <span class="fw-semibold">Escolha de Guarnição</span>
+                    </div>
+                </div>
+                <div class="card-body text-center py-4">
+                    <a href="candidato_escolha_cidade_admin.php" class="text-decoration-none">
                         <div class="documento-info" style="justify-content: center;">
                             <img src="imagens/urgente.gif" height="30px" alt="Urgente" class="mr-3">
                             <h4 class="fw-bold text-dark mb-0">

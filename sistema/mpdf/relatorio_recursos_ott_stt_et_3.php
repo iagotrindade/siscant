@@ -125,8 +125,8 @@ if ($existe_is) {
     <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
         <tr style='text-align: center; background-color: #D8D8D8; font-size: 12px;'>
             <th style='width:5%'>Nº</th>
-            <th style='width:10%'>CPF</th>
-            <th style='width:35%'>NOME</th>
+            <th style='width:15%'>CPF</th>
+            <th style='width:30%'>NOME</th>
             <th style='width:25%'>PARECER</th>
             <th style='width:25%'>ESPECIALIDADE</th>
         </tr>";

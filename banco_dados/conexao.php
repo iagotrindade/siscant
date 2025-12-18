@@ -3590,7 +3590,7 @@ order by total_pontos_somados desc");
     {
         $stmt = $this->pdo->prepare(
             "
-                    select e.teste_pratico, e.nota_av, e.escolhe_guarnicao, ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, ce.id_especialidade, u.nome_completo, u.cpf, 
+                    select e.teste_pratico, e.nota_av, e.escolhe_guarnicao, e.id_candidato_escolhendo_guarnicao, ce.id id_candidato_x_especialidade, ce.cidade_escolheu_servir, ce.concorrendo, ce.justificativa, ce.id_especialidade, u.nome_completo, u.cpf, 
                     e.nome especialidade, e.musica, e.ott_stt, ce.registro_conselho, ce.data_habilitacao, ce.etapa, ce.apto_prova_teorico_pratico
                     from candidato_x_especialidade ce
                     inner join usuario u on u.id = ce.id_candidato

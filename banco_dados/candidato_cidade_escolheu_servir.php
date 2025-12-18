@@ -268,9 +268,6 @@ for ($i = 0; $i < count($vetor_ordenado_candidatos); $i++) {
         $cand = $vetor_ordenado_candidatos[$i];
         if (!empty($cand['cidade_escolheu_servir']) && $cand['cidade_escolheu_servir'] != 754809) {
             $escolheram++;
-        } else {
-            // Encontrou alguém que não escolheu - para de contar
-            break;
         }
     } else {
         break;
@@ -310,7 +307,6 @@ if (empty($candidatos_nao_escolheram)) {
     erro("Erro 34624373457! Não há candidatos elegíveis para escolher!");
     exit();
 }
-
 
 
 // Se a próxima vaga é AC: primeiro candidato na fila

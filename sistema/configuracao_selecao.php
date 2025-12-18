@@ -231,6 +231,20 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
         transform: scale(1.1);
     }
 
+    .select2-container--default .select2-selection--multiple {
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        min-height: 42px;
+        padding: 5px;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border-color: var(--secondary-color);
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
+    }
+
+
     @media (max-width: 768px) {
         .card-body {
             padding: 15px;
@@ -504,6 +518,18 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                                 <label for="dataFimCidade" class="form-label">Data de fim</label>
                                 <input type="text" class="form-control" id="dataFimCidade" name="data_fim_cidade" value="<?php if ($data_fim_cidade != null) echo trata_data($data_fim_cidade); ?>">
                             </div>
+                        </div>
+
+                        <div class="mb-20">
+                            <?php $lista_especialidades = $conexao->get_especialidade(); ?>
+                            <label class="form-label fw-semibold">Selecione as Especialidades</label>
+                            <select name="especialidades[]" class="form-control select2" multiple>
+                                <?php foreach ($lista_especialidades as $value): ?>
+                                    <option value="<?= htmlspecialchars($value['id']) ?>">
+                                        <?= htmlspecialchars($value['nome']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
@@ -1088,6 +1114,17 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            allowClear: true,
+            width: '100%'
+        });
+
+        $('input[name="capacidade_turno"]').on('input', function() {
+            $('#capacidade-value').text($(this).val());
+        });
+    });
+
     // Função para mostrar/ocultar campos de pagamento
     function pagamento_para_selecao() {
         const checkbox = document.getElementById('pagamentoSwitch');

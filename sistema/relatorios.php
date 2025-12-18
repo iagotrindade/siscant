@@ -884,7 +884,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             <h6 class="text-dark mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
                             <ul class="requisitos-list text-dark">
                                 <li>Cadastrar e julgar todos os recursos da Etapa III no SISCANT</li>
-                                <li>Serão considerados apenas recursos cadastrados com a Etapa III</li>
+                                <li>Serão considerados apenas recursos cadastrados com a Etapa 3 - IS</li>
                             </ul>
                         </div>
 
@@ -939,7 +939,7 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold" for="om_grupo_um">OM - ISGR</label>
+                                    <label class="form-label fw-semibold" for="om_grupo_um">1ª OM - ISGR</label>
                                     <input name="om_grupo_um" type="text" class="form-control" value="POLICLÍNICA MILITAR DE PORTO ALEGRE">
                                 </div>
 
@@ -1008,8 +1008,12 @@ $lista_especialidades = $conexao->get_especialidade();
                                     </select>
                                 </div>
 
+                                <div class="col-lg-12 mb-40 mt-40">
+                                    <div style="height: 2px; background-color: #ccc; width:100%"></div>
+                                </div>
+
                                 <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">2ª Data e OM - ISGR</label>
+                                    <label class="form-label fw-semibold">2ª OM - ISGR</label>
                                     <input name="om_grupo_dois" type="text" class="form-control" value="HOSPITAL GERAL DE SANTA MARIA">
                                 </div>
 
@@ -1078,8 +1082,12 @@ $lista_especialidades = $conexao->get_especialidade();
                                     </select>
                                 </div>
 
+                                <div class="col-lg-12 mb-40 mt-40">
+                                    <div style="height: 2px; background-color: #ccc; width:100%"></div>
+                                </div>
+
                                 <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">3ª Data e OM - ISGR</label>
+                                    <label class="form-label fw-semibold">3ª OM - ISGR</label>
                                     <input name="om_grupo_tres" type="text" class="form-control" value="POLICLÍNICA MILITAR DE PORTO ALEGRE">
                                 </div>
 
