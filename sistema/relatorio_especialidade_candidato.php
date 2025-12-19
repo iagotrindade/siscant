@@ -60,7 +60,7 @@ if (isset($_GET['voluntario_obrigatorio']))
 $especialidade_medico = false;
 ?>
 <style>
-    dashboard-card {
+    .dashboard-card {
         border: none;
         border-radius: 12px;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -152,6 +152,19 @@ $especialidade_medico = false;
         background-color: rgba(0, 100, 0, 0.04);
         transform: translateY(-1px);
         transition: all 0.2s ease;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        min-height: 42px;
+        padding: 5px;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border-color: var(--secondary-color);
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.25);
     }
 
     @media (max-width: 768px) {
@@ -380,7 +393,7 @@ $especialidade_medico = false;
                                         <i class="fa fa-user"></i>
                                         Selecione o candidato desejado
                                     </label>
-                                    <select name="id_candidato" class="form-control form-select-lg">
+                                    <select name="id_candidato" class="form-control select2">
                                         <option value="">Selecione o candidato</option>
 
                                         <?php foreach ($lista_candidatos as $candidato) : ?>
@@ -388,7 +401,7 @@ $especialidade_medico = false;
                                             $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 5 : 6;
                                             if ($candidato['etapa'] != $etapa) continue;
                                             ?>
-                                            <option value="<?= $candidato['id'] ?>"><?= $candidato['nome_completo'] . " / CPF: " . mascara($candidato['cpf'], '###.###.###-##') ?> </option>
+                                            <option value="<?= $candidato['id'] ?>"><?= $candidato['nome_completo'] . " / CPF: " . $candidato['cpf'] ?> </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -769,6 +782,17 @@ $especialidade_medico = false;
     <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript">
+        $(document).ready(function() {
+            $('.select2').select2({
+                allowClear: true,
+                width: '100%'
+            });
+
+            $('input[name="capacidade_turno"]').on('input', function() {
+                $('#capacidade-value').text($(this).val());
+            });
+        });
+
         $(document).ready(function() {
             // Seleciona todas as tabelas com a classe .tabela_dinamica
             $('.tabela_dinamica').each(function() {
