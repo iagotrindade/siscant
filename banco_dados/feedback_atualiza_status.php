@@ -35,6 +35,8 @@ if ($usuario_logado[0]['assinatura_sistema'] != $_SESSION['assinatura_sistema'])
 }
 
 $status = trim($_POST['status']);
+$resposta = trim($_POST['resposta']);
+
 $id_feedback = $_POST['id_feedback'];
 
 if ($status == null || $id_feedback == "") {
@@ -44,7 +46,7 @@ if ($status == null || $id_feedback == "") {
 
 if ($_POST) {
     $feedback_atual = $conexao->get_feedback_id($id_feedback);
-    $resultado = $conexao->atualiza_status_feedback($id_feedback, $status);
+    $resultado = $conexao->atualiza_status_feedback($id_feedback, $status, $resposta);
 }
 
 $alteracoes_detalhadas =  print_r($resultado);

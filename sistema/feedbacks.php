@@ -621,29 +621,44 @@ foreach ($usuarios_banidos as $banido) {
                                                     </div>
 
                                                     <div class="card-footer bg-transparent mb-0" style="border: none;">
-                                                        <div class="d-flex justify-content-between align-items-center mb-10">
+                                                        <div class="d-flex flex-column justify-content-between align-items-center mb-10">
                                                             <?php if ($_SESSION['perfil'] == 'admin'): ?>
-                                                                <small class="text-muted">
-                                                                    <i class="fa fa-user me-1"></i>
-                                                                    <?= $feedback['nome_completo'] ?>
-                                                                </small>
+                                                                <div class="w-100 mb-10">
+                                                                    <small class="text-muted p-0">
+                                                                        <i class="fa fa-user me-1"></i>
+                                                                        <?= $feedback['nome_completo'] ?>
+                                                                    </small>
 
-                                                                <small class="text-muted">
-                                                                    <i class="fa fa-clock-o me-1"></i>
-                                                                    <?= trata_data_hora($feedback['criado_em']) ?>
-                                                                </small>
+                                                                    <br>
 
-                                                                <form action="../banco_dados/feedback_atualiza_status.php" method="post" class="mt-2">
+                                                                    <small class="text-muted p-0">
+                                                                        <i class="fa fa-clock-o me-1"></i>
+                                                                        <?= trata_data_hora($feedback['criado_em']) ?>
+                                                                    </small>
+                                                                </div>
+
+                                                                <form action="../banco_dados/feedback_atualiza_status.php" method="post" class="mt-2 w-100">
                                                                     <input type="hidden" name="criptografia" value="<?= hash('sha256', $_SESSION['assinatura_sistema']) ?>">
                                                                     <input type="hidden" name="id_feedback" value="<?= $feedback['id'] ?>">
-                                                                    <select name="status" onchange="this.form.submit()" class="form-select form-control">
+                                                                    <select name="status" onchange="this.form.submit()" class="form-select form-control mb-10">
                                                                         <option value="analise" <?= $feedback['status'] == 'analise' ? 'selected' : '' ?>>Em análise</option>
                                                                         <option value="rejeitado" <?= $feedback['status'] == 'rejeitado' ? 'selected' : '' ?>>Rejeitado</option>
                                                                         <option value="aceito" <?= $feedback['status'] == 'aceito' ? 'selected' : '' ?>>Aceito</option>
                                                                         <option value="desenvolvimento" <?= $feedback['status'] == 'desenvolvimento' ? 'selected' : '' ?>>Em desenvolvimento</option>
                                                                         <option value="concluido" <?= $feedback['status'] == 'concluido' ? 'selected' : '' ?>>Concluído</option>
                                                                     </select>
+
+                                                                    <textarea name="resposta" class="form-control" placeholder="Resposta (Opcional)" rows="2"><?= $feedback['resposta'] ?></textarea>
                                                                 </form>
+                                                            <?php endif; ?>
+
+                                                            <?php if ($_SESSION['perfil'] != 'admin'): ?>
+                                                                <?php if (!empty($feedback['resposta'])): ?>
+                                                                    <div class="w-100">
+                                                                        <strong>Resposta da Comissão:</strong>
+                                                                        <p class="text-muted"><?= nl2br(htmlspecialchars($feedback['resposta'])) ?></p>
+                                                                    </div>
+                                                                <?php endif; ?>
                                                             <?php endif; ?>
                                                         </div>
                                                     </div>
