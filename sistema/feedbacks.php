@@ -121,11 +121,45 @@ foreach ($usuarios_banidos as $banido) {
         border: none;
     }
 
-    .feedback-description {
-        font-size: 1.2rem;
-        max-height: 100px;
-        overflow: hidden;
+    .feedback-container {
         position: relative;
+    }
+
+    .feedback-description {
+        transition: max-height 0.3s ease;
+        max-height: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+    }
+
+    .feedback-description.expanded {
+        max-height: none !important;
+        -webkit-line-clamp: unset !important;
+        overflow: visible;
+    }
+
+    .show-more-btn {
+        background: none;
+        border: none;
+        color: #007bff;
+        cursor: pointer;
+        padding: 5px 0;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .show-more-btn:hover {
+        text-decoration: underline;
+    }
+
+    .show-more-btn .arrow {
+        transition: transform 0.3s ease;
+        font-size: 0.8em;
     }
 
     .feedback-actions {
@@ -604,7 +638,14 @@ foreach ($usuarios_banidos as $banido) {
                                                     </div>
 
                                                     <div class="card-body">
-                                                        <p class="card-text feedback-description"><?= nl2br(htmlspecialchars($feedback['descricao'])) ?></p>
+                                                        <div class="feedback-container">
+                                                            <p class="card-text feedback-description mb-0">
+                                                                <?= nl2br(htmlspecialchars($feedback['descricao'])) ?>
+                                                            </p>
+                                                            <button class="show-more-btn" style="background: none; border: none; color: #007bff; cursor: pointer; padding: 5px 0; font-size: 0.9rem;">
+                                                                <span class="arrow">▼</span> Ver mais
+                                                            </button>
+                                                        </div>
 
                                                         <div class="feedback-actions">
                                                             <form method="post" action="../banco_dados/feedback_like.php" class="d-inline">
@@ -706,27 +747,51 @@ foreach ($usuarios_banidos as $banido) {
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Elementos do DOM
-        const notificationMessage = document.getElementById('descricao');
+        const descriptionMessage = document.getElementById('descricao');
         const charCount = document.getElementById('charCount');
         const feedbackList = document.getElementById('feedbackList');
         const toggleCards = document.getElementById('toggleCards');
 
         // Contador de caracteres
-        notificationMessage.addEventListener('input', function() {
+        descriptionMessage.addEventListener('input', function() {
             charCount.textContent = this.value.length;
         });
 
         // Alternar visualização da lista de notificações
         toggleCards.addEventListener('click', function() {
-            const notificationsCardBody = feedbackList.parentElement;
-            if (notificationsCardBody.style.display === 'none') {
-                notificationsCardBody.style.display = 'block';
+            const feedbacksCardBody = feedbackList.parentElement;
+            if (feedbacksCardBody.style.display === 'none') {
+                feedbacksCardBody.style.display = 'block';
                 toggleCards.innerHTML = '<i class="fa fa-chevron-down"></i>';
             } else {
-                notificationsCardBody.style.display = 'none';
+                feedbacksCardBody.style.display = 'none';
                 toggleCards.innerHTML = '<i class="fa fa-chevron-up"></i>';
             }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.show-more-btn').forEach(button => {
+            const description = button.previousElementSibling;
+            const arrow = button.querySelector('.arrow');
+
+            // Esconde o botão se não precisar expandir
+            if (description.scrollHeight <= 150) {
+                button.style.display = 'none';
+                return;
+            }
+
+            button.addEventListener('click', function() {
+                description.classList.toggle('expanded');
+
+                if (description.classList.contains('expanded')) {
+                    arrow.textContent = '▲';
+                    button.innerHTML = '<span class="arrow">▲</span> Ver menos';
+                } else {
+                    arrow.textContent = '▼';
+                    button.innerHTML = '<span class="arrow">▼</span> Ver mais';
+                }
+            });
         });
     });
 
