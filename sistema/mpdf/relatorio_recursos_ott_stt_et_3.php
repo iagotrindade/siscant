@@ -281,9 +281,10 @@ if (
     !empty($candidatos_grupo_tres_dia_dois) ||
     !empty($candidatos_grupo_tres_dia_tres)
 ) {
+    $numeracao = $existe_documental ? '3' : '2';
     $mpdf->WriteHTML("
         <p style='font-size: 12px; text-align: justify; margin: 20px 0 5px 0; text-indent: 2em;'>
-            <strong>3. CONVOCAÇÃO PARA ISGR (INSPEÇÃO DE SAÚDE EM GRAU DE RECURSO)</strong>
+            <strong>" . $numeracao . ". CONVOCAÇÃO PARA ISGR (INSPEÇÃO DE SAÚDE EM GRAU DE RECURSO)</strong>
         </p>
     ");
 }
