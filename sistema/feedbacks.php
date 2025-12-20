@@ -148,7 +148,7 @@ foreach ($usuarios_banidos as $banido) {
         cursor: pointer;
         padding: 5px 0;
         font-size: 0.9rem;
-        display: flex;
+        display: none;
         align-items: center;
         gap: 5px;
     }
@@ -642,7 +642,7 @@ foreach ($usuarios_banidos as $banido) {
                                                             <p class="card-text feedback-description mb-0">
                                                                 <?= nl2br(htmlspecialchars($feedback['descricao'])) ?>
                                                             </p>
-                                                            <button class="show-more-btn" style="background: none; border: none; color: #007bff; cursor: pointer; padding: 5px 0; font-size: 0.9rem;">
+                                                            <button class="show-more-btn">
                                                                 <span class="arrow">▼</span> Ver mais
                                                             </button>
                                                         </div>
@@ -722,8 +722,6 @@ foreach ($usuarios_banidos as $banido) {
 <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script>
-    $('#tabela_banimentos').DataTable();
-
     // Contador de caracteres
     document.getElementById('descricao').addEventListener('input', function() {
         const charCount = this.value.length;
@@ -768,36 +766,42 @@ foreach ($usuarios_banidos as $banido) {
                 toggleCards.innerHTML = '<i class="fa fa-chevron-up"></i>';
             }
         });
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.show-more-btn').forEach(button => {
-            const description = button.previousElementSibling;
+        const MIN_CHARACTERS = 200; // Define o mínimo de caracteres para mostrar botão
+
+        document.querySelectorAll('.feedback-description').forEach(description => {
+            const button = description.nextElementSibling;
+            const fullText = description.dataset.text || description.textContent;
+
+            console.log(fullText.length > MIN_CHARACTERS);
             const arrow = button.querySelector('.arrow');
 
-            // Esconde o botão se não precisar expandir
-            if (description.scrollHeight <= 150) {
-                button.style.display = 'none';
-                return;
+            // Verifica se o texto tem mais caracteres que o mínimo
+            if (fullText.length > MIN_CHARACTERS) {
+                button.style.display = 'block'; // Mostra o botão
+
+                button.addEventListener('click', function() {
+                    if (description.style.maxHeight && description.style.maxHeight !== '245px') {
+                        // Recolher
+                        description.style.maxHeight = '245px';
+                        description.style.webkitLineClamp = '5';
+                        description.style.overflow = 'hidden';
+                        arrow.textContent = '▼';
+                        button.innerHTML = '<span class="arrow">▼</span> Ver mais';
+                    } else {
+                        // Expandir
+                        description.style.maxHeight = description.scrollHeight + 'px';
+                        description.style.webkitLineClamp = 'unset';
+                        description.style.overflow = 'visible';
+                        arrow.textContent = '▲';
+                        button.innerHTML = '<span class="arrow">▲</span> Ver menos';
+                    }
+                });
             }
-
-            button.addEventListener('click', function() {
-                description.classList.toggle('expanded');
-
-                if (description.classList.contains('expanded')) {
-                    arrow.textContent = '▲';
-                    button.innerHTML = '<span class="arrow">▲</span> Ver menos';
-                } else {
-                    arrow.textContent = '▼';
-                    button.innerHTML = '<span class="arrow">▼</span> Ver mais';
-                }
-            });
         });
-    });
 
 
-    $(document).ready(function() {
-        $('#tabela_banimentos').select2();
+        $('#tabela_banimentos').DataTable();
     });
 </script>
 
