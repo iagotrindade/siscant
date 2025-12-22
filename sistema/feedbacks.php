@@ -621,7 +621,7 @@ foreach ($usuarios_banidos as $banido) {
                                         ?>
                                             <div class="feedback-card">
                                                 <div class="card h-100 shadow-sm border-0">
-                                                    <div class="card-header border-0 d-flex justify-content-between p-0 mb-10" style="background: rgba(0,0,0,0.03); color: #333; align-items: start;">
+                                                    <div class="card-header border-0 d-flex justify-content-between p-0 mb-10" style="background: none; color: #333; align-items: start;">
                                                         <div class="flex-grow-1">
                                                             <h5 class="card-title mb-0"><?= $feedback['titulo'] ?></h5>
                                                             <span class="badge feedback-type-badge" style="<?= $classBadge ?>">
