@@ -447,6 +447,39 @@
                             // Mostrar apenas candidatos de cotas
                             if ($linha['vaga_reservada'] == 0) continue;
 
+                            $etapa = $_SESSION['selecao_codigo'] == 'mfdv' ? 4 : 5;
+
+                            if ($_SESSION['etapa_selecao'] == $etapa) {
+                                $pareceres = $conexao->get_pareceres_heteroidentificacao($linha['id']);
+                                $fase1_confirmada = 0;
+                                $fase1_total = 0;
+                                $fase2_confirmada = 0;
+                                $fase2_nao_confirmada = 0;
+                                $fase2_nao_compareceu = 0;
+                                $fase2_total = 0;
+                                foreach ($pareceres as $parecer) {
+                                    if ((int)$parecer['fase'] === 1) {
+                                        $fase1_total++;
+                                        if ($parecer['parecer'] === 'confirmada') $fase1_confirmada++;
+                                    } elseif ((int)$parecer['fase'] === 2) {
+                                        if ($parecer['parecer'] === 'confirmada') $fase2_confirmada++;
+                                        elseif ($parecer['parecer'] === 'nao_confirmada') $fase2_nao_confirmada++;
+                                        elseif ($parecer['parecer'] === 'nao_compareceu') $fase2_nao_compareceu++;
+                                        $fase2_total++;
+                                    }
+                                }
+                                if ($fase1_total === 5 && $fase1_confirmada >= 3) {
+                                    $linha['vaga_reservada'] = 1;
+                                } elseif ($fase2_total === 3) {
+                                    if ($fase2_confirmada >= 2) {
+                                        $linha['vaga_reservada'] = 1;
+                                    } else {
+                                        // qualquer outro cenário reprova
+                                        continue;
+                                    }
+                                }
+                            }
+
                             // Verificar se é candidato com múltiplas especialidades
                             $is_multiple_especialidades = false;
                             if ($linha['etapa'] > 2) {

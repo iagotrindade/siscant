@@ -513,7 +513,7 @@ if ($perfil == "ouvidor") {
               </a>
             </div>
             <div class="col-xl-4 col-md-6" <?php if ($perfil != "admin" && $perfil != "consulta") echo "hidden"; ?>>
-              <a href="relatorio_incorporados.php" class="card-link">
+              <a href="relatorio_distribuicao.php" class="card-link">
                 <div class="dashboard-card card-hover">
                   <div class="card-icon bg-primary">
                     <i class="fa fa-exchange"></i>

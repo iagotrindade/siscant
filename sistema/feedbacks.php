@@ -288,10 +288,10 @@ foreach ($usuarios_banidos as $banido) {
                                 <h5 class="alert-heading text-danger mb-2">AVISO IMPORTANTE</h5>
                                 <p class="mb-2">
                                     Qualquer comentário abusivo, spam ou sugestão inadequada resultará em
-                                    <strong>banimento permanente</strong> da área de Feedbacks desta Seleção.
+                                    <strong>BANIMENTO PERMANENTE</strong> da área de Feedbacks desta Seleção.
                                 </p>
                                 <p class="mb-0 fw-bold text-danger">
-                                    Não haverá segunda chance.
+                                    NÃO HAVERÁ SEGUNDA CHANCE.
                                 </p>
                             </div>
                         </div>
@@ -334,7 +334,7 @@ foreach ($usuarios_banidos as $banido) {
                             <div class="col-lg-12 mb-20">
                                 <label for="motivo_banimento" class="form-label fw-semibold">
                                     <i class="fa fa-edit me-1"></i>
-                                    Motivo do Banimento
+                                    Motivo do Banimento (Será mostrado ao usuário banido)
                                 </label>
                                 <textarea class="form-control" id="motivo_banimento" name="motivo_banimento"
                                     placeholder="Descreva o motivo do banimento..."
@@ -402,7 +402,7 @@ foreach ($usuarios_banidos as $banido) {
                                     <?php endforeach; ?>
                                 <?php else : ?>
                                     <tr>
-                                        <td colspan="4" class="text-center py-4">
+                                        <td colspan="5" class="text-center py-4">
                                             <div class="text-muted">
                                                 <i class="fa fa-check-circle fa-2x mb-2 opacity-50"></i><br>
                                                 Nenhum usuário banido

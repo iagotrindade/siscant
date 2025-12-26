@@ -284,6 +284,77 @@ else
                     </div>
                 </div>
             </div>
+
+
+            <?php
+            $ata_heteroidentificacao = $conexao->get_ata_heteroidentificacao(1);
+            $ata_heteroidentificacao_revisora = $conexao->get_ata_heteroidentificacao(2);
+            ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header mb-20">
+                            <span><i class="fa fa-file-text-o"></i> Ata Heteroidentificação Complementar</span>
+
+                            <!-- 03/09/2025 -> Iago Silva Validando se o Aviso de Convocação existe para exibi-lo -->
+                            <?php if ($ata_heteroidentificacao['ata_heteroidentificacao']) : ?>
+                                <a href="arquivos/atas_heteroidentificacao/<?php echo $ata_heteroidentificacao['ata_heteroidentificacao']; ?>" target="_blank">
+                                    <img src="../sistema/imagens/pdf.png" class="pdf-icon" width="30px;" title="Visualizar Ata">
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                        <div class="card-body">
+                            <form action="../banco_dados/ata_heteroidentificacao_atualiza.php" method="POST" enctype="multipart/form-data">
+                                <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                                <input hidden name="fase" value="1">
+
+                                <div class="mb-10">
+                                    <label for="avisoFile" class="form-label">Ata Assinada</label>
+                                    <input type="file" class="form-control" id="avisoFile" name="arquivo">
+                                </div>
+
+                                <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fa fa-refresh"></i> ATUALIZAR
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header mb-20">
+                            <span><i class="fa fa-file-text-o"></i> Ata Heteroidentificação Revisora</span>
+
+                            <!-- 03/09/2025 -> Iago Silva Validando se o Aviso de Convocação existe para exibi-lo -->
+                            <?php if ($ata_heteroidentificacao_revisora['ata_heteroidentificacao_revisora']) : ?>
+                                <a href="arquivos/atas_heteroidentificacao/<?php echo $ata_heteroidentificacao_revisora['ata_heteroidentificacao_revisora']; ?>" target="_blank">
+                                    <img src="../sistema/imagens/pdf.png" class="pdf-icon" width="30px;" title="Visualizar Ata">
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                        <div class="card-body">
+                            <form action="../banco_dados/ata_heteroidentificacao_atualiza.php" method="POST" enctype="multipart/form-data">
+                                <input hidden name="crip" value="<?php echo hash('sha256', $_SESSION['chave'] . "freitas"); ?>">
+                                <input hidden name="fase" value="2">
+
+                                <div class="mb-10">
+                                    <label for="avisoFile" class="form-label">Ata Assinada</label>
+                                    <input type="file" class="form-control" id="avisoFile" name="arquivo">
+                                </div>
+
+                                <div <?php if ($perfil != "admin") echo "hidden"; ?>>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fa fa-refresh"></i> ATUALIZAR
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

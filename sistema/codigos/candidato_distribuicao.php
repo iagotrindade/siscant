@@ -261,19 +261,5 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                 </div>
             </div>
         </form>
-
-        <!-- Script Autocomplete -->
-        <script>
-            $(function() {
-                var aditamentos_cadastrados = [
-                    <?php foreach ($todos_aditamentos as $aditamento): ?> "<?= $aditamento['aditamento_convocacao'] ?>",
-                    <?php endforeach; ?> ""
-                ];
-
-                $("#aditamento").autocomplete({
-                    source: aditamentos_cadastrados
-                });
-            });
-        </script>
     </div>
 </div>

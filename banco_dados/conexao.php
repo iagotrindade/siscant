@@ -2336,6 +2336,27 @@ class Conexao
         return $result;
     }
 
+    public function get_candidatos_guarnicao($id_guarnicao)
+    {
+        $stmt = $this->pdo->prepare("
+        SELECT  
+            ce.*,
+            u.id AS id_candidato
+        FROM candidato_x_especialidade ce
+        INNER JOIN usuario u ON u.id = ce.id_candidato
+        WHERE u.apagado = 0
+          AND ce.cidade_escolheu_servir = :id_guarnicao
+          AND u.concorrendo = 1
+    ");
+
+        $stmt->bindValue(':id_guarnicao', $id_guarnicao);
+
+        if ($stmt->execute()) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
 
     public function get_especialidade_por_oms($id_especialidade, $id_om, $id_selecao)
     {
@@ -9673,6 +9694,59 @@ order by total_pontos_somados desc");
             return false;
         }
         return false;
+    }
+
+    public function selecao_atualiza_atas_heteroidentificacao($nome_arquivo, $fase)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $usuario = $_SESSION['id_usuario'];
+        $id_selecao = $_SESSION['selecao'];
+        $zero = 0;
+
+        try {
+            $fase == 1 ? $sqlInsert = "UPDATE selecao SET ata_heteroidentificacao=:ata_heteroidentificacao WHERE id= :id" : $sqlInsert = "UPDATE selecao SET ata_heteroidentificacao_revisora=:ata_heteroidentificacao WHERE id= :id";
+
+            $this->pdo->beginTransaction();
+
+            $query = $this->pdo->prepare($sqlInsert);
+
+            $query->bindValue(":id", $id_selecao);
+            $query->bindValue(":ata_heteroidentificacao", $nome_arquivo);
+
+            if ($query->execute()) {
+
+                $data =
+                    [
+                        'id_selecao' => $id_selecao,
+                        'ata_heteroidentificacao' => $nome_arquivo,
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
+                $this->pdo->rollBack();
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        return false;
+    }
+
+    public function get_ata_heteroidentificacao($fase)
+    {
+        $id_selecao = $_SESSION['selecao'];
+        $sql = $fase == 1 ? "SELECT ata_heteroidentificacao FROM selecao WHERE id = :id_selecao" : "SELECT ata_heteroidentificacao_revisora FROM selecao WHERE id = :id_selecao";
+        $query = $this->pdo->prepare($sql);
+        $query->bindValue(":id_selecao", $id_selecao);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result;
+        } else {
+            return false;
+        }
     }
 
     public function selecao_atualiza_dados_email($smpt, $imap, $porta_smtp, $porta_imap, $usuario_email, $senha_email, $id_selecao)

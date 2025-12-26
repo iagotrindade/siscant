@@ -47,7 +47,7 @@ if (isset($_GET['id_especialidade']))
                 <div class="card-header filter-header mb-20">
                     <span class="card-title mb-0">
                         <i class="fa fa-filter me-2"></i>
-                        Filtros de Relatório
+                        Filtros
                     </span>
                 </div>
                 <div class="card-body">
@@ -238,7 +238,7 @@ if (isset($_GET['id_especialidade']))
                                         </td>
 
                                         <td class="text-center">
-                                            <a href="usuario_visualiza.php?id_usuario=<?= $linha['id_candidato'] ?>" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Visualizar candidato">
+                                            <a href="usuario_visualiza.php?id_usuario=<?= $linha['id'] ?>" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Visualizar candidato">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </td>
@@ -247,6 +247,200 @@ if (isset($_GET['id_especialidade']))
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <!-- Distribuição em massa -->
+            <div class="card filter-card mb-4">
+                <div class="card-header filter-header mb-20">
+                    <span class="card-title mb-0">
+                        <i class="fa fa-map-marker"></i>
+                        Distribuir Candidatos
+                    </span>
+                </div>
+                <div class="card-body">
+                    <form action="../banco_dados/distribuicao_executa.php" method="post">
+                        <input type="hidden" name="crip" value="<?= hash('sha256', $_SESSION['id_usuario'] . $_SESSION['chave']) ?>">
+                        <div class="row">
+                            <div class="col-lg-12 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-graduation-cap me-1"></i>
+                                    Especialidade (Opcional. Se não selecionada, todos os candidatos da Guarnição Selecionada serão distribuídos)
+                                </label>
+                                <select name="id_especialidade" class="form-control" required>
+                                    <option value="">Selecione a opção</option>
+                                    <?php foreach ($conexao->get_especialidade() as $value): ?>
+                                        <option value="<?= $value['id'] ?>">
+                                            <?= mb_strtoupper($value['ott_stt'], "UTF-8") ?> - <?= htmlspecialchars($value['nome']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-check-circle me-1"></i>
+                                    Status de Distribuição
+                                </label>
+                                <select name="incorporado" class="form-control" required>
+                                    <option value="">Selecione a opção</option>
+                                    <option value="1">Distribuído</option>
+                                    <option value="0">Aguardando Distribuição</option>
+                                </select>
+                            </div>
+
+                            <!-- Número da Distribuição -->
+                            <div class="col-lg-3 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-list-ol me-1"></i>
+                                    Número da Distribuição
+                                </label>
+                                <select name="numero_distribuicao" class="form-control" required>
+                                    <option value="">Selecione a opção</option>
+                                    <?php for ($i = 1; $i <= 10; $i++): ?>
+                                        <option value="<?= $i ?>">
+                                            <?= $i ?>ª Distribuição
+                                        </option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+
+                            <!-- Força -->
+                            <div class="col-lg-3 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-shield me-1"></i>
+                                    Força
+                                </label>
+                                <select name="forca_distribuicao" class="form-control" required>
+                                    <option value="">Selecione a opção</option>
+                                    <option value="exercito">Exército</option>
+                                    <option value="marinha">Marinha</option>
+                                    <option value="aeronautica">Aeronáutica</option>
+                                </select>
+                            </div>
+
+                            <!-- Status Militar -->
+                            <div class="col-lg-3 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-info-circle me-1"></i>
+                                    Status Militar
+                                </label>
+                                <select name="titular_reserva" class="form-control" required>
+                                    <option value="">Selecione a opção</option>
+                                    <option value="titular">Titular</option>
+                                    <option value="titular eis">Titular EIS</option>
+                                    <option value="reserva">Reserva</option>
+                                    <option value="adiado">Adiado</option>
+                                    <option value="adiado_b1">Adiado B1</option>
+                                    <option value="adiado_justica">Adiado Justiça</option>
+                                    <option value="excesso">Excesso</option>
+                                    <option value="excesso_incapaz">Excesso Incapaz</option>
+                                    <option value="refratario">Refratário</option>
+                                    <option value="fisemi_transferida">Fisemi Transferida</option>
+                                    <option value="desobrigado">Desobrigado</option>
+                                    <option value="insubmisso">Insubmisso</option>
+                                    <option value="cdi_justica">CDI Justiça</option>
+                                </select>
+                            </div>
+
+                            <!-- UF 1ª Fase -->
+                            <div class="col-lg-3 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-map me-1"></i>
+                                    UF 1ª Fase
+                                </label>
+                                <select id="uf2" name="uf2" class="form-control" onchange="busca_cidades2()" required>
+                                    <option value="">Selecione a UF</option>
+                                    <?php
+                                    $estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'];
+                                    foreach ($estados as $estado):
+                                    ?>
+                                        <option value="<?= $estado ?>">
+                                            <?= $estado ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Guarnição 1ª Fase -->
+                            <div class="col-lg-3 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-map-marker me-1"></i>
+                                    Guarnição 1ª Fase
+                                </label>
+                                <select id="cidade2" name="id_guarnicao" class="form-control" required>
+                                    <option value="">Selecione a Cidade</option>
+                                    <?php foreach ($conexao->busca_cidades() as $value): ?>
+                                        <option value="<?= $value['id'] ?>">
+                                            <?= htmlspecialchars($value['nome']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- OM 1ª Fase -->
+                            <div class="col-lg-3 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-building me-1"></i>
+                                    OM 1ª Fase
+                                </label>
+                                <select name="om_distribuicao_1_fase" class="form-control" required>
+                                    <option value="">Selecione a opção</option>
+                                    <?php foreach ($conexao->get_oms($rm_usuario) as $value): ?>
+                                        <option value="<?= $value['id'] ?>">
+                                            <?= htmlspecialchars($value['nome']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Data de Incorporação -->
+                            <div class="col-lg-3 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-calendar me-1"></i>
+                                    Data de Incorporação
+                                </label>
+                                <input
+                                    type="text"
+                                    name="data_incorporacao"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-12 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-file-contract me-1"></i>
+                                    Aditamento de Convocação
+                                </label>
+                                <input type="text"
+                                    name="aditamento_convocacao"
+                                    id="aditamento"
+                                    class="form-control"
+                                    maxlength="250"
+                                    placeholder="Digite o aditamento de convocação">
+                            </div>
+
+                            <!-- Observações -->
+                            <div class="col-md-12 mb-20">
+                                <label class="form-label fw-semibold">
+                                    <i class="fa fa-sticky-note me-1"></i>
+                                    Observações
+                                </label>
+                                <textarea name="observacao_distribuicao"
+                                    class="form-control"
+                                    rows="4"
+                                    maxlength="2000"
+                                    placeholder="Digite observações sobre a distribuição"></textarea>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-primary py-2 fs-5">
+                                    <i class="fa fa-save me-2"></i>
+                                    INICIAR DISTRIBUIÇÃO
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
