@@ -8431,50 +8431,38 @@ order by total_pontos_somados desc");
     public function usuario_desclassificado($id_usuario, $justificativa)
     {
         $datetime = date('Y-m-d H:i:s');
-        $usuario  = $_SESSION['id_usuario'];
+        $usuario = $_SESSION['id_usuario'];
+        $zero = 0;
 
         try {
-            $sql = "
-            UPDATE usuario 
-            SET 
-                concorrendo = 0,
-                justificativa_concorrendo = :justificativa,
-                id_usuario_alterou_concorrendo = :id_usuario_alterou,
-                _data_ultima_atualizacao = :data,
-                _usuario_ultima_atualizacao = :usuario
-            WHERE id = :id
-        ";
+            $sqlInsert = "UPDATE usuario SET concorrendo='0', justificativa_concorrendo =:justificativa WHERE id = :id";
 
             $this->pdo->beginTransaction();
 
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':id', $id_usuario, PDO::PARAM_INT);
-            $stmt->bindValue(':justificativa', $justificativa);
-            $stmt->bindValue(':id_usuario_alterou', $usuario, PDO::PARAM_INT);
-            $stmt->bindValue(':data', $datetime);
-            $stmt->bindValue(':usuario', $usuario, PDO::PARAM_INT);
+            $query = $this->pdo->prepare($sqlInsert);
 
-            if (!$stmt->execute()) {
+            $query->bindValue(":id", $id_usuario);
+            $query->bindValue(":justificativa", $justificativa);
+
+            if ($query->execute()) {
+                $data =
+                    [
+                        'concorrendo' => $id_usuario,
+                        'justificativa' => $justificativa,
+                        'id_usuario_alterou_concorrendo' => "Script do sistema",
+                        '_data_ultima_atualizacao' => $datetime,
+                        '_usuario_ultima_atualizacao' => $usuario,
+                    ];
+                $this->pdo->commit();
+                return $data;
+            } else {
                 $this->pdo->rollBack();
                 return false;
             }
-
-            $this->pdo->commit();
-
-            return [
-                'id_usuario' => $id_usuario,
-                'concorrendo' => 0,
-                'justificativa' => $justificativa,
-                'id_usuario_alterou_concorrendo' => $usuario,
-                '_data_ultima_atualizacao' => $datetime,
-                '_usuario_ultima_atualizacao' => $usuario,
-            ];
         } catch (Exception $e) {
-            if ($this->pdo->inTransaction()) {
-                $this->pdo->rollBack();
-            }
             return false;
         }
+        return false;
     }
     // </editor-fold>
 
@@ -11348,19 +11336,18 @@ order by total_pontos_somados desc");
         }
     }
 
-    public function atualiza_status_feedback($id_feedback, $novo_status, $resposta = null)
+    public function atualiza_status_feedback($id_feedback, $novo_status)
     {
         $datetime = date('Y-m-d H:i:s');
         try {
             $sqlUpdate = "UPDATE feedbacks 
-                          SET status = :novo_status, atualizado_em = :atualizado_em, resposta = :resposta
+                          SET status = :novo_status, atualizado_em = :atualizado_em 
                           WHERE id = :id_feedback";
 
             $this->pdo->beginTransaction();
 
             $query = $this->pdo->prepare($sqlUpdate);
             $query->bindValue(":novo_status", $novo_status);
-            $query->bindValue(":resposta", $resposta);
             $query->bindValue(":atualizado_em", $datetime);
             $query->bindValue(":id_feedback", $id_feedback);
 

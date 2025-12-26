@@ -256,7 +256,7 @@ foreach ($usuarios_banidos as $banido) {
                     <div class="col-lg-12 mb-20">
                         <div class="rules-list">
                             <div class="rule-item mb-10">
-                                <i class="fa fa-check-circle text-success"></i> Seja respeitoso e profissional em todos as sugestões e não abuse do sistema de votação
+                                <i class="fa fa-check-circle text-success"></i> Seja respeitoso e profissional em todas as sugestões e não abuse do sistema de votação
                             </div>
 
                             <div class="rule-item mb-10">
