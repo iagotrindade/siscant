@@ -7,15 +7,6 @@ class Conexao
     {
         //Local
         $this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', '');
-
-        // CTA SISTEMAS TESTE
-        //$this->pdo = new PDO('mysql:host=10.25.60.31;dbname=siscant_hom;charset=utf8', 'root', 'suporte');
-
-        //Produção
-        //$this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', '123@ati3rm');
-
-        //Produção 2025
-        //$this->pdo = new PDO('mysql:host=localhost;dbname=siscant;charset=utf8', 'root', 'ati@root@mysql');
     }
 
     // <editor-fold defaultstate="collapsed" desc="Get Browser">
