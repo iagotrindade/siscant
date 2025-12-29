@@ -27,7 +27,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-check-circle me-1"></i>
                         Status de Distribuição
                     </label>
-                    <select name="incorporado" class="form-control" required>
+                    <select name="incorporado" class="form-control">
                         <option value="">Selecione a opção</option>
                         <option value="1" <?= $incorporado == '1' ? 'selected' : '' ?>>Distribuído</option>
                         <option value="0" <?= $incorporado == '0' ? 'selected' : '' ?>>Aguardando Distribuição</option>
@@ -40,7 +40,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-graduation-cap me-1"></i>
                         Especialidade de Incorporação
                     </label>
-                    <select name="especialidade_incorporou" class="form-control" required>
+                    <select name="especialidade_incorporou" class="form-control">
                         <option value="">Selecione a especialidade</option>
                         <?php foreach ($especialidade_cadastradas_candidato as $esp_cadastrada_pelo_cand): ?>
                             <option value="<?= $esp_cadastrada_pelo_cand['id_especialidade'] ?>"
@@ -69,7 +69,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-list-ol me-1"></i>
                         Número da Distribuição
                     </label>
-                    <select name="numero_distribuicao" class="form-control" required>
+                    <select name="numero_distribuicao" class="form-control">
                         <option value="">Selecione a opção</option>
                         <?php for ($i = 1; $i <= 10; $i++): ?>
                             <option value="<?= $i ?>" <?= $numero_distribuicao == $i ? 'selected' : '' ?>>
@@ -85,7 +85,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-shield me-1"></i>
                         Força
                     </label>
-                    <select name="forca_distribuicao" class="form-control" required>
+                    <select name="forca_distribuicao" class="form-control">
                         <option value="">Selecione a opção</option>
                         <option value="exercito" <?= $forca_distribuicao == 'exercito' ? 'selected' : '' ?>>Exército</option>
                         <option value="marinha" <?= $forca_distribuicao == 'marinha' ? 'selected' : '' ?>>Marinha</option>
@@ -99,7 +99,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-info-circle me-1"></i>
                         Status Militar
                     </label>
-                    <select name="titular_reserva" class="form-control" required>
+                    <select name="titular_reserva" class="form-control">
                         <option value="">Selecione a opção</option>
                         <option value="titular" <?= $titular_reserva_distribuicao == 'titular' ? 'selected' : '' ?>>Titular</option>
                         <option value="titular eis" <?= $titular_reserva_distribuicao == 'titular eis' ? 'selected' : '' ?>>Titular EIS</option>
@@ -123,7 +123,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-building me-1"></i>
                         OM 1ª Fase
                     </label>
-                    <select name="om_distribuicao_1_fase" class="form-control" required>
+                    <select name="om_distribuicao_1_fase" class="form-control">
                         <option value="">Selecione a opção</option>
                         <?php foreach ($conexao->get_oms($rm_usuario) as $value): ?>
                             <option value="<?= $value['id'] ?>" <?= $om_1_fase == $value['id'] ? 'selected' : '' ?>>
@@ -139,7 +139,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-map me-1"></i>
                         UF 1ª Fase
                     </label>
-                    <select id="uf2" name="uf2" class="form-control" onchange="busca_cidades2()" required>
+                    <select id="uf2" name="uf2" class="form-control" onchange="busca_cidades2()">
                         <option value="">Selecione a UF</option>
                         <?php
                         $estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'];
@@ -158,7 +158,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-map-marker me-1"></i>
                         Guarnição 1ª Fase
                     </label>
-                    <select id="cidade2" name="cidade2" class="form-control" required>
+                    <select id="cidade2" name="cidade2" class="form-control">
                         <option value="">Selecione a Cidade</option>
                         <?php foreach ($conexao->busca_cidade_uf($uf_1_fase) as $value3): ?>
                             <option value="<?= $value3['id'] ?>" <?= $value3['id'] == $id_cidade_1_fase ? 'selected' : '' ?>>
@@ -174,7 +174,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-building me-1"></i>
                         OM de Destino
                     </label>
-                    <select name="om_distribuicao" class="form-control" required>
+                    <select name="om_distribuicao" class="form-control">
                         <option value="">Selecione a opção</option>
                         <?php foreach ($conexao->get_oms($rm_usuario) as $value): ?>
                             <option value="<?= $value['id'] ?>" <?= $om_distribuicao == $value['id'] ? 'selected' : '' ?>>
@@ -190,7 +190,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-map me-1"></i>
                         UF Destino
                     </label>
-                    <select id="uf" name="uf" class="form-control" onchange="busca_cidades()" required>
+                    <select id="uf" name="uf" class="form-control" onchange="busca_cidades()">
                         <option value="">Selecione a UF</option>
                         <?php foreach ($estados as $estado): ?>
                             <option value="<?= $estado ?>" <?= $uf_distribuicao == $estado ? 'selected' : '' ?>>
@@ -206,7 +206,7 @@ if (($_SESSION['perfil'] != 'admin') || $_SESSION['candidato'] == '1') {
                         <i class="fa fa-map-marker me-1"></i>
                         Guarnição Destino
                     </label>
-                    <select id="cidade" name="cidade_distribuicao" class="form-control" required>
+                    <select id="cidade" name="cidade_distribuicao" class="form-control">
                         <option value="">Selecione a Cidade</option>
                         <?php foreach ($conexao->busca_cidade_uf($uf_distribuicao) as $value2): ?>
                             <option value="<?= $value2['id'] ?>" <?= $value2['id'] == $id_cidade_distribuicao ? 'selected' : '' ?>>

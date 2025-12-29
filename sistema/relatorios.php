@@ -234,8 +234,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -300,8 +300,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -395,8 +395,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                     <?php endforeach; ?>
 
                                     <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            <i class="fa fa-file-export me-2"></i> GERAR
+                                        <button type="submit" class="btn btn-lg btn-primary">
+                                            <i class="fa fa-cloud-download"></i> GERAR
                                         </button>
                                     </div>
                                 </div>
@@ -451,8 +451,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                     <?php endforeach; ?>
 
                                     <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            <i class="fa fa-file-export me-2"></i> GERAR
+                                        <button type="submit" class="btn btn-lg btn-primary">
+                                            <i class="fa fa-cloud-download"></i> GERAR
                                         </button>
                                     </div>
                                 </div>
@@ -533,8 +533,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -599,8 +599,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -727,8 +727,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 <?php endforeach; ?>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR CRONOGRAMA AUTOMÁTICO
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR CRONOGRAMA AUTOMÁTICO
                                     </button>
                                 </div>
                             </div>
@@ -760,8 +760,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -790,8 +790,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                     <input name="paragrafo_um" maxlength="100" class="form-control" value="Tendo em vista a convocação dos candidatos OTT/STT 20XX/20XX, abaixo relacionados, para la realização de Inspeção de Saúde na Xª RM, solicito que os mesmos sejam cadastrados no Sistema de Perícias Médicas - SIPMED para la realização das Inspeções de Saúde no período entre XX a XX Maio XX.">
                                 </div>
                                 <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -861,8 +861,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1157,8 +1157,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1223,8 +1223,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1302,8 +1302,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1368,8 +1368,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1480,8 +1480,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1551,8 +1551,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1659,8 +1659,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1743,8 +1743,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1826,8 +1826,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1909,8 +1909,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -1989,8 +1989,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2110,8 +2110,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2187,8 +2187,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2264,8 +2264,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2323,8 +2323,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2408,8 +2408,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2479,8 +2479,162 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Convocação Escolha de Guarnição e divulgação de vagas -->
+                <div class="card border-info mb-20">
+                    <div class="card-header mb-20 bg-info text-white">
+                        <span class="fw-semibold">
+                            <i class="fa fa-flag-checkered me-2"></i>
+                            Convocação para Escolha de Guarnição e Divulgação de Vagas
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning mb-20">
+                            <h6 class="text-dark mb-2"><i class="fa fa-exclamation-circle me-1"></i> Requisitos/Detalhamento</h6>
+                            <ul class="requisitos-list text-dark">
+                                <li>A publicação irá considerar as vagas cadastradas no SisCanT</li>
+                            </ul>
+                        </div>
+
+                        <form action="mpdf/relatorio_convocacao_escolha_guarnicao.php" method="POST">
+                            <input name="tipo_relatorio" type="hidden" value="classificacao">
+                            <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
+                            <input name="etapa" type="hidden" value="<?= $etapa_atual ?>">
+                            <input name="orientacao" type="hidden" value="retrato">
+                            <input name="tipo_especialdiade" type="hidden" value="todas">
+                            <input name="cabecalho" type="hidden" value="sim">
+
+                            <div class="row">
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Título Principal</label>
+                                    <input name="titulo" value="PROCESSO SELETIVO PARA O SERVIÇO TÉCNICO TEMPORÁRIO XX 20XX/20XX" class="form-control">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Título Secundário</label>
+                                    <input name="subtitulo" value="DIVULGAÇÃO DE VAGAS, QUADRO HORÁRIO E ORIENTAÇÃO PARA ESCOLHA DA GUARNIÇÃO - ETAPA VI" class="form-control">
+                                </div>
+
+                                <div class="col-lg-4 mb-20">
+                                    <label class="form-label fw-semibold">Cidade e Data</label>
+                                    <input name="cidade_dt" value="Cidade - Data" class="form-control" placeholder="Cidade - Data">
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">1º Parágrafo</label>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">1. Visando o planejamento para que os candidatos efetuem a ESCOLHA DA GUARNIÇÃO onde desejam servir, que será executado pelo candidato de forma online utilizando o SISCANT, conforme previsto no anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação Nr XX – SSMR/X, de XX de junho de 20XX, informo as vagas previstas por especialidade, para que os candidatos melhores classificados acessem o sistema e efetuem a atividade, de XX a XX DE DEZ DE 20XX DAS 0800h ÀS 1200h, das 0800 às 1200 h conforme tabela abaixo.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">2º Parágrafo</label>
+                                    <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">2. Com a finalidade de não atrasar o processo de escolha cada candidato terá somente o tempo de 5 minutos para realizar sua escolha. O candidato seguinte na classificação só terá acesso à escolha após o anterior realizar a sua.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">3º Parágrafo</label>
+                                    <textarea name="paragrafo_tres" placeholder="3º Parágrafo do relatório" class="form-control" rows="3">3. Problemas devem ser relatados em tempo por todas as vias disponíveis (telefone, e-mail, Fale Conosco, etc) para não parar o processo. Todos os candidatos que chegaram a esta Etapa do processo deverão estar em condições de acessar o sistema e realizar a escolha, devido às desistências de vagas.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">4º Parágrafo</label>
+                                    <textarea name="paragrafo_quatro" placeholder="4º Parágrafo do relatório" class="form-control" rows="3">4. Os candidatos inscritos em duas ou mais especialidades que foram disponibilizadas vagas, ao escolherem vaga para uma especialidade específica, ficará automaticamente impossibilitado de escolher vaga nas demais especialidade em que estiver concorrendo.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">5º Parágrafo</label>
+                                    <textarea name="paragrafo_cinco" placeholder="5º Parágrafo do relatório" class="form-control" rows="3">5. O Cronograma abaixo contém os dias e horários de escolha de cada especialidade. Os candidatos devem realizar sua escolha EXCLUSIVAMENTE no dia destinado à sua especialidade.</textarea>
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">1º Dia</label>
+                                    <input name="data_dia_um" value="XX DE DEZ DE XX DAS 0800h ÀS 1200h" class="form-control" placeholder="XX DE DEZ DE XX DAS 0800h ÀS 1200h">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Especialidades 1º Dia</label>
+                                    <select name="especialidades_dia_um[]" class="form-control select2" multiple>
+                                        <?php foreach ($lista_especialidades as $value): ?>
+                                            <option value="<?= htmlspecialchars($value['id']) ?>">
+                                                <?= htmlspecialchars($value['nome']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">2º Dia</label>
+                                    <input name="data_dia_dois" value="XX DE DEZ DE XX DAS 0800h ÀS 1200h" class="form-control" placeholder="XX DE DEZ DE XX DAS 0800h ÀS 1200h">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Especialidades 2º Dia</label>
+                                    <select name="especialidades_dia_dois[]" class="form-control select2" multiple>
+                                        <?php foreach ($lista_especialidades as $value): ?>
+                                            <option value="<?= htmlspecialchars($value['id']) ?>">
+                                                <?= htmlspecialchars($value['nome']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">3º Dia</label>
+                                    <input name="data_dia_tres" value="XX DE DEZ DE XX DAS 0800h ÀS 1200h" class="form-control" placeholder="XX DE DEZ DE XX DAS 0800h ÀS 1200h">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Especialidades 3º Dia</label>
+                                    <select name="especialidades_dia_tres[]" class="form-control select2" multiple>
+                                        <?php foreach ($lista_especialidades as $value): ?>
+                                            <option value="<?= htmlspecialchars($value['id']) ?>">
+                                                <?= htmlspecialchars($value['nome']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">4º Dia</label>
+                                    <input name="data_dia_quatro" value="XX DE DEZ DE XX DAS 0800h ÀS 1200h" class="form-control" placeholder="XX DE DEZ DE XX DAS 0800h ÀS 1200h">
+                                </div>
+
+                                <div class="col-lg-6 mb-20">
+                                    <label class="form-label fw-semibold">Especialidades 4º Dia</label>
+                                    <select name="especialidades_dia_quatro[]" class="form-control select2" multiple>
+                                        <?php foreach ($lista_especialidades as $value): ?>
+                                            <option value="<?= htmlspecialchars($value['id']) ?>">
+                                                <?= htmlspecialchars($value['nome']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">6º Parágrafo</label>
+                                    <textarea name="paragrafo_seis" placeholder="6º Parágrafo do relatório" class="form-control" rows="3">6. Informo aos candidatos melhores classificados o universo de GUARNIÇÕES OFERTADAS, conforme necessidade da Administração Militar. Será facultado ao candidato o direito de selecionar: “Nenhuma das Opções (Desistência das localidades ofertadas)”.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">7º Parágrafo</label>
+                                    <textarea name="paragrafo_sete" placeholder="7º Parágrafo do relatório" class="form-control" rows="3">Relaciono abaixo as especialidades e as vagas disponíveis para a 1ª Convocação para OTT/STT no processo seletivo 25/26.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">8º Parágrafo</label>
+                                    <textarea name="paragrafo_oito" placeholder="8º Parágrafo do relatório" class="form-control" rows="3">Informo aos candidatos que poderão ser realizadas novas convocações, de acordo com a necessidade de serviço.</textarea>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2613,8 +2767,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2659,8 +2813,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                     </select>
                                 </div>
                                 <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2700,8 +2854,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                         </select>
                                     </div>
                                     <div class="col-lg-12">
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            <i class="fa fa-file-export me-2"></i> GERAR
+                                        <button type="submit" class="btn btn-lg btn-primary">
+                                            <i class="fa fa-cloud-download"></i> GERAR
                                         </button>
                                     </div>
                                 </div>
@@ -2737,8 +2891,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR
                                     </button>
                                 </div>
                             </div>
@@ -2776,8 +2930,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                     </select>
                                 </div>
                                 <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="fa fa-file-export me-2"></i> GERAR RELATÓRIO
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <i class="fa fa-cloud-download"></i> GERAR RELATÓRIO
                                     </button>
                                 </div>
                             </div>

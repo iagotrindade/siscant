@@ -95,7 +95,6 @@ foreach ($get_especialidades_candidato as $linha) {
     </div>
 <?php endif; ?>
 
-<?=$pode_escolher?>
 <!-- Escola de Guarnição liberada pelo Admin OTT/STT/MFDV -->
 
 <?php if ($pode_escolher_admin == true && $concorrendo != 0 && $liberacao_escolha_cidade == true && $_SESSION['candidato_etapa'] >= $etapa && !isset($_SESSION['eipot'])): ?>

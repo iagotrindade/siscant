@@ -267,7 +267,7 @@ if (isset($_GET['id_especialidade']))
                                     <i class="fa fa-graduation-cap me-1"></i>
                                     Especialidade (Opcional. Se não selecionada, todos os candidatos da Guarnição Selecionada serão distribuídos)
                                 </label>
-                                <select name="id_especialidade" class="form-control" required>
+                                <select name="id_especialidade" class="form-control">
                                     <option value="">Selecione a opção</option>
                                     <?php foreach ($conexao->get_especialidade() as $value): ?>
                                         <option value="<?= $value['id'] ?>">
