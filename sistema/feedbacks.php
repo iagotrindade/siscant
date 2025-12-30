@@ -790,7 +790,7 @@ foreach ($usuarios_banidos as $banido) {
                         button.innerHTML = '<span class="arrow">▼</span> Ver mais';
                     } else {
                         // Expandir
-                        description.style.maxHeight = description.scrollHeight + 'px';
+                        description.style.maxHeight = description.scrollHeight + '20px';
                         description.style.webkitLineClamp = 'unset';
                         description.style.overflow = 'visible';
                         arrow.textContent = '▲';

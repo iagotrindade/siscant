@@ -65,7 +65,7 @@ if (!isset($_SESSION['chave'])) {
     exit();
 }
 
-if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] && 'jise' && $_SESSION['perfil'] != 'cr') {
+if ($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'jise' && $_SESSION['perfil'] != 'cr') {
     erro("Erro 4327347! Não é possivel fazer essa edição!");
     exit();
 }
