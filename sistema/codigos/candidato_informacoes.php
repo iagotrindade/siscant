@@ -425,11 +425,65 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
             </div>
 
             <!-- Navegação Rápida -->
-            <div class="row">
+            <div class="row mb-40">
+                <div class="col-md-2 text-center">
+                    <a href="#questionario" class="">
+                        <h4 class="mb-0">
+                            <i class="fa fa-pencil-square me-1"></i> Questionário
+                        </h4>
+                    </a>
+                </div>
+
+                <div class="col-md-2 text-center">
+                    <a href="#alterar_contatos" class="">
+                        <h4 class="mb-0">
+                            <i class="fa fa-phone me-1"></i> Contatos
+                        </h4>
+                    </a>
+                </div>
                 <div class="col-md-2 text-center">
                     <a href="#especialidades" class="">
                         <h4 class="mb-0">
                             <i class="fa fa-graduation-cap me-1"></i> Especialidades
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="#checklist_documentos" class="">
+                        <h4 class="mb-0">
+                            <i class="fa fa-file-text me-1"></i> Anexo "C"
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="#alterar_eaf" class="">
+                        <h4 class="mb-0">
+                            <i class="fa fa-heartbeat me-1"></i> EAF
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="#heteroidentificacao" class="">
+                        <h4 class="mb-0">
+                            <i class="fa fa-users me-1"></i> Heteroidentificação
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    <a href="#recursos" class="">
+                        <h4 class="mb-0">
+                            <i class="fa fa-gavel me-1"></i> Recursos
+                        </h4>
+                    </a>
+                </div>
+
+                <div class="col-md-2 text-center">
+                    <a href="#distribuicao">
+                        <h4 class="mb-0">
+                            <i class="fa fa-map-marker me-1"></i> Distribuição
                         </h4>
                     </a>
                 </div>
@@ -448,13 +502,7 @@ if ($medico_obrigatorio == 0 && ($id_selecao != $_SESSION['selecao']) && $_SESSI
                         </h4>
                     </a>
                 </div>
-                <div class="col-md-2 text-center">
-                    <a href="#recursos" class="">
-                        <h4 class="mb-0">
-                            <i class="fa fa-gavel me-1"></i> Recursos
-                        </h4>
-                    </a>
-                </div>
+
                 <div class="col-md-2 text-center">
                     <a href="#insere_arquivo_candidato" class="">
                         <h4 class="mb-0">

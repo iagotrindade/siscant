@@ -1,3 +1,5 @@
+<a name="exame_medico"></a>
+
 <?php
 if (!isset($_SESSION))
     session_start();
@@ -10,7 +12,6 @@ if (($_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'documentos' && $_
 include_once '../sistema/codigos/funcao_apagar.php';
 ?>
 
-<a name="exame_medico"></a>
 <!-- 22/06/2025 -> Iago Silva Correção na estrutura do layout -->
 <div class="card dashboard-card mb-4">
     <div class="card-header dashboard-header mb-20">

@@ -1,6 +1,7 @@
 <!-- Checklist de Documentos -->
+<a name="checklist_documentos"></a>
+
 <?php if ($_SESSION['perfil'] == 'admin' || $avaliador_pode_avaliar_id_especialidade): ?>
-    <a name="checklist_documentos"></a>
     <style>
         .checklist-item {
             transition: all 0.3s ease;

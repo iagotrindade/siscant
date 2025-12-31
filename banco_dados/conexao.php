@@ -11418,18 +11418,19 @@ order by total_pontos_somados desc");
         }
     }
 
-    public function atualiza_status_feedback($id_feedback, $novo_status)
+    public function atualiza_status_feedback($id_feedback, $novo_status, $resposta)
     {
         $datetime = date('Y-m-d H:i:s');
         try {
             $sqlUpdate = "UPDATE feedbacks 
-                          SET status = :novo_status, atualizado_em = :atualizado_em 
+                          SET status = :novo_status, atualizado_em = :atualizado_em, resposta = :resposta
                           WHERE id = :id_feedback";
 
             $this->pdo->beginTransaction();
 
             $query = $this->pdo->prepare($sqlUpdate);
             $query->bindValue(":novo_status", $novo_status);
+            $query->bindValue(":resposta", $resposta);
             $query->bindValue(":atualizado_em", $datetime);
             $query->bindValue(":id_feedback", $id_feedback);
 

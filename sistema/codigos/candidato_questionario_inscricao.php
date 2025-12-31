@@ -1,8 +1,10 @@
+<a name='questionario'></a>
+
 <?php
 // 22/11/2025 -> Iago Silva Criação da área de Questionário de Inscrição
 $questionario = $conexao->get_respostas_questionario_candidato($id_usuario);
 ?>
-<a name='questionario'></a>
+
 <div <?= $_SESSION['perfil'] != 'admin' && $_SESSION['perfil'] != 'chc' && $_SESSION['perfil'] != 'cr' && $_SESSION['perfil'] != 'consulta' ? 'hidden' : '' ?>>
     <!-- Questionário de Inscrição -->
     <div class="card dashboard-card mb-4">
