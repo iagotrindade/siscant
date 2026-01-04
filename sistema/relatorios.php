@@ -2504,7 +2504,7 @@ $lista_especialidades = $conexao->get_especialidade();
                             </ul>
                         </div>
 
-                        <form action="mpdf/relatorio_convocacao_escolha_guarnicao.php" method="POST">
+                        <form action="mpdf/relatorio_convocacao_selecao_complementar.php" method="POST">
                             <input name="tipo_relatorio" type="hidden" value="classificacao">
                             <input name="mostrar_especialidade" type="hidden" value="nao_mostrar_especialidade">
                             <input name="etapa" type="hidden" value="<?= $etapa_atual ?>">
@@ -2520,7 +2520,7 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-4 mb-20">
                                     <label class="form-label fw-semibold">Título Secundário</label>
-                                    <input name="subtitulo" value="DIVULGAÇÃO DE VAGAS, QUADRO HORÁRIO E ORIENTAÇÃO PARA ESCOLHA DA GUARNIÇÃO - ETAPA VI" class="form-control">
+                                    <input name="subtitulo" value="CONVOCAÇÃO SELEÇÃO COMPLEMENTAR 20XX/20XX" class="form-control">
                                 </div>
 
                                 <div class="col-lg-4 mb-20">
@@ -2530,106 +2530,87 @@ $lista_especialidades = $conexao->get_especialidade();
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">1º Parágrafo</label>
-                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">1. Visando o planejamento para que os candidatos efetuem a ESCOLHA DA GUARNIÇÃO onde desejam servir, que será executado pelo candidato de forma online utilizando o SISCANT, conforme previsto no anexo “A” (Calendário Geral de Atividades) do Aviso de Convocação Nr XX – SSMR/X, de XX de junho de 20XX, informo as vagas previstas por especialidade, para que os candidatos melhores classificados acessem o sistema e efetuem a atividade, de XX a XX DE DEZ DE 20XX DAS 0800h ÀS 1200h, das 0800 às 1200 h conforme tabela abaixo.</textarea>
+                                    <textarea name="paragrafo_um" placeholder="1º Parágrafo do relatório" class="form-control" rows="3">1. O Comandante da 3ª Região Militar divulga a relação nominal de todos os candidatos convocados à incorporação ao Exército Brasileiro, a partir de 1 de fevereiro de 2025, após o final das etapas I a V do Processo Seletivo 2024/2025 para Oficial e Sargento Técnico Temporário (OTT/STT), chamados para a Convocação.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">2º Parágrafo</label>
-                                    <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">2. Com a finalidade de não atrasar o processo de escolha cada candidato terá somente o tempo de 5 minutos para realizar sua escolha. O candidato seguinte na classificação só terá acesso à escolha após o anterior realizar a sua.</textarea>
+                                    <textarea name="paragrafo_dois" placeholder="2º Parágrafo do relatório" class="form-control" rows="3">2. Informa que, conforme preconiza o Aviso de Convocação, os candidatos devem cumprir as seguintes medidas administrativas previstas, até o dia da referida apresentação, prevista para 20 de janeiro de 25, às 0900 horas.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Letra "a" 2º Parágrafo</label>
+                                    <textarea name="paragrafo_tres" placeholder="3º Parágrafo do relatório" class="form-control" rows="3">a. os candidatos Militares da Ativa (3º Sargento, Cabo ou Soldado EP) que foram convocados para a referida incorporação devem ser licenciados ex-offício, na véspera da data da incorporação (31 de janeiro de 2025);</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Letra "b" 2º Parágrafo</label>
+                                    <textarea name="paragrafo_quatro" placeholder="4º Parágrafo do relatório" class="form-control" rows="3">b. os candidatos Servidores ou Empregados Públicos de qualquer dos entes da Administração Pública direta, indireta, autárquica ou fundacional, deverão se desligar dos respectivos órgãos na véspera da data da incorporação (31 de janeiro de 2025); e</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Letra "c" 2º Parágrafo</label>
+                                    <textarea name="paragrafo_cinco" placeholder="5º Parágrafo do relatório" class="form-control" rows="3">c. os demais candidatos que não estão enquadrados nas situações acima citadas devem se desvincular de seus respectivos empregos até a véspera da data da incorporação (31 de janeiro de 2025).</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
                                     <label class="form-label fw-semibold">3º Parágrafo</label>
-                                    <textarea name="paragrafo_tres" placeholder="3º Parágrafo do relatório" class="form-control" rows="3">3. Problemas devem ser relatados em tempo por todas as vias disponíveis (telefone, e-mail, Fale Conosco, etc) para não parar o processo. Todos os candidatos que chegaram a esta Etapa do processo deverão estar em condições de acessar o sistema e realizar a escolha, devido às desistências de vagas.</textarea>
+                                    <textarea name="paragrafo_seis" placeholder="6º Parágrafo do relatório" class="form-control" rows="3">3. Observações relativas à presente publicação:</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">4º Parágrafo</label>
-                                    <textarea name="paragrafo_quatro" placeholder="4º Parágrafo do relatório" class="form-control" rows="3">4. Os candidatos inscritos em duas ou mais especialidades que foram disponibilizadas vagas, ao escolherem vaga para uma especialidade específica, ficará automaticamente impossibilitado de escolher vaga nas demais especialidade em que estiver concorrendo.</textarea>
+                                    <label class="form-label fw-semibold">Letra "a" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_sete" placeholder="7º Parágrafo do relatório" class="form-control" rows="3">a. qualquer discordância dos candidatos a seguir convocados deverá ser informada formalmente, via documento ao Comando da 3ª Região Militar, até o dia 31 de janeiro de 2025, data final de ajustes na convocação, caso contrário será considerada a concordância de todos os convocados;</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">5º Parágrafo</label>
-                                    <textarea name="paragrafo_cinco" placeholder="5º Parágrafo do relatório" class="form-control" rows="3">5. O Cronograma abaixo contém os dias e horários de escolha de cada especialidade. Os candidatos devem realizar sua escolha EXCLUSIVAMENTE no dia destinado à sua especialidade.</textarea>
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">1º Dia</label>
-                                    <input name="data_dia_um" value="XX DE DEZ DE XX DAS 0800h ÀS 1200h" class="form-control" placeholder="XX DE DEZ DE XX DAS 0800h ÀS 1200h">
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">Especialidades 1º Dia</label>
-                                    <select name="especialidades_dia_um[]" class="form-control select2" multiple>
-                                        <?php foreach ($lista_especialidades as $value): ?>
-                                            <option value="<?= htmlspecialchars($value['id']) ?>">
-                                                <?= htmlspecialchars($value['nome']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">2º Dia</label>
-                                    <input name="data_dia_dois" value="XX DE DEZ DE XX DAS 0800h ÀS 1200h" class="form-control" placeholder="XX DE DEZ DE XX DAS 0800h ÀS 1200h">
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">Especialidades 2º Dia</label>
-                                    <select name="especialidades_dia_dois[]" class="form-control select2" multiple>
-                                        <?php foreach ($lista_especialidades as $value): ?>
-                                            <option value="<?= htmlspecialchars($value['id']) ?>">
-                                                <?= htmlspecialchars($value['nome']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">3º Dia</label>
-                                    <input name="data_dia_tres" value="XX DE DEZ DE XX DAS 0800h ÀS 1200h" class="form-control" placeholder="XX DE DEZ DE XX DAS 0800h ÀS 1200h">
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">Especialidades 3º Dia</label>
-                                    <select name="especialidades_dia_tres[]" class="form-control select2" multiple>
-                                        <?php foreach ($lista_especialidades as $value): ?>
-                                            <option value="<?= htmlspecialchars($value['id']) ?>">
-                                                <?= htmlspecialchars($value['nome']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">4º Dia</label>
-                                    <input name="data_dia_quatro" value="XX DE DEZ DE XX DAS 0800h ÀS 1200h" class="form-control" placeholder="XX DE DEZ DE XX DAS 0800h ÀS 1200h">
-                                </div>
-
-                                <div class="col-lg-6 mb-20">
-                                    <label class="form-label fw-semibold">Especialidades 4º Dia</label>
-                                    <select name="especialidades_dia_quatro[]" class="form-control select2" multiple>
-                                        <?php foreach ($lista_especialidades as $value): ?>
-                                            <option value="<?= htmlspecialchars($value['id']) ?>">
-                                                <?= htmlspecialchars($value['nome']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <label class="form-label fw-semibold">Letra "b" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_oito" placeholder="8º Parágrafo do relatório" class="form-control" rows="3">b. as Organizações Militares designadas como OM de 1ª Fase deverão realizar a inspeção de saúde complementar, a fim de verificar se algum candidato passou à condição de Inapto para o Serviço do Exército. Para tanto, caso julgue necessário, o médico perito da OM poderá solicitar novos exames para elucidar qualquer situação e informar ao Comando da 3ª RM;</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">6º Parágrafo</label>
-                                    <textarea name="paragrafo_seis" placeholder="6º Parágrafo do relatório" class="form-control" rows="3">6. Informo aos candidatos melhores classificados o universo de GUARNIÇÕES OFERTADAS, conforme necessidade da Administração Militar. Será facultado ao candidato o direito de selecionar: “Nenhuma das Opções (Desistência das localidades ofertadas)”.</textarea>
+                                    <label class="form-label fw-semibold">Letra "c" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_nove" placeholder="9º Parágrafo do relatório" class="form-control" rows="3">c. com a finalidade de comprovar a situação de aptidão e dar agilidade ao processo, os candidatos deverão apresentar as certidões e exame abaixo relacionados, atualizados no período de 15 a 31 de janeiro de 2025.</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">7º Parágrafo</label>
-                                    <textarea name="paragrafo_sete" placeholder="7º Parágrafo do relatório" class="form-control" rows="3">Relaciono abaixo as especialidades e as vagas disponíveis para a 1ª Convocação para OTT/STT no processo seletivo 25/26.</textarea>
+                                    <label class="form-label fw-semibold">Número "c.1" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_dez" placeholder="10º Parágrafo do relatório" class="form-control" rows="3">1) Certidões dos Distribuidores Criminais das Justiças Federal, Estadual, (ou Distrito Federal) e Militar dos lugares em que residiu nos últimos 5 (cinco) anos, que podem ser obtidas nos seguintes endereços eletrônicos respectivamente (www.trf4.jus.br, www.tjrs.jus.br e www.stm.jus.br);</textarea>
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">8º Parágrafo</label>
-                                    <textarea name="paragrafo_oito" placeholder="8º Parágrafo do relatório" class="form-control" rows="3">Informo aos candidatos que poderão ser realizadas novas convocações, de acordo com a necessidade de serviço.</textarea>
+                                    <label class="form-label fw-semibold">Número "c.2" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_onze" placeholder="11º Parágrafo do relatório" class="form-control" rows="3">2) Folha de antecedentes de Polícia Federal e da Polícia Civil Estadual (ou do Distrito Federal) dos lugares em que residiu nos últimos 5 (cinco) anos, que podem ser obtidas nos seguintes endereços eletrônicos respectivamente (www.dpf.gov.br e www.igp.rs.gov.br); e</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Número "c.3" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_doze" placeholder="12º Parágrafo do relatório" class="form-control" rows="3">3) as candidatas (segmento feminino) deverão conduzir o Exame Beta HCG com resultado expedido no período de 15 a 31 de janeiro de 2024.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Letra "d" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_treze" placeholder="13º Parágrafo do relatório" class="form-control" rows="3">d. para os candidatos julgados aptos, deverá ser efetuada a incorporação e inclusão no SiCaPEx, remetendo a publicação imediatamente à 3ª RM;</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Letra "e" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_quatorze" placeholder="14º Parágrafo do relatório" class="form-control" rows="3">e. os candidatos APTOS nas Etapas de I a V do processo seletivo, que não foram convocados, poderão, a critério do Comandante da 3ª Região Militar e por necessidade do serviço, ser convocados enquanto o presente Processo Seletivo se encontrar na validade. Para tanto, deverão manter ativos o e-mail e telefone informados por ocasião da inscrição, em virtude de ser necessário um meio de contato por parte da Região Militar caso seja necessário informar sobre uma convocação complementar; e,</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Letra "f" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_quinze" placeholder="15º Parágrafo do relatório" class="form-control" rows="3">f. até a data da incorporação a convocação estará sujeita a modificações, inclusive cancelamento, em função da constatação de fato superveniente ao presente aviso.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Letra "g" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_dezeseis" placeholder="16º Parágrafo do relatório" class="form-control" rows="3">g. A presente relação não está em ordem de classificação.</textarea>
+                                </div>
+
+                                <div class="col-lg-12 mb-20">
+                                    <label class="form-label fw-semibold">Letra "g" 3º Parágrafo</label>
+                                    <textarea name="paragrafo_dezesete" placeholder="17º Parágrafo do relatório" class="form-control" rows="3">4. Candidatos a Oficial Técnico Temporário (OTT) convocados:</textarea>
                                 </div>
 
                                 <div class="col-md-12">
