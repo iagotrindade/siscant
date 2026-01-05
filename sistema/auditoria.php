@@ -1025,6 +1025,24 @@ if (isset($_GET['codigo'])) {
                                             <td>Atualizou o Checlist de um candidato</td>
                                             <td>22115</td>
                                         </tr>
+
+                                        <tr>
+                                            <td>OM</td>
+                                            <td>Cadastrou uma nova OM</td>
+                                            <td>22116</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>OM</td>
+                                            <td>Atualizou uma OM</td>
+                                            <td>22117</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>OM</td>
+                                            <td>Excluiu uma OM</td>
+                                            <td>22118</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

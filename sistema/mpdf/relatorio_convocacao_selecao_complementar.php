@@ -162,7 +162,7 @@ foreach ($candidatos as $candidato) {
 
     // Armazenar informações da OM junto com o candidato
     $candidato['om_nome'] = $om[0]['nome'] ?? '';
-    $candidato['om_endereco'] = ($om[0]['endereco'] ?? '') . "/" . ($om[0]['uf'] ?? '') . " - " . ($om[0]['cep'] ?? '');
+    $candidato['om_endereco'] = ($om[0]['endereco'] ?? '') . "/" . ($om[0]['uf'] ?? '') . " - " . (mascara($om[0]['cep'] ?? '', '#####-###'));
     $candidato['ott_stt'] = $ott_stt; // Garantir que está disponível
 
     $candidatos_agrupados[$cidade][$especialidade][] = $candidato;

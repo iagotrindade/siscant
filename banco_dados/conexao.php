@@ -2050,6 +2050,27 @@ class Conexao
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function insere_om($nome, $abreviatura, $rm, $comando_militar_area, $codom, $uf, $cep, $endereco, $telefone)
+    {
+        $stmt = $this->pdo->prepare(
+            "
+            INSERT INTO om (nome, abreviatura, rm, cma, codom, uf, cep, endereco, telefone, apagado)
+            VALUES (:nome, :abreviatura, :rm, :comando_militar_area, :codom, :uf, :cep, :endereco, :telefone, 0)
+        "
+        );
+        $stmt->bindValue(':nome', $nome);
+        $stmt->bindValue(':abreviatura', $abreviatura);
+        $stmt->bindValue(':rm', $rm);
+        $stmt->bindValue(':comando_militar_area', $comando_militar_area);
+        $stmt->bindValue(':codom', $codom);
+        $stmt->bindValue(':uf', $uf);
+        $stmt->bindValue(':cep', $cep);
+        $stmt->bindValue(':endereco', $endereco);
+        $stmt->bindValue(':telefone', $telefone);
+
+        return $stmt->execute();
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Especialidades ID">
