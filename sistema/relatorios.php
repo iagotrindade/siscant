@@ -2609,8 +2609,8 @@ $lista_especialidades = $conexao->get_especialidade();
                                 </div>
 
                                 <div class="col-lg-12 mb-20">
-                                    <label class="form-label fw-semibold">Letra "g" 3º Parágrafo</label>
-                                    <textarea name="paragrafo_dezesete" placeholder="17º Parágrafo do relatório" class="form-control" rows="3">4. Candidatos a Oficial Técnico Temporário (OTT) convocados:</textarea>
+                                    <label class="form-label fw-semibold">4º Parágrafo</label>
+                                    <textarea name="paragrafo_dezesete" placeholder="17º Parágrafo do relatório" class="form-control" rows="3">4. Candidatos a Oficial Técnico Temporário (OTT) e Sargento Técnico Temporário (STT) convocados:</textarea>
                                 </div>
 
                                 <div class="col-md-12">

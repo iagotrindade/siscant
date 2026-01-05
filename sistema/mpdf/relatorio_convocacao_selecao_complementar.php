@@ -140,12 +140,14 @@ foreach ($lista_especialidades as $especialidade) {
 
 usort($candidatos, function ($a, $b) {
     return [
+        $a['ott_stt'] === 'ott' ? 0 : 1, // ott vem primeiro (0 < 1)
         $a['cidade_escolheu_servir'],
-        $a['especialidade_id'],
+        $a['especialidade'],
         $a['nome_completo']
     ] <=> [
+        $b['ott_stt'] === 'ott' ? 0 : 1,
         $b['cidade_escolheu_servir'],
-        $b['especialidade_id'],
+        $b['especialidade'],
         $b['nome_completo']
     ];
 });
@@ -156,7 +158,7 @@ foreach ($candidatos as $candidato) {
     $cidade = $candidato['cidade_escolheu_servir'];
     $especialidade = $candidato['especialidade'];
     $ott_stt = $candidato['ott_stt'];
-    
+
     $id_om = $candidato['om_1_fase'];
     $om = $conexao->get_om_id($id_om);
 
@@ -187,14 +189,14 @@ foreach ($candidatos_agrupados as $cidade => $especialidades) {
             <strong>" . mb_strtoupper($cidade) . "</strong>, deverão apresentar-se no(a) " . $om_nome . ", 
             localizado(a) na(o) {$endereco_om}
         </p>";
-        
+
         // Tabela
         $html_candidatos .= "
         <table border='1' style='width:100%; border-collapse: collapse; margin-bottom: 20px;'>
             <tr>
                 <th colspan='3' style='text-align: center; background-color: #f0f0f0; font-weight: bold;'>
                     <div style='text-transform: uppercase;'>{$especialidade}</div>
-                    <div style='font-weight: normal;'>{$cidade}</div>
+                    <div>{$cidade}</div>
                 </th>
             </tr>
             <tr>
@@ -203,7 +205,7 @@ foreach ($candidatos_agrupados as $cidade => $especialidades) {
                 <th style='font-size: 12px; width: 100px;'>OBSERVAÇÃO</th>
             </tr>
         ";
-        
+
         $contador = 1;
         foreach ($candidatos_especialidade as $candidato) {
             $html_candidatos .= "
@@ -215,13 +217,13 @@ foreach ($candidatos_agrupados as $cidade => $especialidades) {
             ";
             $contador++;
         }
-        
+
         $html_candidatos .= "</table>";
-        
+
         // Avançar para próxima letra
         $letra_atual = ++$letra_atual;
         $indice_letra++;
-        
+
         // Se passou do 'z', começar com 'aa', 'ab', etc.
         if ($letra_atual > 'z') {
             $letra_atual = 'a' . chr(96 + ($indice_letra - 25));
