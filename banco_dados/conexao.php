@@ -2071,6 +2071,36 @@ class Conexao
 
         return $stmt->execute();
     }
+
+    public function edita_om($id_om, $nome, $abreviatura, $rm, $comando_militar_area, $codom, $uf, $cep, $endereco, $telefone) {
+        $stmt = $this->pdo->prepare(
+            "
+            UPDATE om
+            SET nome = :nome,
+                abreviatura = :abreviatura,
+                rm = :rm,
+                cma = :comando_militar_area,
+                codom = :codom,
+                uf = :uf,
+                cep = :cep,
+                endereco = :endereco,
+                telefone = :telefone
+            WHERE id = :id_om
+        "
+        );
+        $stmt->bindValue(':id_om', $id_om);
+        $stmt->bindValue(':nome', $nome);
+        $stmt->bindValue(':abreviatura', $abreviatura);
+        $stmt->bindValue(':rm', $rm);
+        $stmt->bindValue(':comando_militar_area', $comando_militar_area);
+        $stmt->bindValue(':codom', $codom);
+        $stmt->bindValue(':uf', $uf);
+        $stmt->bindValue(':cep', $cep);
+        $stmt->bindValue(':endereco', $endereco);
+        $stmt->bindValue(':telefone', $telefone);
+
+        return $stmt->execute();
+    }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Get Especialidades ID">

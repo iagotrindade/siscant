@@ -5,6 +5,8 @@ include_once 'codigos/funcao_apagar.php';
 if (!isset($_SESSION))
     session_start();
 
+$om = $conexao->get_om_id($_GET['id_om']);
+
 $resultado_selecao = $conexao->get_selecao_id();
 if (
     $resultado_selecao[0]['codigo'] == 'ott_stt'
@@ -129,7 +131,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
             <ul class="breadcrumb">
                 <li><i class="fa fa-home fa-lg"></i></li>
                 <li><a href="index.php">Página Inicial</a></li>
-                <li>Organizações Militares</li>
+                <li>Editar Organizações Militares</li>
             </ul>
         </div>
     </div>
@@ -138,19 +140,20 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
         <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white mb-20">
-                    <span class="mb-0"><i class="fa fa-building me-2"></i> Cadastrar Nova OM</span>
+                    <span class="mb-0"><i class="fa fa-building"></i> Editar OM</span>
                     <small class="opacity-75">Todos os campos são obrigatórios</small>
                 </div>
                 <div class="card-body">
-                    <form action="../banco_dados/om_cadastra.php" method="post" class="needs-validation">
+                    <form action="../banco_dados/om_edita.php" method="post" class="needs-validation">
                         <input type="hidden" name="criptografia" value="<?php echo hash('sha256', $_SESSION['assinatura_sistema']); ?>">
+                        <input type="hidden" name="id_om" value="<?= $_GET['id_om'] ?>">
 
                         <div class="row mb-20">
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label class="form-label fw-bold"><i class="fa fa-building"></i> Nome</label>
                                     <input id="nome" name="nome" maxlength="240"
-                                        class="form-control form-control-lg" placeholder="Digite o nome" required>
+                                        class="form-control form-control-lg" placeholder="Digite o nome" required value="<?= $om[0]['nome'] ?>">
                                 </div>
                             </div>
 
@@ -158,7 +161,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <div class="form-group">
                                     <label class="form-label fw-bold"><i class="fa fa-tag"></i> Abreviatura</label>
                                     <input id="abreviatura" name="abreviatura" maxlength="240"
-                                        class="form-control form-control-lg" placeholder="Digite a abreviatura" required>
+                                        class="form-control form-control-lg" placeholder="Digite a abreviatura" required value="<?= $om[0]['abreviatura'] ?>">
                                 </div>
                             </div>
 
@@ -166,7 +169,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <div class="form-group">
                                     <label class="form-label fw-bold"><i class="fa fa-building"></i> RM</label>
                                     <input id="rm" name="rm" type="number" maxlength="12"
-                                        class="form-control form-control-lg" placeholder="Digite o RM" required>
+                                        class="form-control form-control-lg" placeholder="Digite o RM" required value="<?= $om[0]['rm'] ?>">
                                 </div>
                             </div>
 
@@ -176,14 +179,14 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                     <select id="comando_militar_area" name="cma" type="number" maxlength="12"
                                         class="form-control form-control-lg" placeholder="Digite o Comando Militar de Área da OM" required>
                                         <option value="" selected disabled>Selecione o Comando</option>
-                                        <option value="cma">Comando Militar da Amazônia (CMA)</option>
-                                        <option value="cmn">Comando Militar do Norte (CMN)</option>
-                                        <option value="cmne">Comando Militar do Nordeste (CMNE)</option>
-                                        <option value="cmo">Comando Militar do Oeste (CMO)</option>
-                                        <option value="cmp">Comando Militar do Planalto (CMP)</option>
-                                        <option value="cml">Comando Militar do Leste (CML)</option>
-                                        <option value="cmse">Comando Militar do Sudeste (CMSE)</option>
-                                        <option value="cms">Comando Militar do Sul (CMS)</option>
+                                        <option value="cma" <?= $om[0]['cma'] == 'cma' ? 'selected' : '' ?>>Comando Militar da Amazônia (CMA)</option>
+                                        <option value="cmn" <?= $om[0]['cma'] == 'cmn' ? 'selected' : '' ?>>Comando Militar do Norte (CMN)</option>
+                                        <option value="cmne" <?= $om[0]['cma'] == 'cmne' ? 'selected' : '' ?>>Comando Militar do Nordeste (CMNE)</option>
+                                        <option value="cmo" <?= $om[0]['cma'] == 'cmo' ? 'selected' : '' ?>>Comando Militar do Oeste (CMO)</option>
+                                        <option value="cmp" <?= $om[0]['cma'] == 'cmp' ? 'selected' : '' ?>>Comando Militar do Planalto (CMP)</option>
+                                        <option value="cml" <?= $om[0]['cma'] == 'cml' ? 'selected' : '' ?>>Comando Militar do Leste (CML)</option>
+                                        <option value="cmse" <?= $om[0]['cma'] == 'cmse' ? 'selected' : '' ?>>Comando Militar do Sudeste (CMSE)</option>
+                                        <option value="cms" <?= $om[0]['cma'] == 'cms' ? 'selected' : '' ?>>Comando Militar do Sul (CMS)</option>
                                     </select>
                                 </div>
                             </div>
@@ -192,7 +195,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <div class="form-group">
                                     <label class="form-label fw-bold"><i class="fa fa-barcode"></i> CODOM da OM</label>
                                     <input id="codom" name="codom" type="text"
-                                        class="form-control form-control-lg" placeholder="Digite o CODOM da OM" required>
+                                        class="form-control form-control-lg" placeholder="Digite o CODOM da OM" required value="<?= $om[0]['codom'] ?>">
                                 </div>
                             </div>
 
@@ -208,7 +211,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                     $estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'];
                                     foreach ($estados as $estado):
                                     ?>
-                                        <option value="<?= $estado ?>">
+                                        <option value="<?= $estado ?>" <?= $om[0]['uf'] == $estado ? 'selected' : '' ?>>
                                             <?= $estado ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -219,7 +222,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <div class="form-group">
                                     <label class="form-label fw-bold"><i class="fa fa-envelope"></i> CEP</label>
                                     <input id="cep" name="cep" type="text"
-                                        class="form-control form-control-lg" placeholder="Digite o CEP" required>
+                                        class="form-control form-control-lg" placeholder="Digite o CEP" required value="<?= $om[0]['cep'] ?>">
                                 </div>
                             </div>
 
@@ -227,7 +230,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <div class="form-group">
                                     <label class="form-label fw-bold"><i class="fa fa-road"></i> Endereço</label>
                                     <input id="endereco" name="endereco" type="text"
-                                        class="form-control form-control-lg" placeholder="Digite o endereço" required>
+                                        class="form-control form-control-lg" placeholder="Digite o endereço" required value="<?= $om[0]['endereco'] ?>">
                                 </div>
                             </div>
 
@@ -235,14 +238,14 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <div class="form-group">
                                     <label class="form-label fw-bold"><i class="fa fa-phone"></i> Telefone</label>
                                     <input id="telefone" name="telefone" type="text"
-                                        class="form-control form-control-lg" placeholder="Digite o telefone" required>
+                                        class="form-control form-control-lg" placeholder="Digite o telefone" required value="<?= $om[0]['telefone'] ?>">
                                 </div>
                             </div>
                         </div>
 
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fa fa-save me-2"></i> CADASTRAR OM
+                                <i class="fa fa-save me-2"></i> ATUALIZAR OM
                             </button>
                         </div>
                     </form>
