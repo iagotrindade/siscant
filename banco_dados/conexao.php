@@ -2072,7 +2072,8 @@ class Conexao
         return $stmt->execute();
     }
 
-    public function edita_om($id_om, $nome, $abreviatura, $rm, $comando_militar_area, $codom, $uf, $cep, $endereco, $telefone) {
+    public function edita_om($id_om, $nome, $abreviatura, $rm, $comando_militar_area, $codom, $uf, $cep, $endereco, $telefone)
+    {
         $stmt = $this->pdo->prepare(
             "
             UPDATE om
@@ -2098,6 +2099,20 @@ class Conexao
         $stmt->bindValue(':cep', $cep);
         $stmt->bindValue(':endereco', $endereco);
         $stmt->bindValue(':telefone', $telefone);
+
+        return $stmt->execute();
+    }
+
+    public function apaga_om($id_om)
+    {
+        $stmt = $this->pdo->prepare(
+            "
+            UPDATE om
+            SET apagado = 1
+            WHERE id = :id_om
+        "
+        );
+        $stmt->bindValue(':id_om', $id_om);
 
         return $stmt->execute();
     }
