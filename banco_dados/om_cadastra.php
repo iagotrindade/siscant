@@ -45,7 +45,7 @@ $endereco = $_POST['endereco'];
 $telefone = $_POST['telefone'];
 
 
-if ($nome == null || $abreviatura == null || $rm == null || $comando_militar_area == null || $codom == null || $uf == null || $cep == null || $endereco == null || $telefone == null) {
+if ($nome == null || $abreviatura == null || $rm == null || $comando_militar_area == null || $codom == null || $uf == null || $cep == null || $endereco == null) {
     erro("Todos os campos são obrigatórios!");
     exit();
 }

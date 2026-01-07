@@ -197,7 +197,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                             </div>
 
                             <!-- UF 1ª Fase -->
-                            <div class="col-lg-3 mb-20">
+                            <div class="col-lg-4 mb-20">
                                 <label class="form-label fw-semibold">
                                     <i class="fa fa-map-marker me-1"></i>
                                     UF
@@ -225,9 +225,9 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
 
                             <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="form-label fw-bold"><i class="fa fa-road"></i> Endereço</label>
+                                    <label class="form-label fw-bold"><i class="fa fa-road"></i> Endereço COMPLETO</label>
                                     <input id="endereco" name="endereco" type="text"
-                                        class="form-control form-control-lg" placeholder="Digite o endereço" required>
+                                        class="form-control form-control-lg" placeholder="Digite o endereço COMPLETO" required>
                                 </div>
                             </div>
 
@@ -235,7 +235,7 @@ if ($_SESSION['perfil'] == 'candidato' || $_SESSION['candidato'] == 1) {
                                 <div class="form-group">
                                     <label class="form-label fw-bold"><i class="fa fa-phone"></i> Telefone</label>
                                     <input id="telefone" name="telefone" type="text"
-                                        class="form-control form-control-lg" placeholder="Digite o telefone" required>
+                                        class="form-control form-control-lg" placeholder="Digite o telefone">
                                 </div>
                             </div>
                         </div>
