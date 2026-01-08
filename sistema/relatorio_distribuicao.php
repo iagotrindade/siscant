@@ -284,7 +284,7 @@ if (isset($_GET['id_especialidade']))
                                 </label>
                                 <select name="incorporado" class="form-control" required>
                                     <option value="">Selecione a opção</option>
-                                    <option value="1">Distribuído</option>
+                                    <option value="1" selected>Distribuído</option>
                                     <option value="0">Aguardando Distribuição</option>
                                 </select>
                             </div>
@@ -298,7 +298,7 @@ if (isset($_GET['id_especialidade']))
                                 <select name="numero_distribuicao" class="form-control" required>
                                     <option value="">Selecione a opção</option>
                                     <?php for ($i = 1; $i <= 10; $i++): ?>
-                                        <option value="<?= $i ?>">
+                                        <option value="<?= $i ?>" <?php if($i == 1) echo("selected")?>>
                                             <?= $i ?>ª Distribuição
                                         </option>
                                     <?php endfor; ?>
@@ -313,7 +313,7 @@ if (isset($_GET['id_especialidade']))
                                 </label>
                                 <select name="forca_distribuicao" class="form-control" required>
                                     <option value="">Selecione a opção</option>
-                                    <option value="exercito">Exército</option>
+                                    <option value="exercito" selected>Exército</option>
                                     <option value="marinha">Marinha</option>
                                     <option value="aeronautica">Aeronáutica</option>
                                 </select>
@@ -327,7 +327,7 @@ if (isset($_GET['id_especialidade']))
                                 </label>
                                 <select name="titular_reserva" class="form-control" required>
                                     <option value="">Selecione a opção</option>
-                                    <option value="titular">Titular</option>
+                                    <option value="titular" selected>Titular</option>
                                     <option value="titular eis">Titular EIS</option>
                                     <option value="reserva">Reserva</option>
                                     <option value="adiado">Adiado</option>
@@ -355,7 +355,7 @@ if (isset($_GET['id_especialidade']))
                                     $estados = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'];
                                     foreach ($estados as $estado):
                                     ?>
-                                        <option value="<?= $estado ?>">
+                                        <option value="<?= $estado ?>" <?php if($estado == 'RS') echo("selected")?>>
                                             <?= $estado ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -403,7 +403,8 @@ if (isset($_GET['id_especialidade']))
                                 <input
                                     type="text"
                                     name="data_incorporacao"
-                                    class="form-control">
+                                    class="form-control"
+                                    value="01/02/2026">
                             </div>
 
                             <div class="col-md-12 mb-20">

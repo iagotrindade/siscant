@@ -300,7 +300,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-refresh"></i> ATUALIZAR
                             </button>
                         </div>
@@ -359,7 +359,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-refresh"></i> ATUALIZAR
                             </button>
                         </div>
@@ -388,7 +388,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -425,7 +425,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-refresh"></i> ATUALIZAR
                             </button>
                         </div>
@@ -457,7 +457,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-refresh"></i> ATUALIZAR
                             </button>
                         </div>
@@ -489,7 +489,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-refresh"></i> ATUALIZAR
                             </button>
                         </div>
@@ -533,7 +533,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-refresh"></i> ATUALIZAR
                             </button>
                         </div>
@@ -565,7 +565,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-refresh"></i> ATUALIZAR
                             </button>
                         </div>
@@ -605,7 +605,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -640,7 +640,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -675,7 +675,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -710,7 +710,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -739,7 +739,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -776,7 +776,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-refresh"></i> ATUALIZAR
                             </button>
                         </div>
@@ -820,7 +820,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?>>
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -849,7 +849,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -878,7 +878,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
@@ -911,7 +911,7 @@ $apelido_ug = $get_selecao[0]['apelido_ug'];
                         </div>
 
                         <div <?php if ($perfil != "admin") echo "hidden"; ?> class="mt-3">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-save"></i> SALVAR
                             </button>
                         </div>
