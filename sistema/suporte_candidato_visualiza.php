@@ -212,7 +212,8 @@ if ($data_enviado != null)
         margin-bottom: 1rem;
     }
 
-    .chat-input input {
+    .chat-input input,
+    .chat-input textarea {
         flex: 1;
         padding: 1.2rem 1rem;
         border: 1px solid rgba(0, 0, 0, 0.1);
@@ -390,6 +391,18 @@ if ($data_enviado != null)
 
     .bot-message .message-time {
         text-align: left;
+    }
+
+    .chat-input button,
+    .send-mail-button {
+        font-size: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0 2.5rem;
+        border-radius: 0 6px 6px 0;
+        cursor: pointer;
+        transition: background-color 0.2s;
     }
 
     @media (max-width: 768px) {
@@ -594,11 +607,24 @@ if ($data_enviado != null)
                             </div>
 
                             <div class="chat-input">
-                                <input type="text"
+                                <textarea
                                     placeholder="Digite sua mensagem..."
                                     autocomplete="off"
-                                    name="resposta">
-                                <button type="submit"><i class="bi bi-send"></i></button>
+                                    name="resposta"
+                                    autocorrect="on"
+                                    rows="5">
+
+
+
+Atenciosamente,
+<?= $posto_grad . ' ' . $nome_guerra ?> - Comissão de Seleção Especial (CSE)</textarea>
+
+                            </div>
+
+                            <div style="text-align: right; margin-top: 20px;">
+                                <button class="send-mail-button" style="font-weight:600; width: 20%; padding: 10px; border-radius: 6px" type="submit">
+                                    Enviar <i class="bi bi-send"></i>
+                                </button>
                             </div>
                         <?php endif; ?>
                     </form>

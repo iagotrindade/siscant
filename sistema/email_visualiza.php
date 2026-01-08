@@ -887,7 +887,14 @@ $dados_usuario = $conexao->get_usuario_email(trim($get_email_id['email_remetente
                                 <textarea
                                     placeholder="Digite sua mensagem..."
                                     autocomplete="off"
-                                    name="resposta"></textarea>
+                                    name="resposta"
+                                    autocorrect="on"
+                                    rows="5">
+
+
+
+Atenciosamente,
+<?= $posto_grad . ' ' . $nome_guerra?> - Comissão de Seleção Especial (CSE)</textarea>
                             </div>
 
                             <!-- Área de Anexos da Resposta -->
