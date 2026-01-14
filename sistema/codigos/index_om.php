@@ -87,6 +87,7 @@ if ($incorporados == "medicos") {
                 <tbody>
                     <?php
                     foreach ($usuarios_destinados as $linha) {
+                        
                         $foto = "user.jpg";
                         $get_foto = $conexao->get_foto_usuario($linha['id']);
                         if (count($get_foto) > 0)
@@ -99,6 +100,7 @@ if ($incorporados == "medicos") {
                         // Filtro por ano
                         if ($ano_selecao != "todos") {
                             $ano_incorp = (int) substr($linha['data_incorporacao'], 0, 4);
+
                             if ($ano_selecao != null && $ano_incorp != $ano_selecao) continue;
                             if ($ano_selecao == null && $ano_incorp != $ano_atual) continue;
                         }
@@ -136,7 +138,7 @@ if ($incorporados == "medicos") {
                                 <span class="badge" style="background-color: ' . $cor_apresentacao_cand_om . '">' . $linha['apresentacao_candidato_om'] . '</span>
                             </td>
                             <td class="text-center">
-                                <a href="usuario_visualiza.php?id_usuario=159644" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Visualizar usuário">
+                                <a href="usuario_visualiza.php?id_usuario=' . $linha['id'] . '" class="btn btn-sm action-btn" data-bs-toggle="tooltip" title="Visualizar usuário">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                 </td>
@@ -154,11 +156,6 @@ if ($incorporados == "medicos") {
 
 <script type="text/javascript">
     $('#tabela_dinamica').DataTable({
-        "lengthMenu": [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        "iDisplayLength": -1,
         "order": [
             [1, "asc"]
         ]

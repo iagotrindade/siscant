@@ -88,19 +88,29 @@ class Conexao
 
     public function login($usuario, $senha, $id_selecao)
     {
+        // Remover a trava do id_selecao no SQL para permitir buscar o usuário globalmente
         $stmt = $this->pdo->prepare(
-            "select u.* 
-                from usuario u 
-                inner join selecao s on u.id_selecao = s.id
-                where u.cpf = :cpf and u.senha = :senha and u.apagado = 0
-                and s.id = :id_selecao"
+            "SELECT u.* 
+         FROM usuario u
+         WHERE u.cpf = :cpf AND u.senha = :senha AND u.apagado = 0"
         );
+
         $stmt->bindValue(':cpf', $usuario);
         $stmt->bindValue(':senha', $senha);
-        $stmt->bindValue(':id_selecao', $id_selecao);
-        $run = $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        $stmt->execute();
+
+        // fetch() pois login geralmente retorna apenas um usuário
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($users as $user) {
+            if ($user['perfil'] == 'om') {
+                return [$user];
+            } elseif ($user['id_selecao'] == $id_selecao) {
+                return [$user];
+            }
+        }
+
+        // Caso não encontre usuário ou a seleção não coincida (para não-om)
+        return [];
     }
     // </editor-fold>
 

@@ -68,7 +68,7 @@ if ($usuario_logado[0]['assinatura_sistema'] != $_SESSION['assinatura_sistema'])
     header("Location: ../index.php?erro=987");
     exit();
 }
-if ($usuario_logado[0]['id_selecao'] != $_SESSION['selecao']) {
+if ($usuario_logado[0]['perfil'] != 'om' && $usuario_logado[0]['id_selecao'] != $_SESSION['selecao']) {
     header("Location: ../index.php?erro=654");
     exit();
 }
